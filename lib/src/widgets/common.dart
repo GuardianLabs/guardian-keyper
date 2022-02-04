@@ -181,19 +181,46 @@ class ListTileButton extends StatelessWidget {
             ),
       leading: leading == null
           ? null
-          : CircleAvatar(
-              radius: 20,
-              backgroundColor: bgColor ?? Colors.transparent,
-              foregroundImage: AssetImage(leading!),
+          : CircleIcon(
+              bgColor: bgColor,
+              icon: leading!,
             ),
       trailing: trailing == null
           ? null
-          : CircleAvatar(
-              radius: 20,
-              backgroundColor: bgColor ?? Colors.transparent,
-              foregroundImage: AssetImage(trailing!),
+          : CircleIcon(
+              bgColor: bgColor,
+              icon: trailing!,
             ),
       onTap: onPressed,
+    );
+  }
+}
+
+class CircleIcon extends StatelessWidget {
+  const CircleIcon({
+    Key? key,
+    required this.icon,
+    required this.bgColor,
+  }) : super(key: key);
+
+  final String icon;
+  final Color? bgColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: bgColor ?? Colors.white,
+        shape: BoxShape.circle,
+      ),
+      height: 40,
+      width: 40,
+      child: Center(
+          child: Image(
+        image: AssetImage(icon),
+        height: 20,
+        width: 20,
+      )),
     );
   }
 }
@@ -226,6 +253,44 @@ class DotBar extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class SimpleCard extends StatelessWidget {
+  const SimpleCard({
+    Key? key,
+    this.leading,
+    this.trailing,
+    required this.caption,
+    required this.text,
+  }) : super(key: key);
+
+  final Widget? leading;
+  final Widget? trailing;
+  final String caption;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 335,
+      child: Card(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                leading == null ? Container() : leading!,
+                trailing == null ? Container() : trailing!,
+                Text(caption),
+                Text(text),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

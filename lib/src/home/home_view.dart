@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../widgets/common.dart';
 import '../intro/intro_view.dart';
 import '../wallet/wallet_select_view.dart';
+import '../recovery_group/recovery_group_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -48,10 +49,10 @@ class HomeView extends StatelessWidget {
                   Padding(
                     padding: _paddingV5,
                     child: ListTileButton(
-                      text: 'Create group',
+                      text: 'Create recovery group',
                       trailing: 'assets/images/logo.png',
                       onPressed: () => Navigator.pushNamed(
-                          context, WalletSelectView.routeName),
+                          context, RecoveryGroupView.routeName),
                     ),
                   ),
                 ],
