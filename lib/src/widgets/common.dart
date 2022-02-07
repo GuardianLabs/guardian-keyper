@@ -1,47 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-import '../globals.dart';
+import '../theme_data.dart';
 
 class HeaderBar extends StatelessWidget {
   const HeaderBar({
     Key? key,
+    this.caption,
     this.title,
     this.backButton,
     this.closeButton,
   }) : super(key: key);
 
+  final String? caption;
   final Widget? title;
   final Widget? backButton;
   final Widget? closeButton;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        if (title != null)
-          Align(
-            alignment: Alignment.center,
-            child: title,
-          ),
-        // Close button (right)
-        if (closeButton != null)
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 50, right: 20),
-              child: closeButton,
-            ),
-          ),
-        //Back button (left)
-        if (backButton != null)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 50, left: 20),
-              child: backButton,
-            ),
-          ),
+        Container(
+          height: 100,
+          width: 70,
+          alignment: Alignment.centerRight,
+          child: backButton,
+        ),
+        Container(
+          height: 100,
+          alignment: Alignment.center,
+          child: caption == null ? title : Text(caption!),
+        ),
+        Container(
+          height: 100,
+          width: 70,
+          alignment: Alignment.centerLeft,
+          child: closeButton,
+        ),
       ],
     );
   }
@@ -53,29 +51,20 @@ class HeaderBarTitleLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(top: 48),
-          child: Image(
-            height: 33,
-            width: 33,
-            image: AssetImage('assets/images/logo.png'),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Text(
-            'Guardian Network',
-            style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
-          ),
-        ),
+        SvgPicture.asset('assets/icons/logo.svg', height: 32, width: 32),
+        const SizedBox(height: 8),
+        const Text('Guardian'),
       ],
     );
   }
 }
 
 class HeaderBarCloseButton extends StatelessWidget {
-  const HeaderBarCloseButton({Key? key}) : super(key: key);
+  const HeaderBarCloseButton({Key? key, this.onPressed}) : super(key: key);
+
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -84,17 +73,19 @@ class HeaderBarCloseButton extends StatelessWidget {
       child: IconButton(
         color: Colors.white,
         icon: const Icon(Icons.close),
-        // onPressed: Navigator.of(context).pop,
-        onPressed: () {
-          if (Navigator.of(context).canPop()) Navigator.of(context).pop();
-        },
+        onPressed: onPressed ??
+            () {
+              if (Navigator.of(context).canPop()) Navigator.of(context).pop();
+            },
       ),
     );
   }
 }
 
 class HeaderBarBackButton extends StatelessWidget {
-  const HeaderBarBackButton({Key? key}) : super(key: key);
+  const HeaderBarBackButton({Key? key, this.onPressed}) : super(key: key);
+
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -103,9 +94,10 @@ class HeaderBarBackButton extends StatelessWidget {
       child: IconButton(
         color: Colors.white,
         icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          if (Navigator.of(context).canPop()) Navigator.of(context).pop();
-        },
+        onPressed: onPressed ??
+            () {
+              if (Navigator.of(context).canPop()) Navigator.of(context).pop();
+            },
       ),
     );
   }
@@ -119,23 +111,14 @@ class FooterButton extends StatelessWidget {
   }) : super(key: key);
 
   final String text;
-  final void Function() onPressed;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Container(
         height: 50,
         width: double.infinity,
-        decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF7BE7FF),
-                Color(0xFF3AABF0),
-              ],
-            )),
+        decoration: decorBlueButton,
         child: TextButton(
           child: Text(
             text,
@@ -150,77 +133,22 @@ class FooterButton extends StatelessWidget {
   }
 }
 
-class ListTileButton extends StatelessWidget {
-  const ListTileButton({
+class DotColored extends StatelessWidget {
+  const DotColored({
     Key? key,
-    this.text,
-    this.leading,
-    this.trailing,
-    this.bgColor,
-    required this.onPressed,
+    this.color = Colors.white,
+    this.size = 8,
   }) : super(key: key);
 
-  final String? text;
-  final String? leading;
-  final String? trailing;
-  final Color? bgColor;
-  final void Function() onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: text == null
-          ? null
-          : Text(
-              text!,
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-              ),
-            ),
-      leading: leading == null
-          ? null
-          : CircleIcon(
-              bgColor: bgColor,
-              icon: leading!,
-            ),
-      trailing: trailing == null
-          ? null
-          : CircleIcon(
-              bgColor: bgColor,
-              icon: trailing!,
-            ),
-      onTap: onPressed,
-    );
-  }
-}
-
-class CircleIcon extends StatelessWidget {
-  const CircleIcon({
-    Key? key,
-    required this.icon,
-    required this.bgColor,
-  }) : super(key: key);
-
-  final String icon;
-  final Color? bgColor;
+  final Color color;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: bgColor ?? Colors.white,
-        shape: BoxShape.circle,
-      ),
-      height: 40,
-      width: 40,
-      child: Center(
-          child: Image(
-        image: AssetImage(icon),
-        height: 20,
-        width: 20,
-      )),
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+      height: size,
+      width: size,
     );
   }
 }
@@ -243,14 +171,7 @@ class DotBar extends StatelessWidget {
         for (var i = 0; i < count; i++)
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: Container(
-              decoration: BoxDecoration(
-                color: i == active ? Colors.white : clIndigo500,
-                shape: BoxShape.circle,
-              ),
-              height: 8,
-              width: 8,
-            ),
+            child: DotColored(color: i == active ? Colors.white : clIndigo700),
           ),
       ],
     );
@@ -263,31 +184,47 @@ class SimpleCard extends StatelessWidget {
     this.leading,
     this.trailing,
     required this.caption,
-    required this.text,
+    this.text = '',
+    this.bgColor,
+    this.isSelected = false,
   }) : super(key: key);
 
   final Widget? leading;
   final Widget? trailing;
   final String caption;
   final String text;
+  final Color? bgColor;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 335,
-      child: Card(
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+        color: isSelected ? Colors.transparent : bgColor,
+        border: isSelected
+            ? Border.all(
+                color: clBlue,
+                width: 2,
+              )
+            : null,
+      ),
+      height: 192,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                leading == null ? Container() : leading!,
-                trailing == null ? Container() : trailing!,
-                Text(caption),
-                Text(text),
+                leading ?? Container(),
+                trailing ?? Container(),
               ],
             ),
+            Text(caption),
+            Text(text),
           ],
         ),
       ),

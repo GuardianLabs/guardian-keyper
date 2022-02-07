@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../globals.dart';
+import '../../theme_data.dart';
 import '../../widgets/common.dart';
 
 class IntroPage2View extends StatelessWidget {
@@ -31,7 +31,7 @@ class IntroPage2View extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFF54BAF9), width: 2),
-                  color: clIndigo500,
+                  color: clIndigo700,
                   shape: BoxShape.circle,
                 ),
                 height: 40,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/common.dart';
+import '../widgets/icon_of.dart';
 import '../intro/intro_view.dart';
 import '../wallet/wallet_select_view.dart';
 import '../recovery_group/recovery_group_view.dart';
@@ -30,28 +31,28 @@ class HomeView extends StatelessWidget {
                 children: [
                   Padding(
                     padding: _paddingV5,
-                    child: ListTileButton(
-                      text: 'Intro',
-                      trailing: 'assets/images/logo.png',
-                      onPressed: () =>
+                    child: ListTile(
+                      title: const Text('Intro'),
+                      trailing: const IconOf.app(),
+                      onTap: () =>
                           Navigator.pushNamed(context, IntroView.routeName),
                     ),
                   ),
                   Padding(
                     padding: _paddingV5,
-                    child: ListTileButton(
-                      text: 'Connect wallet',
-                      trailing: 'assets/images/icon_connect.png',
-                      onPressed: () => Navigator.pushNamed(
+                    child: ListTile(
+                      title: const Text('Connect wallet'),
+                      trailing: const IconOf.connect(),
+                      onTap: () => Navigator.pushNamed(
                           context, WalletSelectView.routeName),
                     ),
                   ),
                   Padding(
                     padding: _paddingV5,
-                    child: ListTileButton(
-                      text: 'Create recovery group',
-                      trailing: 'assets/images/logo.png',
-                      onPressed: () => Navigator.pushNamed(
+                    child: ListTile(
+                      title: const Text('Create recovery group'),
+                      trailing: const IconOf.app(),
+                      onTap: () => Navigator.pushNamed(
                           context, RecoveryGroupView.routeName),
                     ),
                   ),

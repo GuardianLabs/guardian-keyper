@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:guardian_network/src/recovery_group/recovery_group_view.dart';
 import 'package:provider/provider.dart';
 
 import 'theme_data.dart';
@@ -10,8 +9,12 @@ import 'home/home_view.dart';
 import 'wallet/wallet_select_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
+
+import 'recovery_group/recovery_group_model.dart';
+import 'recovery_group/recovery_group_controller.dart';
 import 'recovery_group/recovery_group_view.dart';
-import 'recovery_group/view/recovery_group_edit_view.dart';
+import 'recovery_group/create/recovery_group_create_view.dart';
+import 'recovery_group/edit/recovery_group_edit_view.dart';
 
 part 'di_provider.dart';
 
@@ -48,8 +51,12 @@ class App extends StatelessWidget {
                 return const IntroView();
               case RecoveryGroupView.routeName:
                 return const RecoveryGroupView();
+              case RecoveryGroupCreateView.routeName:
+                return const RecoveryGroupCreateView();
               case RecoveryGroupEditView.routeName:
-                return const RecoveryGroupEditView();
+                return RecoveryGroupEditView(
+                    recoveryGroup:
+                        routeSettings.arguments as RecoveryGroupModel);
               case WalletSelectView.routeName:
                 return const WalletSelectView();
               case SettingsView.routeName:

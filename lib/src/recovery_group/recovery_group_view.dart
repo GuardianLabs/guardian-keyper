@@ -1,46 +1,111 @@
 import 'package:flutter/material.dart';
+import 'package:guardian_network/src/recovery_group/create/recovery_group_create_view.dart';
+import 'package:provider/provider.dart';
 
+import '../theme_data.dart';
+import '../widgets/icon_of.dart';
 import '../widgets/common.dart';
-import 'view/recovery_group_edit_view.dart';
 import 'recovery_group_model.dart';
+import 'recovery_group_controller.dart';
+import 'edit/recovery_group_edit_view.dart';
 
-final _groups = <RecoveryGroupModel>[
-  const RecoveryGroupModel(groupName: 'Fake group 1'),
-  const RecoveryGroupModel(groupName: 'Fake group 2'),
-];
-
-class RecoveryGroupView extends StatelessWidget {
+class RecoveryGroupView extends StatefulWidget {
   const RecoveryGroupView({Key? key}) : super(key: key);
 
   static const routeName = '/recovery_group';
-  static const _paddingV5 = EdgeInsets.only(top: 5, bottom: 5);
+
+  @override
+  State<RecoveryGroupView> createState() => _RecoveryGroupViewState();
+}
+
+class _RecoveryGroupViewState extends State<RecoveryGroupView> {
+  final _ctrl = TextEditingController();
+  String _filter = '';
 
   @override
   Widget build(BuildContext context) {
+    final recoveryGroupsController =
+        Provider.of<RecoveryGroupController>(context);
+    final recoveryGroups =
+        List<RecoveryGroupModel>.from(recoveryGroupsController.groups.values)
+            .where((element) =>
+                element.name.toLowerCase().startsWith(_filter.toLowerCase()))
+            .toList();
+    recoveryGroups.sort((a, b) => a.name.compareTo(b.name));
+
     return Scaffold(
         primary: true,
+        restorationId: 'RecoveryGroup',
+        resizeToAvoidBottomInset: false,
         body: Column(
           children: [
             // Header
             const HeaderBar(
-              title: Padding(
-                padding: EdgeInsets.only(top: 55),
-                child: Text('My Recovery Groups'),
-              ),
+              caption: 'Groups',
+              // title: Text('Groups'),
               backButton: HeaderBarBackButton(),
-              closeButton: HeaderBarCloseButton(),
+            ),
+            // Search bar
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+              child: TextField(
+                controller: _ctrl,
+                restorationId: 'RecoveryGroupFilterInput',
+                keyboardType: TextInputType.name,
+                onChanged: (value) => setState(() => _filter = value),
+                decoration: InputDecoration(
+                  border: Theme.of(context).inputDecorationTheme.border,
+                  filled: Theme.of(context).inputDecorationTheme.filled,
+                  fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+                  hintText: 'Search',
+                  prefixIcon: const Icon(Icons.search),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'GROUP',
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                    Text(
+                      'GUARDIANS / STATUS',
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                  ]),
             ),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.all(20),
                 children: [
-                  for (final group in _groups)
+                  for (final group in recoveryGroups)
                     Padding(
-                      padding: _paddingV5,
-                      child: ListTileButton(
-                        text: group.groupName,
-                        trailing: 'assets/images/icon_group.png',
-                        onPressed: () => Navigator.pushNamed(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: ListTile(
+                        tileColor: clIndigo900,
+                        textColor: group.status == RecoveryGroupStatus.missed
+                            ? clRed
+                            : null,
+                        iconColor: group.status == RecoveryGroupStatus.missed
+                            ? clRed
+                            : clIndigo700,
+                        title: Text(group.name),
+                        leading: const IconOf.app(),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child:
+                                  Text('${group.members.length}/${group.size}'),
+                            ),
+                            DotColored(
+                                color: _colorOfGroupStatus(group.status)),
+                          ],
+                        ),
+                        onTap: () => Navigator.pushNamed(
                             context, RecoveryGroupEditView.routeName,
                             arguments: group),
                       ),
@@ -51,10 +116,27 @@ class RecoveryGroupView extends StatelessWidget {
             // Footer
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
-              child: FooterButton(text: 'Create new group', onPressed: () {}),
+              child: FooterButton(
+                text: 'Create New Group',
+                onPressed: () => Navigator.pushNamed(
+                  context,
+                  RecoveryGroupCreateView.routeName,
+                ),
+              ),
             ),
             Container(height: 50),
           ],
         ));
+  }
+
+  Color _colorOfGroupStatus(RecoveryGroupStatus status) {
+    switch (status) {
+      case RecoveryGroupStatus.completed:
+        return clGreen;
+      case RecoveryGroupStatus.notCompleted:
+        return clYellow;
+      case RecoveryGroupStatus.missed:
+        return clRed;
+    }
   }
 }
