@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:guardian_network/src/recovery_group/create/recovery_group_create_view.dart';
 import 'package:provider/provider.dart';
 
 import '../theme_data.dart';
@@ -7,7 +6,9 @@ import '../widgets/icon_of.dart';
 import '../widgets/common.dart';
 import 'recovery_group_model.dart';
 import 'recovery_group_controller.dart';
+import 'create_group/create_group_view.dart';
 import 'edit/recovery_group_edit_view.dart';
+import 'add_guardian/add_guardian_view.dart';
 
 class RecoveryGroupView extends StatefulWidget {
   const RecoveryGroupView({Key? key}) : super(key: key);
@@ -98,8 +99,8 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(right: 8.0),
-                              child:
-                                  Text('${group.members.length}/${group.size}'),
+                              child: Text(
+                                  '${group.guardians.length}/${group.size}'),
                             ),
                             DotColored(
                                 color: _colorOfGroupStatus(group.status)),
@@ -118,10 +119,20 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: FooterButton(
                 text: 'Create New Group',
-                onPressed: () => Navigator.pushNamed(
-                  context,
-                  RecoveryGroupCreateView.routeName,
-                ),
+                onPressed: () async {
+                  final newGroup = await Navigator.pushNamed(
+                    context,
+                    CreateGroupView.routeName,
+                  );
+                  if (newGroup is RecoveryGroupModel) {
+                    recoveryGroupsController.addGroup(newGroup);
+                    Navigator.pushNamed(
+                      context,
+                      AddGuardianView.routeName,
+                      arguments: newGroup,
+                    );
+                  }
+                },
               ),
             ),
             Container(height: 50),

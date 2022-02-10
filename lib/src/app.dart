@@ -13,8 +13,9 @@ import 'settings/settings_view.dart';
 import 'recovery_group/recovery_group_model.dart';
 import 'recovery_group/recovery_group_controller.dart';
 import 'recovery_group/recovery_group_view.dart';
-import 'recovery_group/create/recovery_group_create_view.dart';
+import 'recovery_group/create_group/create_group_view.dart';
 import 'recovery_group/edit/recovery_group_edit_view.dart';
+import 'recovery_group/add_guardian/add_guardian_view.dart';
 
 part 'di_provider.dart';
 
@@ -51,12 +52,15 @@ class App extends StatelessWidget {
                 return const IntroView();
               case RecoveryGroupView.routeName:
                 return const RecoveryGroupView();
-              case RecoveryGroupCreateView.routeName:
-                return const RecoveryGroupCreateView();
+              case CreateGroupView.routeName:
+                return const CreateGroupView();
               case RecoveryGroupEditView.routeName:
                 return RecoveryGroupEditView(
                     recoveryGroup:
                         routeSettings.arguments as RecoveryGroupModel);
+              case AddGuardianView.routeName:
+                return AddGuardianView(
+                    group: routeSettings.arguments as RecoveryGroupModel);
               case WalletSelectView.routeName:
                 return const WalletSelectView();
               case SettingsView.routeName:

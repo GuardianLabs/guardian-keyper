@@ -1,35 +1,47 @@
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/material.dart';
 
 enum RecoveryGroupStatus { completed, notCompleted, missed }
+enum RecoveryGroupType { none, devices, fiduciaries }
 
-@immutable
 class RecoveryGroupModel {
-  final String name;
-  final String description;
+  String name;
+  String description;
+  RecoveryGroupType type;
   final int size;
-  final Map<String, RecoveryGroupMemberModel> members;
+  final int threshold;
+  Map<String, RecoveryGroupGuardianModel> guardians = {};
+  String secret = '';
 
-  const RecoveryGroupModel({
+  RecoveryGroupModel({
     required this.name,
-    required this.description,
-    this.size = 5,
-    required this.members,
-  });
+    this.description = '',
+    this.size = 3,
+    this.threshold = 2,
+    this.type = RecoveryGroupType.none,
+    Map<String, RecoveryGroupGuardianModel>? guardians,
+  }) {
+    if (guardians != null) this.guardians = guardians;
+  }
 
   RecoveryGroupStatus get status {
-    if (members.length == size) {
+    if (guardians.length == size) {
       return RecoveryGroupStatus.completed;
     }
-    if (members.isEmpty || members.length < size / 2) {
+    if (guardians.length < threshold) {
       return RecoveryGroupStatus.missed;
     }
     return RecoveryGroupStatus.notCompleted;
   }
 }
 
-@immutable
-class RecoveryGroupMemberModel {
-  const RecoveryGroupMemberModel({required this.name});
+class RecoveryGroupGuardianModel {
+  RecoveryGroupGuardianModel({
+    this.name = '',
+    this.code = '',
+    this.tag = '',
+  });
 
-  final String name;
+  String name;
+  String code;
+  String tag;
 }

@@ -231,3 +231,48 @@ class SimpleCard extends StatelessWidget {
     );
   }
 }
+
+class GuardianListTileWidget extends StatelessWidget {
+  const GuardianListTileWidget({
+    Key? key,
+    this.iconColor = clGreen,
+    required this.name,
+    required this.code,
+    this.tag,
+  }) : super(key: key);
+
+  final Color iconColor;
+  final String name;
+  final String code;
+  final String? tag;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: CircleAvatar(
+          backgroundColor: iconColor,
+          foregroundColor: clWhite,
+          child: const Icon(Icons.health_and_safety_outlined)),
+      title: Row(
+        children: [
+          Text(name, maxLines: 1),
+          if (tag != null && tag!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: borderRadius,
+                  color: clIndigo500,
+                ),
+                child: Text('   ${tag!}   '),
+              ),
+            ),
+        ],
+      ),
+      subtitle: Text(code, maxLines: 1),
+      isThreeLine: true,
+      dense: true,
+      // visualDensity: VisualDensity.comfortable,
+    );
+  }
+}
