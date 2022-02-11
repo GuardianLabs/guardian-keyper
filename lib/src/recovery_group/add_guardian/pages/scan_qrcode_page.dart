@@ -44,7 +44,7 @@ class _ScanQRCodePageState extends State<ScanQRCodePage> {
     controller.scannedDataStream.listen((scanData) {
       if (scanData.code == null || scanData.code!.isEmpty) return;
       final state = context.read<AddGuardianController>();
-      state.code = scanData.code!;
+      state.guardianCode = scanData.code!;
       state.nextScreen();
     });
   }
@@ -77,7 +77,7 @@ class _ScanQRCodePageState extends State<ScanQRCodePage> {
           onPressed: () {
             const chars = '0123456789ABCDEF';
             final random = Random();
-            state.code = String.fromCharCodes(Iterable.generate(
+            state.guardianCode = String.fromCharCodes(Iterable.generate(
                 64, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
             state.nextScreen();
           },

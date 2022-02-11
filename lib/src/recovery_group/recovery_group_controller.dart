@@ -38,8 +38,6 @@ class RecoveryGroupController with ChangeNotifier {
     group.guardians[guardian.name] = guardian;
     _groups[groupName] = group;
     notifyListeners();
-    print('Add guardian');
-    print(_groups[groupName]?.guardians.length);
   }
 }
 

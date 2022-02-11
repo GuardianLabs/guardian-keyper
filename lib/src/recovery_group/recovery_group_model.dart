@@ -1,12 +1,11 @@
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 enum RecoveryGroupStatus { completed, notCompleted, missed }
-enum RecoveryGroupType { none, devices, fiduciaries }
+enum RecoveryGroupType { devices, fiduciaries }
 
 class RecoveryGroupModel {
-  String name;
-  String description;
-  RecoveryGroupType type;
+  final String name;
+  final RecoveryGroupType type;
   final int size;
   final int threshold;
   Map<String, RecoveryGroupGuardianModel> guardians = {};
@@ -14,10 +13,9 @@ class RecoveryGroupModel {
 
   RecoveryGroupModel({
     required this.name,
-    this.description = '',
     this.size = 3,
     this.threshold = 2,
-    this.type = RecoveryGroupType.none,
+    required this.type,
     Map<String, RecoveryGroupGuardianModel>? guardians,
   }) {
     if (guardians != null) this.guardians = guardians;
@@ -34,14 +32,15 @@ class RecoveryGroupModel {
   }
 }
 
+@immutable
 class RecoveryGroupGuardianModel {
-  RecoveryGroupGuardianModel({
-    this.name = '',
-    this.code = '',
-    this.tag = '',
+  const RecoveryGroupGuardianModel({
+    required this.name,
+    required this.code,
+    required this.tag,
   });
 
-  String name;
-  String code;
-  String tag;
+  final String name;
+  final String code;
+  final String tag;
 }

@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
 
-import '../recovery_group_model.dart';
 import '../../core/page_controller.dart';
 
 class AddGuardianController with ChangeNotifier, PagesController {
-  AddGuardianController({required int lastScreen, required this.group}) {
+  AddGuardianController({required int lastScreen, required this.groupName}) {
     this.lastScreen = lastScreen;
   }
 
-  final RecoveryGroupModel group;
-  final _guardian = RecoveryGroupGuardianModel();
+  final String groupName;
+  String guardianName = '';
+  String guardianCode = '';
+  String _tag = '';
 
-  RecoveryGroupGuardianModel get guardian => _guardian;
+  String get guardianTag => _tag;
+  String get guardianCodeHex =>
+      '0x' +
+      guardianCode.substring(0, 10) +
+      '...' +
+      guardianCode.substring(guardianCode.length - 10);
 
-  set guardianName(String value) {
-    _guardian.name = value;
-    notifyListeners();
-  }
-
-  set code(String value) {
-    _guardian.code = value;
-  }
-
-  set tag(String value) {
-    _guardian.tag = value;
+  set guardianTag(String value) {
+    _tag = value;
     notifyListeners();
   }
 }

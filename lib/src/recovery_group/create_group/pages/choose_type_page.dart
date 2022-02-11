@@ -28,7 +28,7 @@ class ChooseTypePage extends StatelessWidget {
               GestureDetector(
                 onTap: () => state.groupType = RecoveryGroupType.devices,
                 child: SimpleCard(
-                  isSelected: state.group.type == RecoveryGroupType.devices,
+                  isSelected: state.groupType == RecoveryGroupType.devices,
                   bgColor: clIndigo700,
                   caption: 'Devices',
                   text:
@@ -38,7 +38,7 @@ class ChooseTypePage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               SimpleCard(
-                isSelected: state.group.type == RecoveryGroupType.fiduciaries,
+                isSelected: state.groupType == RecoveryGroupType.fiduciaries,
                 bgColor: clIndigo800,
                 caption: 'Fiduciaries',
                 text:
@@ -60,9 +60,7 @@ class ChooseTypePage extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: FooterButton(
             text: 'Continue',
-            onPressed: state.group.type == RecoveryGroupType.none
-                ? null
-                : state.nextScreen,
+            onPressed: state.groupType == null ? null : state.nextScreen,
           ),
         ),
         Container(height: 50),

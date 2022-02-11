@@ -8,25 +8,26 @@ class CreateGroupController with ChangeNotifier, PagesController {
     this.lastScreen = lastScreen;
   }
 
-  final _group = RecoveryGroupModel(name: 'New group');
-  String? _errName;
+  RecoveryGroupType? _groupType;
+  String _groupName = '';
+  String? _groupNameError;
 
-  RecoveryGroupModel get group => _group;
-  String? get errName => _errName;
+  RecoveryGroupType? get groupType => _groupType;
+  String get groupName => _groupName;
+  String? get groupNameError => _groupNameError;
 
-  set groupType(RecoveryGroupType value) {
-    _group.type = value;
+  set groupType(RecoveryGroupType? value) {
+    _groupType = value;
     notifyListeners();
   }
 
   set groupName(String value) {
-    if (_errName != null) _errName = null;
-    _group.name = value;
+    _groupName = value;
     notifyListeners();
   }
 
-  set errName(String? value) {
-    _errName = value;
+  set groupNameError(String? value) {
+    _groupNameError = value;
     notifyListeners();
   }
 }

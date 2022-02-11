@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../recovery_group_model.dart';
 import 'add_guardian_controller.dart';
 import 'pages/add_guardian_page.dart';
 import 'pages/scan_qrcode_page.dart';
@@ -10,17 +9,18 @@ import 'pages/add_tag_page.dart';
 import 'pages/guardian_added_page.dart';
 
 class AddGuardianView extends StatelessWidget {
-  // const AddGuardianView({Key? key, required this.group}) : super(key: key);
-  AddGuardianView({required this.group});
+  const AddGuardianView({Key? key, required this.groupName}) : super(key: key);
+  // AddGuardianView({required this.groupName});
 
   static const routeName = '/recovery_group_add_guardian';
 
-  final RecoveryGroupModel group;
+  final String groupName;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => AddGuardianController(lastScreen: 4, group: group),
+      create: (context) =>
+          AddGuardianController(lastScreen: 4, groupName: groupName),
       child: Consumer<AddGuardianController>(
         builder: (context, value, child) {
           switch (value.currentScreen) {

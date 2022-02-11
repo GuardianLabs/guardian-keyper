@@ -37,7 +37,7 @@ class RecoveryGroupEditView extends StatelessWidget {
                 children: [
                   SimpleCard(
                     caption: recoveryGroup.name,
-                    text: recoveryGroup.description,
+                    text: recoveryGroup.type.toString(),
                     leading: const IconOf.group(),
                   ),
                 ],

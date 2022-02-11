@@ -15,12 +15,8 @@ class GuardianAddedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AddGuardianController>(context);
-    final recoveryGroupController =
-        Provider.of<RecoveryGroupController>(context);
-    final code = '0x' +
-        state.guardian.code.substring(0, 10) +
-        '...' +
-        state.guardian.code.substring(state.guardian.code.length - 10);
+    final recoveryGroup =
+        Provider.of<RecoveryGroupController>(context).groups[state.groupName]!;
     return Column(
       children: [
         // Header
@@ -29,10 +25,9 @@ class GuardianAddedPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text('Recovery Group'),
-              Text(state.group.name),
+              Text(state.groupName),
             ],
           ),
-          // backButton: HeaderBarBackButton(onPressed: state.previousScreen),
           closeButton: const HeaderBarCloseButton(),
         ),
         // Body
@@ -55,9 +50,9 @@ class GuardianAddedPage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(20),
           child: GuardianListTileWidget(
-            name: state.guardian.name,
-            code: code,
-            tag: state.guardian.tag,
+            name: state.guardianName,
+            code: state.guardianCodeHex,
+            tag: state.guardianTag,
           ),
         ),
         Padding(
@@ -73,12 +68,12 @@ class GuardianAddedPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    for (var i = 0; i < state.group.size; i++)
+                    for (var i = 0; i < recoveryGroup.size; i++)
                       Padding(
                         padding: const EdgeInsets.all(5),
                         child: CircleAvatar(
                           foregroundColor: clWhite,
-                          backgroundColor: state.group.guardians.length > i
+                          backgroundColor: recoveryGroup.guardians.length > i
                               ? clGreen
                               : clIndigo500,
                           child: const Icon(Icons.health_and_safety_outlined),
@@ -94,7 +89,7 @@ class GuardianAddedPage extends StatelessWidget {
                     Navigator.popAndPushNamed(
                       context,
                       AddGuardianView.routeName,
-                      arguments: state.group,
+                      arguments: state.groupName,
                     );
                   },
                 ),
@@ -104,13 +99,12 @@ class GuardianAddedPage extends StatelessWidget {
         ),
         Expanded(child: Container()),
         // Footer
-        if (state.group.status != RecoveryGroupStatus.notCompleted)
+        if (recoveryGroup.status != RecoveryGroupStatus.missed)
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: FooterButton(
               text: 'Add Secret',
               onPressed: Navigator.of(context).pop,
-              // onPressed: () => state.gotoScreen(2),
             ),
           ),
         Container(height: 50),

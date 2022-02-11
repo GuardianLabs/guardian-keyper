@@ -4,9 +4,10 @@ import 'package:provider/provider.dart';
 import '../../../theme_data.dart';
 import '../../../widgets/common.dart';
 
-// import '../../add_guardian/add_guardian_view.dart';
+import '../../add_guardian/add_guardian_view.dart';
+import '../../recovery_group_model.dart';
 import '../create_group_controller.dart';
-// import '../../recovery_group_controller.dart';
+import '../../recovery_group_controller.dart';
 
 class InputNamePage extends StatelessWidget {
   const InputNamePage({Key? key}) : super(key: key);
@@ -14,6 +15,8 @@ class InputNamePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<CreateGroupController>(context);
+    final recoveryGroups =
+        Provider.of<RecoveryGroupController>(context, listen: false).groups;
     return Column(
       children: [
         // Header
@@ -39,17 +42,22 @@ class InputNamePage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
           child: TextField(
-            // autofocus: true,
-            controller: TextEditingController(text: state.group.name),
             restorationId: 'RecoveryGroupNameInput',
             keyboardType: TextInputType.name,
-            onChanged: (value) => state.groupName = value,
+            onChanged: (value) {
+              state.groupName = value;
+              if (recoveryGroups.containsKey(value)) {
+                state.groupNameError = 'Name already used!';
+              } else {
+                state.groupNameError = null;
+              }
+            },
             decoration: InputDecoration(
               border: Theme.of(context).inputDecorationTheme.border,
               filled: Theme.of(context).inputDecorationTheme.filled,
               fillColor: Theme.of(context).inputDecorationTheme.fillColor,
               labelText: 'GROUP NAME',
-              errorText: state.errName,
+              errorText: state.groupNameError,
             ),
           ),
         ),
@@ -59,23 +67,27 @@ class InputNamePage extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: FooterButton(
             text: 'Continue',
-            onPressed: state.group.name.isEmpty
+            onPressed: state.groupName.isEmpty || state.groupNameError != null
                 ? null
                 : () {
-                    Navigator.pop(context, state.group);
-                    // try {
-                    //   context
-                    //       .read<RecoveryGroupController>()
-                    //       .addGroup(state.group);
-                    // } on RecoveryGroupAlreadyExists {
-                    //   state.errName = RecoveryGroupAlreadyExists.description;
-                    //   return;
-                    // }
-                    // Navigator.popAndPushNamed(
-                    //   context,
-                    //   AddGuardianView.routeName,
-                    //   arguments: state.group,
-                    // );
+                    final newGroup = RecoveryGroupModel(
+                      name: state.groupName,
+                      type: state.groupType!,
+                    );
+                    try {
+                      context
+                          .read<RecoveryGroupController>()
+                          .addGroup(newGroup);
+                    } on RecoveryGroupAlreadyExists {
+                      state.groupNameError =
+                          RecoveryGroupAlreadyExists.description;
+                      return;
+                    }
+                    Navigator.popAndPushNamed(
+                      context,
+                      AddGuardianView.routeName,
+                      arguments: state.groupName,
+                    );
                   },
           ),
         ),

@@ -60,7 +60,7 @@ class App extends StatelessWidget {
                         routeSettings.arguments as RecoveryGroupModel);
               case AddGuardianView.routeName:
                 return AddGuardianView(
-                    group: routeSettings.arguments as RecoveryGroupModel);
+                    groupName: routeSettings.arguments as String);
               case WalletSelectView.routeName:
                 return const WalletSelectView();
               case SettingsView.routeName:

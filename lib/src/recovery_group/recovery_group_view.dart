@@ -8,7 +8,6 @@ import 'recovery_group_model.dart';
 import 'recovery_group_controller.dart';
 import 'create_group/create_group_view.dart';
 import 'edit/recovery_group_edit_view.dart';
-import 'add_guardian/add_guardian_view.dart';
 
 class RecoveryGroupView extends StatefulWidget {
   const RecoveryGroupView({Key? key}) : super(key: key);
@@ -60,6 +59,13 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
                   fillColor: Theme.of(context).inputDecorationTheme.fillColor,
                   hintText: 'Search',
                   prefixIcon: const Icon(Icons.search),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () => setState(() {
+                      _filter = '';
+                      _ctrl.text = '';
+                    }),
+                  ),
                 ),
               ),
             ),
@@ -119,19 +125,10 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: FooterButton(
                 text: 'Create New Group',
-                onPressed: () async {
-                  final newGroup = await Navigator.pushNamed(
-                    context,
-                    CreateGroupView.routeName,
-                  );
-                  if (newGroup is RecoveryGroupModel) {
-                    recoveryGroupsController.addGroup(newGroup);
-                    Navigator.pushNamed(
-                      context,
-                      AddGuardianView.routeName,
-                      arguments: newGroup,
-                    );
-                  }
+                onPressed: () {
+                  _filter = '';
+                  _ctrl.text = '';
+                  Navigator.pushNamed(context, CreateGroupView.routeName);
                 },
               ),
             ),

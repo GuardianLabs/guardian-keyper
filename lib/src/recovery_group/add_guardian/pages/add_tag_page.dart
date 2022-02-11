@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../theme_data.dart';
 import '../../../widgets/common.dart';
 
+import '../../recovery_group_model.dart';
 import '../add_guardian_controller.dart';
 import '../../recovery_group_controller.dart';
 
@@ -13,10 +14,6 @@ class AddTagPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AddGuardianController>(context);
-    final code = '0x' +
-        state.guardian.code.substring(0, 10) +
-        '...' +
-        state.guardian.code.substring(state.guardian.code.length - 10);
     return Column(
       children: [
         // Header
@@ -41,9 +38,9 @@ class AddTagPage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(20),
           child: GuardianListTileWidget(
-            name: state.guardian.name,
-            code: code,
-            tag: state.guardian.tag,
+            name: state.guardianName,
+            code: state.guardianCodeHex,
+            tag: state.guardianTag,
           ),
         ),
         Padding(
@@ -51,7 +48,7 @@ class AddTagPage extends StatelessWidget {
           child: TextField(
             restorationId: 'RecoveryGroupTagInput',
             keyboardType: TextInputType.name,
-            onChanged: (value) => state.tag = value,
+            onChanged: (value) => state.guardianTag = value,
             decoration: InputDecoration(
               border: Theme.of(context).inputDecorationTheme.border,
               filled: Theme.of(context).inputDecorationTheme.filled,
@@ -70,8 +67,12 @@ class AddTagPage extends StatelessWidget {
             text: 'Continue',
             onPressed: () async {
               await context.read<RecoveryGroupController>().addGuardian(
-                    state.group.name,
-                    state.guardian,
+                    state.groupName,
+                    RecoveryGroupGuardianModel(
+                      name: state.guardianName,
+                      code: state.guardianCode,
+                      tag: state.guardianTag,
+                    ),
                   );
               state.nextScreen();
             },
