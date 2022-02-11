@@ -7,8 +7,7 @@ class RecoveryGroupController with ChangeNotifier {
   RecoveryGroupController(this._recoveryGroupService);
 
   final RecoveryGroupService _recoveryGroupService;
-
-  Map<String, RecoveryGroupModel> _groups = {};
+  late Map<String, RecoveryGroupModel> _groups;
 
   Map<String, RecoveryGroupModel> get groups => _groups;
 
@@ -32,11 +31,7 @@ class RecoveryGroupController with ChangeNotifier {
       throw RecoveryGroupDoesNotExist();
     }
     final group = _groups[groupName]!;
-    if (group.guardians.containsKey([guardian.name])) {
-      throw RecoveryGroupGuardianAlreadyExists();
-    }
-    group.guardians[guardian.name] = guardian;
-    _groups[groupName] = group;
+    _groups[groupName] = group.addGuardian(guardian);
     notifyListeners();
   }
 }
@@ -47,9 +42,4 @@ class RecoveryGroupAlreadyExists implements Exception {
 
 class RecoveryGroupDoesNotExist implements Exception {
   static const description = 'Group with given name does not exist!';
-}
-
-class RecoveryGroupGuardianAlreadyExists implements Exception {
-  static const description =
-      'Guardian with given name already exists in that group!';
 }

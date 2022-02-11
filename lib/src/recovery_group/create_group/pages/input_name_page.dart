@@ -69,13 +69,13 @@ class InputNamePage extends StatelessWidget {
             text: 'Continue',
             onPressed: state.groupName.isEmpty || state.groupNameError != null
                 ? null
-                : () {
+                : () async {
                     final newGroup = RecoveryGroupModel(
                       name: state.groupName,
                       type: state.groupType!,
                     );
                     try {
-                      context
+                      await context
                           .read<RecoveryGroupController>()
                           .addGroup(newGroup);
                     } on RecoveryGroupAlreadyExists {

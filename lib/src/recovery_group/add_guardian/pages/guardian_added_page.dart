@@ -81,17 +81,19 @@ class GuardianAddedPage extends StatelessWidget {
                       ),
                   ],
                 ),
-                const Text(
-                    'In order to addsecret you need to add from 3 to 5 guardians to the group.'),
+                Text(
+                    'In order to addsecret you need to add from ${recoveryGroup.threshold} to ${recoveryGroup.size} guardians to the group.'),
                 OutlinedButton(
                   child: const Text('Add Guardian'),
-                  onPressed: () {
-                    Navigator.popAndPushNamed(
-                      context,
-                      AddGuardianView.routeName,
-                      arguments: state.groupName,
-                    );
-                  },
+                  onPressed: recoveryGroup.guardians.length < recoveryGroup.size
+                      ? () {
+                          Navigator.popAndPushNamed(
+                            context,
+                            AddGuardianView.routeName,
+                            arguments: state.groupName,
+                          );
+                        }
+                      : null,
                 ),
               ],
             ),
