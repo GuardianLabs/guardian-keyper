@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
+import '../../../core/utils.dart';
 import '../../../theme_data.dart';
 import '../../../widgets/common.dart';
 
@@ -75,10 +75,7 @@ class _ScanQRCodePageState extends State<ScanQRCodePage> {
             child: TextButton(
           child: const Text('Create random code'),
           onPressed: () {
-            const chars = '0123456789ABCDEF';
-            final random = Random();
-            state.guardianCode = String.fromCharCodes(Iterable.generate(
-                64, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
+            state.guardianCode = getRandomString(64);
             state.nextScreen();
           },
         )),

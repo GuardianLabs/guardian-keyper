@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
+import '../core/utils.dart';
+import '../theme_data.dart';
 import '../widgets/common.dart';
 import '../widgets/icon_of.dart';
-import '../intro/intro_view.dart';
-import '../wallet/wallet_select_view.dart';
+
 import '../recovery_group/recovery_group_view.dart';
+import '../recovery_group/create_group/create_group_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -15,57 +18,79 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        primary: true,
-        body: Column(
-          children: [
-            // Header
-            const HeaderBar(
-              title: HeaderBarTitleLogo(),
-              backButton: HeaderBarBackButton(),
-              closeButton: HeaderBarCloseButton(),
-            ),
-            Expanded(
-              child: ListView(
-                restorationId: 'homeListView',
-                padding: const EdgeInsets.all(20),
-                children: [
-                  Padding(
-                    padding: _paddingV5,
-                    child: ListTile(
-                      title: const Text('Intro'),
-                      trailing: const IconOf.app(),
-                      onTap: () =>
-                          Navigator.pushNamed(context, IntroView.routeName),
+      body: Column(
+        children: [
+          const HeaderBar(title: HeaderBarTitleLogo()),
+          Expanded(
+            child: ListView(
+              restorationId: 'homeListView',
+              padding: const EdgeInsets.all(20),
+              children: [
+                Padding(
+                  padding: _paddingV5,
+                  child: ListTile(
+                    title: const Text('Show QR code'),
+                    trailing: const IconOf.app(),
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        alignment: Alignment.center,
+                        backgroundColor: Colors.white,
+                        content: SizedBox(
+                          height: 200,
+                          width: 200,
+                          child: QrImage(data: getRandomString()),
+                        ),
+                      ),
                     ),
                   ),
-                  Padding(
-                    padding: _paddingV5,
-                    child: ListTile(
-                      title: const Text('Connect wallet'),
-                      trailing: const IconOf.connect(),
-                      onTap: () => Navigator.pushNamed(
-                          context, WalletSelectView.routeName),
-                    ),
-                  ),
-                  Padding(
-                    padding: _paddingV5,
-                    child: ListTile(
-                      title: const Text('Create recovery group'),
-                      trailing: const IconOf.app(),
-                      onTap: () => Navigator.pushNamed(
-                          context, RecoveryGroupView.routeName),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            // Footer
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: FooterButton(text: 'Do nothing', onPressed: () {}),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: clBlue,
+        showSelectedLabels: false,
+        unselectedItemColor: clWhite,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.health_and_safety_outlined),
+            label: 'Recovery Groups',
+          ),
+          BottomNavigationBarItem(
+            icon: CircleAvatar(
+              child: Icon(Icons.add, color: clWhite),
+              backgroundColor: clBlue,
             ),
-            Container(height: 50),
-          ],
-        ));
+            label: 'Add Recovery Group',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_none_outlined),
+            label: 'Notifications',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings_outlined),
+            label: 'Settings',
+          ),
+        ],
+        onTap: (value) {
+          switch (value) {
+            case 1:
+              Navigator.pushNamed(context, RecoveryGroupView.routeName);
+              break;
+            case 2:
+              Navigator.pushNamed(context, CreateGroupView.routeName);
+              break;
+            default:
+          }
+        },
+      ),
+    );
   }
 }

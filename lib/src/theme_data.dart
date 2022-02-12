@@ -30,6 +30,7 @@ final theme = ThemeData.light();
 
 final themeDark = ThemeData.dark().copyWith(
   scaffoldBackgroundColor: clIndigo900,
+  canvasColor: clIndigo900,
   cardTheme: CardTheme(
     color: clIndigo700,
     shape: RoundedRectangleBorder(borderRadius: borderRadius),

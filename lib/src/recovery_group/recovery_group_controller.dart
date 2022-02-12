@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../core/utils.dart';
 import 'recovery_group_model.dart';
 import 'recovery_group_service.dart';
 
@@ -10,6 +11,7 @@ class RecoveryGroupController with ChangeNotifier {
   late Map<String, RecoveryGroupModel> _groups;
 
   Map<String, RecoveryGroupModel> get groups => _groups;
+  String get qrCode => getRandomString(64);
 
   Future<void> load() async {
     _groups = await _recoveryGroupService.getGroups();
