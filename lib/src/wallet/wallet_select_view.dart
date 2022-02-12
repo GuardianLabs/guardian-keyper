@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// import '../settings/settings_view.dart';
-import '../widgets/common.dart';
+import '../core/widgets/common.dart';
 
 class WalletSelectView extends StatelessWidget {
   const WalletSelectView({Key? key}) : super(key: key);

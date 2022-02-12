@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provider/provider.dart';
 
-import 'theme_data.dart';
+import 'core/theme_data.dart';
 import 'intro/intro_view.dart';
 import 'home/home_view.dart';
-import 'wallet/wallet_select_view.dart';
-import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
-import 'recovery_group/recovery_group_controller.dart';
 import 'recovery_group/recovery_group_view.dart';
 import 'recovery_group/create_group/create_group_view.dart';
 import 'recovery_group/edit_group/recovery_group_edit_view.dart';
 import 'recovery_group/add_guardian/add_guardian_view.dart';
 import 'recovery_group/add_secret/add_secret_view.dart';
-
-part 'di_provider.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -72,9 +66,6 @@ class App extends StatelessWidget {
               case RecoveryGroupAddSecretView.routeName:
                 return RecoveryGroupAddSecretView(
                     recoveryGroupName: routeSettings.arguments as String);
-
-              case WalletSelectView.routeName:
-                return const WalletSelectView();
 
               case SettingsView.routeName:
                 return const SettingsView();

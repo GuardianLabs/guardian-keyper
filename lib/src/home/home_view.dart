@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../core/utils.dart';
-import '../theme_data.dart';
-import '../widgets/common.dart';
-import '../widgets/icon_of.dart';
+import '../core/theme_data.dart';
+import '../core/widgets/common.dart';
+import '../core/widgets/icon_of.dart';
 
 import '../recovery_group/recovery_group_view.dart';
 import '../recovery_group/create_group/create_group_view.dart';

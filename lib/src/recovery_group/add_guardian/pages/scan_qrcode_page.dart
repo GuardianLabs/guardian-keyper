@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../../../core/utils.dart';
-import '../../../theme_data.dart';
-import '../../../widgets/common.dart';
+import '../../../core/theme_data.dart';
+import '../../../core/widgets/common.dart';
 
 import '../add_guardian_controller.dart';
 

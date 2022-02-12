@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// import '../../widgets/icon_of.dart';
-import '../../widgets/common.dart';
+import '../../core/widgets/common.dart';
 
-// import '../recovery_group_model.dart';
 import '../recovery_group_controller.dart';
 
 class RecoveryGroupAddSecretView extends StatelessWidget {

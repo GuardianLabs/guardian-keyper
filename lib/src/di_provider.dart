@@ -1,4 +1,10 @@
-part of 'app.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'settings/settings_controller.dart';
+import 'recovery_group/recovery_group_controller.dart';
+
+import 'app.dart';
 
 class DIProvider extends StatelessWidget {
   const DIProvider({

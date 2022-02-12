@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../recovery_group_model.dart';
-import '../../core/page_controller.dart';
+import '../../core/controller/page_controller.dart';
 
 class CreateGroupController with ChangeNotifier, PagesController {
   CreateGroupController({required int lastPage}) {

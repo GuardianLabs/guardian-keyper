@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core/page_controller.dart';
+import '../../core/controller/page_controller.dart';
 
 class AddGuardianController with ChangeNotifier, PagesController {
   AddGuardianController({

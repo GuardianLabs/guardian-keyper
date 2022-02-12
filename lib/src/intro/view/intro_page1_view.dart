@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../theme_data.dart';
-import '../../widgets/common.dart';
+import '../../core/theme_data.dart';
+import '../../core/widgets/common.dart';
 
 class IntroPage1View extends StatelessWidget {
   const IntroPage1View({Key? key, required this.onPressed}) : super(key: key);
