@@ -85,7 +85,7 @@ class InputNamePage extends StatelessWidget {
                     }
                     Navigator.popAndPushNamed(
                       context,
-                      AddGuardianView.routeName,
+                      AddGuardianView.routeName + '/showLastPage',
                       arguments: state.groupName,
                     );
                   },

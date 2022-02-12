@@ -4,8 +4,8 @@ import '../recovery_group_model.dart';
 import '../../core/page_controller.dart';
 
 class CreateGroupController with ChangeNotifier, PagesController {
-  CreateGroupController({required int lastScreen}) {
-    this.lastScreen = lastScreen;
+  CreateGroupController({required int lastPage}) {
+    this.lastPage = lastPage;
   }
 
   RecoveryGroupType? _groupType;

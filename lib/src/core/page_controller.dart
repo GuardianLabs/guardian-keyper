@@ -1,25 +1,25 @@
 import 'package:flutter/foundation.dart';
 
 mixin PagesController on ChangeNotifier {
-  late int lastScreen;
-  int currentScreen = 0;
+  late int lastPage;
+  int currentPage = 0;
 
   void gotoScreen(int value) {
-    if (value < 0 || value > lastScreen) return;
-    currentScreen = value;
+    if (value < 0 || value > lastPage) return;
+    currentPage = value;
     notifyListeners();
   }
 
   void nextScreen() {
-    if (currentScreen < lastScreen) {
-      currentScreen++;
+    if (currentPage < lastPage) {
+      currentPage++;
       notifyListeners();
     }
   }
 
   void previousScreen() {
-    if (currentScreen > 0) {
-      currentScreen--;
+    if (currentPage > 0) {
+      currentPage--;
       notifyListeners();
     }
   }

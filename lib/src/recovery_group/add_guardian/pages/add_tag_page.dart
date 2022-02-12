@@ -74,7 +74,9 @@ class AddTagPage extends StatelessWidget {
                       tag: state.guardianTag,
                     ),
                   );
-              state.nextScreen();
+              state.showLastPage
+                  ? state.nextScreen()
+                  : Navigator.of(context).pop();
             },
           ),
         ),

@@ -7,7 +7,7 @@ import '../widgets/common.dart';
 import 'recovery_group_model.dart';
 import 'recovery_group_controller.dart';
 import 'create_group/create_group_view.dart';
-import 'edit/recovery_group_edit_view.dart';
+import 'edit_group/recovery_group_edit_view.dart';
 
 class RecoveryGroupView extends StatefulWidget {
   const RecoveryGroupView({Key? key}) : super(key: key);
@@ -24,13 +24,11 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
 
   @override
   Widget build(BuildContext context) {
-    final recoveryGroupsController =
-        Provider.of<RecoveryGroupController>(context);
-    final recoveryGroups =
-        List<RecoveryGroupModel>.from(recoveryGroupsController.groups.values)
-            .where((element) =>
-                element.name.toLowerCase().startsWith(_filter.toLowerCase()))
-            .toList();
+    final state = Provider.of<RecoveryGroupController>(context);
+    final recoveryGroups = List<RecoveryGroupModel>.from(state.groups.values)
+        .where((element) =>
+            element.name.toLowerCase().startsWith(_filter.toLowerCase()))
+        .toList();
     recoveryGroups.sort((a, b) => a.name.compareTo(b.name));
 
     return Scaffold(
@@ -42,7 +40,6 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
             // Header
             const HeaderBar(
               caption: 'Groups',
-              // title: Text('Groups'),
               backButton: HeaderBarBackButton(),
             ),
             // Search bar
@@ -114,7 +111,7 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
                         ),
                         onTap: () => Navigator.pushNamed(
                             context, RecoveryGroupEditView.routeName,
-                            arguments: group),
+                            arguments: group.name),
                       ),
                     )
                 ],

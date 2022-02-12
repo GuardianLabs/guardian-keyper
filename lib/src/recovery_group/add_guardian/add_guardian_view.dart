@@ -9,34 +9,44 @@ import 'pages/add_tag_page.dart';
 import 'pages/guardian_added_page.dart';
 
 class AddGuardianView extends StatelessWidget {
-  const AddGuardianView({Key? key, required this.groupName}) : super(key: key);
-  // AddGuardianView({required this.groupName});
+  const AddGuardianView({
+    Key? key,
+    this.showLastPage = false,
+    required this.groupName,
+  }) : super(key: key);
+
+  const AddGuardianView.showLastPage({
+    Key? key,
+    this.showLastPage = true,
+    required this.groupName,
+  }) : super(key: key);
 
   static const routeName = '/recovery_group_add_guardian';
+  static const _pages = [
+    AddGuardianPage(),
+    ScanQRCodePage(),
+    LoadingPage(),
+    AddTagPage(),
+    GuardianAddedPage(),
+  ];
 
+  final bool showLastPage;
   final String groupName;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) =>
-          AddGuardianController(lastScreen: 4, groupName: groupName),
+      create: (context) => AddGuardianController(
+        lastPage: _pages.length - 1,
+        groupName: groupName,
+        showLastPage: showLastPage,
+      ),
       child: Consumer<AddGuardianController>(
         builder: (context, value, child) {
-          switch (value.currentScreen) {
-            case 0:
-              return const Scaffold(body: AddGuardianPage());
-            case 1:
-              return const Scaffold(body: ScanQRCodePage());
-            case 2:
-              return const Scaffold(body: LoadingPage());
-            case 3:
-              return const Scaffold(
-                  resizeToAvoidBottomInset: false, body: AddTagPage());
-            case 4:
-              return const Scaffold(body: GuardianAddedPage());
-          }
-          return const Scaffold(); // Dumb
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: _pages[value.currentPage],
+          );
         },
       ),
     );

@@ -3,11 +3,16 @@ import 'package:flutter/material.dart';
 import '../../core/page_controller.dart';
 
 class AddGuardianController with ChangeNotifier, PagesController {
-  AddGuardianController({required int lastScreen, required this.groupName}) {
-    this.lastScreen = lastScreen;
+  AddGuardianController({
+    required int lastPage,
+    required this.groupName,
+    this.showLastPage = false,
+  }) {
+    this.lastPage = lastPage;
   }
 
   final String groupName;
+  final bool showLastPage;
   String guardianName = '';
   String guardianCode = '';
   String _tag = '';

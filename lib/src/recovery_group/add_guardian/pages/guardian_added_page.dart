@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 
 import '../../../theme_data.dart';
 import '../../../widgets/common.dart';
-import '../../recovery_group_model.dart';
 import '../add_guardian_view.dart';
+import '../../add_secret/add_secret_view.dart';
 
+import '../../recovery_group_model.dart';
 import '../add_guardian_controller.dart';
 import '../../recovery_group_controller.dart';
 
@@ -89,7 +90,7 @@ class GuardianAddedPage extends StatelessWidget {
                       ? () {
                           Navigator.popAndPushNamed(
                             context,
-                            AddGuardianView.routeName,
+                            AddGuardianView.routeName + '/showLastPage',
                             arguments: state.groupName,
                           );
                         }
@@ -106,7 +107,11 @@ class GuardianAddedPage extends StatelessWidget {
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: FooterButton(
               text: 'Add Secret',
-              onPressed: Navigator.of(context).pop,
+              onPressed: () => Navigator.popAndPushNamed(
+                context,
+                RecoveryGroupAddSecretView.routeName,
+                arguments: state.groupName,
+              ),
             ),
           ),
         Container(height: 50),

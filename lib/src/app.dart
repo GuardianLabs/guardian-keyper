@@ -10,12 +10,12 @@ import 'wallet/wallet_select_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
-import 'recovery_group/recovery_group_model.dart';
 import 'recovery_group/recovery_group_controller.dart';
 import 'recovery_group/recovery_group_view.dart';
 import 'recovery_group/create_group/create_group_view.dart';
-import 'recovery_group/edit/recovery_group_edit_view.dart';
+import 'recovery_group/edit_group/recovery_group_edit_view.dart';
 import 'recovery_group/add_guardian/add_guardian_view.dart';
+import 'recovery_group/add_secret/add_secret_view.dart';
 
 part 'di_provider.dart';
 
@@ -50,22 +50,37 @@ class App extends StatelessWidget {
             switch (routeSettings.name) {
               case IntroView.routeName:
                 return const IntroView();
+
               case RecoveryGroupView.routeName:
                 return const RecoveryGroupView();
+
               case CreateGroupView.routeName:
                 return const CreateGroupView();
+
               case RecoveryGroupEditView.routeName:
                 return RecoveryGroupEditView(
-                    recoveryGroup:
-                        routeSettings.arguments as RecoveryGroupModel);
+                    recoveryGroupName: routeSettings.arguments as String);
+
               case AddGuardianView.routeName:
                 return AddGuardianView(
                     groupName: routeSettings.arguments as String);
+
+              case AddGuardianView.routeName + '/showLastPage':
+                return AddGuardianView.showLastPage(
+                    groupName: routeSettings.arguments as String);
+
+              case RecoveryGroupAddSecretView.routeName:
+                return RecoveryGroupAddSecretView(
+                    recoveryGroupName: routeSettings.arguments as String);
+
               case WalletSelectView.routeName:
                 return const WalletSelectView();
+
               case SettingsView.routeName:
                 return const SettingsView();
+
               case HomeView.routeName:
+
               default:
                 return const HomeView();
             }

@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:guardian_network/src/widgets/icon_of.dart';
+import 'package:provider/provider.dart';
 
+import '../../widgets/icon_of.dart';
 import '../../widgets/common.dart';
 
-import '../recovery_group_model.dart';
+// import '../recovery_group_model.dart';
+import '../recovery_group_controller.dart';
 
 class RecoveryGroupEditView extends StatelessWidget {
   const RecoveryGroupEditView({
     Key? key,
-    required this.recoveryGroup,
+    required this.recoveryGroupName,
   }) : super(key: key);
 
   static const routeName = '/recovery_group_edit';
-  // static const _paddingV5 = EdgeInsets.only(top: 5, bottom: 5);
 
-  final RecoveryGroupModel recoveryGroup;
+  final String recoveryGroupName;
 
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<RecoveryGroupController>(context);
+    final recoveryGroup = state.groups[recoveryGroupName]!;
     return Scaffold(
         primary: true,
         body: Column(
