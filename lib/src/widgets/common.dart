@@ -237,14 +237,18 @@ class GuardianListTileWidget extends StatelessWidget {
     Key? key,
     this.iconColor = clGreen,
     required this.name,
+    this.nameColor = clWhite,
     required this.code,
     this.tag,
+    this.status,
   }) : super(key: key);
 
   final Color iconColor;
   final String name;
+  final Color? nameColor;
   final String code;
   final String? tag;
+  final Color? status;
 
   @override
   Widget build(BuildContext context) {
@@ -253,9 +257,10 @@ class GuardianListTileWidget extends StatelessWidget {
           backgroundColor: iconColor,
           foregroundColor: clWhite,
           child: const Icon(Icons.health_and_safety_outlined)),
+      trailing: status == null ? null : DotColored(color: status!),
       title: Row(
         children: [
-          Text(name, maxLines: 1),
+          Text(name, maxLines: 1, style: TextStyle(color: nameColor)),
           if (tag != null && tag!.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(left: 8.0),

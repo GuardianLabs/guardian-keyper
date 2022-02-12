@@ -63,32 +63,6 @@ class RecoveryGroupModel {
   }
 }
 
-@immutable
-class RecoveryGroupGuardianModel {
-  const RecoveryGroupGuardianModel({
-    required this.name,
-    required this.code,
-    this.tag = '',
-  })  : assert(name != ''),
-        assert(code != '');
-
-  final String name;
-  final String code;
-  final String tag;
-}
-
-@immutable
-class RecoveryGroupSecretModel {
-  const RecoveryGroupSecretModel({
-    required this.name,
-    required this.secret,
-  })  : assert(name != ''),
-        assert(secret != '');
-
-  final String name;
-  final String secret;
-}
-
 class RecoveryGroupGuardianAlreadyExists implements Exception {
   static const description =
       'Guardian with given name already exists in that group!';
@@ -101,4 +75,38 @@ class RecoveryGroupGuardianLimitexhausted implements Exception {
 class RecoveryGroupSecretAlreadyExists implements Exception {
   static const description =
       'Secret with given name already exists in that group!';
+}
+
+// RecoveryGroupGuardianModel
+
+enum RecoveryGroupGuardianStatus { connected, notConnected, missed }
+
+@immutable
+class RecoveryGroupGuardianModel {
+  const RecoveryGroupGuardianModel({
+    required this.name,
+    required this.code,
+    this.tag = '',
+    this.status = RecoveryGroupGuardianStatus.notConnected,
+  })  : assert(name != ''),
+        assert(code != '');
+
+  final String name;
+  final String code;
+  final String tag;
+  final RecoveryGroupGuardianStatus status;
+}
+
+// RecoveryGroupSecretModel
+
+@immutable
+class RecoveryGroupSecretModel {
+  const RecoveryGroupSecretModel({
+    required this.name,
+    required this.secret,
+  })  : assert(name != ''),
+        assert(secret != '');
+
+  final String name;
+  final String secret;
 }

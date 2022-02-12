@@ -1,34 +1,53 @@
 import 'recovery_group_model.dart';
 
 const _group1 = {
-  '1': RecoveryGroupGuardianModel(name: '1', code: '1'),
+  'Melly Caramelly': RecoveryGroupGuardianModel(
+    name: 'Melly Caramelly',
+    code: '01234567890ABCDEF',
+    tag: 'Wife`s iPhone',
+    status: RecoveryGroupGuardianStatus.missed,
+  ),
 };
 
 const _group2 = {
   ..._group1,
-  '2': RecoveryGroupGuardianModel(name: '2', code: '2'),
+  'My iPad': RecoveryGroupGuardianModel(
+    name: 'My iPad',
+    code: '01234567890ABCDEF',
+    status: RecoveryGroupGuardianStatus.notConnected,
+  ),
 };
 
 const _group3 = {
   ..._group2,
-  '3': RecoveryGroupGuardianModel(name: '3', code: '3'),
+  'My MacBook Pro': RecoveryGroupGuardianModel(
+    name: 'My MacBook Pro',
+    code: '01234567890ABCDEF',
+    status: RecoveryGroupGuardianStatus.connected,
+  ),
 };
 
 Map<String, RecoveryGroupModel> _groups = {
-  'Fake group 1': const RecoveryGroupModel(
-    name: 'Fake group 1',
+  'MetaMask Wallet': const RecoveryGroupModel(
+    name: 'MetaMask Wallet',
     type: RecoveryGroupType.devices,
     guardians: _group1,
   ),
-  'Fake group 2': const RecoveryGroupModel(
-    name: 'Fake group 2',
+  'Binance Pass': const RecoveryGroupModel(
+    name: 'Binance Pass',
     type: RecoveryGroupType.devices,
     guardians: _group2,
   ),
-  'Fake group 3': const RecoveryGroupModel(
-    name: 'Fake group 3',
+  'Phantom wallet': const RecoveryGroupModel(
+    name: 'Phantom wallet',
     type: RecoveryGroupType.devices,
     guardians: _group3,
+    secrets: {
+      'SecretName': RecoveryGroupSecretModel(
+        name: 'SecretName',
+        secret: 'My very secret secret',
+      ),
+    },
   ),
 };
 

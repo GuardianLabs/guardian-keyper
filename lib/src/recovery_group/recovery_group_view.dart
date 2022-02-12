@@ -39,7 +39,7 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
           children: [
             // Header
             const HeaderBar(
-              caption: 'Groups',
+              caption: 'Recovery Groups',
               backButton: HeaderBarBackButton(),
             ),
             // Search bar
@@ -86,9 +86,10 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
                 children: [
                   for (final group in recoveryGroups)
                     Padding(
-                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      padding: const EdgeInsets.only(
+                          top: 1, bottom: 1, left: 20, right: 20),
                       child: ListTile(
-                        tileColor: clIndigo900,
+                        tileColor: clIndigo700,
                         textColor: group.status == RecoveryGroupStatus.missed
                             ? clRed
                             : null,
