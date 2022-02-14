@@ -6,7 +6,6 @@ import '../../../core/widgets/common.dart';
 import '../add_guardian_view.dart';
 import '../../add_secret/add_secret_view.dart';
 
-import '../../recovery_group_model.dart';
 import '../add_guardian_controller.dart';
 import '../../recovery_group_controller.dart';
 
@@ -102,7 +101,7 @@ class GuardianAddedPage extends StatelessWidget {
         ),
         Expanded(child: Container()),
         // Footer
-        if (recoveryGroup.status != RecoveryGroupStatus.missed)
+        if (!recoveryGroup.isMissed)
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: FooterButton(

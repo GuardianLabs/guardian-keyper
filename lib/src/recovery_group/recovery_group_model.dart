@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-enum RecoveryGroupStatus { completed, notCompleted, missed }
 enum RecoveryGroupType { devices, fiduciaries }
 
 @immutable
@@ -28,6 +27,9 @@ class RecoveryGroupModel {
     if (guardians.length == size) {
       throw RecoveryGroupGuardianLimitexhausted();
     }
+    if (guardian.code.isEmpty) {
+      throw RecoveryGroupGuardianCodeIsEmpty();
+    }
     return RecoveryGroupModel(
       name: name,
       type: type,
@@ -42,6 +44,9 @@ class RecoveryGroupModel {
     if (secrets.containsKey(secret.name)) {
       throw RecoveryGroupSecretAlreadyExists();
     }
+    if (secret.token.isEmpty) {
+      throw RecoveryGroupSecretIsEmpty();
+    }
     return RecoveryGroupModel(
       name: name,
       type: type,
@@ -52,15 +57,9 @@ class RecoveryGroupModel {
     );
   }
 
-  RecoveryGroupStatus get status {
-    if (guardians.length == size) {
-      return RecoveryGroupStatus.completed;
-    }
-    if (guardians.length < threshold) {
-      return RecoveryGroupStatus.missed;
-    }
-    return RecoveryGroupStatus.notCompleted;
-  }
+  bool get isCompleted => guardians.length == size;
+  bool get isMissed => guardians.length < threshold;
+  bool get isNotCompleted => !isCompleted && !isMissed;
 }
 
 class RecoveryGroupGuardianAlreadyExists implements Exception {
@@ -72,29 +71,32 @@ class RecoveryGroupGuardianLimitexhausted implements Exception {
   static const description = 'Guardian group size limit exhausted!';
 }
 
+class RecoveryGroupGuardianCodeIsEmpty implements Exception {
+  static const description = 'Guardian code could not be empty!';
+}
+
 class RecoveryGroupSecretAlreadyExists implements Exception {
   static const description =
       'Secret with given name already exists in that group!';
 }
 
-// RecoveryGroupGuardianModel
+class RecoveryGroupSecretIsEmpty implements Exception {
+  static const description = 'Secret could not be empty!';
+}
 
-enum RecoveryGroupGuardianStatus { connected, notConnected, missed }
+// RecoveryGroupGuardianModel
 
 @immutable
 class RecoveryGroupGuardianModel {
   const RecoveryGroupGuardianModel({
     required this.name,
-    required this.code,
+    this.code = '',
     this.tag = '',
-    this.status = RecoveryGroupGuardianStatus.notConnected,
-  })  : assert(name != ''),
-        assert(code != '');
+  }) : assert(name != '');
 
   final String name;
   final String code;
   final String tag;
-  final RecoveryGroupGuardianStatus status;
 }
 
 // RecoveryGroupSecretModel
@@ -103,10 +105,9 @@ class RecoveryGroupGuardianModel {
 class RecoveryGroupSecretModel {
   const RecoveryGroupSecretModel({
     required this.name,
-    required this.secret,
-  })  : assert(name != ''),
-        assert(secret != '');
+    this.token = '',
+  }) : assert(name != '');
 
   final String name;
-  final String secret;
+  final String token;
 }

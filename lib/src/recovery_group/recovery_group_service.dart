@@ -3,9 +3,8 @@ import 'recovery_group_model.dart';
 const _group1 = {
   'Melly Caramelly': RecoveryGroupGuardianModel(
     name: 'Melly Caramelly',
-    code: '01234567890ABCDEF',
+    code: '',
     tag: 'Wife`s iPhone',
-    status: RecoveryGroupGuardianStatus.missed,
   ),
 };
 
@@ -14,7 +13,6 @@ const _group2 = {
   'My iPad': RecoveryGroupGuardianModel(
     name: 'My iPad',
     code: '01234567890ABCDEF',
-    status: RecoveryGroupGuardianStatus.notConnected,
   ),
 };
 
@@ -23,7 +21,6 @@ const _group3 = {
   'My MacBook Pro': RecoveryGroupGuardianModel(
     name: 'My MacBook Pro',
     code: '01234567890ABCDEF',
-    status: RecoveryGroupGuardianStatus.connected,
   ),
 };
 
@@ -45,7 +42,7 @@ Map<String, RecoveryGroupModel> _groups = {
     secrets: {
       'SecretName': RecoveryGroupSecretModel(
         name: 'SecretName',
-        secret: 'My very secret secret',
+        token: 'My very secret secret',
       ),
     },
   ),

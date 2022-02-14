@@ -90,12 +90,8 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
                           top: 1, bottom: 1, left: 20, right: 20),
                       child: ListTile(
                         tileColor: clIndigo700,
-                        textColor: group.status == RecoveryGroupStatus.missed
-                            ? clRed
-                            : null,
-                        iconColor: group.status == RecoveryGroupStatus.missed
-                            ? clRed
-                            : clIndigo700,
+                        textColor: group.isMissed ? clRed : null,
+                        iconColor: group.isMissed ? clRed : clIndigo700,
                         title: Text(group.name),
                         leading: const IconOf.app(),
                         trailing: Row(
@@ -107,7 +103,11 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
                                   '${group.guardians.length}/${group.size}'),
                             ),
                             DotColored(
-                                color: _colorOfGroupStatus(group.status)),
+                                color: group.isCompleted
+                                    ? clGreen
+                                    : group.isNotCompleted
+                                        ? clYellow
+                                        : clRed),
                           ],
                         ),
                         onTap: () => Navigator.pushNamed(
@@ -133,16 +133,5 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
             Container(height: 50),
           ],
         ));
-  }
-
-  Color _colorOfGroupStatus(RecoveryGroupStatus status) {
-    switch (status) {
-      case RecoveryGroupStatus.completed:
-        return clGreen;
-      case RecoveryGroupStatus.notCompleted:
-        return clYellow;
-      case RecoveryGroupStatus.missed:
-        return clRed;
-    }
   }
 }

@@ -6,7 +6,6 @@ import '../../core/widgets/common.dart';
 import '../add_guardian/add_guardian_view.dart';
 
 import '../recovery_group_controller.dart';
-import '../recovery_group_model.dart';
 
 class RecoveryGroupEditView extends StatelessWidget {
   const RecoveryGroupEditView({
@@ -60,28 +59,21 @@ class RecoveryGroupEditView extends StatelessWidget {
                       name: guardian.name,
                       code: guardian.code,
                       tag: guardian.tag,
-                      nameColor:
-                          guardian.status == RecoveryGroupGuardianStatus.missed
-                              ? clRed
-                              : clWhite,
-                      iconColor:
-                          guardian.status == RecoveryGroupGuardianStatus.missed
-                              ? clRed
-                              : clGreen,
-                      status: _colorOfGuardianStatus(guardian.status),
+                      nameColor: guardian.code.isEmpty ? clRed : clWhite,
+                      iconColor: guardian.code.isEmpty ? clRed : clGreen,
+                      status: guardian.code.isEmpty ? clRed : clGreen,
                     ),
                   ListTile(
                     title: ElevatedButton(
                       child: const Text('Add Guardian'),
-                      onPressed:
-                          recoveryGroup.status == RecoveryGroupStatus.completed
-                              ? null
-                              : () => Navigator.of(context).pushNamed(
-                                  AddGuardianView.routeName,
-                                  arguments: recoveryGroupName),
+                      onPressed: recoveryGroup.isCompleted
+                          ? null
+                          : () => Navigator.of(context).pushNamed(
+                              AddGuardianView.routeName,
+                              arguments: recoveryGroupName),
                     ),
                   ),
-                  if (recoveryGroup.status != RecoveryGroupStatus.missed)
+                  if (!recoveryGroup.isMissed)
                     const ListTile(
                       title: ElevatedButton(
                         child: Text('Test Guardians (soon)'),
@@ -92,7 +84,7 @@ class RecoveryGroupEditView extends StatelessWidget {
               ),
             ),
             // Footer
-            if (recoveryGroup.status != RecoveryGroupStatus.missed)
+            if (!recoveryGroup.isMissed)
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: recoveryGroup.secrets.isEmpty
@@ -102,16 +94,5 @@ class RecoveryGroupEditView extends StatelessWidget {
             Container(height: 50),
           ],
         ));
-  }
-
-  Color? _colorOfGuardianStatus(RecoveryGroupGuardianStatus status) {
-    switch (status) {
-      case RecoveryGroupGuardianStatus.connected:
-        return null;
-      case RecoveryGroupGuardianStatus.notConnected:
-        return clYellow;
-      case RecoveryGroupGuardianStatus.missed:
-        return clRed;
-    }
   }
 }
