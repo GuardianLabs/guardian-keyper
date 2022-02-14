@@ -17,7 +17,7 @@ class CreateGroupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => CreateGroupController(lastPage: _pages.length - 1),
+      create: (context) => CreateGroupController(pagesCount: _pages.length),
       child: Consumer<CreateGroupController>(
         builder: (context, value, child) {
           return Scaffold(

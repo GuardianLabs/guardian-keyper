@@ -59,7 +59,7 @@ class App extends StatelessWidget {
                 return AddGuardianView(
                     groupName: routeSettings.arguments as String);
 
-              case AddGuardianView.routeName + '/showLastPage':
+              case AddGuardianView.routeNameShowLastPage:
                 return AddGuardianView.showLastPage(
                     groupName: routeSettings.arguments as String);
 

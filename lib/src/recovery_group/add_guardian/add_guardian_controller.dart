@@ -4,11 +4,11 @@ import '../../core/controller/page_controller.dart';
 
 class AddGuardianController with ChangeNotifier, PagesController {
   AddGuardianController({
-    required int lastPage,
+    required int pagesCount,
     required this.groupName,
     this.showLastPage = false,
   }) {
-    this.lastPage = lastPage;
+    this.pagesCount = pagesCount;
   }
 
   final String groupName;

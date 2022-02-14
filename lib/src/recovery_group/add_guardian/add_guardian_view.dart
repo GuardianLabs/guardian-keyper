@@ -22,6 +22,9 @@ class AddGuardianView extends StatelessWidget {
   }) : super(key: key);
 
   static const routeName = '/recovery_group_add_guardian';
+  static const routeNameShowLastPage =
+      '/recovery_group_add_guardian?showLastPage';
+
   static const _pages = [
     AddGuardianPage(),
     ScanQRCodePage(),
@@ -37,7 +40,7 @@ class AddGuardianView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => AddGuardianController(
-        lastPage: _pages.length - 1,
+        pagesCount: _pages.length,
         groupName: groupName,
         showLastPage: showLastPage,
       ),

@@ -4,8 +4,8 @@ import '../recovery_group_model.dart';
 import '../../core/controller/page_controller.dart';
 
 class CreateGroupController with ChangeNotifier, PagesController {
-  CreateGroupController({required int lastPage}) {
-    this.lastPage = lastPage;
+  CreateGroupController({required int pagesCount}) {
+    this.pagesCount = pagesCount;
   }
 
   RecoveryGroupType? _groupType;
