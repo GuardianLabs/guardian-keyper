@@ -52,4 +52,6 @@ class RecoveryGroupService {
   Future<Map<String, RecoveryGroupModel>> getGroups() async {
     return _groups;
   }
+
+  Future<void> setGroups(Map<String, RecoveryGroupModel> groups) async {}
 }

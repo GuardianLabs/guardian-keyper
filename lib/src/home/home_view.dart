@@ -1,59 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
-import '../core/utils.dart';
+// import '../core/utils.dart';
 import '../core/theme_data.dart';
-import '../core/widgets/common.dart';
-import '../core/widgets/icon_of.dart';
-
+// import '../core/widgets/common.dart';
+// import '../core/widgets/icon_of.dart';
+import '../dashboard/dashboard_view.dart';
 import '../recovery_group/recovery_group_view.dart';
 import '../recovery_group/create_group/create_group_view.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
   static const routeName = '/';
-  static const _paddingV5 = EdgeInsets.only(top: 5, bottom: 5);
+
+  static const _pages = [
+    DashboardView(),
+    RecoveryGroupView(),
+  ];
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  int _page = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const HeaderBar(title: HeaderBarTitleLogo()),
-          Expanded(
-            child: ListView(
-              restorationId: 'homeListView',
-              padding: const EdgeInsets.all(20),
-              children: [
-                Padding(
-                  padding: _paddingV5,
-                  child: ListTile(
-                    title: const Text('Show QR code'),
-                    trailing: const IconOf.app(),
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        alignment: Alignment.center,
-                        backgroundColor: Colors.white,
-                        content: SizedBox(
-                          height: 200,
-                          width: 200,
-                          child: QrImage(data: getRandomString()),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        child: HomeView._pages[_page],
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: clBlue,
         showSelectedLabels: false,
         unselectedItemColor: clWhite,
+        currentIndex: _page,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
@@ -81,8 +64,12 @@ class HomeView extends StatelessWidget {
         ],
         onTap: (value) {
           switch (value) {
+            case 0:
+              setState(() => _page = 0);
+              break;
             case 1:
-              Navigator.pushNamed(context, RecoveryGroupView.routeName);
+              setState(() => _page = 1);
+              // Navigator.pushNamed(context, RecoveryGroupView.routeName);
               break;
             case 2:
               Navigator.pushNamed(context, CreateGroupView.routeName);

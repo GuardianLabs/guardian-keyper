@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/add_secret_page.dart';
+import 'pages/split_and_share_page.dart';
+import 'pages/secret_transmitting_page.dart';
 
-// import '../recovery_group_controller.dart';
 import 'add_secret_controller.dart';
 
 class RecoveryGroupAddSecretView extends StatelessWidget {
@@ -15,6 +16,8 @@ class RecoveryGroupAddSecretView extends StatelessWidget {
   static const routeName = '/recovery_group_add_secret';
   static const _pages = [
     AddSecretPage(),
+    SplitAndShareSecretPage(),
+    SecretTransmittingPage(),
   ];
 
   final String recoveryGroupName;

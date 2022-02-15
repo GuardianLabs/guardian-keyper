@@ -6,7 +6,7 @@ import '../core/widgets/icon_of.dart';
 import '../core/widgets/common.dart';
 import 'recovery_group_model.dart';
 import 'recovery_group_controller.dart';
-import 'create_group/create_group_view.dart';
+// import 'create_group/create_group_view.dart';
 import 'edit_group/recovery_group_edit_view.dart';
 
 class RecoveryGroupView extends StatefulWidget {
@@ -40,7 +40,7 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
             // Header
             const HeaderBar(
               caption: 'Recovery Groups',
-              backButton: HeaderBarBackButton(),
+              // backButton: HeaderBarBackButton(),
             ),
             // Search bar
             Padding(
@@ -119,18 +119,18 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
               ),
             ),
             // Footer
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: FooterButton(
-                text: 'Create New Group',
-                onPressed: () {
-                  _filter = '';
-                  _ctrl.text = '';
-                  Navigator.pushNamed(context, CreateGroupView.routeName);
-                },
-              ),
-            ),
-            Container(height: 50),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 20, right: 20),
+            //   child: FooterButton(
+            //     text: 'Create New Group',
+            //     onPressed: () {
+            //       _filter = '';
+            //       _ctrl.text = '';
+            //       Navigator.pushNamed(context, CreateGroupView.routeName);
+            //     },
+            //   ),
+            // ),
+            // Container(height: 50),
           ],
         ));
   }

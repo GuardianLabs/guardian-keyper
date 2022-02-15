@@ -17,12 +17,17 @@ class RecoveryGroupController with ChangeNotifier {
     _groups = await _recoveryGroupService.getGroups();
   }
 
+  Future<void> _save() async {
+    await _recoveryGroupService.setGroups(_groups);
+    notifyListeners();
+  }
+
   Future<void> addGroup(RecoveryGroupModel group) async {
     if (_groups.containsKey(group.name)) {
       throw RecoveryGroupAlreadyExists();
     }
     _groups[group.name] = group;
-    notifyListeners();
+    await _save();
   }
 
   Future<void> addGuardian(
@@ -34,7 +39,21 @@ class RecoveryGroupController with ChangeNotifier {
     }
     final group = _groups[groupName]!;
     _groups[groupName] = group.addGuardian(guardian);
-    notifyListeners();
+    await _save();
+  }
+
+  Future<void> addSecret(
+    String groupName,
+    RecoveryGroupSecretModel secret,
+  ) async {
+    // TBD: do all checks
+    // if (_groups.containsKey(groupName)) {
+    //   throw RecoveryGroupAlreadyExists();
+    // }
+    final group = _groups[groupName]!;
+    final updatedgroup = group.addSecret(secret);
+    _groups[groupName] = updatedgroup;
+    await _save();
   }
 }
 
