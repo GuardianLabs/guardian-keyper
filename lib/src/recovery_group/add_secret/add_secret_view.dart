@@ -13,7 +13,7 @@ class RecoveryGroupAddSecretView extends StatelessWidget {
     required this.recoveryGroupName,
   }) : super(key: key);
 
-  static const routeName = '/recovery_group_add_secret';
+  static const routeName = '/recovery_group/add_secret';
   static const _pages = [
     AddSecretPage(),
     SplitAndShareSecretPage(),

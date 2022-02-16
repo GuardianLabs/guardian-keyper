@@ -12,6 +12,7 @@ import 'recovery_group/create_group/create_group_view.dart';
 import 'recovery_group/edit_group/recovery_group_edit_view.dart';
 import 'recovery_group/add_guardian/add_guardian_view.dart';
 import 'recovery_group/add_secret/add_secret_view.dart';
+import 'recovery_group/recovery_secret/recovery_secret_view.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -65,6 +66,10 @@ class App extends StatelessWidget {
 
               case RecoveryGroupAddSecretView.routeName:
                 return RecoveryGroupAddSecretView(
+                    recoveryGroupName: routeSettings.arguments as String);
+
+              case RecoveryGroupRecoverySecretView.routeName:
+                return RecoveryGroupRecoverySecretView(
                     recoveryGroupName: routeSettings.arguments as String);
 
               case SettingsView.routeName:

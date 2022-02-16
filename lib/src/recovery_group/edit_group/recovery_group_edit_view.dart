@@ -5,6 +5,7 @@ import '../../core/theme_data.dart';
 import '../../core/widgets/common.dart';
 import '../add_guardian/add_guardian_view.dart';
 import '../add_secret/add_secret_view.dart';
+import '../recovery_secret/recovery_secret_view.dart';
 
 import '../recovery_group_controller.dart';
 
@@ -94,7 +95,11 @@ class RecoveryGroupEditView extends StatelessWidget {
                         onPressed: () => Navigator.of(context).pushNamed(
                             RecoveryGroupAddSecretView.routeName,
                             arguments: recoveryGroupName))
-                    : FooterButton(text: 'Secret Recovery', onPressed: () {}),
+                    : FooterButton(
+                        text: 'Secret Recovery',
+                        onPressed: () => Navigator.of(context).pushNamed(
+                            RecoveryGroupRecoverySecretView.routeName,
+                            arguments: recoveryGroupName)),
               ),
             Container(height: 50),
           ],
