@@ -89,7 +89,7 @@ class GuardianAddedPage extends StatelessWidget {
                       ? () {
                           Navigator.popAndPushNamed(
                             context,
-                            AddGuardianView.routeName + '/showLastPage',
+                            AddGuardianView.routeNameShowLastPage,
                             arguments: state.groupName,
                           );
                         }
