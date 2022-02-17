@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // import '../core/utils.dart';
 import '../core/theme_data.dart';
 // import '../core/widgets/common.dart';
 // import '../core/widgets/icon_of.dart';
 import '../dashboard/dashboard_view.dart';
+import '../settings/settings_view.dart';
 import '../recovery_group/recovery_group_view.dart';
 import '../recovery_group/create_group/create_group_view.dart';
+
+import '../recovery_group/recovery_group_controller.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -16,6 +20,9 @@ class HomeView extends StatefulWidget {
   static const _pages = [
     DashboardView(),
     RecoveryGroupView(),
+    null,
+    null,
+    SettingsView(),
   ];
 
   @override
@@ -27,6 +34,8 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<RecoveryGroupController>(context);
+    controller.runtimeType;
     return Scaffold(
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),
@@ -73,6 +82,9 @@ class _HomeViewState extends State<HomeView> {
               break;
             case 2:
               Navigator.pushNamed(context, CreateGroupView.routeName);
+              break;
+            case 4:
+              setState(() => _page = 4);
               break;
             default:
           }

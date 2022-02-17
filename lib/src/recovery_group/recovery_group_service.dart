@@ -38,4 +38,6 @@ class RecoveryGroupService {
     });
     _storage.write(key: _key, value: value);
   }
+
+  Future<void> clearGroups() async => _storage.delete(key: _key);
 }

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'settings_controller.dart';
+import '../recovery_group/recovery_group_controller.dart';
 
-/// Displays the various settings that can be customized by the user.
-///
-/// When a user changes a setting, the SettingsController is updated and
-/// Widgets that listen to the SettingsController are rebuilt.
+import '../core/widgets/common.dart';
+
 class SettingsView extends StatelessWidget {
   const SettingsView({Key? key}) : super(key: key);
 
@@ -15,36 +14,47 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<SettingsController>(context);
+    final recoveryGroupscontroller =
+        Provider.of<RecoveryGroupController>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        // Glue the SettingsController to the theme selection DropdownButton.
-        //
-        // When a user selects a theme from the dropdown list, the
-        // SettingsController is updated, which rebuilds the MaterialApp.
-        child: DropdownButton<ThemeMode>(
-          // Read the selected themeMode from the controller
-          value: controller.themeMode,
-          // Call the updateThemeMode method any time the user selects a theme.
-          onChanged: controller.updateThemeMode,
-          items: const [
-            DropdownMenuItem(
-              value: ThemeMode.system,
-              child: Text('System Theme'),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          const HeaderBar(caption: 'Settings'),
+          // Theme
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: DropdownButton<ThemeMode>(
+              value: controller.themeMode,
+              onChanged: null,
+              // onChanged: controller.updateThemeMode,
+              items: const [
+                DropdownMenuItem(
+                  value: ThemeMode.system,
+                  child: Text('System Theme'),
+                ),
+                DropdownMenuItem(
+                  value: ThemeMode.light,
+                  child: Text('Light Theme'),
+                ),
+                DropdownMenuItem(
+                  value: ThemeMode.dark,
+                  child: Text('Dark Theme'),
+                )
+              ],
             ),
-            DropdownMenuItem(
-              value: ThemeMode.light,
-              child: Text('Light Theme'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: ElevatedButton(
+              child: const Text('Delete all groups'),
+              onPressed: recoveryGroupscontroller.clear,
             ),
-            DropdownMenuItem(
-              value: ThemeMode.dark,
-              child: Text('Dark Theme'),
-            )
-          ],
-        ),
+          ),
+          // Footer
+          Expanded(child: Container()),
+        ],
       ),
     );
   }

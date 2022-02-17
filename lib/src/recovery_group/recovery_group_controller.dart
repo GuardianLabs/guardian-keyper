@@ -22,6 +22,12 @@ class RecoveryGroupController with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> clear() async {
+    await _recoveryGroupService.clearGroups();
+    _groups.clear();
+    notifyListeners();
+  }
+
   Future<void> addGroup(RecoveryGroupModel group) async {
     if (_groups.containsKey(group.name)) {
       throw RecoveryGroupAlreadyExists();

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../core/theme_data.dart';
 import '../core/widgets/icon_of.dart';
 import '../core/widgets/common.dart';
+import 'create_group/create_group_view.dart';
 import 'recovery_group_model.dart';
 import 'recovery_group_controller.dart';
 // import 'create_group/create_group_view.dart';
@@ -24,15 +25,38 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
 
   @override
   Widget build(BuildContext context) {
-    final state = Provider.of<RecoveryGroupController>(context);
-    final recoveryGroups = List<RecoveryGroupModel>.from(state.groups.values)
-        .where((element) =>
-            element.name.toLowerCase().startsWith(_filter.toLowerCase()))
-        .toList();
+    final controller = Provider.of<RecoveryGroupController>(context);
+
+    if (controller.groups.isEmpty) {
+      return Scaffold(
+          body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const IconOf.group(),
+          const Padding(
+            padding: EdgeInsets.all(20),
+            child: Text('You don`t have any recovery groups'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: FooterButton(
+              text: 'Create Recovery Group',
+              onPressed: () =>
+                  Navigator.pushNamed(context, CreateGroupView.routeName),
+            ),
+          ),
+        ],
+      ));
+    }
+    final recoveryGroups =
+        List<RecoveryGroupModel>.from(controller.groups.values)
+            .where((element) =>
+                element.name.toLowerCase().startsWith(_filter.toLowerCase()))
+            .toList();
     recoveryGroups.sort((a, b) => a.name.compareTo(b.name));
 
     return Scaffold(
-        primary: true,
         restorationId: 'RecoveryGroup',
         resizeToAvoidBottomInset: false,
         body: Column(
@@ -118,19 +142,6 @@ class _RecoveryGroupViewState extends State<RecoveryGroupView> {
                 ],
               ),
             ),
-            // Footer
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 20, right: 20),
-            //   child: FooterButton(
-            //     text: 'Create New Group',
-            //     onPressed: () {
-            //       _filter = '';
-            //       _ctrl.text = '';
-            //       Navigator.pushNamed(context, CreateGroupView.routeName);
-            //     },
-            //   ),
-            // ),
-            // Container(height: 50),
           ],
         ));
   }
