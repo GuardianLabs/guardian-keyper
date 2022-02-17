@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
+
+import 'settings/settings_controller.dart';
 
 import 'core/theme_data.dart';
 import 'intro/intro_view.dart';
 import 'home/home_view.dart';
 import 'settings/settings_view.dart';
-
 import 'recovery_group/recovery_group_view.dart';
 import 'recovery_group/create_group/create_group_view.dart';
 import 'recovery_group/edit_group/recovery_group_edit_view.dart';
@@ -19,7 +21,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final settingsController = Provider.of<SettingsController>(context);
+    final settingsController = Provider.of<SettingsController>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       restorationScopeId: 'app',
@@ -36,8 +38,7 @@ class App extends StatelessWidget {
       // AppLocalizations.of(context)!.appTitle,
       theme: theme,
       darkTheme: themeDark,
-      themeMode: ThemeMode.dark,
-      // themeMode: settingsController.themeMode,
+      themeMode: settingsController.themeMode,
       onGenerateRoute: (RouteSettings routeSettings) {
         return MaterialPageRoute<void>(
           settings: routeSettings,

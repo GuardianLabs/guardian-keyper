@@ -18,7 +18,35 @@ class RecoveryGroupModel {
     this.threshold = 2,
     this.secrets = const {},
     this.guardians = const {},
-  });
+  }) : assert(name != '');
+
+  factory RecoveryGroupModel.fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic> secretsMap = json['secrets'];
+    secretsMap.updateAll((key, value) =>
+        RecoveryGroupSecretModel.fromJson(value as Map<String, dynamic>));
+
+    Map<String, dynamic> guardiansMap = json['guardians'];
+    guardiansMap.updateAll((key, value) =>
+        RecoveryGroupGuardianModel.fromJson(value as Map<String, dynamic>));
+
+    return RecoveryGroupModel(
+      name: json['name'] as String,
+      type: RecoveryGroupType.values.byName(json['type']),
+      size: json['size'] as int,
+      threshold: json['threshold'] as int,
+      secrets: secretsMap.cast<String, RecoveryGroupSecretModel>(),
+      guardians: guardiansMap.cast<String, RecoveryGroupGuardianModel>(),
+    );
+  }
+
+  static Map<String, dynamic> toJson(RecoveryGroupModel value) => {
+        'name': value.name,
+        'type': value.type.name,
+        'size': value.size,
+        'threshold': value.threshold,
+        'secrets': value.secrets,
+        'guardians': value.guardians,
+      };
 
   RecoveryGroupModel addGuardian(RecoveryGroupGuardianModel guardian) {
     if (guardians.containsKey(guardian.name)) {
@@ -26,9 +54,6 @@ class RecoveryGroupModel {
     }
     if (guardians.length == size) {
       throw RecoveryGroupGuardianLimitexhausted();
-    }
-    if (guardian.code.isEmpty) {
-      throw RecoveryGroupGuardianCodeIsEmpty();
     }
     return RecoveryGroupModel(
       name: name,
@@ -43,9 +68,6 @@ class RecoveryGroupModel {
   RecoveryGroupModel addSecret(RecoveryGroupSecretModel secret) {
     if (secrets.containsKey(secret.name)) {
       throw RecoveryGroupSecretAlreadyExists();
-    }
-    if (secret.token.isEmpty) {
-      throw RecoveryGroupSecretIsEmpty();
     }
     return RecoveryGroupModel(
       name: name,
@@ -71,43 +93,61 @@ class RecoveryGroupGuardianLimitexhausted implements Exception {
   static const description = 'Guardian group size limit exhausted!';
 }
 
-class RecoveryGroupGuardianCodeIsEmpty implements Exception {
-  static const description = 'Guardian code could not be empty!';
-}
-
 class RecoveryGroupSecretAlreadyExists implements Exception {
   static const description =
       'Secret with given name already exists in that group!';
-}
-
-class RecoveryGroupSecretIsEmpty implements Exception {
-  static const description = 'Secret could not be empty!';
 }
 
 // RecoveryGroupGuardianModel
 
 @immutable
 class RecoveryGroupGuardianModel {
+  final String name;
+  final String code;
+  final String tag;
+
   const RecoveryGroupGuardianModel({
     required this.name,
     this.code = '',
     this.tag = '',
-  }) : assert(name != '');
+  })  : assert(name != ''),
+        assert(code != '');
 
-  final String name;
-  final String code;
-  final String tag;
+  factory RecoveryGroupGuardianModel.fromJson(Map<String, dynamic> json) =>
+      RecoveryGroupGuardianModel(
+        name: json['name'] as String,
+        code: json['code'] as String,
+        tag: json['tag'] as String,
+      );
+
+  static Map<String, dynamic> toJson(RecoveryGroupGuardianModel value) => {
+        'name': value.name,
+        'code': value.code,
+        'tag': value.tag,
+      };
 }
 
 // RecoveryGroupSecretModel
 
 @immutable
 class RecoveryGroupSecretModel {
+  final String name;
+  final String token;
+
   const RecoveryGroupSecretModel({
     required this.name,
     this.token = '',
-  }) : assert(name != '');
+  })  : assert(name != ''),
+        assert(token != '');
 
-  final String name;
-  final String token;
+  factory RecoveryGroupSecretModel.fromJson(Map<String, dynamic> json) =>
+      RecoveryGroupSecretModel(
+        name: json['name'] as String,
+        token: json['token'] as String,
+      );
+
+  static Map<String, dynamic> toJson(RecoveryGroupSecretModel value) => {
+        'name': value.name,
+        'token': value.token,
+      };
 }

@@ -1,57 +1,41 @@
+import 'dart:convert';
+
+import '../core/service/kv_storage.dart';
 import 'recovery_group_model.dart';
 
-const _group1 = {
-  'Melly Caramelly': RecoveryGroupGuardianModel(
-    name: 'Melly Caramelly',
-    code: '',
-    tag: 'Wife`s iPhone',
-  ),
-};
-
-const _group2 = {
-  ..._group1,
-  'My iPad': RecoveryGroupGuardianModel(
-    name: 'My iPad',
-    code: '01234567890ABCDEF',
-  ),
-};
-
-const _group3 = {
-  ..._group2,
-  'My MacBook Pro': RecoveryGroupGuardianModel(
-    name: 'My MacBook Pro',
-    code: '01234567890ABCDEF',
-  ),
-};
-
-Map<String, RecoveryGroupModel> _groups = {
-  'MetaMask Wallet': const RecoveryGroupModel(
-    name: 'MetaMask Wallet',
-    type: RecoveryGroupType.devices,
-    guardians: _group1,
-  ),
-  'Binance Pass': const RecoveryGroupModel(
-    name: 'Binance Pass',
-    type: RecoveryGroupType.devices,
-    guardians: _group2,
-  ),
-  'Phantom wallet': const RecoveryGroupModel(
-    name: 'Phantom wallet',
-    type: RecoveryGroupType.devices,
-    guardians: _group3,
-    secrets: {
-      'SecretName': RecoveryGroupSecretModel(
-        name: 'SecretName',
-        token: 'My very secret secret',
-      ),
-    },
-  ),
-};
-
 class RecoveryGroupService {
+  const RecoveryGroupService(this._storage);
+
+  static const _key = 'recovery_groups';
+
+  final KVStorage _storage;
+
   Future<Map<String, RecoveryGroupModel>> getGroups() async {
-    return _groups;
+    final groupsStr = await _storage.read(key: _key);
+    if (groupsStr == null) return {};
+
+    Map<String, dynamic> groupsMap = jsonDecode(groupsStr);
+    groupsMap.updateAll((key, value) =>
+        RecoveryGroupModel.fromJson(value as Map<String, dynamic>));
+
+    return groupsMap.cast<String, RecoveryGroupModel>();
   }
 
-  Future<void> setGroups(Map<String, RecoveryGroupModel> groups) async {}
+  Future<void> setGroups(Map<String, RecoveryGroupModel> groups) async {
+    final value = jsonEncode(groups, toEncodable: (Object? value) {
+      switch (value.runtimeType) {
+        case RecoveryGroupModel:
+          return RecoveryGroupModel.toJson(value as RecoveryGroupModel);
+        case RecoveryGroupGuardianModel:
+          return RecoveryGroupGuardianModel.toJson(
+              value as RecoveryGroupGuardianModel);
+        case RecoveryGroupSecretModel:
+          return RecoveryGroupSecretModel.toJson(
+              value as RecoveryGroupSecretModel);
+        default:
+          throw UnsupportedError(value.runtimeType.toString());
+      }
+    });
+    _storage.write(key: _key, value: value);
+  }
 }
