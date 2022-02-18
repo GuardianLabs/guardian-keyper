@@ -128,6 +128,7 @@ class RecoveryGroupGuardianModel {
 }
 
 // RecoveryGroupSecretModel
+// Do not save\serialize token or delete token at all?
 
 @immutable
 class RecoveryGroupSecretModel {

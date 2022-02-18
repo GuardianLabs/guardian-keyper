@@ -65,16 +65,15 @@ class RecoveryGroupEditView extends StatelessWidget {
                       iconColor: guardian.code.isEmpty ? clRed : clGreen,
                       status: guardian.code.isEmpty ? clRed : clGreen,
                     ),
-                  ListTile(
-                    title: ElevatedButton(
-                      child: const Text('Add Guardian'),
-                      onPressed: recoveryGroup.isCompleted
-                          ? null
-                          : () => Navigator.of(context).pushNamed(
-                              AddGuardianView.routeName,
-                              arguments: recoveryGroupName),
+                  if (!recoveryGroup.isCompleted)
+                    ListTile(
+                      title: ElevatedButton(
+                        child: const Text('Add Guardian'),
+                        onPressed: () => Navigator.of(context).pushNamed(
+                            AddGuardianView.routeName,
+                            arguments: recoveryGroupName),
+                      ),
                     ),
-                  ),
                   if (!recoveryGroup.isMissed)
                     const ListTile(
                       title: ElevatedButton(
