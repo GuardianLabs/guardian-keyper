@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'settings_controller.dart';
 import '../recovery_group/recovery_group_controller.dart';
@@ -22,6 +23,15 @@ class SettingsView extends StatelessWidget {
         children: [
           // Header
           const HeaderBar(caption: 'Settings'),
+          // Version
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: FutureBuilder(
+              future: PackageInfo.fromPlatform(),
+              builder: ((context, AsyncSnapshot<PackageInfo?> snapshot) => Text(
+                  '${snapshot.data?.version}+${snapshot.data?.buildNumber}')),
+            ),
+          ),
           // Theme
           Padding(
             padding: const EdgeInsets.all(20),
