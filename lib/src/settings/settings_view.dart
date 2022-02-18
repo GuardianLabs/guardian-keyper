@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-
-import 'settings_controller.dart';
-import '../recovery_group/recovery_group_controller.dart';
 
 import '../core/widgets/common.dart';
+
+import 'settings_controller.dart';
+import 'widgets/app_version.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({Key? key}) : super(key: key);
@@ -15,8 +14,6 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<SettingsController>(context);
-    final recoveryGroupscontroller =
-        Provider.of<RecoveryGroupController>(context);
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,13 +21,9 @@ class SettingsView extends StatelessWidget {
           // Header
           const HeaderBar(caption: 'Settings'),
           // Version
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: FutureBuilder(
-              future: PackageInfo.fromPlatform(),
-              builder: ((context, AsyncSnapshot<PackageInfo?> snapshot) => Text(
-                  '${snapshot.data?.version}+${snapshot.data?.buildNumber}')),
-            ),
+          const Padding(
+            padding: EdgeInsets.all(20),
+            child: AppVersionWidget(),
           ),
           // Theme
           Padding(
@@ -59,7 +52,7 @@ class SettingsView extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: ElevatedButton(
               child: const Text('Delete all groups'),
-              onPressed: recoveryGroupscontroller.clear,
+              onPressed: controller.clearRecoveryGroups,
             ),
           ),
           // Footer
