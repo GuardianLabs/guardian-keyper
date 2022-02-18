@@ -1,13 +1,18 @@
 import 'package:flutter/widgets.dart';
 
 import '../core/utils.dart';
+import '../core/service/event_bus.dart';
+
 import 'recovery_group_model.dart';
 import 'recovery_group_service.dart';
 
 class RecoveryGroupController with ChangeNotifier {
-  RecoveryGroupController(this._recoveryGroupService);
+  RecoveryGroupController(this._recoveryGroupService, this.eventBus) {
+    eventBus.on<RecoveryGroupClearEvent>().listen((event) => clear());
+  }
 
   final RecoveryGroupService _recoveryGroupService;
+  final EventBus eventBus;
   late Map<String, RecoveryGroupModel> _groups;
 
   Map<String, RecoveryGroupModel> get groups => _groups;

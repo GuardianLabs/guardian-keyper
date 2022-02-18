@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../core/service/event_bus.dart';
 import 'settings_service.dart';
 
 class SettingsController with ChangeNotifier {
-  SettingsController(this._settingsService);
+  SettingsController(this._settingsService, this.eventBus);
 
   final SettingsService _settingsService;
+  final EventBus eventBus;
   late ThemeMode _themeMode;
 
   ThemeMode get themeMode => _themeMode;
@@ -22,4 +24,6 @@ class SettingsController with ChangeNotifier {
     notifyListeners();
     await _settingsService.updateThemeMode(newThemeMode);
   }
+
+  void clearRecoveryGroups() => eventBus.fire(RecoveryGroupClearEvent());
 }
