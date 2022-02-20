@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.guardian_network.keyper_experimental">
+    package="com.guardian_network.keyper">
    <application
         android:label="guardian_network"
         android:name="${applicationName}"

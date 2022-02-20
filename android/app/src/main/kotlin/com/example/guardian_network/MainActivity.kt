@@ -1,4 +1,4 @@
-package com.guardian_network.keyper_experimental
+package com.guardian_network.keyper
 
 import io.flutter.embedding.android.FlutterActivity
 
