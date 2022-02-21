@@ -284,9 +284,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: b6fddc0662211dce8c8cb415d74e0225e43c9f91
-      url: "https://gitlab.com/guardian-network/social-recovery-p2p/p2plib-dart"
+      ref: main
+      resolved-ref: ce4dc308e47675e295f29ab625f2e7f32e6c4d55
+      url: "git@gitlab.com:guardian-network/social-recovery-p2p/p2plib-dart.git"
     source: git
     version: "1.0.0"
   package_info_plus:
