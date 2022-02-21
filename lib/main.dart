@@ -9,8 +9,11 @@ import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
 import 'src/recovery_group/recovery_group_controller.dart';
 import 'src/recovery_group/recovery_group_service.dart';
+import 'package:p2plib/p2plib.dart';
 
 void main() async {
+  await P2PCrypto().init();
+
   final eventBus = EventBus();
   final kvStrorage = KVStorage();
   final settingsController =
