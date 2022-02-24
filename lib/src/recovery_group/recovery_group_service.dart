@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:p2plib/p2plib.dart' as p2p;
+import 'package:sodium/sodium.dart' show KeyPair;
 
 import '../core/service/kv_storage.dart';
 import 'recovery_group_model.dart';
@@ -40,4 +42,23 @@ class RecoveryGroupService {
   }
 
   Future<void> clearGroups() async => _storage.delete(key: _key);
+
+  Future<KeyPairModel> getKeyPair() async {
+    final keyPairString = await _storage.read(key: 'key_pair');
+
+    if (keyPairString == null) {
+      final keyPair = p2p.P2PCrypto().sodium.crypto.box.keyPair() as KeyPair;
+
+      final keyPairModel = KeyPairModel(
+        privateKey: keyPair.secretKey.extractBytes(),
+        publicKey: keyPair.publicKey,
+      );
+      await _storage.write(
+        key: 'key_pair',
+        value: KeyPairModel.toJson(keyPairModel),
+      );
+      return keyPairModel;
+    }
+    return KeyPairModel.fromJson(keyPairString);
+  }
 }

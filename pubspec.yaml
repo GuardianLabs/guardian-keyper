@@ -2,7 +2,7 @@ name: guardian_network
 description: A Guardian Network client
 publish_to: 'none'
 
-version: 0.1.4+3
+version: 0.1.5+1
 
 environment:
   sdk: ">=2.15.1 <3.0.0"
@@ -24,11 +24,11 @@ dependencies:
   qr_code_scanner: ^0.7.0
   package_info_plus: ^1.3.1
   flutter_sodium: ^0.2.0
-  p2plib: 
+  p2plib:
+    # path: ../p2plib-dart
     git:
       url: git@gitlab.com:guardian-network/social-recovery-p2p/p2plib-dart.git
       ref: main
-    # git: https://gitlab.com/guardian-network/social-recovery-p2p/p2plib-dart
 
 dev_dependencies:
   flutter_test:

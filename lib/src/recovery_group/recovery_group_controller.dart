@@ -1,4 +1,7 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/widgets.dart';
+import 'package:p2plib/p2plib.dart' as p2p;
 
 import '../core/utils.dart';
 import '../core/service/event_bus.dart';
@@ -7,19 +10,29 @@ import 'recovery_group_model.dart';
 import 'recovery_group_service.dart';
 
 class RecoveryGroupController with ChangeNotifier {
-  RecoveryGroupController(this._recoveryGroupService, this.eventBus) {
+  RecoveryGroupController({
+    required RecoveryGroupService recoveryGroupService,
+    required EventBus eventBus,
+    required p2p.Router p2pRouter,
+  })  : _recoveryGroupService = recoveryGroupService,
+        _eventBus = eventBus,
+        _p2pRouter = p2pRouter {
     eventBus.on<RecoveryGroupClearEvent>().listen((event) => clear());
   }
 
   final RecoveryGroupService _recoveryGroupService;
-  final EventBus eventBus;
+  final p2p.Router _p2pRouter;
+  final EventBus _eventBus;
   late Map<String, RecoveryGroupModel> _groups;
+  late KeyPairModel _keyPair;
 
   Map<String, RecoveryGroupModel> get groups => _groups;
-  String get qrCode => getRandomString(64);
+  String get qrCode => getRandomString(100);
+  KeyPairModel get keyPair => _keyPair;
 
   Future<void> load() async {
     _groups = await _recoveryGroupService.getGroups();
+    _keyPair = await _recoveryGroupService.getKeyPair();
   }
 
   Future<void> _save() async {
