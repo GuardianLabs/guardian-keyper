@@ -24,15 +24,12 @@ class RecoveryGroupController with ChangeNotifier {
   final p2p.Router _p2pRouter;
   final EventBus _eventBus;
   late Map<String, RecoveryGroupModel> _groups;
-  late KeyPairModel _keyPair;
 
   Map<String, RecoveryGroupModel> get groups => _groups;
   String get qrCode => getRandomString(100);
-  KeyPairModel get keyPair => _keyPair;
 
   Future<void> load() async {
     _groups = await _recoveryGroupService.getGroups();
-    _keyPair = await _recoveryGroupService.getKeyPair();
   }
 
   Future<void> _save() async {

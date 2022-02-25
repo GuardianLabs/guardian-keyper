@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/service/event_bus.dart';
+import 'settings_model.dart';
 import 'settings_service.dart';
 
 class SettingsController with ChangeNotifier {
@@ -12,13 +13,16 @@ class SettingsController with ChangeNotifier {
 
   final SettingsService _settingsService;
   final EventBus _eventBus;
+  late KeyPairModel _keyPair;
 
   ThemeMode _themeMode = ThemeMode.system;
 
   ThemeMode get themeMode => _themeMode;
+  KeyPairModel get keyPair => _keyPair;
 
   Future<void> load() async {
     _themeMode = await _settingsService.themeMode();
+    _keyPair = await _settingsService.getKeyPair();
     notifyListeners();
   }
 

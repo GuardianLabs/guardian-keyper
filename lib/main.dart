@@ -21,19 +21,19 @@ void main() async {
   final eventBus = EventBus();
   final kvStorage = KVStorage();
 
+  final settingsService = SettingsService(kvStorage);
   final settingsController = SettingsController(
-    settingsService: SettingsService(kvStorage),
+    settingsService: settingsService,
     eventBus: eventBus,
   );
 
-  final recoveryGroupService = RecoveryGroupService(kvStorage);
-  final keyPairModel = await recoveryGroupService.getKeyPair();
+  final keyPairModel = await settingsService.getKeyPair();
   final keyPair = KeyPair(
       publicKey: keyPairModel.publicKey,
       secretKey: SecureKey.fromList(crypto.sodium, keyPairModel.privateKey));
 
   final recoveryGroupController = RecoveryGroupController(
-    recoveryGroupService: recoveryGroupService,
+    recoveryGroupService: RecoveryGroupService(kvStorage),
     eventBus: eventBus,
     p2pRouter: p2p.Router(p2p.UdpConnection(), keyPair),
   );
