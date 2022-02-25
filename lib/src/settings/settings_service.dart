@@ -6,7 +6,10 @@ import '../core/service/kv_storage.dart';
 import 'settings_model.dart';
 
 class SettingsService {
-  SettingsService(this._storage);
+  static const _keyPairPath = 'key_pair';
+  static const _settingsPath = 'settings';
+
+  const SettingsService(this._storage);
 
   final KVStorage _storage;
 
@@ -18,11 +21,11 @@ class SettingsService {
   Future<ThemeMode> themeMode() async => ThemeMode.dark;
 
   Future<void> updateThemeMode(ThemeMode theme) async {
-    if (!await _storage.containsKey(key: 'settings')) {}
+    if (!await _storage.containsKey(key: _settingsPath)) {}
   }
 
   Future<KeyPairModel> getKeyPair() async {
-    final keyPairString = await _storage.read(key: 'key_pair');
+    final keyPairString = await _storage.read(key: _keyPairPath);
 
     if (keyPairString == null) {
       final keyPair = p2p.P2PCrypto().sodium.crypto.box.keyPair() as KeyPair;
@@ -32,7 +35,7 @@ class SettingsService {
         publicKey: keyPair.publicKey,
       );
       await _storage.write(
-        key: 'key_pair',
+        key: _keyPairPath,
         value: KeyPairModel.toJson(keyPairModel),
       );
       return keyPairModel;
