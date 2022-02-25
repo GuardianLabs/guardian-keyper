@@ -4,14 +4,14 @@ import '../core/service/kv_storage.dart';
 import 'recovery_group_model.dart';
 
 class RecoveryGroupService {
-  const RecoveryGroupService(this._storage);
+  const RecoveryGroupService({required KVStorage storage}) : _storage = storage;
 
-  static const _key = 'recovery_groups';
+  static const _recoveryGroupsPath = 'recovery_groups';
 
   final KVStorage _storage;
 
   Future<Map<String, RecoveryGroupModel>> getGroups() async {
-    final groupsStr = await _storage.read(key: _key);
+    final groupsStr = await _storage.read(key: _recoveryGroupsPath);
     if (groupsStr == null) return {};
 
     Map<String, dynamic> groupsMap = jsonDecode(groupsStr);
@@ -36,8 +36,8 @@ class RecoveryGroupService {
           throw UnsupportedError(value.runtimeType.toString());
       }
     });
-    _storage.write(key: _key, value: value);
+    _storage.write(key: _recoveryGroupsPath, value: value);
   }
 
-  Future<void> clearGroups() async => _storage.delete(key: _key);
+  Future<void> clearGroups() async => _storage.delete(key: _recoveryGroupsPath);
 }

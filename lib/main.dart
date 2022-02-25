@@ -7,10 +7,12 @@ import 'src/di_provider.dart';
 import 'src/core/service/event_bus.dart';
 import 'src/core/service/kv_storage.dart';
 
-import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
-import 'src/recovery_group/recovery_group_controller.dart';
+import 'src/settings/settings_controller.dart';
 import 'src/recovery_group/recovery_group_service.dart';
+import 'src/recovery_group/recovery_group_controller.dart';
+import 'src/guardian/guardian_service.dart';
+import 'src/guardian/guardian_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,29 +24,38 @@ void main() async {
   final kvStorage = KVStorage();
 
   final settingsService = SettingsService(kvStorage);
+
+  final keyPair = await settingsService.getKeyPair();
+  final p2pRouter = p2p.Router(
+      p2p.UdpConnection(),
+      KeyPair(
+          publicKey: keyPair.publicKey,
+          secretKey: SecureKey.fromList(crypto.sodium, keyPair.privateKey)));
+
   final settingsController = SettingsController(
     settingsService: settingsService,
     eventBus: eventBus,
   );
-
-  final keyPairModel = await settingsService.getKeyPair();
-  final keyPair = KeyPair(
-      publicKey: keyPairModel.publicKey,
-      secretKey: SecureKey.fromList(crypto.sodium, keyPairModel.privateKey));
-
   final recoveryGroupController = RecoveryGroupController(
-    recoveryGroupService: RecoveryGroupService(kvStorage),
+    recoveryGroupService: RecoveryGroupService(storage: kvStorage),
     eventBus: eventBus,
-    p2pRouter: p2p.Router(p2p.UdpConnection(), keyPair),
+    p2pRouter: p2pRouter,
+  );
+  final guardianController = GuardianController(
+    guardianService: GuardianService(storage: kvStorage),
+    eventBus: eventBus,
+    p2pRouter: p2pRouter,
   );
 
   FlutterNativeSplash.removeAfter((BuildContext context) async {
     await settingsController.load();
+    await guardianController.load();
     await recoveryGroupController.load();
   });
 
   runApp(DIProvider(
     settingsController: settingsController,
+    guardianController: guardianController,
     recoveryGroupController: recoveryGroupController,
   ));
 }
