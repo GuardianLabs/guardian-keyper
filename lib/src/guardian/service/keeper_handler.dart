@@ -8,11 +8,16 @@ import 'keeper_packet.dart';
 class KeeperHandler extends TopicHandler {
   static const topic = 101;
 
-  Function(PubKey owner, Uint8List token)? onAddKeeperRequest;
-  Function(PubKey owner, Uint8List data)? onSaveRequest;
-  Function(PubKey owner)? onGetRequest;
+  void Function(PubKey owner, Uint8List token) onAddKeeperRequest;
+  void Function(PubKey owner, Uint8List data) onSaveRequest;
+  void Function(PubKey owner) onGetRequest;
 
-  KeeperHandler(Router router) : super(router);
+  KeeperHandler({
+    required Router router,
+    required this.onAddKeeperRequest,
+    required this.onSaveRequest,
+    required this.onGetRequest,
+  }) : super(router);
 
   @override
   void onMessage(Uint8List data, Peer peer) {
@@ -74,13 +79,13 @@ class KeeperHandler extends TopicHandler {
   void _onPacket(Header header, OwnerBody body) {
     switch (body.type) {
       case OwnerMsgType.addKeeper:
-        onAddKeeperRequest?.call(header.srcKey, body.data);
+        onAddKeeperRequest(header.srcKey, body.data);
         break;
       case OwnerMsgType.saveShard:
-        onSaveRequest?.call(header.srcKey, body.data);
+        onSaveRequest(header.srcKey, body.data);
         break;
       case OwnerMsgType.getShard:
-        onGetRequest?.call(header.srcKey);
+        onGetRequest(header.srcKey);
         break;
     }
   }

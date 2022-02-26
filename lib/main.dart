@@ -22,7 +22,6 @@ void main() async {
 
   final eventBus = EventBus();
   final kvStorage = KVStorage();
-
   final settingsService = SettingsService(kvStorage);
 
   final keyPair = await settingsService.getKeyPair();
@@ -42,14 +41,15 @@ void main() async {
     p2pRouter: p2pRouter,
   );
   final guardianController = GuardianController(
-    guardianService: GuardianService(storage: kvStorage, router: p2pRouter),
+    // guardianService: GuardianService(storage: kvStorage, router: p2pRouter),
+    guardianService: GuardianService(storage: kvStorage),
     eventBus: eventBus,
     p2pRouter: p2pRouter,
   );
 
   FlutterNativeSplash.removeAfter((BuildContext context) async {
     await settingsController.load();
-    await guardianController.load();
+    // await guardianController.load();
     await recoveryGroupController.load();
   });
 
