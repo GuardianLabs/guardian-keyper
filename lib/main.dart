@@ -42,7 +42,7 @@ void main() async {
     p2pRouter: p2pRouter,
   );
   final guardianController = GuardianController(
-    guardianService: GuardianService(storage: kvStorage),
+    guardianService: GuardianService(storage: kvStorage, router: p2pRouter),
     eventBus: eventBus,
     p2pRouter: p2pRouter,
   );

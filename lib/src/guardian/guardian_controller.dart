@@ -18,7 +18,7 @@ class GuardianController with ChangeNotifier {
 
   final GuardianService _guardianService;
   final EventBus _eventBus;
-  final p2p.Router _p2pRouter;
+  final p2p.Router _p2pRouter; // Is it really needed?
 
   Future<void> load() async {
     notifyListeners();

@@ -15,15 +15,3 @@ class AuthToken extends RawToken {
     return AuthToken(Uint8List.fromList(listInt));
   }
 }
-
-class StoredSecret {
-  final Uint8List secret;
-  // final PubKey owner;
-  final String? description;
-
-  const StoredSecret({
-    required this.secret,
-    // required this.owner,
-    this.description,
-  });
-}
