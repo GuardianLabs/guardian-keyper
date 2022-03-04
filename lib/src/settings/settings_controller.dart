@@ -34,5 +34,5 @@ class SettingsController with ChangeNotifier {
     await _settingsService.updateThemeMode(newThemeMode);
   }
 
-  void clearRecoveryGroups() => _eventBus.fire(RecoveryGroupClearEvent());
+  void clearRecoveryGroups() => _eventBus.fire(RecoveryGroupClearCommand());
 }

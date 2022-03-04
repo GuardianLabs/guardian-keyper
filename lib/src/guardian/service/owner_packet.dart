@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:p2plib/p2plib.dart';
 
-enum OwnerMsgType { saveShard, getShard, addKeeper }
+enum OwnerMsgType { setShard, getShard, authPeer }
 
 class OwnerBody {
   final OwnerMsgType type;

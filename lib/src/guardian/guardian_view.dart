@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -15,22 +14,29 @@ class GuardianView extends StatefulWidget {
 }
 
 class _GuardianViewState extends State<GuardianView> {
-  late final Uint8List _qr;
-
   @override
-  void initState() {
-    super.initState();
-    final myPubKey = context.read<SettingsController>().keyPair.publicKey;
-    final authToken = context.read<GuardianController>().generateAuthToken();
-    var qr = [0, 0, 0, 0];
-    qr.addAll(authToken.data);
-    qr.addAll(myPubKey);
-    qr.addAll(myPubKey); //TBD: add second pubKey
-    _qr = Uint8List.fromList(qr);
+  void dispose() {
+    context.read<GuardianController>().reset();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return QrImage(data: base64.encode(_qr));
+    final controller = Provider.of<GuardianController>(context);
+    switch (controller.processStatus) {
+      case ProcessingStatus.notInited:
+        context.read<GuardianController>().generateAuthToken();
+        return const CircularProgressIndicator.adaptive();
+      case ProcessingStatus.inited:
+        return QrImage(
+            data: base64.encode(controller.getQRCode(
+                context.read<SettingsController>().keyPair.publicKey)));
+      case ProcessingStatus.waiting:
+        return const CircularProgressIndicator.adaptive();
+      case ProcessingStatus.finished:
+        return const Text('Success!');
+      case ProcessingStatus.error:
+        return const Text('Error!');
+    }
   }
 }

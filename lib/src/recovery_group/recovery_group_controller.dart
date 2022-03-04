@@ -17,7 +17,7 @@ class RecoveryGroupController with ChangeNotifier {
   })  : _recoveryGroupService = recoveryGroupService,
         _eventBus = eventBus,
         _p2pRouter = p2pRouter {
-    eventBus.on<RecoveryGroupClearEvent>().listen((event) => clear());
+    eventBus.on<RecoveryGroupClearCommand>().listen((event) => clear());
   }
 
   final RecoveryGroupService _recoveryGroupService;

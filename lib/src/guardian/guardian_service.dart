@@ -1,20 +1,29 @@
-// ignore_for_file: unused_field
-
-// import 'dart:typed_data';
-// import 'package:p2plib/p2plib.dart' as p2p;
+import 'dart:convert';
 
 import '../core/service/kv_storage.dart';
-
-// import 'guardian_model.dart';
-// import 'service/keeper_handler.dart';
+import 'guardian_model.dart';
 
 class GuardianService {
-  GuardianService({
-    required KVStorage storage,
-    // required p2p.Router router,
-  }) : _storage = storage;
+  const GuardianService({required this.storage});
 
   static const _guardianPath = 'guardian';
 
-  final KVStorage _storage;
+  final KVStorage storage;
+
+  Future<Set<SecretShard>> getShards() async {
+    final shardsStr = await storage.read(key: _guardianPath);
+    if (shardsStr == null) return {};
+
+    final shardsList = jsonDecode(shardsStr) as List;
+    return shardsList.map((e) => SecretShard.fromJson(e)).toSet();
+  }
+
+  Future<void> setShards(Set<SecretShard> managedSecrets) async {
+    final json = jsonEncode(managedSecrets.toList(),
+        toEncodable: (Object? value) =>
+            value is SecretShard ? SecretShard.toJson(value) : null);
+    await storage.write(key: _guardianPath, value: json);
+  }
+
+  Future<void> clearShards() async => storage.delete(key: _guardianPath);
 }

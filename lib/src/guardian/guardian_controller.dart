@@ -1,74 +1,129 @@
-// ignore_for_file: unused_field
-
+import 'dart:math';
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
-import 'package:p2plib/p2plib.dart' as p2p;
+import 'package:flutter/material.dart' hide Router;
+import 'package:p2plib/p2plib.dart';
 
 import '../core/service/event_bus.dart';
 import 'guardian_model.dart';
 import 'guardian_service.dart';
 import 'service/keeper_handler.dart';
 
+enum ProcessingStatus { notInited, inited, waiting, finished, error }
+
 class GuardianController with ChangeNotifier {
   GuardianController({
     required GuardianService guardianService,
     required EventBus eventBus,
-    required p2p.Router p2pRouter,
+    required Router p2pRouter,
   })  : _guardianService = guardianService,
         _eventBus = eventBus {
+    eventBus.on<RecoveryGroupClearCommand>().listen((event) => clear());
     _handler = KeeperHandler(
       router: p2pRouter,
-      onAddKeeperRequest: _onAddKeeperRequest,
-      onSaveRequest: _onSaveRequest,
+      onAuthRequest: _onAuthRequest,
+      onSetRequest: _onSaveRequest,
       onGetRequest: _onGetRequest,
     );
   }
 
   final GuardianService _guardianService;
+  // ignore: unused_field
   final EventBus _eventBus;
-  late KeeperHandler _handler;
-  AuthToken? _currentToken;
-  final Map<p2p.PubKey, StoredSecret?> _managedSecrets = {};
+  final _random = Random.secure();
+  late final KeeperHandler _handler;
+  PubKey? _currentAuthToken;
+  PubKey? _currentOwner;
+  ProcessingStatus _processStatus = ProcessingStatus.notInited;
+  Set<SecretShard> _managedShards = {};
 
-  // Future<void> load() async {
-  //   notifyListeners();
-  // }
+  ProcessingStatus get processStatus => _processStatus;
 
-  AuthToken generateAuthToken() {
-    _currentToken = AuthToken.generate();
-    return _currentToken!;
+  Future<void> load() async {
+    _managedShards = await _guardianService.getShards();
+  }
+
+  Future<void> clear() async {
+    await _guardianService.clearShards();
+    _managedShards.clear();
+    notifyListeners();
+  }
+
+  void reset() {
+    _currentAuthToken = null;
+    _currentOwner = null;
+    _processStatus = ProcessingStatus.notInited;
+    notifyListeners();
+  }
+
+  void generateAuthToken() {
+    _currentAuthToken = PubKey(Uint8List.fromList(
+        Iterable.generate(PubKey.length, (x) => _random.nextInt(255))
+            .toList()));
+    _processStatus = ProcessingStatus.inited;
+    notifyListeners();
+  }
+
+  Uint8List getQRCode(Uint8List myPubKey) {
+    var qr = [0, 0, 0, 0];
+    qr.addAll(_currentAuthToken!.data);
+    qr.addAll(myPubKey);
+    qr.addAll(myPubKey); //TBD: add second pubKey
+    return Uint8List.fromList(qr);
   }
 
   // обработка запроса от owner'a на добавление текущего кипера
-  void _onAddKeeperRequest(p2p.PubKey owner, Uint8List authToken) {
-    if (AuthToken(authToken) == _currentToken) {
-      _managedSecrets[owner] = null;
-      _handler.sendAddKeeperStatus(owner, p2p.ProcessStatus.success);
+  void _onAuthRequest(PubKey owner, Uint8List authToken) async {
+    if (PubKey(authToken) == _currentAuthToken) {
+      _currentAuthToken = null;
+      _currentOwner = owner;
+      try {
+        await _handler.sendAuthStatus(owner, ProcessStatus.success);
+        _processStatus = ProcessingStatus.waiting;
+      } on Exception {
+        _processStatus = ProcessingStatus.error;
+      } finally {
+        notifyListeners();
+      }
     } else {
-      _handler.sendAddKeeperStatus(owner, p2p.ProcessStatus.reject);
+      _handler.sendAuthStatus(owner, ProcessStatus.reject);
     }
   }
 
   // обработка запроса на сохранение данных
-  void _onSaveRequest(p2p.PubKey owner, Uint8List secretChunk) {
-    // owner не добавлял текущего кипера
-    if (!_managedSecrets.containsKey(owner)) {
-      _handler.sendSaveStatus(owner, p2p.ProcessStatus.reject);
-      return;
+  void _onSaveRequest(PubKey owner, Uint8List secretChunk) async {
+    if (_currentOwner == owner) {
+      _currentOwner = null;
+      _managedShards.add(SecretShard(
+        owner: owner.data,
+        secret: secretChunk,
+        groupId: '', //TBD groupId
+      ));
+      try {
+        await _guardianService.setShards(_managedShards);
+        await _handler.sendSaveStatus(owner, ProcessStatus.success);
+        _processStatus = ProcessingStatus.finished;
+      } on Exception {
+        _processStatus = ProcessingStatus.error;
+      } finally {
+        notifyListeners();
+      }
+    } else {
+      _handler.sendSaveStatus(owner, ProcessStatus.reject);
     }
-    _managedSecrets[owner] = StoredSecret(secret: secretChunk);
-    _handler.sendSaveStatus(owner, p2p.ProcessStatus.success);
   }
 
   // обработка запроса на получение данных
-  void _onGetRequest(p2p.PubKey owner) {
-    if (_managedSecrets.containsKey(owner) && _managedSecrets[owner] != null) {
-      final data = _managedSecrets[owner]!.secret;
-      _handler.sendShard(owner, data);
-    } else {
+  void _onGetRequest(PubKey owner) {
+    try {
+      _handler.sendShard(
+        owner,
+        _managedShards
+            .firstWhere((e) =>
+                PubKey(e.owner) == owner && e.groupId == '') //TBD groupId
+            .secret,
+      );
+    } on StateError {
       _handler.sendShard(owner, Uint8List(0));
     }
   }
-
-  // void clearRecoveryGroups() => _eventBus.fire(RecoveryGroupClearEvent());
 }

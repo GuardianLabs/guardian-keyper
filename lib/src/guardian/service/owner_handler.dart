@@ -37,7 +37,7 @@ class OwnerHandler extends TopicHandler {
     _statusCompleters[peer] = completer;
 
     final header = Header(topic, router.pubKey, peer);
-    final body = OwnerBody(OwnerMsgType.saveShard, data);
+    final body = OwnerBody(OwnerMsgType.setShard, data);
     final encryptedBody =
         P2PCrypto.encrypt(peer, router.keyPair.secretKey, body.serialize());
     final msg = OwnerPacket(header, encryptedBody).serialize();
@@ -58,7 +58,7 @@ class OwnerHandler extends TopicHandler {
     final completer = Completer();
     _statusCompleters[peer] = completer;
     final header = Header(topic, router.pubKey, peer);
-    final body = OwnerBody(OwnerMsgType.addKeeper, token);
+    final body = OwnerBody(OwnerMsgType.authPeer, token);
     final encryptedBody =
         P2PCrypto.encrypt(peer, router.keyPair.secretKey, body.serialize());
     final msg = OwnerPacket(header, encryptedBody).serialize();

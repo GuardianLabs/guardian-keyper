@@ -1,29 +1,40 @@
-import 'dart:math';
+import 'dart:convert';
 import 'dart:typed_data';
+import 'package:collection/collection.dart';
 
-import 'package:p2plib/p2plib.dart';
-
-class AuthToken extends RawToken {
-  static const length = 32;
-  static final random = Random.secure();
-
-  const AuthToken(Uint8List data) : super(data: data, len: length);
-
-  factory AuthToken.generate() {
-    final listInt = Iterable.generate(length, (x) => random.nextInt(255))
-        .toList(growable: false);
-    return AuthToken(Uint8List.fromList(listInt));
-  }
-}
-
-class StoredSecret {
+class SecretShard {
   final Uint8List secret;
-  // final PubKey owner;
-  final String? description;
+  final Uint8List owner;
+  final String groupId;
 
-  const StoredSecret({
+  const SecretShard({
     required this.secret,
-    // required this.owner,
-    this.description,
+    required this.owner,
+    required this.groupId,
   });
+
+  factory SecretShard.fromJson(Map<String, dynamic> json) => SecretShard(
+        owner: base64Decode(json['owner']),
+        groupId: json['group_id'],
+        secret: base64Decode(json['secret']),
+      );
+
+  static Map<String, dynamic> toJson(SecretShard value) => {
+        'owner': value.owner.toString(),
+        'group_id': value.groupId,
+        'secret': base64Encode(value.secret),
+      };
+
+  @override
+  String toString() => '$groupId: ${base64Encode(owner)}';
+
+  @override
+  bool operator ==(Object other) =>
+      other is SecretShard &&
+      groupId == other.groupId &&
+      owner == other.owner &&
+      const IterableEquality().equals(secret, other.secret);
+
+  @override
+  int get hashCode => Object.hash(owner, groupId, secret); // TBD:
 }
