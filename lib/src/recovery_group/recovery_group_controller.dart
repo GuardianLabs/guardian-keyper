@@ -10,18 +10,12 @@ class RecoveryGroupController with ChangeNotifier {
   RecoveryGroupController({
     required RecoveryGroupService recoveryGroupService,
     required EventBus eventBus,
-    required Router p2pRouter,
-  })  : _recoveryGroupService = recoveryGroupService,
-        _eventBus = eventBus,
-        _p2pRouter = p2pRouter {
+    required Router router,
+  }) : _recoveryGroupService = recoveryGroupService {
     eventBus.on<RecoveryGroupClearCommand>().listen((event) => clear());
   }
 
   final RecoveryGroupService _recoveryGroupService;
-  // ignore: unused_field
-  final Router _p2pRouter;
-  // ignore: unused_field
-  final EventBus _eventBus;
   late Map<String, RecoveryGroupModel> _groups;
 
   Map<String, RecoveryGroupModel> get groups => _groups;

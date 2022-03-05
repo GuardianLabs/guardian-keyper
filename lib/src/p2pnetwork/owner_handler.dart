@@ -2,13 +2,14 @@ import 'dart:typed_data';
 import 'dart:async';
 import 'package:p2plib/p2plib.dart';
 
-import 'keeper_packet.dart';
-import 'owner_packet.dart';
-import 'keeper_handler.dart';
+import '../core/model/keeper_packet.dart';
+import '../core/model/owner_packet.dart';
 
 class OwnerHandler extends TopicHandler {
+  static const _topicOfThis = 100;
+  static const _topicSubscribeTo = 101;
   static const defaultTimeout = Duration(seconds: 10);
-  static const topic = 100;
+
   final Map<PubKey, Completer> _statusCompleters = {};
   final Map<PubKey, Completer<Uint8List>> _dataCompleters = {};
 
@@ -26,10 +27,7 @@ class OwnerHandler extends TopicHandler {
   void onStarted() {}
 
   @override
-  Uint64List topics() {
-    // подписываемся на сообщения от хранителя
-    return Uint64List.fromList([KeeperHandler.topic]);
-  }
+  Uint64List topics() => Uint64List.fromList([_topicSubscribeTo]);
 
   // оправить фрагмент данных на хранение
   Future<void> sendSetShardRequest(PubKey peer, Uint8List data,
@@ -37,7 +35,7 @@ class OwnerHandler extends TopicHandler {
     final completer = Completer();
     _statusCompleters[peer] = completer;
 
-    final header = Header(topic, router.pubKey, peer);
+    final header = Header(_topicOfThis, router.pubKey, peer);
     final body = OwnerBody(OwnerMsgType.setShard, data);
     final encryptedBody =
         P2PCrypto.encrypt(peer, router.keyPair.secretKey, body.serialize());
@@ -55,7 +53,7 @@ class OwnerHandler extends TopicHandler {
       {Duration timeout = defaultTimeout}) async {
     final completer = Completer();
     _statusCompleters[peer] = completer;
-    final header = Header(topic, router.pubKey, peer);
+    final header = Header(_topicOfThis, router.pubKey, peer);
     final body = OwnerBody(OwnerMsgType.authPeer, token);
     final encryptedBody =
         P2PCrypto.encrypt(peer, router.keyPair.secretKey, body.serialize());
@@ -73,7 +71,7 @@ class OwnerHandler extends TopicHandler {
       {Duration timeout = defaultTimeout}) async {
     final completer = Completer<Uint8List>();
     _dataCompleters[peer] = completer;
-    final header = Header(topic, router.pubKey, peer);
+    final header = Header(_topicOfThis, router.pubKey, peer);
     final body = OwnerBody(OwnerMsgType.getShard, Uint8List(0));
     final encryptedBody =
         P2PCrypto.encrypt(peer, router.keyPair.secretKey, body.serialize());
