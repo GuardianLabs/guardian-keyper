@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:async';
 import 'package:p2plib/p2plib.dart';
+
 import 'keeper_packet.dart';
 import 'owner_packet.dart';
 import 'keeper_handler.dart';
@@ -31,7 +32,7 @@ class OwnerHandler extends TopicHandler {
   }
 
   // оправить фрагмент данных на хранение
-  Future<void> sendShardSave(PubKey peer, Uint8List data,
+  Future<void> sendSetShardRequest(PubKey peer, Uint8List data,
       {Duration timeout = defaultTimeout}) async {
     final completer = Completer();
     _statusCompleters[peer] = completer;
@@ -41,11 +42,8 @@ class OwnerHandler extends TopicHandler {
     final encryptedBody =
         P2PCrypto.encrypt(peer, router.keyPair.secretKey, body.serialize());
     final msg = OwnerPacket(header, encryptedBody).serialize();
-    try {
-      await router.send(peer, msg);
-    } catch (err) {
-      rethrow;
-    }
+    await router.send(peer, msg);
+
     return completer.future.timeout(timeout, onTimeout: () {
       _statusCompleters.remove(peer);
       throw TimeoutException('[OwnerHandler] send shard request timeout');
@@ -53,7 +51,7 @@ class OwnerHandler extends TopicHandler {
   }
 
   // отправить запрос на добавление кипера
-  Future<void> sendAddKeeperRequest(PubKey peer, Uint8List token,
+  Future<void> sendAuthRequest(PubKey peer, Uint8List token,
       {Duration timeout = defaultTimeout}) async {
     final completer = Completer();
     _statusCompleters[peer] = completer;
@@ -62,11 +60,8 @@ class OwnerHandler extends TopicHandler {
     final encryptedBody =
         P2PCrypto.encrypt(peer, router.keyPair.secretKey, body.serialize());
     final msg = OwnerPacket(header, encryptedBody).serialize();
-    try {
-      await router.send(peer, msg);
-    } catch (err) {
-      rethrow;
-    }
+    await router.send(peer, msg);
+
     return completer.future.timeout(timeout, onTimeout: () {
       _statusCompleters.remove(peer);
       throw TimeoutException('[OwnerHandler] add keeper request timeout');
@@ -83,11 +78,8 @@ class OwnerHandler extends TopicHandler {
     final encryptedBody =
         P2PCrypto.encrypt(peer, router.keyPair.secretKey, body.serialize());
     final msg = OwnerPacket(header, encryptedBody).serialize();
-    try {
-      await router.send(peer, msg);
-    } catch (err) {
-      rethrow;
-    }
+    await router.send(peer, msg);
+
     return completer.future.timeout(timeout, onTimeout: () {
       _dataCompleters.remove(peer);
       throw TimeoutException('[OwnerHandler] request shard timeout');
@@ -97,34 +89,25 @@ class OwnerHandler extends TopicHandler {
   void _onPacket(Header header, KeeperBody body) {
     switch (body.msgType) {
       case KeeperMsgType.addKeeperResult:
+        break;
       case KeeperMsgType.saveDataResult:
-        {
-          final completer = _statusCompleters[header.srcKey];
-          if (null == completer) {
-            // print('[OwnerHandler] no completer for the status operation');
-            return;
-          }
-          final status = ProcessStatus.values[body.data[0]];
-          if (status == ProcessStatus.success) {
-            completer.complete();
-          } else {
-            completer.completeError(status);
-          }
-          _statusCompleters.remove(header.srcKey);
-          break;
-        }
-      case KeeperMsgType.data:
-        {
-          final completer = _dataCompleters[header.srcKey];
-          if (null == completer) {
-            // print('[OwnerHandler] no completer for the get data operation');
-            return;
-          }
+        final completer = _statusCompleters[header.srcKey];
+        if (completer == null) return;
 
-          completer.complete(body.data);
-          _dataCompleters.remove(header.srcKey);
-          break;
-        }
+        final status = ProcessStatus.values[body.data[0]];
+        status == ProcessStatus.success
+            ? completer.complete()
+            : completer.completeError(status);
+
+        _statusCompleters.remove(header.srcKey);
+        break;
+      case KeeperMsgType.data:
+        final completer = _dataCompleters[header.srcKey];
+        if (completer == null) return;
+
+        completer.complete(body.data);
+        _dataCompleters.remove(header.srcKey);
+        break;
     }
   }
 }

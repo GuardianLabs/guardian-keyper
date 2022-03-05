@@ -1,8 +1,10 @@
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:p2plib/p2plib.dart';
 
 enum OwnerMsgType { setShard, getShard, authPeer }
 
+@immutable
 class OwnerBody {
   final OwnerMsgType type;
   final Uint8List data;
@@ -33,6 +35,7 @@ class OwnerBody {
   }
 }
 
+@immutable
 class OwnerPacket {
   final Header header;
   final Uint8List body;

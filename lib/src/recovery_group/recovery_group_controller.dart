@@ -1,11 +1,8 @@
-// ignore_for_file: unused_field
-
-import 'package:flutter/widgets.dart';
-import 'package:p2plib/p2plib.dart' as p2p;
+import 'package:flutter/widgets.dart' hide Router;
+import 'package:p2plib/p2plib.dart';
 
 import '../core/utils.dart';
 import '../core/service/event_bus.dart';
-
 import 'recovery_group_model.dart';
 import 'recovery_group_service.dart';
 
@@ -13,7 +10,7 @@ class RecoveryGroupController with ChangeNotifier {
   RecoveryGroupController({
     required RecoveryGroupService recoveryGroupService,
     required EventBus eventBus,
-    required p2p.Router p2pRouter,
+    required Router p2pRouter,
   })  : _recoveryGroupService = recoveryGroupService,
         _eventBus = eventBus,
         _p2pRouter = p2pRouter {
@@ -21,7 +18,9 @@ class RecoveryGroupController with ChangeNotifier {
   }
 
   final RecoveryGroupService _recoveryGroupService;
-  final p2p.Router _p2pRouter;
+  // ignore: unused_field
+  final Router _p2pRouter;
+  // ignore: unused_field
   final EventBus _eventBus;
   late Map<String, RecoveryGroupModel> _groups;
 

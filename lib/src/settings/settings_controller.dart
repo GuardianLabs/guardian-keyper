@@ -35,4 +35,6 @@ class SettingsController with ChangeNotifier {
   }
 
   void clearRecoveryGroups() => _eventBus.fire(RecoveryGroupClearCommand());
+
+  void clearGuardianShards() => _eventBus.fire(GuardianShardsClearCommand());
 }

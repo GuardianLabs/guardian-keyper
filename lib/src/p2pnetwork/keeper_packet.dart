@@ -1,21 +1,19 @@
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:p2plib/p2plib.dart';
 
-enum KeeperMsgType {
-  addKeeperResult,
-  saveDataResult,
-  data,
-}
+enum KeeperMsgType { addKeeperResult, saveDataResult, data }
 
+@immutable
 class KeeperBody {
-  KeeperMsgType msgType;
-  Uint8List data;
+  final KeeperMsgType msgType;
+  final Uint8List data;
 
   static const minimalLength = 2;
 
-  KeeperBody(this.msgType, this.data);
+  const KeeperBody(this.msgType, this.data);
 
-  factory KeeperBody.createAddKeeperStatus(ProcessStatus status) {
+  factory KeeperBody.createAuthStatus(ProcessStatus status) {
     return KeeperBody.createStatusMsg(KeeperMsgType.addKeeperResult, status);
   }
 
@@ -55,11 +53,12 @@ class KeeperBody {
   }
 }
 
+@immutable
 class KeeperPacket {
   final Header header;
   final Uint8List body;
 
-  KeeperPacket(this.header, this.body);
+  const KeeperPacket(this.header, this.body);
 
   factory KeeperPacket.deserialize(Uint8List data) {
     const minimalLength = Header.length + KeeperBody.minimalLength;

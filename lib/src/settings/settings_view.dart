@@ -55,6 +55,13 @@ class SettingsView extends StatelessWidget {
               onPressed: controller.clearRecoveryGroups,
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: ElevatedButton(
+              child: const Text('Delete all shards'),
+              onPressed: controller.clearGuardianShards,
+            ),
+          ),
           // Footer
           Expanded(child: Container()),
         ],
