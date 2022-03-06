@@ -41,35 +41,35 @@ class GuardianController extends TopicHandler with ChangeNotifier {
   @override
   void onMessage(Uint8List data, Peer peer) async {
     final packet = OwnerPacket.deserialize(data);
-    final owner = packet.header.srcKey;
+    final peerPubKey = packet.header.srcKey;
     final body = OwnerBody.deserialize(
-        P2PCrypto.decrypt(owner, router.keyPair.secretKey, packet.body));
+        P2PCrypto.decrypt(peerPubKey, router.keyPair.secretKey, packet.body));
 
     switch (body.type) {
       case OwnerMsgType.authPeer:
         if (_currentAuthToken == PubKey(body.data)) {
-          _trustedPeers.add(owner);
+          _trustedPeers.add(peerPubKey);
           await _guardianService
               .setTrustedPeers(_trustedPeers.map((e) => e.data).toSet());
           _processStatus = ProcessingStatus.waiting;
           _sendResponse(
-              owner, KeeperBody.createAuthStatus(ProcessStatus.success));
+              peerPubKey, KeeperBody.createAuthStatus(ProcessStatus.success));
         } else {
           _processStatus = ProcessingStatus.error;
           _sendResponse(
-              owner, KeeperBody.createAuthStatus(ProcessStatus.reject));
+              peerPubKey, KeeperBody.createAuthStatus(ProcessStatus.reject));
         }
         _currentAuthToken = null;
         notifyListeners();
         break;
 
       case OwnerMsgType.setShard:
-        if (_trustedPeers.contains(owner)) {
+        if (_trustedPeers.contains(peerPubKey)) {
           try {
             await _guardianService.setSecretShards(_secretShards);
             //TBD groupId
-            _secretShards.add(
-                SecretShard(owner: owner.data, secret: body.data, groupId: ''));
+            _secretShards.add(SecretShard(
+                owner: peerPubKey.data, secret: body.data, groupId: ''));
             _processStatus = ProcessingStatus.finished;
           } on Exception {
             _processStatus = ProcessingStatus.error;
@@ -78,8 +78,8 @@ class GuardianController extends TopicHandler with ChangeNotifier {
           }
         } else {
           _processStatus = ProcessingStatus.error;
-          _sendResponse(
-              owner, KeeperBody.createSaveDataStatus(ProcessStatus.reject));
+          _sendResponse(peerPubKey,
+              KeeperBody.createSaveDataStatus(ProcessStatus.reject));
           notifyListeners();
         }
         break;
@@ -89,22 +89,24 @@ class GuardianController extends TopicHandler with ChangeNotifier {
         try {
           //TBD groupId
           shard = _secretShards
-              .firstWhere((e) => PubKey(e.owner) == owner && e.groupId == '')
+              .firstWhere(
+                  (e) => PubKey(e.owner) == peerPubKey && e.groupId == '')
               .secret;
         } on StateError {
           shard = Uint8List(0);
         } finally {
-          _sendResponse(owner, KeeperBody(KeeperMsgType.data, shard));
+          _sendResponse(peerPubKey, KeeperBody(KeeperMsgType.data, shard));
         }
         break;
     }
   }
 
-  void _sendResponse(PubKey owner, KeeperBody body) => router.send(
-      owner,
+  void _sendResponse(PubKey peerPubKey, KeeperBody body) => router.send(
+      peerPubKey,
       KeeperPacket(
-        Header(_topicOfThis, router.pubKey, owner),
-        P2PCrypto.encrypt(owner, router.keyPair.secretKey, body.serialize()),
+        Header(_topicOfThis, router.pubKey, peerPubKey),
+        P2PCrypto.encrypt(
+            peerPubKey, router.keyPair.secretKey, body.serialize()),
       ).serialize());
 
   Future<void> load() async {
