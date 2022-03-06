@@ -5,3 +5,5 @@ class EventBus extends event_bus.EventBus {}
 class RecoveryGroupClearCommand {}
 
 class GuardianShardsClearCommand {}
+
+class GuardianPeersClearCommand {}

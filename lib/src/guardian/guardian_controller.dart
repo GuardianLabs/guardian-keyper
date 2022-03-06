@@ -25,9 +25,9 @@ class GuardianController extends TopicHandler with ChangeNotifier {
   }
 
   final GuardianService _guardianService;
-  Set<SecretShard> _managedShards = {};
+  Set<SecretShard> _secretShards = {};
+  Set<PubKey> _trustedPeers = {};
   PubKey? _currentAuthToken;
-  PubKey? _currentOwner;
   ProcessingStatus _processStatus = ProcessingStatus.notInited;
 
   ProcessingStatus get processStatus => _processStatus;
@@ -48,7 +48,9 @@ class GuardianController extends TopicHandler with ChangeNotifier {
     switch (body.type) {
       case OwnerMsgType.authPeer:
         if (_currentAuthToken == PubKey(body.data)) {
-          _currentOwner = owner;
+          _trustedPeers.add(owner);
+          await _guardianService
+              .setTrustedPeers(_trustedPeers.map((e) => e.data).toSet());
           _processStatus = ProcessingStatus.waiting;
           _sendResponse(
               owner, KeeperBody.createAuthStatus(ProcessStatus.success));
@@ -62,21 +64,19 @@ class GuardianController extends TopicHandler with ChangeNotifier {
         break;
 
       case OwnerMsgType.setShard:
-        if (_currentOwner == owner) {
+        if (_trustedPeers.contains(owner)) {
           try {
-            await _guardianService.setShards(_managedShards);
+            await _guardianService.setSecretShards(_secretShards);
             //TBD groupId
-            _managedShards.add(
+            _secretShards.add(
                 SecretShard(owner: owner.data, secret: body.data, groupId: ''));
             _processStatus = ProcessingStatus.finished;
           } on Exception {
             _processStatus = ProcessingStatus.error;
           } finally {
-            _currentOwner = null;
             notifyListeners();
           }
         } else {
-          _currentOwner = null;
           _processStatus = ProcessingStatus.error;
           _sendResponse(
               owner, KeeperBody.createSaveDataStatus(ProcessStatus.reject));
@@ -88,7 +88,7 @@ class GuardianController extends TopicHandler with ChangeNotifier {
         late final Uint8List shard;
         try {
           //TBD groupId
-          shard = _managedShards
+          shard = _secretShards
               .firstWhere((e) => PubKey(e.owner) == owner && e.groupId == '')
               .secret;
         } on StateError {
@@ -108,18 +108,20 @@ class GuardianController extends TopicHandler with ChangeNotifier {
       ).serialize());
 
   Future<void> load() async {
-    _managedShards = await _guardianService.getShards();
+    _secretShards = await _guardianService.getSecretShards();
+    _trustedPeers = (await _guardianService.getTrustedPeers())
+        .map((e) => PubKey(e))
+        .toSet();
   }
 
   Future<void> clear() async {
-    await _guardianService.clearShards();
-    _managedShards.clear();
+    await _guardianService.clearSecretShards();
+    _secretShards.clear();
     notifyListeners();
   }
 
   void reset() {
     _currentAuthToken = null;
-    _currentOwner = null;
     _processStatus = ProcessingStatus.notInited;
     notifyListeners();
   }

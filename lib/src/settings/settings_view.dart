@@ -51,15 +51,22 @@ class SettingsView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20),
             child: ElevatedButton(
-              child: const Text('Delete all groups'),
+              child: const Text('Delete all  recovery groups'),
               onPressed: controller.clearRecoveryGroups,
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(20),
             child: ElevatedButton(
-              child: const Text('Delete all shards'),
+              child: const Text('Delete all trusted peers'),
               onPressed: controller.clearGuardianShards,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: ElevatedButton(
+              child: const Text('Delete all secret shards'),
+              onPressed: controller.clearGuardianPeers,
             ),
           ),
           // Footer
