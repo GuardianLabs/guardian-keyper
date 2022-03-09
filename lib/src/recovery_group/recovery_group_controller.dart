@@ -10,18 +10,19 @@ import '../core/model/owner_packet.dart';
 import 'recovery_group_model.dart';
 import 'recovery_group_service.dart';
 
-enum AuthRequestStatus { idle, sending, sent, timeout }
+enum RequestStatus { idle, sending, sent, timeout, error }
 
 class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   static const _topicOfThis = 100;
   static const _topicSubscribeTo = 101;
-  static const defaultTimeout = Duration(seconds: 10);
+  static const _networkTimeout = Duration(seconds: 10);
 
   final RecoveryGroupService _recoveryGroupService;
-  final Map<PubKey, Completer> _statusCompleters = {};
   final Map<PubKey, Completer<Uint8List>> _dataCompleters = {};
   late Map<String, RecoveryGroupModel> _groups;
-  AuthRequestStatus _authRequestStatus = AuthRequestStatus.idle;
+  RequestStatus _authRequestStatus = RequestStatus.idle;
+  final Map<PubKey, RequestStatus> _setShardRequestStatus = {};
+  final Map<PubKey, Uint8List> _getShardRequestResponse = {};
 
   RecoveryGroupController({
     required RecoveryGroupService recoveryGroupService,
@@ -33,7 +34,11 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   }
 
   Map<String, RecoveryGroupModel> get groups => _groups;
-  AuthRequestStatus get authRequestStatus => _authRequestStatus;
+  RequestStatus get authRequestStatus => _authRequestStatus;
+  Map<PubKey, RequestStatus> get setShardRequestStatus =>
+      _setShardRequestStatus;
+  Map<PubKey, Uint8List> get getShardRequestResponse =>
+      _getShardRequestResponse;
 
   @override
   void onStarted() {}
@@ -50,21 +55,27 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
 
     switch (body.msgType) {
       case KeeperMsgType.addKeeperResult:
-        if (_authRequestStatus == AuthRequestStatus.sending) {
-          _authRequestStatus = AuthRequestStatus.sent;
+        if (_authRequestStatus == RequestStatus.sending) {
+          _authRequestStatus = RequestStatus.sent;
           notifyListeners();
         }
         break;
 
       case KeeperMsgType.saveDataResult:
-        final completer = _statusCompleters[srcKey];
-        if (completer == null) return;
+        if (!_setShardRequestStatus.containsKey(srcKey)) return;
+        if (_setShardRequestStatus[srcKey] != RequestStatus.sending) return;
 
-        final status = ProcessStatus.values[body.data[0]];
-        status == ProcessStatus.success
-            ? completer.complete()
-            : completer.completeError(status);
-        _statusCompleters.remove(srcKey);
+        switch (ProcessStatus.values[body.data[0]]) {
+          case ProcessStatus.success:
+            _setShardRequestStatus[srcKey] = RequestStatus.sent;
+            break;
+          case ProcessStatus.timeoutError:
+            _setShardRequestStatus[srcKey] = RequestStatus.timeout;
+            break;
+          default:
+            _setShardRequestStatus[srcKey] = RequestStatus.error;
+        }
+        notifyListeners();
         break;
 
       case KeeperMsgType.data:
@@ -80,49 +91,40 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   void sendAuthRequest(QRCodeModel guardianQRCode) {
     _sendRequest(PubKey(guardianQRCode.pubKey),
             OwnerBody(OwnerMsgType.authPeer, guardianQRCode.authToken))
-        .timeout(defaultTimeout, onTimeout: () {
-      if (_authRequestStatus == AuthRequestStatus.sending) {
-        _authRequestStatus = AuthRequestStatus.timeout;
+        .timeout(_networkTimeout, onTimeout: () {
+      if (_authRequestStatus == RequestStatus.sending) {
+        _authRequestStatus = RequestStatus.timeout;
       }
     });
-    _authRequestStatus = AuthRequestStatus.sending;
+    _authRequestStatus = RequestStatus.sending;
     notifyListeners();
   }
 
-  void resetAuthRequest() => _authRequestStatus = AuthRequestStatus.idle;
+  void resetAuthRequest() => _authRequestStatus = RequestStatus.idle;
 
-  // оправить фрагмент данных на хранение
-  Future<void> sendSetShardRequest(
+  void sendSetShardRequest(
     PubKey peerPubKey,
-    Uint8List secretShard, {
-    Duration timeout = defaultTimeout,
-  }) async {
-    final completer = Completer();
-    _statusCompleters[peerPubKey] = completer;
-    await _sendRequest(
-        peerPubKey, OwnerBody(OwnerMsgType.setShard, secretShard));
-
-    return completer.future.timeout(timeout, onTimeout: () {
-      _statusCompleters.remove(peerPubKey);
-      throw TimeoutException('[OwnerHandler] send shard request timeout');
+    Uint8List groupId,
+    Uint8List secretShard,
+  ) {
+    _sendRequest(peerPubKey, OwnerBody(OwnerMsgType.setShard, secretShard))
+        .timeout(_networkTimeout, onTimeout: () {
+      if (_setShardRequestStatus[peerPubKey] == RequestStatus.sending) {
+        _setShardRequestStatus[peerPubKey] = RequestStatus.timeout;
+      }
     });
+    _setShardRequestStatus[peerPubKey] = RequestStatus.sending;
+    notifyListeners();
   }
 
-  // оправить запрос на получение фрагмента данных
-  Future<Uint8List> _sendGetShardRequest(
-    PubKey peerPubKey, {
-    Duration timeout = defaultTimeout,
-  }) async {
-    final completer = Completer<Uint8List>();
-    _dataCompleters[peerPubKey] = completer;
-    await _sendRequest(
-        peerPubKey, OwnerBody(OwnerMsgType.getShard, Uint8List(0)));
+  void resetSetShardRequests() => _setShardRequestStatus.clear();
 
-    return completer.future.timeout(timeout, onTimeout: () {
-      _dataCompleters.remove(peerPubKey);
-      throw TimeoutException('[OwnerHandler] request shard timeout');
-    });
+  void sendGetShardRequest(PubKey peerPubKey, Uint8List groupId) {
+    _sendRequest(peerPubKey, OwnerBody(OwnerMsgType.getShard, Uint8List(0)))
+        .timeout(_networkTimeout);
   }
+
+  void resetGetShardRequests() => _getShardRequestResponse.clear();
 
   Future<void> _sendRequest(PubKey peerPubKey, OwnerBody body) => router.send(
       peerPubKey,

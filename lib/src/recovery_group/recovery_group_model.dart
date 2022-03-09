@@ -1,5 +1,5 @@
 import 'dart:convert';
-// import 'dart:typed_data';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import '../core/model/pub_key_model.dart';
@@ -8,6 +8,7 @@ enum RecoveryGroupType { devices, fiduciaries }
 
 @immutable
 class RecoveryGroupModel {
+  final Uint8List id;
   final String name;
   final RecoveryGroupType type;
   final int size;
@@ -16,6 +17,7 @@ class RecoveryGroupModel {
   final Map<String, RecoveryGroupSecretModel> secrets;
 
   const RecoveryGroupModel({
+    required this.id,
     required this.name,
     required this.type,
     this.size = 3,
@@ -34,6 +36,7 @@ class RecoveryGroupModel {
         RecoveryGroupGuardianModel.fromJson(value as Map<String, dynamic>));
 
     return RecoveryGroupModel(
+      id: base64Decode(json['id'] as String),
       name: json['name'] as String,
       type: RecoveryGroupType.values.byName(json['type']),
       size: json['size'] as int,
@@ -44,6 +47,7 @@ class RecoveryGroupModel {
   }
 
   static Map<String, dynamic> toJson(RecoveryGroupModel value) => {
+        'id': base64Encode(value.id),
         'name': value.name,
         'type': value.type.name,
         'size': value.size,
@@ -56,10 +60,11 @@ class RecoveryGroupModel {
     if (guardians.containsKey(guardian.name)) {
       throw RecoveryGroupGuardianAlreadyExists();
     }
-    if (guardians.length == size) {
+    if (guardians.length >= size) {
       throw RecoveryGroupGuardianLimitexhausted();
     }
     return RecoveryGroupModel(
+      id: id,
       name: name,
       type: type,
       size: size,
@@ -74,6 +79,7 @@ class RecoveryGroupModel {
       throw RecoveryGroupSecretAlreadyExists();
     }
     return RecoveryGroupModel(
+      id: id,
       name: name,
       type: type,
       size: size,

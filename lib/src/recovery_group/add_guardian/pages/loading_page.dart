@@ -14,18 +14,18 @@ class LoadingPage extends StatelessWidget {
     final controller = Provider.of<RecoveryGroupController>(context);
 
     switch (controller.authRequestStatus) {
-      case AuthRequestStatus.idle:
+      case RequestStatus.idle:
         controller.sendAuthRequest(QRCodeModel.fromString(
             context.read<AddGuardianController>().guardianCode));
         break;
-      case AuthRequestStatus.sending:
+      case RequestStatus.sending:
         return const Center(child: CircularProgressIndicator.adaptive());
-      case AuthRequestStatus.sent:
+      case RequestStatus.sent:
         controller.resetAuthRequest();
         state.guardianName = 'Phone name ' + DateTime.now().second.toString();
         state.nextScreen();
         break;
-      case AuthRequestStatus.timeout:
+      case RequestStatus.timeout:
         controller.resetAuthRequest();
         state.previousScreen(); // TBD: show error
         break;
