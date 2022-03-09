@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/widgets.dart' hide Router;
 import 'package:p2plib/p2plib.dart';
@@ -18,11 +17,10 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   static const _networkTimeout = Duration(seconds: 10);
 
   final RecoveryGroupService _recoveryGroupService;
-  final Map<PubKey, Completer<Uint8List>> _dataCompleters = {};
-  late Map<String, RecoveryGroupModel> _groups;
-  RequestStatus _authRequestStatus = RequestStatus.idle;
   final Map<PubKey, RequestStatus> _setShardRequestStatus = {};
   final Map<PubKey, Uint8List> _getShardRequestResponse = {};
+  RequestStatus _authRequestStatus = RequestStatus.idle;
+  Map<String, RecoveryGroupModel> _groups = {};
 
   RecoveryGroupController({
     required RecoveryGroupService recoveryGroupService,
@@ -54,14 +52,14 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
         P2PCrypto.decrypt(srcKey, router.keyPair.secretKey, packet.body));
 
     switch (body.msgType) {
-      case KeeperMsgType.addKeeperResult:
+      case KeeperMsgType.authResult:
         if (_authRequestStatus == RequestStatus.sending) {
           _authRequestStatus = RequestStatus.sent;
           notifyListeners();
         }
         break;
 
-      case KeeperMsgType.saveDataResult:
+      case KeeperMsgType.setShardResult:
         if (!_setShardRequestStatus.containsKey(srcKey)) return;
         if (_setShardRequestStatus[srcKey] != RequestStatus.sending) return;
 
@@ -78,12 +76,9 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
         notifyListeners();
         break;
 
-      case KeeperMsgType.data:
-        final completer = _dataCompleters[srcKey];
-        if (completer == null) return;
-
-        completer.complete(body.data);
-        _dataCompleters.remove(srcKey);
+      case KeeperMsgType.getShardResult:
+        _getShardRequestResponse[srcKey] = body.data;
+        notifyListeners();
         break;
     }
   }

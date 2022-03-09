@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme_data.dart';
 import '../../../core/widgets/common.dart';
-import '../../../core/model/pub_key_model.dart';
+import '../../../core/model/p2p_model.dart';
 import '../../recovery_group_model.dart';
 import '../add_guardian_controller.dart';
 import '../../recovery_group_controller.dart';

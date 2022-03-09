@@ -2,13 +2,19 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
-import '../core/model/pub_key_model.dart';
+import '../core/model/p2p_model.dart';
 
 enum RecoveryGroupType { devices, fiduciaries }
 
+class GroupID extends RawToken {
+  static const length = 8;
+
+  const GroupID(Uint8List data) : super(data: data, len: length);
+}
+
 @immutable
 class RecoveryGroupModel {
-  final Uint8List id;
+  final GroupID id;
   final String name;
   final RecoveryGroupType type;
   final int size;
@@ -36,7 +42,7 @@ class RecoveryGroupModel {
         RecoveryGroupGuardianModel.fromJson(value as Map<String, dynamic>));
 
     return RecoveryGroupModel(
-      id: base64Decode(json['id'] as String),
+      id: GroupID(base64Decode(json['id'] as String)),
       name: json['name'] as String,
       type: RecoveryGroupType.values.byName(json['type']),
       size: json['size'] as int,
@@ -47,7 +53,7 @@ class RecoveryGroupModel {
   }
 
   static Map<String, dynamic> toJson(RecoveryGroupModel value) => {
-        'id': base64Encode(value.id),
+        'id': base64Encode(value.id.data),
         'name': value.name,
         'type': value.type.name,
         'size': value.size,

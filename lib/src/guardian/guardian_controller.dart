@@ -96,7 +96,8 @@ class GuardianController extends TopicHandler with ChangeNotifier {
         } on StateError {
           shard = Uint8List(0);
         } finally {
-          _sendResponse(peerPubKey, KeeperBody(KeeperMsgType.data, shard));
+          _sendResponse(
+              peerPubKey, KeeperBody(KeeperMsgType.getShardResult, shard));
         }
         break;
     }

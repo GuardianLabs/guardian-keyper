@@ -72,7 +72,7 @@ class InputNamePage extends StatelessWidget {
                 ? null
                 : () async {
                     final newGroup = RecoveryGroupModel(
-                      id: getRandomBytes(8),
+                      id: GroupID(getRandomBytes(8)),
                       name: state.groupName,
                       type: state.groupType!,
                     );

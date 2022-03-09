@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:p2plib/p2plib.dart';
 
-enum KeeperMsgType { addKeeperResult, saveDataResult, data }
+enum KeeperMsgType { authResult, setShardResult, getShardResult }
 
 @immutable
 class KeeperBody {
@@ -14,15 +14,15 @@ class KeeperBody {
   const KeeperBody(this.msgType, this.data);
 
   factory KeeperBody.createAuthStatus(ProcessStatus status) {
-    return KeeperBody.createStatusMsg(KeeperMsgType.addKeeperResult, status);
+    return KeeperBody.createStatusMsg(KeeperMsgType.authResult, status);
   }
 
   factory KeeperBody.createSaveDataStatus(ProcessStatus status) {
-    return KeeperBody.createStatusMsg(KeeperMsgType.saveDataResult, status);
+    return KeeperBody.createStatusMsg(KeeperMsgType.setShardResult, status);
   }
 
   factory KeeperBody.createData(Uint8List data) {
-    return KeeperBody(KeeperMsgType.data, data);
+    return KeeperBody(KeeperMsgType.getShardResult, data);
   }
 
   factory KeeperBody.createStatusMsg(KeeperMsgType type, ProcessStatus status) {
