@@ -74,7 +74,7 @@ class _SplitAndShareSecretPageState extends State<SplitAndShareSecretPage> {
                   for (var guardian in groupGuardians.values)
                     GuardianListTileWidget(
                       name: guardian.name,
-                      code: guardian.code,
+                      code: guardian.pubKey.toString(),
                       tag: guardian.tag,
                       // nameColor: guardian.code.isEmpty ? clRed : clWhite,
                       iconColor: clIndigo500,

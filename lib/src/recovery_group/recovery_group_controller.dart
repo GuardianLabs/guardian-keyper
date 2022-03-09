@@ -3,12 +3,14 @@ import 'dart:typed_data';
 import 'package:flutter/widgets.dart' hide Router;
 import 'package:p2plib/p2plib.dart';
 
-import '../core/utils.dart';
 import '../core/service/event_bus.dart';
+import '../core/model/qr_code_model.dart';
 import '../core/model/keeper_packet.dart';
 import '../core/model/owner_packet.dart';
 import 'recovery_group_model.dart';
 import 'recovery_group_service.dart';
+
+enum AuthRequestStatus { idle, sending, sent, timeout }
 
 class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   static const _topicOfThis = 100;
@@ -19,6 +21,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   final Map<PubKey, Completer> _statusCompleters = {};
   final Map<PubKey, Completer<Uint8List>> _dataCompleters = {};
   late Map<String, RecoveryGroupModel> _groups;
+  AuthRequestStatus _authRequestStatus = AuthRequestStatus.idle;
 
   RecoveryGroupController({
     required RecoveryGroupService recoveryGroupService,
@@ -30,7 +33,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   }
 
   Map<String, RecoveryGroupModel> get groups => _groups;
-  String get qrCode => getRandomString(100);
+  AuthRequestStatus get authRequestStatus => _authRequestStatus;
 
   @override
   void onStarted() {}
@@ -47,6 +50,10 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
 
     switch (body.msgType) {
       case KeeperMsgType.addKeeperResult:
+        if (_authRequestStatus == AuthRequestStatus.sending) {
+          _authRequestStatus = AuthRequestStatus.sent;
+          notifyListeners();
+        }
         break;
 
       case KeeperMsgType.saveDataResult:
@@ -70,21 +77,19 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     }
   }
 
-  // отправить запрос на добавление кипера
-  Future<void> sendAuthRequest(
-    PubKey peerPubKey,
-    Uint8List token, {
-    Duration timeout = defaultTimeout,
-  }) async {
-    final completer = Completer();
-    _statusCompleters[peerPubKey] = completer;
-    await _sendResponse(peerPubKey, OwnerBody(OwnerMsgType.authPeer, token));
-
-    return completer.future.timeout(timeout, onTimeout: () {
-      _statusCompleters.remove(peerPubKey);
-      throw TimeoutException('[OwnerHandler] add keeper request timeout');
+  void sendAuthRequest(QRCodeModel guardianQRCode) {
+    _sendRequest(PubKey(guardianQRCode.pubKey),
+            OwnerBody(OwnerMsgType.authPeer, guardianQRCode.authToken))
+        .timeout(defaultTimeout, onTimeout: () {
+      if (_authRequestStatus == AuthRequestStatus.sending) {
+        _authRequestStatus = AuthRequestStatus.timeout;
+      }
     });
+    _authRequestStatus = AuthRequestStatus.sending;
+    notifyListeners();
   }
+
+  void resetAuthRequest() => _authRequestStatus = AuthRequestStatus.idle;
 
   // оправить фрагмент данных на хранение
   Future<void> sendSetShardRequest(
@@ -94,7 +99,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   }) async {
     final completer = Completer();
     _statusCompleters[peerPubKey] = completer;
-    await _sendResponse(
+    await _sendRequest(
         peerPubKey, OwnerBody(OwnerMsgType.setShard, secretShard));
 
     return completer.future.timeout(timeout, onTimeout: () {
@@ -104,13 +109,13 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   }
 
   // оправить запрос на получение фрагмента данных
-  Future<Uint8List> sendShardRequest(
+  Future<Uint8List> _sendGetShardRequest(
     PubKey peerPubKey, {
     Duration timeout = defaultTimeout,
   }) async {
     final completer = Completer<Uint8List>();
     _dataCompleters[peerPubKey] = completer;
-    await _sendResponse(
+    await _sendRequest(
         peerPubKey, OwnerBody(OwnerMsgType.getShard, Uint8List(0)));
 
     return completer.future.timeout(timeout, onTimeout: () {
@@ -119,7 +124,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     });
   }
 
-  Future<void> _sendResponse(PubKey peerPubKey, OwnerBody body) => router.send(
+  Future<void> _sendRequest(PubKey peerPubKey, OwnerBody body) => router.send(
       peerPubKey,
       OwnerPacket(
         Header(_topicOfThis, router.pubKey, peerPubKey),

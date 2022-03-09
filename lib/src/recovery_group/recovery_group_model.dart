@@ -1,4 +1,8 @@
+import 'dart:convert';
+// import 'dart:typed_data';
 import 'package:flutter/material.dart';
+
+import '../core/model/pub_key_model.dart';
 
 enum RecoveryGroupType { devices, fiduciaries }
 
@@ -103,27 +107,30 @@ class RecoveryGroupSecretAlreadyExists implements Exception {
 @immutable
 class RecoveryGroupGuardianModel {
   final String name;
-  final String code;
   final String tag;
+  final PubKey pubKey;
+  final PubKey signPubKey;
 
   const RecoveryGroupGuardianModel({
     required this.name,
-    this.code = '',
     this.tag = '',
-  })  : assert(name != ''),
-        assert(code != '');
+    required this.pubKey,
+    required this.signPubKey,
+  }) : assert(name != '');
 
   factory RecoveryGroupGuardianModel.fromJson(Map<String, dynamic> json) =>
       RecoveryGroupGuardianModel(
         name: json['name'] as String,
-        code: json['code'] as String,
         tag: json['tag'] as String,
+        pubKey: PubKey(base64Decode(json['pub_key'] as String)),
+        signPubKey: PubKey(base64Decode(json['sign_pub_key'] as String)),
       );
 
   static Map<String, dynamic> toJson(RecoveryGroupGuardianModel value) => {
         'name': value.name,
-        'code': value.code,
         'tag': value.tag,
+        'pub_key': base64Encode(value.pubKey.data),
+        'sign_pub_key': base64Encode(value.signPubKey.data),
       };
 }
 

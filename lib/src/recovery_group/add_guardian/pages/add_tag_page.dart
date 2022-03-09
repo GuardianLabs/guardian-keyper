@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:guardian_network/src/core/model/qr_code_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme_data.dart';
 import '../../../core/widgets/common.dart';
-
+import '../../../core/model/pub_key_model.dart';
 import '../../recovery_group_model.dart';
 import '../add_guardian_controller.dart';
 import '../../recovery_group_controller.dart';
@@ -66,12 +67,14 @@ class AddTagPage extends StatelessWidget {
           child: FooterButton(
             text: 'Continue',
             onPressed: () async {
+              final qr = QRCodeModel.fromString(state.guardianCode);
               await context.read<RecoveryGroupController>().addGuardian(
                     state.groupName,
                     RecoveryGroupGuardianModel(
                       name: state.guardianName,
-                      code: state.guardianCode,
                       tag: state.guardianTag,
+                      pubKey: PubKey(qr.pubKey),
+                      signPubKey: PubKey(qr.signPubKey),
                     ),
                   );
               state.showLastPage

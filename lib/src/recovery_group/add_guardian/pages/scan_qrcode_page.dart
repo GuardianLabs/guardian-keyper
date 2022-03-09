@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import '../../../core/utils.dart';
+// import '../../../core/utils.dart';
 import '../../../core/theme_data.dart';
 import '../../../core/widgets/common.dart';
 
@@ -51,7 +51,7 @@ class _ScanQRCodePageState extends State<ScanQRCodePage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = Provider.of<AddGuardianController>(context);
+    // final state = Provider.of<AddGuardianController>(context);
     return Column(
       children: [
         // Header
@@ -71,14 +71,15 @@ class _ScanQRCodePageState extends State<ScanQRCodePage> {
                 onQRViewCreated: _onQRViewCreated,
               ),
             )),
-        Expanded(
-            child: TextButton(
-          child: const Text('Create random code'),
-          onPressed: () {
-            state.guardianCode = getRandomString(64);
-            state.nextScreen();
-          },
-        )),
+        Expanded(child: Container()),
+        // Expanded(
+        //     child: TextButton(
+        //   child: const Text('Create random code'),
+        //   onPressed: () {
+        //     state.guardianCode = getRandomString(100);
+        //     state.nextScreen();
+        //   },
+        // )),
         Padding(
           padding: const EdgeInsets.only(left: 95, right: 95),
           child: Container(

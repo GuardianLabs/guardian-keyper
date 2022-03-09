@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -29,8 +28,9 @@ class _GuardianViewState extends State<GuardianView> {
         return const CircularProgressIndicator.adaptive();
       case ProcessingStatus.inited:
         return QrImage(
-            data: base64.encode(controller.getQRCode(
-                context.read<SettingsController>().keyPair.publicKey)));
+            data: controller
+                .getQRCode(context.read<SettingsController>().keyPair.publicKey)
+                .toString());
       case ProcessingStatus.waiting:
         return const CircularProgressIndicator.adaptive();
       case ProcessingStatus.finished:

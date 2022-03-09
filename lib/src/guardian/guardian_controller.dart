@@ -4,6 +4,7 @@ import 'package:p2plib/p2plib.dart';
 
 import '../core/utils.dart';
 import '../core/service/event_bus.dart';
+import '../core/model/qr_code_model.dart';
 import '../core/model/owner_packet.dart';
 import '../core/model/keeper_packet.dart';
 import 'guardian_model.dart';
@@ -134,11 +135,11 @@ class GuardianController extends TopicHandler with ChangeNotifier {
     notifyListeners();
   }
 
-  Uint8List getQRCode(Uint8List myPubKey) {
-    var qr = [0, 0, 0, 0];
-    qr.addAll(_currentAuthToken!.data);
-    qr.addAll(myPubKey);
-    qr.addAll(myPubKey); //TBD: add second pubKey
-    return Uint8List.fromList(qr);
-  }
+  QRCodeModel getQRCode(Uint8List myPubKey, [Uint8List? mySignPubKey]) =>
+      QRCodeModel(
+        header: Uint8List.fromList([0, 0, 0, 0]),
+        authToken: _currentAuthToken!.data,
+        pubKey: myPubKey,
+        signPubKey: mySignPubKey ?? myPubKey,
+      );
 }

@@ -61,7 +61,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
               for (var guardian in _groupGuardians.values)
                 GuardianListTileWidget(
                   name: guardian.name,
-                  code: guardian.code,
+                  code: guardian.pubKey.toString(),
                   tag: guardian.tag,
                   // nameColor: guardian.code.isEmpty ? clRed : clWhite,
                   iconColor: state.guardians.containsKey(guardian.name)
