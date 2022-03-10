@@ -5,6 +5,7 @@ import 'package:p2plib/p2plib.dart';
 import '../core/utils.dart';
 import '../core/service/event_bus.dart';
 import '../core/model/qr_code_model.dart';
+import '../core/model/p2p_model.dart' hide PubKey;
 import '../core/model/owner_packet.dart';
 import '../core/model/keeper_packet.dart';
 import 'guardian_model.dart';
