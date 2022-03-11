@@ -52,14 +52,14 @@ class RecoveryGroupModel {
     );
   }
 
-  static Map<String, dynamic> toJson(RecoveryGroupModel value) => {
-        'id': base64Encode(value.id.data),
-        'name': value.name,
-        'type': value.type.name,
-        'size': value.size,
-        'threshold': value.threshold,
-        'secrets': value.secrets,
-        'guardians': value.guardians,
+  Map<String, dynamic> toJson() => {
+        'id': base64Encode(id.data),
+        'name': name,
+        'type': type.name,
+        'size': size,
+        'threshold': threshold,
+        'secrets': secrets,
+        'guardians': guardians,
       };
 
   RecoveryGroupModel addGuardian(RecoveryGroupGuardianModel guardian) {
@@ -138,36 +138,36 @@ class RecoveryGroupGuardianModel {
         signPubKey: PubKey(base64Decode(json['sign_pub_key'] as String)),
       );
 
-  static Map<String, dynamic> toJson(RecoveryGroupGuardianModel value) => {
-        'name': value.name,
-        'tag': value.tag,
-        'pub_key': base64Encode(value.pubKey.data),
-        'sign_pub_key': base64Encode(value.signPubKey.data),
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'tag': tag,
+        'pub_key': base64Encode(pubKey.data),
+        'sign_pub_key': base64Encode(signPubKey.data),
       };
 }
 
 // RecoveryGroupSecretModel
-// Do not save\serialize token or delete token at all?
 
 @immutable
 class RecoveryGroupSecretModel {
+  final int id;
   final String name;
   final String token;
 
   const RecoveryGroupSecretModel({
     required this.name,
     this.token = '',
-  })  : assert(name != ''),
-        assert(token != '');
+    this.id = 0,
+  }) : assert(name != '');
 
   factory RecoveryGroupSecretModel.fromJson(Map<String, dynamic> json) =>
       RecoveryGroupSecretModel(
+        id: json['id'] as int,
         name: json['name'] as String,
-        token: json['token'] as String,
       );
 
-  static Map<String, dynamic> toJson(RecoveryGroupSecretModel value) => {
-        'name': value.name,
-        'token': value.token,
+  Map<String, dynamic> toJson() => {
+        'id': token.hashCode,
+        'name': name,
       };
 }

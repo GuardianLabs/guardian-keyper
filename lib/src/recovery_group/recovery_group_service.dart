@@ -25,13 +25,11 @@ class RecoveryGroupService {
     final value = jsonEncode(groups, toEncodable: (Object? value) {
       switch (value.runtimeType) {
         case RecoveryGroupModel:
-          return RecoveryGroupModel.toJson(value as RecoveryGroupModel);
+          return (value as RecoveryGroupModel).toJson();
         case RecoveryGroupGuardianModel:
-          return RecoveryGroupGuardianModel.toJson(
-              value as RecoveryGroupGuardianModel);
+          return (value as RecoveryGroupGuardianModel).toJson();
         case RecoveryGroupSecretModel:
-          return RecoveryGroupSecretModel.toJson(
-              value as RecoveryGroupSecretModel);
+          return (value as RecoveryGroupSecretModel).toJson();
         default:
           throw UnsupportedError(value.runtimeType.toString());
       }
