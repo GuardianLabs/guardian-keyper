@@ -14,9 +14,9 @@ class GuardianView extends StatefulWidget {
 
 class _GuardianViewState extends State<GuardianView> {
   @override
-  void dispose() {
-    context.read<GuardianController>().reset();
-    super.dispose();
+  void initState() {
+    super.initState();
+    context.read<GuardianController>().generateAuthToken();
   }
 
   @override
@@ -24,8 +24,7 @@ class _GuardianViewState extends State<GuardianView> {
     final controller = Provider.of<GuardianController>(context);
     switch (controller.processStatus) {
       case ProcessingStatus.notInited:
-        context.read<GuardianController>().generateAuthToken();
-        return const CircularProgressIndicator.adaptive();
+        return const Text('Not inited!');
       case ProcessingStatus.inited:
         return QrImage(
             data: controller

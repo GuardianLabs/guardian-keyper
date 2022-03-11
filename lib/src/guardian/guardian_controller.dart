@@ -21,13 +21,13 @@ class GuardianController extends TopicHandler with ChangeNotifier {
     required Router router,
   })  : _guardianService = guardianService,
         super(router) {
-    eventBus.on<RecoveryGroupClearCommand>().listen((event) => clear());
+    eventBus.on<RecoveryGroupClearCommand>().listen((event) => clearStorage());
   }
 
   final GuardianService _guardianService;
   Set<SecretShard> _secretShards = {};
   Set<PubKey> _trustedPeers = {};
-  PubKey? _currentAuthToken;
+  AuthToken? _currentAuthToken;
   ProcessingStatus _processStatus = ProcessingStatus.notInited;
 
   ProcessingStatus get processStatus => _processStatus;
@@ -45,7 +45,7 @@ class GuardianController extends TopicHandler with ChangeNotifier {
 
     switch (p2pPacket.type) {
       case MessageType.authPeer:
-        if (_currentAuthToken == PubKey(p2pPacket.body)) {
+        if (_currentAuthToken == AuthToken(p2pPacket.body)) {
           _trustedPeers.add(peerPubKey);
           await _guardianService
               .setTrustedPeers(_trustedPeers.map((e) => e.data).toSet());
@@ -120,26 +120,20 @@ class GuardianController extends TopicHandler with ChangeNotifier {
         .toSet();
   }
 
-  Future<void> clear() async {
+  Future<void> clearStorage() async {
     await _guardianService.clearSecretShards();
     _secretShards.clear();
     notifyListeners();
   }
 
-  void reset() {
-    _currentAuthToken = null;
-    _processStatus = ProcessingStatus.notInited;
-    notifyListeners();
-  }
-
   void generateAuthToken() {
-    _currentAuthToken = PubKey(getRandomBytes(PubKey.length));
+    _currentAuthToken = AuthToken(getRandomBytes(AuthToken.length));
     _processStatus = ProcessingStatus.inited;
-    notifyListeners();
+    // notifyListeners();
   }
 
   QRCode getQRCode(Uint8List myPubKey, [Uint8List? mySignPubKey]) => QRCode(
-        header: Uint8List.fromList([0, 0, 0, 0]),
+        header: Uint8List(4),
         authToken: _currentAuthToken!.data,
         pubKey: myPubKey,
         signPubKey: mySignPubKey ?? myPubKey,

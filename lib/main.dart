@@ -50,6 +50,7 @@ void main() async {
     await settingsController.load();
     await guardianController.load();
     await recoveryGroupController.load();
+    await router.run();
   });
 
   runApp(DIProvider(

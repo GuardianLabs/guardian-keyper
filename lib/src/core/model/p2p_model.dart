@@ -6,6 +6,8 @@ import 'package:cbor/cbor.dart';
 
 typedef PubKey = p2p.PubKey;
 
+typedef AuthToken = p2p.PubKey;
+
 typedef RawToken = p2p.RawToken;
 
 enum MessageType { none, authPeer, getShard, setShard }
@@ -95,12 +97,10 @@ class QRCode {
   }
 
   @override
-  String toString() {
-    var qr = Uint8List(0);
-    qr.addAll(header);
-    qr.addAll(authToken);
-    qr.addAll(pubKey);
-    qr.addAll(signPubKey);
-    return base64Encode(qr);
-  }
+  String toString() => base64Encode([
+        ...header,
+        ...authToken,
+        ...pubKey,
+        ...signPubKey,
+      ]);
 }
