@@ -308,6 +308,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  ntcdcrypto:
+    dependency: "direct main"
+    description:
+      name: ntcdcrypto
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   p2plib:
     dependency: "direct main"
     description:
