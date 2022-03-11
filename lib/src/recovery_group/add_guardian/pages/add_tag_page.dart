@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:guardian_network/src/core/model/qr_code_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme_data.dart';
@@ -67,7 +66,7 @@ class AddTagPage extends StatelessWidget {
           child: FooterButton(
             text: 'Continue',
             onPressed: () async {
-              final qr = QRCodeModel.fromString(state.guardianCode);
+              final qr = QRCode.fromBase64(state.guardianCode);
               await context.read<RecoveryGroupController>().addGuardian(
                     state.groupName,
                     RecoveryGroupGuardianModel(

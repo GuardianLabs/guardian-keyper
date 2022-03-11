@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/model/qr_code_model.dart';
+import '../../../core/model/p2p_model.dart';
 import '../add_guardian_controller.dart';
 import '../../recovery_group_controller.dart';
 
@@ -15,7 +15,7 @@ class LoadingPage extends StatelessWidget {
 
     switch (controller.authRequestStatus) {
       case RequestStatus.idle:
-        controller.sendAuthRequest(QRCodeModel.fromString(
+        controller.sendAuthRequest(QRCode.fromBase64(
             context.read<AddGuardianController>().guardianCode));
         break;
       case RequestStatus.sending:

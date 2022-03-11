@@ -1,11 +1,13 @@
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:collection/collection.dart';
+import 'dart:typed_data' show Uint8List;
+import 'dart:convert' show base64Decode, base64Encode;
+import 'package:flutter/foundation.dart' show immutable;
+import 'package:collection/collection.dart' show IterableEquality;
 
+@immutable
 class SecretShard {
   final Uint8List secret;
   final Uint8List owner;
-  final String groupId;
+  final Uint8List groupId;
 
   const SecretShard({
     required this.secret,
@@ -13,16 +15,22 @@ class SecretShard {
     required this.groupId,
   });
 
+  factory SecretShard.empty() => SecretShard(
+        secret: Uint8List(0),
+        owner: Uint8List(0),
+        groupId: Uint8List(0),
+      );
+
   factory SecretShard.fromJson(Map<String, dynamic> json) => SecretShard(
         owner: base64Decode(json['owner']),
-        groupId: json['group_id'],
+        groupId: base64Decode(json['group_id']),
         secret: base64Decode(json['secret']),
       );
 
-  static Map<String, dynamic> toJson(SecretShard value) => {
-        'owner': value.owner.toString(),
-        'group_id': value.groupId,
-        'secret': base64Encode(value.secret),
+  Map<String, dynamic> toJson() => {
+        'owner': base64Encode(owner),
+        'group_id': base64Encode(groupId),
+        'secret': base64Encode(secret),
       };
 
   @override
@@ -31,10 +39,10 @@ class SecretShard {
   @override
   bool operator ==(Object other) =>
       other is SecretShard &&
-      groupId == other.groupId &&
-      owner == other.owner &&
+      const IterableEquality().equals(groupId, other.groupId) &&
+      const IterableEquality().equals(owner, other.owner) &&
       const IterableEquality().equals(secret, other.secret);
 
   @override
-  int get hashCode => Object.hash(owner, groupId, secret); // TBD:
+  int get hashCode => Object.hashAll([owner, groupId, secret]);
 }

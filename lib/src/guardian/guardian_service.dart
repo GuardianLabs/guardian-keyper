@@ -41,7 +41,7 @@ class GuardianService {
   Future<void> setSecretShards(Set<SecretShard> managedSecrets) async {
     final json = jsonEncode(managedSecrets.toList(),
         toEncodable: (Object? value) =>
-            value is SecretShard ? SecretShard.toJson(value) : null);
+            value is SecretShard ? value.toJson() : null);
     await storage.write(key: _secretShardsPath, value: json);
   }
 

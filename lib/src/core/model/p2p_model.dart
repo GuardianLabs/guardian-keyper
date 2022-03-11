@@ -1,11 +1,10 @@
-import 'dart:typed_data';
+import 'dart:typed_data' show Uint8List;
+import 'dart:convert' show base64Decode, base64Encode;
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:p2plib/p2plib.dart' as p2p;
+import 'package:p2plib/p2plib.dart' as p2p show Header, RawToken, PubKey;
 import 'package:cbor/cbor.dart';
 
 typedef PubKey = p2p.PubKey;
-
-// typedef AuthKey = p2p.PubKey;
 
 typedef RawToken = p2p.RawToken;
 
@@ -69,4 +68,39 @@ class SetShardPacket {
         const CborSimpleValue(0): CborBytes(groupId),
         const CborSimpleValue(1): CborBytes(secretShard),
       })));
+}
+
+@immutable
+class QRCode {
+  final Uint8List header;
+  final Uint8List authToken;
+  final Uint8List pubKey;
+  final Uint8List signPubKey;
+
+  const QRCode({
+    required this.header,
+    required this.authToken,
+    required this.pubKey,
+    required this.signPubKey,
+  });
+
+  factory QRCode.fromBase64(String qrCode) {
+    final packet = base64Decode(qrCode);
+    return QRCode(
+      header: packet.sublist(0, 3),
+      authToken: packet.sublist(4, 35),
+      pubKey: packet.sublist(36, 67),
+      signPubKey: packet.sublist(68, 99),
+    );
+  }
+
+  @override
+  String toString() {
+    var qr = Uint8List(0);
+    qr.addAll(header);
+    qr.addAll(authToken);
+    qr.addAll(pubKey);
+    qr.addAll(signPubKey);
+    return base64Encode(qr);
+  }
 }

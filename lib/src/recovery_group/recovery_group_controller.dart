@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart' hide Router;
 import 'package:p2plib/p2plib.dart';
 
 import '../core/service/event_bus.dart';
-import '../core/model/qr_code_model.dart';
 import '../core/model/p2p_model.dart' hide PubKey;
 import 'recovery_group_model.dart';
 import 'recovery_group_service.dart';
@@ -47,11 +46,11 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   @override
   void onMessage(Uint8List data, Peer peer) {
     final p2pPacket = P2PPacket.fromCbor(data);
-    final peerKey = p2pPacket.header.srcKey;
+    final peerPubKey = p2pPacket.header.srcKey;
 
     switch (p2pPacket.type) {
       case MessageType.authPeer:
-        if (_authRequestPeer != peerKey ||
+        if (_authRequestPeer != peerPubKey ||
             _authRequestStatus != RequestStatus.sending) return;
         _authRequestStatus = p2pPacket.status == MessageStatus.success
             ? RequestStatus.sent
@@ -60,9 +59,9 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
         break;
 
       case MessageType.setShard:
-        if (!_setShardRequestStatus.containsKey(peerKey) ||
-            _setShardRequestStatus[peerKey] != RequestStatus.sending) return;
-        _setShardRequestStatus[peerKey] =
+        if (!_setShardRequestStatus.containsKey(peerPubKey) ||
+            _setShardRequestStatus[peerPubKey] != RequestStatus.sending) return;
+        _setShardRequestStatus[peerPubKey] =
             p2pPacket.status == MessageStatus.success
                 ? RequestStatus.sent
                 : RequestStatus.error;
@@ -71,25 +70,22 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
 
       case MessageType.getShard:
         if (p2pPacket.status != MessageStatus.success) return;
-        _getShardRequestResponse[peerKey] = P2PCrypto.decrypt(
-          peerKey,
-          router.keyPair.secretKey,
-          p2pPacket.body,
-        );
+        _getShardRequestResponse[peerPubKey] = p2pPacket.body;
         notifyListeners();
         break;
       default:
     }
   }
 
-  void sendAuthRequest(QRCodeModel guardianQRCode) {
+  void sendAuthRequest(QRCode guardianQRCode) {
     final peerPubKey = PubKey(guardianQRCode.pubKey);
     router
         .send(
             peerPubKey,
-            P2PPacket.emptyBody(
+            P2PPacket(
               header: Header(_topicOfThis, router.pubKey, peerPubKey),
               type: MessageType.authPeer,
+              body: guardianQRCode.authToken,
             ).toCbor())
         .onError(
             (error, stackTrace) => _authRequestStatus = RequestStatus.error)
