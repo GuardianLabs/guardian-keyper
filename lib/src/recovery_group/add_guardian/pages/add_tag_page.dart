@@ -14,6 +14,7 @@ class AddTagPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AddGuardianController>(context);
+    // final controller = Provider.of<RecoveryGroupController>(context);
     return Column(
       children: [
         // Header
@@ -46,7 +47,6 @@ class AddTagPage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
           child: TextField(
-            restorationId: 'RecoveryGroupTagInput',
             keyboardType: TextInputType.name,
             onChanged: (value) => state.guardianTag = value,
             decoration: InputDecoration(
@@ -76,6 +76,7 @@ class AddTagPage extends StatelessWidget {
                       signPubKey: PubKey(qr.signPubKey),
                     ),
                   );
+              // controller.resetAuthRequest();
               state.showLastPage
                   ? state.nextScreen()
                   : Navigator.of(context).pop();

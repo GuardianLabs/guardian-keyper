@@ -51,7 +51,6 @@ class _ScanQRCodePageState extends State<ScanQRCodePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final state = Provider.of<AddGuardianController>(context);
     return Column(
       children: [
         // Header
@@ -72,14 +71,6 @@ class _ScanQRCodePageState extends State<ScanQRCodePage> {
               ),
             )),
         Expanded(child: Container()),
-        // Expanded(
-        //     child: TextButton(
-        //   child: const Text('Create random code'),
-        //   onPressed: () {
-        //     state.guardianCode = getRandomString(100);
-        //     state.nextScreen();
-        //   },
-        // )),
         Padding(
           padding: const EdgeInsets.only(left: 95, right: 95),
           child: Container(

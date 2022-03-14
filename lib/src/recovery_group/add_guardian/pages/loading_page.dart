@@ -10,27 +10,48 @@ class LoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = Provider.of<AddGuardianController>(context);
-    final controller = Provider.of<RecoveryGroupController>(context);
+    final controller =
+        Provider.of<RecoveryGroupController>(context, listen: false);
+    return StreamBuilder<P2PPacketStream>(
+        initialData: const P2PPacketStream(requestStatus: RequestStatus.idle),
+        stream: controller.networkStream.stream,
+        builder: (context, snapshot) {
+          final state =
+              Provider.of<AddGuardianController>(context, listen: false);
+          state.guardianPeer = snapshot.data?.p2pPacket?.header.srcKey;
+          state.guardianName = snapshot.data?.p2pPacket?.body == null
+              ? 'No name'
+              : String.fromCharCodes(snapshot.data!.p2pPacket!.body);
 
-    switch (controller.authRequestStatus) {
-      case RequestStatus.idle:
-        controller.sendAuthRequest(QRCode.fromBase64(
-            context.read<AddGuardianController>().guardianCode));
-        break;
-      case RequestStatus.sending:
-        return const Center(child: CircularProgressIndicator.adaptive());
-      case RequestStatus.sent:
-        controller.resetAuthRequest();
-        state.guardianName = 'Phone name ' + DateTime.now().second.toString();
-        state.nextScreen();
-        break;
-      case RequestStatus.timeout:
-        controller.resetAuthRequest();
-        state.previousScreen(); // TBD: show error
-        break;
-      default:
-    }
-    return const Center();
+          switch (snapshot.data?.requestStatus) {
+            case RequestStatus.idle:
+              controller.sendAuthRequest(QRCode.fromBase64(state.guardianCode));
+              break;
+            case RequestStatus.sent:
+              Future.delayed(const Duration(seconds: 3), state.nextScreen);
+              break;
+            case RequestStatus.timeout:
+              Future.delayed(const Duration(seconds: 3), state.previousScreen);
+              break;
+            // case RequestStatus.sending:
+            // case RequestStatus.error:
+            // case null:
+            default:
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              const Center(child: CircularProgressIndicator.adaptive()),
+              Text('Name: ${state.guardianName}'),
+              Text('Error: ${snapshot.data?.error}'),
+              Text('Stack Trace: ${snapshot.data?.stackTrace}'),
+              Text('Request Status: ${snapshot.data?.requestStatus?.name}'),
+              Text('Packet Status: ${snapshot.data?.p2pPacket?.status.name}'),
+              Text('Packet Body: ${snapshot.data?.p2pPacket?.body}'),
+            ],
+          );
+        });
   }
 }

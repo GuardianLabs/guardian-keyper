@@ -15,8 +15,8 @@ class GuardianAddedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AddGuardianController>(context);
-    final recoveryGroup =
-        Provider.of<RecoveryGroupController>(context).groups[state.groupName]!;
+    final controller = Provider.of<RecoveryGroupController>(context);
+    final recoveryGroup = controller.groups[state.groupName]!;
     return Column(
       children: [
         // Header

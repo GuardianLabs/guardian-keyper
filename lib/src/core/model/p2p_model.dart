@@ -36,7 +36,7 @@ class P2PPacket {
       P2PPacket(header: header, body: Uint8List(0));
 
   factory P2PPacket.fromCbor(Uint8List value) {
-    final packet = cbor.decode(value).toObject as Map<int, dynamic>;
+    final packet = cbor.decode(value).toObject() as Map;
     return P2PPacket(
       header: p2p.Header.deserialize(Uint8List.fromList(packet[0])),
       type: MessageType.values[packet[1]],
@@ -59,7 +59,7 @@ class SetShardPacket {
   const SetShardPacket({required this.groupId, required this.secretShard});
 
   factory SetShardPacket.fromCbor(Uint8List value) {
-    final packet = cbor.decode(value).toObject as Map<int, dynamic>;
+    final packet = cbor.decode(value).toObject() as Map;
     return SetShardPacket(
       groupId: Uint8List.fromList(packet[0]),
       secretShard: Uint8List.fromList(packet[1]),
@@ -74,33 +74,50 @@ class SetShardPacket {
 
 @immutable
 class QRCode {
-  final Uint8List header;
+  final int version;
   final Uint8List authToken;
   final Uint8List pubKey;
   final Uint8List signPubKey;
 
   const QRCode({
-    required this.header,
+    this.version = 1,
     required this.authToken,
     required this.pubKey,
     required this.signPubKey,
   });
 
   factory QRCode.fromBase64(String qrCode) {
-    final packet = base64Decode(qrCode);
+    final packet = cbor.decode(base64Decode(qrCode)).toObject() as Map;
     return QRCode(
-      header: packet.sublist(0, 3),
-      authToken: packet.sublist(4, 35),
-      pubKey: packet.sublist(36, 67),
-      signPubKey: packet.sublist(68, 99),
+      version: packet[0] as int,
+      authToken: Uint8List.fromList(packet[1]),
+      pubKey: Uint8List.fromList(packet[2]),
+      signPubKey: Uint8List.fromList(packet[3]),
     );
   }
 
   @override
-  String toString() => base64Encode([
-        ...header,
-        ...authToken,
-        ...pubKey,
-        ...signPubKey,
-      ]);
+  String toString() => base64Encode(Uint8List.fromList(cborEncode(CborMap({
+        const CborSmallInt(0): CborSmallInt(version),
+        const CborSmallInt(1): CborBytes(authToken),
+        const CborSmallInt(2): CborBytes(pubKey),
+        const CborSmallInt(3): CborBytes(signPubKey),
+      }))));
+}
+
+enum RequestStatus { idle, recieved, sending, sent, timeout, error }
+
+@immutable
+class P2PPacketStream {
+  final P2PPacket? p2pPacket;
+  final RequestStatus? requestStatus;
+  final Object? error;
+  final Object? stackTrace;
+
+  const P2PPacketStream({
+    this.p2pPacket,
+    this.requestStatus,
+    this.error,
+    this.stackTrace,
+  });
 }
