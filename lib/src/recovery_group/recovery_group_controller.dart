@@ -11,7 +11,7 @@ import 'recovery_group_service.dart';
 class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   static const _topicOfThis = 100;
   static const _topicSubscribeTo = 101;
-  static const _networkTimeout = Duration(seconds: 5);
+  static const _networkTimeout = Duration(seconds: 10);
 
   final networkStream = StreamController<P2PPacketStream>.broadcast();
   final RecoveryGroupService _recoveryGroupService;
@@ -32,13 +32,15 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   Uint64List topics() => Uint64List.fromList([_topicSubscribeTo]);
 
   @override
-  void onMessage(Uint8List data, Peer peer) =>
-      networkStream.add(P2PPacketStream(
-        requestStatus: RequestStatus.recieved,
-        p2pPacket: P2PPacket.fromCbor(data.sublist(Header.length)),
-      ));
+  void onMessage(Uint8List data, Peer peer) {
+    final header = Header.deserialize(data.sublist(0, Header.length - 1));
+    networkStream.add(P2PPacketStream(
+      requestStatus: RequestStatus.recieved,
+      p2pPacket: P2PPacket.fromCbor(data.sublist(Header.length), header.srcKey),
+    ));
+  }
 
-  void sendAuthRequest(QRCode guardianQRCode) async {
+  Future<void> sendAuthRequest(QRCode guardianQRCode) async {
     final peerPubKey = PubKey(guardianQRCode.pubKey);
     networkStream
         .add(const P2PPacketStream(requestStatus: RequestStatus.sending));
@@ -47,7 +49,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
             _topicOfThis,
             peerPubKey,
             P2PPacket(
-              header: Header(_topicOfThis, router.pubKey, peerPubKey),
+              peerPubKey: peerPubKey,
               type: MessageType.authPeer,
               body: guardianQRCode.authToken,
             ).toCbor())
@@ -57,6 +59,79 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
         .whenComplete(() => networkStream
             .add(const P2PPacketStream(requestStatus: RequestStatus.sent)))
         .onError((e, s) => networkStream.add(P2PPacketStream(
+              requestStatus: RequestStatus.error,
+              error: e,
+              stackTrace: s,
+            )));
+  }
+
+  Future<void> sendSetShardRequest(
+    PubKey peerPubKey,
+    Uint8List groupId,
+    Uint8List secretShard,
+  ) async {
+    networkStream.add(P2PPacketStream(
+      p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
+      requestStatus: RequestStatus.sending,
+    ));
+    await router
+        .sendTo(
+            _topicOfThis,
+            peerPubKey,
+            P2PPacket(
+              peerPubKey: peerPubKey,
+              type: MessageType.setShard,
+              body: SetShardPacket(
+                groupId: groupId,
+                secretShard: secretShard,
+              ).toCbor(),
+            ).toCbor())
+        .timeout(_networkTimeout,
+            onTimeout: () => networkStream.add(P2PPacketStream(
+                  p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
+                  requestStatus: RequestStatus.timeout,
+                )))
+        .whenComplete(() => networkStream.add(P2PPacketStream(
+              p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
+              requestStatus: RequestStatus.sent,
+            )))
+        .onError((e, s) => networkStream.add(P2PPacketStream(
+              p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
+              requestStatus: RequestStatus.error,
+              error: e,
+              stackTrace: s,
+            )));
+  }
+
+  Future<void> sendGetShardRequest(
+    PubKey peerPubKey,
+    Uint8List groupId,
+    Uint8List secretShard,
+  ) async {
+    networkStream.add(P2PPacketStream(
+      p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
+      requestStatus: RequestStatus.sending,
+    ));
+    await router
+        .sendTo(
+            _topicOfThis,
+            peerPubKey,
+            P2PPacket(
+              peerPubKey: peerPubKey,
+              type: MessageType.getShard,
+              body: groupId,
+            ).toCbor())
+        .timeout(_networkTimeout,
+            onTimeout: () => networkStream.add(P2PPacketStream(
+                  p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
+                  requestStatus: RequestStatus.timeout,
+                )))
+        .whenComplete(() => networkStream.add(P2PPacketStream(
+              p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
+              requestStatus: RequestStatus.sent,
+            )))
+        .onError((e, s) => networkStream.add(P2PPacketStream(
+              p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
               requestStatus: RequestStatus.error,
               error: e,
               stackTrace: s,

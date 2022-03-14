@@ -18,7 +18,7 @@ class LoadingPage extends StatelessWidget {
         builder: (context, snapshot) {
           final state =
               Provider.of<AddGuardianController>(context, listen: false);
-          state.guardianPeer = snapshot.data?.p2pPacket?.header.srcKey;
+          state.guardianPeer = snapshot.data?.p2pPacket?.peerPubKey;
           state.guardianName = snapshot.data?.p2pPacket?.body == null
               ? 'No name'
               : String.fromCharCodes(snapshot.data!.p2pPacket!.body);
@@ -28,10 +28,10 @@ class LoadingPage extends StatelessWidget {
               controller.sendAuthRequest(QRCode.fromBase64(state.guardianCode));
               break;
             case RequestStatus.sent:
-              Future.delayed(const Duration(seconds: 3), state.nextScreen);
+              Future.delayed(const Duration(seconds: 1), state.nextScreen);
               break;
             case RequestStatus.timeout:
-              Future.delayed(const Duration(seconds: 3), state.previousScreen);
+              Future.delayed(const Duration(seconds: 1), state.previousScreen);
               break;
             // case RequestStatus.sending:
             // case RequestStatus.error:

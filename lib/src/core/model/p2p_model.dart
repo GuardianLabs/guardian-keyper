@@ -1,7 +1,7 @@
 import 'dart:typed_data' show Uint8List;
 import 'dart:convert' show base64Decode, base64Encode;
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:p2plib/p2plib.dart' as p2p show Header, RawToken, PubKey;
+import 'package:p2plib/p2plib.dart' as p2p show RawToken, PubKey;
 import 'package:cbor/cbor.dart';
 
 typedef PubKey = p2p.PubKey;
@@ -10,45 +10,63 @@ typedef AuthToken = p2p.PubKey;
 
 typedef RawToken = p2p.RawToken;
 
+enum MessageStatus { none, success, reject }
+
 enum MessageType { none, authPeer, getShard, setShard }
 
-enum MessageStatus { none, success, reject }
+enum RequestStatus { idle, recieved, sending, sent, timeout, error }
 
 @immutable
 class P2PPacket {
-  final p2p.Header header;
+  final PubKey? peerPubKey;
   final MessageType type;
   final MessageStatus status;
   final Uint8List body;
 
   const P2PPacket({
-    required this.header,
+    this.peerPubKey,
     this.type = MessageType.none,
     this.status = MessageStatus.none,
     required this.body,
   });
 
   factory P2PPacket.emptyBody({
-    required p2p.Header header,
+    PubKey? peerPubKey,
     MessageType type = MessageType.none,
     MessageStatus status = MessageStatus.none,
   }) =>
-      P2PPacket(header: header, body: Uint8List(0));
+      P2PPacket(peerPubKey: peerPubKey, body: Uint8List(0));
 
-  factory P2PPacket.fromCbor(Uint8List value) {
+  factory P2PPacket.fromCbor(Uint8List value, PubKey peerPubKey) {
     final packet = cbor.decode(value).toObject() as Map;
     return P2PPacket(
-      header: p2p.Header.deserialize(Uint8List.fromList(packet[0])),
-      type: MessageType.values[packet[1]],
+      peerPubKey: peerPubKey,
+      type: MessageType.values[packet[0]],
+      status: MessageStatus.values[packet[1]],
       body: Uint8List.fromList(packet[2]),
     );
   }
 
   Uint8List toCbor() => Uint8List.fromList(cbor.encode(CborMap({
-        const CborSimpleValue(0): CborBytes(header.serialize()),
-        const CborSimpleValue(1): CborSimpleValue(type.index),
-        const CborSimpleValue(2): CborBytes(body),
+        const CborSmallInt(0): CborSimpleValue(type.index),
+        const CborSmallInt(1): CborSimpleValue(status.index),
+        const CborSmallInt(2): CborBytes(body),
       })));
+}
+
+@immutable
+class P2PPacketStream {
+  final P2PPacket? p2pPacket;
+  final RequestStatus? requestStatus;
+  final Object? error;
+  final Object? stackTrace;
+
+  const P2PPacketStream({
+    this.p2pPacket,
+    this.requestStatus,
+    this.error,
+    this.stackTrace,
+  });
 }
 
 @immutable
@@ -67,8 +85,8 @@ class SetShardPacket {
   }
 
   Uint8List toCbor() => Uint8List.fromList(cbor.encode(CborMap({
-        const CborSimpleValue(0): CborBytes(groupId),
-        const CborSimpleValue(1): CborBytes(secretShard),
+        const CborSmallInt(0): CborBytes(groupId),
+        const CborSmallInt(1): CborBytes(secretShard),
       })));
 }
 
@@ -103,21 +121,4 @@ class QRCode {
         const CborSmallInt(2): CborBytes(pubKey),
         const CborSmallInt(3): CborBytes(signPubKey),
       }))));
-}
-
-enum RequestStatus { idle, recieved, sending, sent, timeout, error }
-
-@immutable
-class P2PPacketStream {
-  final P2PPacket? p2pPacket;
-  final RequestStatus? requestStatus;
-  final Object? error;
-  final Object? stackTrace;
-
-  const P2PPacketStream({
-    this.p2pPacket,
-    this.requestStatus,
-    this.error,
-    this.stackTrace,
-  });
 }
