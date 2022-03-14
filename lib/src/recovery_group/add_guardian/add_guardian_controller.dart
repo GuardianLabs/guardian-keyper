@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../core/controller/page_controller.dart';
-import '../../core/model/p2p_model.dart';
 
 class AddGuardianController with ChangeNotifier, PagesController {
   AddGuardianController({
@@ -14,12 +13,10 @@ class AddGuardianController with ChangeNotifier, PagesController {
 
   final String groupName;
   final bool showLastPage;
-  PubKey? _guardianPeer;
   String _guardianName = '';
   String _guardianCode = '';
   String _tag = '';
 
-  PubKey? get guardianPeer => _guardianPeer;
   String get guardianTag => _tag;
   String get guardianName => _guardianName;
   String get guardianCode => _guardianCode;
@@ -38,11 +35,6 @@ class AddGuardianController with ChangeNotifier, PagesController {
 
   set guardianCode(String value) {
     _guardianCode = value;
-    notifyListeners();
-  }
-
-  set guardianPeer(PubKey? value) {
-    _guardianPeer = value;
     notifyListeners();
   }
 }

@@ -5,8 +5,8 @@ import '../../../core/theme_data.dart';
 import '../../../core/widgets/common.dart';
 import '../../../core/model/p2p_model.dart';
 import '../../recovery_group_model.dart';
-import '../add_guardian_controller.dart';
 import '../../recovery_group_controller.dart';
+import '../add_guardian_controller.dart';
 
 class AddTagPage extends StatelessWidget {
   const AddTagPage({Key? key}) : super(key: key);
@@ -14,7 +14,6 @@ class AddTagPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AddGuardianController>(context);
-    // final controller = Provider.of<RecoveryGroupController>(context);
     return Column(
       children: [
         // Header
@@ -76,7 +75,6 @@ class AddTagPage extends StatelessWidget {
                       signPubKey: PubKey(qr.signPubKey),
                     ),
                   );
-              // controller.resetAuthRequest();
               state.showLastPage
                   ? state.nextScreen()
                   : Navigator.of(context).pop();

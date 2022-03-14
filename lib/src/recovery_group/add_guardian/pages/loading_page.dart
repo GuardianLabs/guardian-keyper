@@ -18,7 +18,6 @@ class LoadingPage extends StatelessWidget {
         builder: (context, snapshot) {
           final state =
               Provider.of<AddGuardianController>(context, listen: false);
-          state.guardianPeer = snapshot.data?.p2pPacket?.peerPubKey;
           state.guardianName = snapshot.data?.p2pPacket?.body == null
               ? 'No name'
               : String.fromCharCodes(snapshot.data!.p2pPacket!.body);
