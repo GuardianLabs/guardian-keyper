@@ -13,7 +13,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   static const _topicSubscribeTo = 101;
   static const _networkTimeout = Duration(seconds: 10);
 
-  final networkStream = StreamController<P2PPacketStream>.broadcast();
+  final networkStream = StreamController<P2PPacket>.broadcast();
   final RecoveryGroupService _recoveryGroupService;
   Map<String, RecoveryGroupModel> _groups = {};
 
@@ -33,45 +33,33 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
 
   @override
   void onMessage(Uint8List data, Peer peer) {
-    final header = Header.deserialize(data.sublist(0, Header.length - 1));
-    networkStream.add(P2PPacketStream(
-      requestStatus: RequestStatus.recieved,
-      p2pPacket: P2PPacket.fromCbor(data.sublist(Header.length), header.srcKey),
-    ));
+    final header = Header.deserialize(data.sublist(0, Header.length));
+    networkStream
+        .add(P2PPacket.fromCbor(data.sublist(Header.length), header.srcKey));
   }
 
   Future<void> sendAuthRequest(QRCode guardianQRCode) async {
     final peerPubKey = PubKey(guardianQRCode.pubKey);
-    networkStream
-        .add(const P2PPacketStream(requestStatus: RequestStatus.sending));
     await router
         .sendTo(
             _topicOfThis,
             peerPubKey,
             P2PPacket(
-              peerPubKey: peerPubKey,
               type: MessageType.authPeer,
               body: guardianQRCode.authToken,
             ).toCbor())
-        .timeout(_networkTimeout,
-            onTimeout: () => networkStream.add(
-                const P2PPacketStream(requestStatus: RequestStatus.timeout)))
-        .whenComplete(() => networkStream
-            .add(const P2PPacketStream(requestStatus: RequestStatus.sent)))
-        .onError((e, s) => networkStream.add(P2PPacketStream(
-              requestStatus: RequestStatus.error,
-              error: e,
-              stackTrace: s,
-            )));
+        // .timeout(_networkTimeout)
+        .onError(networkStream.addError);
   }
 
-  Future<void> sendSetShardRequest(
+  Future<void> _sendSetShardRequest(
     PubKey peerPubKey,
-    Uint8List groupId,
+    GroupID groupId,
     Uint8List secretShard,
   ) async {
-    networkStream.add(P2PPacketStream(
-      p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
+    networkStream.add(P2PPacket.emptyBody(
+      peerPubKey: peerPubKey,
+      type: MessageType.setShard,
       requestStatus: RequestStatus.sending,
     ));
     await router
@@ -82,25 +70,27 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
               peerPubKey: peerPubKey,
               type: MessageType.setShard,
               body: SetShardPacket(
-                groupId: groupId,
+                groupId: groupId.data,
                 secretShard: secretShard,
               ).toCbor(),
             ).toCbor())
-        .timeout(_networkTimeout,
-            onTimeout: () => networkStream.add(P2PPacketStream(
-                  p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
-                  requestStatus: RequestStatus.timeout,
-                )))
-        .whenComplete(() => networkStream.add(P2PPacketStream(
-              p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
+        .timeout(_networkTimeout)
+        .whenComplete(() => networkStream.add(P2PPacket.emptyBody(
+              peerPubKey: peerPubKey,
               requestStatus: RequestStatus.sent,
             )))
-        .onError((e, s) => networkStream.add(P2PPacketStream(
-              p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
-              requestStatus: RequestStatus.error,
-              error: e,
-              stackTrace: s,
-            )));
+        .onError(networkStream.addError);
+  }
+
+  void distributeShards(
+    List<PubKey> peers,
+    GroupID groupId,
+    String secret,
+  ) {
+    final shards = _splitSecret(secret, peers.length);
+    for (var i = 0; i < peers.length; i++) {
+      _sendSetShardRequest(peers[i], groupId, shards[i]);
+    }
   }
 
   Future<void> sendGetShardRequest(
@@ -108,8 +98,8 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     Uint8List groupId,
     Uint8List secretShard,
   ) async {
-    networkStream.add(P2PPacketStream(
-      p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
+    networkStream.add(P2PPacket.emptyBody(
+      peerPubKey: peerPubKey,
       requestStatus: RequestStatus.sending,
     ));
     await router
@@ -121,21 +111,21 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
               type: MessageType.getShard,
               body: groupId,
             ).toCbor())
-        .timeout(_networkTimeout,
-            onTimeout: () => networkStream.add(P2PPacketStream(
-                  p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
-                  requestStatus: RequestStatus.timeout,
-                )))
-        .whenComplete(() => networkStream.add(P2PPacketStream(
-              p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
+        .timeout(_networkTimeout)
+        .whenComplete(() => networkStream.add(P2PPacket.emptyBody(
+              peerPubKey: peerPubKey,
               requestStatus: RequestStatus.sent,
             )))
-        .onError((e, s) => networkStream.add(P2PPacketStream(
-              p2pPacket: P2PPacket.emptyBody(peerPubKey: peerPubKey),
-              requestStatus: RequestStatus.error,
-              error: e,
-              stackTrace: s,
-            )));
+        .onError(networkStream.addError);
+  }
+
+  List<Uint8List> _splitSecret(String secret, int shardsCount) {
+    List<Uint8List> result = [];
+    final shard = Uint8List.fromList(secret.codeUnits);
+    for (var i = 0; i < shardsCount; i++) {
+      result[i] = shard;
+    }
+    return result;
   }
 
   Future<void> load() async {

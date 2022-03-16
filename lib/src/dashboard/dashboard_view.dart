@@ -7,7 +7,7 @@ import '../core/widgets/common.dart';
 // import '../guardian/guardian_view.dart';
 import '../settings/settings_controller.dart';
 import '../guardian/guardian_controller.dart';
-import '../core/model/p2p_model.dart';
+// import '../core/model/p2p_model.dart';
 
 class DashboardView extends StatelessWidget {
   const DashboardView({Key? key}) : super(key: key);
@@ -23,16 +23,6 @@ class DashboardView extends StatelessWidget {
           // Header
           const HeaderBar(title: HeaderBarTitleLogo()),
           // Body
-          Align(
-            child: StreamBuilder<P2PPacketStream>(
-              initialData:
-                  const P2PPacketStream(requestStatus: RequestStatus.idle),
-              stream: context.read<GuardianController>().networkStream.stream,
-              builder: (context, snapshot) => Text(
-                  snapshot.data?.requestStatus?.toString() ??
-                      'No Request Status'),
-            ),
-          ),
           Container(
             alignment: Alignment.center,
             color: Colors.white,

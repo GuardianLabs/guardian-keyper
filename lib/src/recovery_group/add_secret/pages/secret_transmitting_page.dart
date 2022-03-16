@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/model/p2p_model.dart';
 import '../../../core/theme_data.dart';
 import '../../../core/widgets/common.dart';
 // import '../../../core/widgets/icon_of.dart';
@@ -9,32 +10,38 @@ import '../../recovery_group_model.dart';
 import '../add_secret_controller.dart';
 import '../../recovery_group_controller.dart';
 
-class SecretTransmittingPage extends StatefulWidget {
+class SecretTransmittingPage extends StatelessWidget {
   const SecretTransmittingPage({Key? key}) : super(key: key);
 
   @override
-  State<SecretTransmittingPage> createState() => _SecretTransmittingPageState();
+  Widget build(BuildContext context) {
+    final controller = context.read<RecoveryGroupController>();
+    return StreamBuilder<P2PPacket>(
+        initialData: P2PPacket.emptyBody(requestStatus: RequestStatus.idle),
+        stream: controller.networkStream.stream,
+        builder: (context, snapshot) {
+          final state = context.read<AddSecretController>();
+          final recoveryGroup = controller.groups[state.groupName]!;
+          if (snapshot.hasData) {
+            if (snapshot.data?.status == MessageStatus.success) {
+              state.addGuardian(recoveryGroup.guardians.values
+                  .firstWhere((e) => e.pubKey == snapshot.data?.peerPubKey));
+            }
+          }
+          return const Scaffold(body: SecretTransmittingBody());
+        });
+  }
 }
 
-class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
-  late final Map<String, RecoveryGroupGuardianModel> _groupGuardians;
-
-  @override
-  void initState() {
-    super.initState();
-    final state = context.read<AddSecretController>();
-    _groupGuardians = context
-        .read<RecoveryGroupController>()
-        .groups[state.groupName]!
-        .guardians;
-    state.distributeSecret(_groupGuardians);
-  }
+class SecretTransmittingBody extends StatelessWidget {
+  const SecretTransmittingBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.read<RecoveryGroupController>();
     final state = Provider.of<AddSecretController>(context);
-    return Scaffold(
-        body: Column(
+    final recoveryGroup = controller.groups[state.groupName]!;
+    return Column(
       children: [
         // Header
         const HeaderBar(
@@ -49,7 +56,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
         ),
         const Text('The secret is being sharded and transmitted ',
             textAlign: TextAlign.center),
-        if (state.guardians.length != _groupGuardians.length)
+        if (state.guardians.length != recoveryGroup.guardians.length)
           const Padding(
             padding: EdgeInsets.only(top: 20),
             child: Align(child: CircularProgressIndicator()),
@@ -58,7 +65,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           child: ListView(
             padding: const EdgeInsets.all(20),
             children: [
-              for (var guardian in _groupGuardians.values)
+              for (var guardian in recoveryGroup.guardians.values)
                 GuardianListTileWidget(
                   name: guardian.name,
                   code: guardian.pubKey.toString(),
@@ -75,7 +82,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           ),
         ),
         // Footer
-        if (state.guardians.length == _groupGuardians.length)
+        if (state.guardians.length == recoveryGroup.guardians.length)
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: FooterButton(
@@ -93,6 +100,6 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           ),
         Container(height: 50),
       ],
-    ));
+    );
   }
 }

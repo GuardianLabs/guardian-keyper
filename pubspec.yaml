@@ -28,10 +28,10 @@ dependencies:
   ntcdcrypto: ^0.2.0
   cbor: ^5.0.1
   p2plib:
-    # path: ../p2plib-dart
-    git:
-      url: git@gitlab.com:guardian-network/social-recovery-p2p/p2plib-dart.git
-      ref: main
+    path: ../p2plib-dart
+    # git:
+    #   url: git@gitlab.com:guardian-network/social-recovery-p2p/p2plib-dart.git
+    #   ref: main
 
 dev_dependencies:
   flutter_test:

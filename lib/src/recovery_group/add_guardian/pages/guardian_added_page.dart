@@ -51,7 +51,7 @@ class GuardianAddedPage extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: GuardianListTileWidget(
             name: state.guardianName,
-            code: state.guardianCodeHex,
+            code: state.guardianPubKey,
             tag: state.guardianTag,
           ),
         ),

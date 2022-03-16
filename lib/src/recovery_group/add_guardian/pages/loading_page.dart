@@ -10,47 +10,41 @@ class LoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller =
-        Provider.of<RecoveryGroupController>(context, listen: false);
-    return StreamBuilder<P2PPacketStream>(
-        initialData: const P2PPacketStream(requestStatus: RequestStatus.idle),
+    final controller = context.read<RecoveryGroupController>();
+    return StreamBuilder<P2PPacket>(
+        initialData: P2PPacket.emptyBody(
+          requestStatus: RequestStatus.idle,
+          type: MessageType.authPeer,
+        ),
         stream: controller.networkStream.stream,
         builder: (context, snapshot) {
-          final state =
-              Provider.of<AddGuardianController>(context, listen: false);
-          state.guardianName = snapshot.data?.p2pPacket?.body == null
-              ? 'No name'
-              : String.fromCharCodes(snapshot.data!.p2pPacket!.body);
+          final state = context.read<AddGuardianController>();
 
-          switch (snapshot.data?.requestStatus) {
-            case RequestStatus.idle:
-              controller.sendAuthRequest(QRCode.fromBase64(state.guardianCode));
-              break;
-            case RequestStatus.sent:
-              Future.delayed(const Duration(seconds: 1), state.nextScreen);
-              break;
-            case RequestStatus.timeout:
-              Future.delayed(const Duration(seconds: 1), state.previousScreen);
-              break;
-            // case RequestStatus.sending:
-            // case RequestStatus.error:
-            // case null:
-            default:
+          if (snapshot.hasError || !snapshot.hasData) {
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text('Name: ${state.guardianName}'),
+                  Text('Error: ${snapshot.error}'),
+                  Text('Stack Trace: ${snapshot.stackTrace}'),
+                  Text('Packet Type: ${snapshot.data?.type.name}'),
+                  Text('Packet Status: ${snapshot.data?.status.name}'),
+                  Text('Packet Body: ${snapshot.data?.body}'),
+                ]);
           }
+          final p2pPacket = snapshot.data!;
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const Center(child: CircularProgressIndicator.adaptive()),
-              Text('Name: ${state.guardianName}'),
-              Text('Error: ${snapshot.data?.error}'),
-              Text('Stack Trace: ${snapshot.data?.stackTrace}'),
-              Text('Request Status: ${snapshot.data?.requestStatus?.name}'),
-              Text('Packet Status: ${snapshot.data?.p2pPacket?.status.name}'),
-              Text('Packet Body: ${snapshot.data?.p2pPacket?.body}'),
-            ],
-          );
+          if (p2pPacket.requestStatus == RequestStatus.idle) {
+            controller.sendAuthRequest(QRCode.fromBase64(state.guardianCode));
+          } else if (p2pPacket.type == MessageType.authPeer &&
+              p2pPacket.status == MessageStatus.success &&
+              state.guardianName.isEmpty) {
+            state.guardianName = p2pPacket.body.isEmpty
+                ? 'No name'
+                : String.fromCharCodes(p2pPacket.body);
+            Future.delayed(const Duration(seconds: 1), state.nextScreen);
+          }
+          return const Center(child: CircularProgressIndicator.adaptive());
         });
   }
 }

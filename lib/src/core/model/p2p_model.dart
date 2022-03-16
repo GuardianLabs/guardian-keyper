@@ -18,55 +18,54 @@ enum RequestStatus { idle, recieved, sending, sent, timeout, error }
 
 @immutable
 class P2PPacket {
-  final PubKey? peerPubKey;
   final MessageType type;
   final MessageStatus status;
   final Uint8List body;
+  final PubKey? peerPubKey;
+  final RequestStatus? requestStatus;
 
   const P2PPacket({
-    this.peerPubKey,
     this.type = MessageType.none,
     this.status = MessageStatus.none,
     required this.body,
+    this.peerPubKey,
+    this.requestStatus,
   });
 
   factory P2PPacket.emptyBody({
-    PubKey? peerPubKey,
     MessageType type = MessageType.none,
     MessageStatus status = MessageStatus.none,
+    PubKey? peerPubKey,
+    RequestStatus? requestStatus,
   }) =>
-      P2PPacket(peerPubKey: peerPubKey, body: Uint8List(0));
+      P2PPacket(
+        type: type,
+        status: status,
+        body: Uint8List(0),
+        peerPubKey: peerPubKey,
+        requestStatus: requestStatus,
+      );
 
-  factory P2PPacket.fromCbor(Uint8List value, PubKey peerPubKey) {
+  factory P2PPacket.fromCbor(
+    Uint8List value, [
+    PubKey? peerPubKey,
+    RequestStatus? requestStatus,
+  ]) {
     final packet = cbor.decode(value).toObject() as Map;
     return P2PPacket(
-      peerPubKey: peerPubKey,
       type: MessageType.values[packet[0]],
       status: MessageStatus.values[packet[1]],
       body: Uint8List.fromList(packet[2]),
+      peerPubKey: peerPubKey,
+      requestStatus: requestStatus,
     );
   }
 
   Uint8List toCbor() => Uint8List.fromList(cbor.encode(CborMap({
-        const CborSmallInt(0): CborSimpleValue(type.index),
-        const CborSmallInt(1): CborSimpleValue(status.index),
+        const CborSmallInt(0): CborSmallInt(type.index),
+        const CborSmallInt(1): CborSmallInt(status.index),
         const CborSmallInt(2): CborBytes(body),
       })));
-}
-
-@immutable
-class P2PPacketStream {
-  final P2PPacket? p2pPacket;
-  final RequestStatus? requestStatus;
-  final Object? error;
-  final Object? stackTrace;
-
-  const P2PPacketStream({
-    this.p2pPacket,
-    this.requestStatus,
-    this.error,
-    this.stackTrace,
-  });
 }
 
 @immutable

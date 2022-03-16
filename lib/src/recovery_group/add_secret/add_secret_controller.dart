@@ -17,12 +17,8 @@ class AddSecretController with ChangeNotifier, PagesController {
 
   Map<String, RecoveryGroupGuardianModel> get guardians => _guardians;
 
-  Future<void> distributeSecret(
-      Map<String, RecoveryGroupGuardianModel> guardian) async {
-    for (var peer in guardian.values) {
-      await Future.delayed(const Duration(seconds: 1));
-      _guardians[peer.name] = peer;
-      notifyListeners();
-    }
+  void addGuardian(RecoveryGroupGuardianModel guardian) {
+    _guardians[guardian.name] = guardian;
+    notifyListeners();
   }
 }
