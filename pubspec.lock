@@ -360,9 +360,11 @@ packages:
   p2plib:
     dependency: "direct main"
     description:
-      path: "../p2plib-dart"
-      relative: true
-    source: path
+      path: "."
+      ref: legacy
+      resolved-ref: "5f6e7f74cb222ba4397e48f1e21c5b7217811928"
+      url: "git@gitlab.com:guardian-network/social-recovery-p2p/p2plib-dart.git"
+    source: git
     version: "1.0.0"
   package_info_plus:
     dependency: "direct main"

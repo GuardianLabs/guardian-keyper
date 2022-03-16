@@ -17,7 +17,8 @@ class SecretTransmittingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = context.read<RecoveryGroupController>();
     return StreamBuilder<P2PPacket>(
-        initialData: P2PPacket.emptyBody(requestStatus: RequestStatus.idle),
+        // initialData: P2PPacket.emptyBody(requestStatus: RequestStatus.idle),
+        initialData: P2PPacket.emptyBody(),
         stream: controller.networkStream.stream,
         builder: (context, snapshot) {
           final state = context.read<AddSecretController>();

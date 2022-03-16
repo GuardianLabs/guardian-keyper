@@ -11,16 +11,19 @@ class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.read<RecoveryGroupController>();
+    controller.sendAuthRequest(
+        QRCode.fromBase64(context.read<AddGuardianController>().guardianCode));
     return StreamBuilder<P2PPacket>(
-        initialData: P2PPacket.emptyBody(
-          requestStatus: RequestStatus.idle,
-          type: MessageType.authPeer,
-        ),
+        // initialData: P2PPacket.emptyBody(
+        //   requestStatus: RequestStatus.idle,
+        //   type: MessageType.authPeer,
+        // ),
+        initialData: P2PPacket.emptyBody(),
         stream: controller.networkStream.stream,
         builder: (context, snapshot) {
           final state = context.read<AddGuardianController>();
 
-          if (snapshot.hasError || !snapshot.hasData) {
+          if (snapshot.hasError) {
             return Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -34,9 +37,10 @@ class LoadingPage extends StatelessWidget {
           }
           final p2pPacket = snapshot.data!;
 
-          if (p2pPacket.requestStatus == RequestStatus.idle) {
-            controller.sendAuthRequest(QRCode.fromBase64(state.guardianCode));
-          } else if (p2pPacket.type == MessageType.authPeer &&
+          // if (p2pPacket.requestStatus == RequestStatus.idle) {
+          //   controller.sendAuthRequest(QRCode.fromBase64(state.guardianCode));
+          // } else
+          if (p2pPacket.type == MessageType.authPeer &&
               p2pPacket.status == MessageStatus.success &&
               state.guardianName.isEmpty) {
             state.guardianName = p2pPacket.body.isEmpty

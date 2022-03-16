@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guardian_network/src/core/model/p2p_model.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -35,6 +36,18 @@ class DashboardView extends StatelessWidget {
                     .getQRCode(
                         context.read<SettingsController>().keyPair.publicKey)
                     .toString()),
+          ),
+          StreamBuilder<P2PPacket>(
+            initialData: P2PPacket.emptyBody(),
+            stream: controller.p2pNetwork.stream,
+            builder: (context, snapshot) => snapshot.hasError
+                ? Column(
+                    children: [
+                      Text('Error: ${snapshot.error}'),
+                      Text('Stack Trace: ${snapshot.stackTrace}'),
+                    ],
+                  )
+                : Container(),
           ),
         ],
       ),

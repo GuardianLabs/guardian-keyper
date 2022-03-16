@@ -88,12 +88,12 @@ class _SplitAndShareSecretPageState extends State<SplitAndShareSecretPage> {
               child: FooterButton(
                 text: 'Split and Share Secret',
                 onPressed: () {
+                  state.nextScreen();
                   controller.distributeShards(
                     group.guardians.values.map((v) => v.pubKey).toList(),
                     group.id,
                     state.secret,
                   );
-                  state.nextScreen();
                 },
               ),
             ),
