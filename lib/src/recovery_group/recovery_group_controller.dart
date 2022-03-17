@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:typed_data';
+// import 'package:collection/collection.dart' show IterableEquality;
 import 'package:flutter/widgets.dart' hide Router;
 import 'package:p2plib/p2plib.dart';
 
 import '../core/service/event_bus.dart';
-import '../core/model/p2p_model.dart' hide PubKey;
+import '../core/model/p2p_model.dart';
 import 'recovery_group_model.dart';
 import 'recovery_group_service.dart';
 
@@ -12,7 +13,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   static const _topicOfThis = 100;
   static const _topicSubscribeTo = 101;
 
-  final networkStream = StreamController<P2PPacket>.broadcast();
+  final p2pNetwork = StreamController<P2PPacket>.broadcast();
   final RecoveryGroupService _recoveryGroupService;
   Map<String, RecoveryGroupModel> _groups = {};
 
@@ -33,7 +34,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   @override
   void onMessage(Uint8List data, Peer peer) {
     final header = Header.deserialize(data.sublist(0, Header.length));
-    networkStream
+    p2pNetwork
         .add(P2PPacket.fromCbor(data.sublist(Header.length), header.srcKey));
   }
 
@@ -47,7 +48,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
               type: MessageType.authPeer,
               body: guardianQRCode.authToken,
             ).toCbor())
-        .onError(networkStream.addError);
+        .onError(p2pNetwork.addError);
   }
 
   Future<void> _sendSetShardRequest(
@@ -55,45 +56,38 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     GroupID groupId,
     Uint8List secretShard,
   ) async {
-    await router
-        .sendTo(
-            _topicOfThis,
-            peerPubKey,
-            P2PPacket(
-              peerPubKey: peerPubKey,
-              type: MessageType.setShard,
-              body: SetShardPacket(
-                      groupId: groupId.data, secretShard: secretShard)
-                  .toCbor(),
-            ).toCbor())
-        .onError(networkStream.addError);
+    await router.sendTo(
+        _topicOfThis,
+        peerPubKey,
+        P2PPacket(
+          peerPubKey: peerPubKey,
+          type: MessageType.setShard,
+          body: SetShardPacket(groupId: groupId.data, secretShard: secretShard)
+              .toCbor(),
+        ).toCbor());
+    // .onError(p2pNetwork.addError);
   }
 
   Future<void> distributeShards(
-    List<PubKey> peers,
+    Set<PubKey> peers,
     GroupID groupId,
     String secret,
   ) async {
-    // TBD: Future.wait()
     // final shards = _splitSecret(secret, peers.length);
-    // for (var i = 0; i < peers.length; i++) {
-    //   await _sendSetShardRequest(peers[i], groupId, shard);
-    // }
     final shard = Uint8List.fromList(secret.codeUnits);
+    // Future.wait(
+    //   [for (var peer in peers) _sendSetShardRequest(peer, groupId, shard)],
+    // );
     for (var peer in peers) {
-      await _sendSetShardRequest(peer, groupId, shard);
+      await _sendSetShardRequest(peer, groupId, shard)
+          .onError(p2pNetwork.addError);
     }
   }
 
-  Future<void> sendGetShardRequest(
+  Future<void> _sendGetShardRequest(
     PubKey peerPubKey,
-    Uint8List groupId,
-    Uint8List secretShard,
+    GroupID groupId,
   ) async {
-    // networkStream.add(P2PPacket.emptyBody(
-    //   peerPubKey: peerPubKey,
-    //   requestStatus: RequestStatus.sending,
-    // ));
     await router
         .sendTo(
             _topicOfThis,
@@ -101,9 +95,17 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
             P2PPacket(
               peerPubKey: peerPubKey,
               type: MessageType.getShard,
-              body: groupId,
+              body: groupId.data,
             ).toCbor())
-        .onError(networkStream.addError);
+        .onError(p2pNetwork.addError);
+  }
+
+  Future<void> requestShards(Set<PubKey> peers, GroupID groupId) async {
+    // TBD: Future.wait()
+    // final shards = _splitSecret(secret, peers.length);
+    for (var peer in peers) {
+      await _sendGetShardRequest(peer, groupId);
+    }
   }
 
   // List<Uint8List> _splitSecret(String secret, int shardsCount) {
@@ -113,6 +115,14 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   //     result.add(shard);
   //   }
   //   return result;
+  // }
+
+  // String restoreSecret(List<Uint8List> shards) {
+  //   if (shards.isNotEmpty &&
+  //       shards.every((e) => const IterableEquality().equals(e, shards.first))) {
+  //     return String.fromCharCodes(shards.first);
+  //   }
+  //   return '';
   // }
 
   Future<void> load() async {

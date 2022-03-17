@@ -14,15 +14,10 @@ class LoadingPage extends StatelessWidget {
     controller.sendAuthRequest(
         QRCode.fromBase64(context.read<AddGuardianController>().guardianCode));
     return StreamBuilder<P2PPacket>(
-        // initialData: P2PPacket.emptyBody(
-        //   requestStatus: RequestStatus.idle,
-        //   type: MessageType.authPeer,
-        // ),
         initialData: P2PPacket.emptyBody(),
-        stream: controller.networkStream.stream,
+        stream: controller.p2pNetwork.stream,
         builder: (context, snapshot) {
           final state = context.read<AddGuardianController>();
-
           if (snapshot.hasError) {
             return Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -36,10 +31,6 @@ class LoadingPage extends StatelessWidget {
                 ]);
           }
           final p2pPacket = snapshot.data!;
-
-          // if (p2pPacket.requestStatus == RequestStatus.idle) {
-          //   controller.sendAuthRequest(QRCode.fromBase64(state.guardianCode));
-          // } else
           if (p2pPacket.type == MessageType.authPeer &&
               p2pPacket.status == MessageStatus.success &&
               state.guardianName.isEmpty) {

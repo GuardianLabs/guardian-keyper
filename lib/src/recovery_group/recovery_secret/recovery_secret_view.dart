@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../recovery_group_controller.dart';
 import 'recovery_secret_controller.dart';
 
 import 'pages/discovering_peers_page.dart';
@@ -26,6 +27,7 @@ class RecoveryGroupRecoverySecretView extends StatelessWidget {
       create: (context) => RecoverySecretController(
         pagesCount: _pages.length,
         groupName: recoveryGroupName,
+        p2pNetwork: context.read<RecoveryGroupController>().p2pNetwork.stream,
       ),
       child: Consumer<RecoverySecretController>(
           builder: (context, value, child) => _pages[value.currentPage]),

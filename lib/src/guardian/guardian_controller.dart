@@ -8,7 +8,7 @@ import 'package:p2plib/p2plib.dart';
 
 import '../core/utils.dart';
 import '../core/service/event_bus.dart';
-import '../core/model/p2p_model.dart' hide PubKey, RawToken;
+import '../core/model/p2p_model.dart';
 import 'guardian_model.dart';
 import 'guardian_service.dart';
 

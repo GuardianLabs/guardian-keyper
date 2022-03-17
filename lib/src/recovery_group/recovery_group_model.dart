@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-
-import '../core/model/p2p_model.dart';
+import 'package:p2plib/p2plib.dart' show RawToken, PubKey;
 
 enum RecoveryGroupType { devices, fiduciaries }
 
 class GroupID extends RawToken {
   static const length = 8;
 
-  const GroupID(Uint8List data) : super(data: data, len: length);
+  const GroupID(Uint8List value) : super(data: value, len: length);
 }
 
 @immutable

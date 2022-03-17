@@ -1,18 +1,12 @@
 import 'dart:typed_data' show Uint8List;
 import 'dart:convert' show base64Decode, base64Encode;
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:p2plib/p2plib.dart' as p2p show RawToken, PubKey;
+import 'package:p2plib/p2plib.dart' show PubKey;
 import 'package:cbor/cbor.dart';
-
-typedef PubKey = p2p.PubKey;
-
-typedef RawToken = p2p.RawToken;
 
 enum MessageStatus { none, success, reject }
 
 enum MessageType { none, authPeer, getShard, setShard }
-
-// enum RequestStatus { idle, recieved, sending, sent, timeout, error }
 
 @immutable
 class P2PPacket {
@@ -20,34 +14,29 @@ class P2PPacket {
   final MessageStatus status;
   final Uint8List body;
   final PubKey? peerPubKey;
-  // final RequestStatus? requestStatus;
 
   const P2PPacket({
     this.type = MessageType.none,
     this.status = MessageStatus.none,
     required this.body,
     this.peerPubKey,
-    // this.requestStatus,
   });
 
   factory P2PPacket.emptyBody({
     MessageType type = MessageType.none,
     MessageStatus status = MessageStatus.none,
     PubKey? peerPubKey,
-    // RequestStatus? requestStatus,
   }) =>
       P2PPacket(
         type: type,
         status: status,
         body: Uint8List(0),
         peerPubKey: peerPubKey,
-        // requestStatus: requestStatus,
       );
 
   factory P2PPacket.fromCbor(
     Uint8List value, [
     PubKey? peerPubKey,
-    // RequestStatus? requestStatus,
   ]) {
     final packet = cbor.decode(value).toObject() as Map;
     return P2PPacket(
@@ -55,7 +44,6 @@ class P2PPacket {
       status: MessageStatus.values[packet[1]],
       body: Uint8List.fromList(packet[2]),
       peerPubKey: peerPubKey,
-      // requestStatus: requestStatus,
     );
   }
 
