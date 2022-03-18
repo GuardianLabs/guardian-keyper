@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:collection/collection.dart' show IterableEquality;
 import 'package:flutter/material.dart' hide Router;
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:p2plib/p2plib.dart';
 
 import '../core/utils.dart';
@@ -27,7 +25,7 @@ class GuardianController extends TopicHandler with ChangeNotifier {
 
   final p2pNetwork = StreamController<P2PPacket>.broadcast();
   final GuardianService _guardianService;
-  late final String deviceName;
+  String _deviceName = 'Undefined';
   Set<SecretShard> _secretShards = {};
   Set<PubKey> _trustedPeers = {};
   RawToken _currentAuthToken = RawToken(len: 32, data: getRandomBytes(32));
@@ -58,7 +56,7 @@ class GuardianController extends TopicHandler with ChangeNotifier {
                 P2PPacket(
                   type: MessageType.authPeer,
                   status: status,
-                  body: Uint8List.fromList(deviceName.codeUnits),
+                  body: Uint8List.fromList(_deviceName.codeUnits),
                 ).toCbor())
             .whenComplete(generateAuthToken)
             .onError(p2pNetwork.addError);
@@ -109,16 +107,8 @@ class GuardianController extends TopicHandler with ChangeNotifier {
     }
   }
 
-  Future<void> load() async {
-    final deviceInfoPlugin = DeviceInfoPlugin();
-    if (Platform.isAndroid) {
-      final androidInfo = await deviceInfoPlugin.androidInfo;
-      deviceName = androidInfo.model ?? androidInfo.id ?? 'Undefined';
-    }
-    if (Platform.isIOS) {
-      final iosInfo = await deviceInfoPlugin.iosInfo;
-      deviceName = iosInfo.model ?? iosInfo.name ?? 'Undefined';
-    }
+  Future<void> load([String? deviceName]) async {
+    if (deviceName != null) _deviceName = deviceName;
     _secretShards = await _guardianService.getSecretShards();
     _trustedPeers = (await _guardianService.getTrustedPeers())
         .map((e) => PubKey(e))

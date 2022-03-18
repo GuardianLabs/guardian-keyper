@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart' hide Router;
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:sodium/sodium.dart' show KeyPair, SecureKey;
 import 'package:p2plib/p2plib.dart';
 
@@ -14,23 +16,36 @@ import 'src/recovery_group/recovery_group_controller.dart';
 import 'src/guardian/guardian_service.dart';
 import 'src/guardian/guardian_controller.dart';
 
+Future<String?> _getDeviceName() async {
+  final deviceInfoPlugin = DeviceInfoPlugin();
+  if (Platform.isAndroid) {
+    final androidInfo = await deviceInfoPlugin.androidInfo;
+    return androidInfo.model ?? androidInfo.id;
+  }
+  if (Platform.isIOS) {
+    final iosInfo = await deviceInfoPlugin.iosInfo;
+    return iosInfo.model ?? iosInfo.name;
+  }
+  return null;
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  final crypto = P2PCrypto();
-  await crypto.init();
 
   final eventBus = EventBus();
   final kvStorage = KVStorage();
   final settingsService = SettingsService(kvStorage);
 
+  final crypto = P2PCrypto();
+  await crypto.init();
   final keyPair = await settingsService.getKeyPair();
-  final router = Router(
-      UdpConnection(),
-      KeyPair(
-          publicKey: keyPair.publicKey,
-          secretKey: SecureKey.fromList(crypto.sodium, keyPair.privateKey)));
 
+  final router = Router(
+    UdpConnection(),
+    KeyPair(
+        publicKey: keyPair.publicKey,
+        secretKey: SecureKey.fromList(crypto.sodium, keyPair.privateKey)),
+  );
   final settingsController = SettingsController(
     settingsService: settingsService,
     eventBus: eventBus,
@@ -48,7 +63,7 @@ void main() async {
 
   FlutterNativeSplash.removeAfter((BuildContext context) async {
     await settingsController.load();
-    await guardianController.load();
+    await guardianController.load(await _getDeviceName());
     await recoveryGroupController.load();
     await router.run();
   });

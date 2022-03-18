@@ -18,10 +18,9 @@ class AddTagPage extends StatelessWidget {
     return Column(
       children: [
         // Header
-        HeaderBar(
+        const HeaderBar(
           caption: 'Add Guardian',
-          backButton: HeaderBarBackButton(onPressed: state.previousScreen),
-          closeButton: const HeaderBarCloseButton(),
+          closeButton: HeaderBarCloseButton(),
         ),
         // Body
         Padding(

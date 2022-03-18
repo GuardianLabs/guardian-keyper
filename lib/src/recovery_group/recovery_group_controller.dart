@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:typed_data';
-// import 'package:collection/collection.dart' show IterableEquality;
 import 'package:flutter/widgets.dart' hide Router;
 import 'package:p2plib/p2plib.dart';
 
@@ -51,23 +50,6 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
         .onError(p2pNetwork.addError);
   }
 
-  Future<void> _sendSetShardRequest(
-    PubKey peerPubKey,
-    GroupID groupId,
-    Uint8List secretShard,
-  ) async {
-    await router.sendTo(
-        _topicOfThis,
-        peerPubKey,
-        P2PPacket(
-          peerPubKey: peerPubKey,
-          type: MessageType.setShard,
-          body: SetShardPacket(groupId: groupId.data, secretShard: secretShard)
-              .toCbor(),
-        ).toCbor());
-    // .onError(p2pNetwork.addError);
-  }
-
   Future<void> distributeShards(
     Set<PubKey> peers,
     GroupID groupId,
@@ -75,36 +57,31 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   ) async {
     // final shards = _splitSecret(secret, peers.length);
     final shard = Uint8List.fromList(secret.codeUnits);
-    // Future.wait(
-    //   [for (var peer in peers) _sendSetShardRequest(peer, groupId, shard)],
-    // );
     for (var peer in peers) {
-      await _sendSetShardRequest(peer, groupId, shard)
+      router
+          .sendTo(
+              _topicOfThis,
+              peer,
+              P2PPacket(
+                type: MessageType.setShard,
+                body: SetShardPacket(
+                  groupId: groupId.data,
+                  secretShard: shard,
+                ).toCbor(),
+              ).toCbor())
           .onError(p2pNetwork.addError);
     }
   }
 
-  Future<void> _sendGetShardRequest(
-    PubKey peerPubKey,
-    GroupID groupId,
-  ) async {
-    await router
-        .sendTo(
-            _topicOfThis,
-            peerPubKey,
-            P2PPacket(
-              peerPubKey: peerPubKey,
-              type: MessageType.getShard,
-              body: groupId.data,
-            ).toCbor())
-        .onError(p2pNetwork.addError);
-  }
-
   Future<void> requestShards(Set<PubKey> peers, GroupID groupId) async {
-    // TBD: Future.wait()
-    // final shards = _splitSecret(secret, peers.length);
     for (var peer in peers) {
-      await _sendGetShardRequest(peer, groupId);
+      router
+          .sendTo(
+              _topicOfThis,
+              peer,
+              P2PPacket(type: MessageType.getShard, body: groupId.data)
+                  .toCbor())
+          .onError(p2pNetwork.addError);
     }
   }
 

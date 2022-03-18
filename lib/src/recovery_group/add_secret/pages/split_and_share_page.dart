@@ -87,18 +87,7 @@ class _SplitAndShareSecretPageState extends State<SplitAndShareSecretPage> {
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: FooterButton(
                 text: 'Split and Share Secret',
-                onPressed: () {
-                  // Future.delayed(
-                  //   const Duration(milliseconds: 50),
-                  //   state.nextScreen,
-                  // );
-                  state.nextScreen();
-                  // controller.distributeShards(
-                  //   group.guardians.values.map((v) => v.pubKey).toList(),
-                  //   group.id,
-                  //   state.secret,
-                  // );
-                },
+                onPressed: state.nextScreen,
               ),
             ),
             Container(height: 50),

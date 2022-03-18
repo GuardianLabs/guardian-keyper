@@ -1,17 +1,16 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:guardian_network/src/core/model/p2p_model.dart';
 import 'package:p2plib/p2plib.dart';
 
 import '../../core/controller/page_controller.dart';
-// import '../recovery_group_model.dart';
+import '../../core/model/p2p_model.dart';
 
 class RecoverySecretController with ChangeNotifier, PagesController {
-  RecoverySecretController(
-      {required int pagesCount,
-      required this.groupName,
-      required this.p2pNetwork}) {
+  RecoverySecretController({
+    required int pagesCount,
+    required this.groupName,
+    required this.p2pNetwork,
+  }) {
     this.pagesCount = pagesCount;
     p2pNetwork.listen(
       (p2pPacket) {
