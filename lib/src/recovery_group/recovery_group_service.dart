@@ -4,14 +4,14 @@ import '../core/service/kv_storage.dart';
 import 'recovery_group_model.dart';
 
 class RecoveryGroupService {
-  const RecoveryGroupService(this._storage);
+  const RecoveryGroupService({required KVStorage storage}) : _storage = storage;
 
-  static const _key = 'recovery_groups';
+  static const _recoveryGroupsPath = 'recovery_groups';
 
   final KVStorage _storage;
 
   Future<Map<String, RecoveryGroupModel>> getGroups() async {
-    final groupsStr = await _storage.read(key: _key);
+    final groupsStr = await _storage.read(key: _recoveryGroupsPath);
     if (groupsStr == null) return {};
 
     Map<String, dynamic> groupsMap = jsonDecode(groupsStr);
@@ -25,19 +25,17 @@ class RecoveryGroupService {
     final value = jsonEncode(groups, toEncodable: (Object? value) {
       switch (value.runtimeType) {
         case RecoveryGroupModel:
-          return RecoveryGroupModel.toJson(value as RecoveryGroupModel);
+          return (value as RecoveryGroupModel).toJson();
         case RecoveryGroupGuardianModel:
-          return RecoveryGroupGuardianModel.toJson(
-              value as RecoveryGroupGuardianModel);
+          return (value as RecoveryGroupGuardianModel).toJson();
         case RecoveryGroupSecretModel:
-          return RecoveryGroupSecretModel.toJson(
-              value as RecoveryGroupSecretModel);
+          return (value as RecoveryGroupSecretModel).toJson();
         default:
           throw UnsupportedError(value.runtimeType.toString());
       }
     });
-    _storage.write(key: _key, value: value);
+    _storage.write(key: _recoveryGroupsPath, value: value);
   }
 
-  Future<void> clearGroups() async => _storage.delete(key: _key);
+  Future<void> clearGroups() async => _storage.delete(key: _recoveryGroupsPath);
 }

@@ -1,52 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:guardian_network/src/core/model/p2p_model.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import '../core/utils.dart';
-// import '../core/theme_data.dart';
 import '../core/widgets/common.dart';
-import '../core/widgets/icon_of.dart';
-
-// import '../recovery_group/recovery_group_view.dart';
-// import '../recovery_group/create_group/create_group_view.dart';
+// import '../core/widgets/icon_of.dart';
+// import '../guardian/guardian_view.dart';
+import '../settings/settings_controller.dart';
+import '../guardian/guardian_controller.dart';
+// import '../core/model/p2p_model.dart';
 
 class DashboardView extends StatelessWidget {
   const DashboardView({Key? key}) : super(key: key);
 
-  static const _paddingV5 = EdgeInsets.only(top: 5, bottom: 5);
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const HeaderBar(title: HeaderBarTitleLogo()),
-        Expanded(
-          child: ListView(
-            restorationId: 'homeListView',
-            padding: const EdgeInsets.all(20),
-            children: [
-              Padding(
-                padding: _paddingV5,
-                child: ListTile(
-                  title: const Text('Show QR code'),
-                  trailing: const IconOf.app(),
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      alignment: Alignment.center,
-                      backgroundColor: Colors.white,
-                      content: SizedBox(
-                        height: 200,
-                        width: 200,
-                        child: QrImage(data: getRandomString()),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+    final controller = Provider.of<GuardianController>(context);
+    final size = MediaQuery.of(context).size.width - 20;
+    return RefreshIndicator(
+      onRefresh: () async => controller.generateAuthToken(),
+      child: ListView(
+        children: [
+          // Header
+          const HeaderBar(title: HeaderBarTitleLogo()),
+          // Body
+          Container(
+            alignment: Alignment.center,
+            color: Colors.white,
+            margin: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(10),
+            height: size,
+            width: size,
+            child: QrImage(
+                data: controller
+                    .getQRCode(
+                        context.read<SettingsController>().keyPair.publicKey)
+                    .toString()),
           ),
-        ),
-      ],
+          StreamBuilder<P2PPacket>(
+            initialData: P2PPacket.emptyBody(),
+            stream: controller.p2pNetwork.stream,
+            builder: (context, snapshot) => snapshot.hasError
+                ? Column(
+                    children: [
+                      Text('Error: ${snapshot.error}'),
+                      Text('Stack Trace: ${snapshot.stackTrace}'),
+                    ],
+                  )
+                : Container(),
+          ),
+        ],
+      ),
     );
   }
 }

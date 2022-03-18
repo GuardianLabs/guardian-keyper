@@ -22,10 +22,9 @@ class _SplitAndShareSecretPageState extends State<SplitAndShareSecretPage> {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AddSecretController>(context);
-    final groupGuardians =
-        Provider.of<RecoveryGroupController>(context, listen: false)
-            .groups[state.groupName]!
-            .guardians;
+    final controller = context.read<RecoveryGroupController>();
+    final group = controller.groups[state.groupName]!;
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Column(
@@ -71,10 +70,10 @@ class _SplitAndShareSecretPageState extends State<SplitAndShareSecretPage> {
               child: ListView(
                 padding: const EdgeInsets.all(20),
                 children: [
-                  for (var guardian in groupGuardians.values)
+                  for (var guardian in group.guardians.values)
                     GuardianListTileWidget(
                       name: guardian.name,
-                      code: guardian.code,
+                      code: guardian.pubKey.toString(),
                       tag: guardian.tag,
                       // nameColor: guardian.code.isEmpty ? clRed : clWhite,
                       iconColor: clIndigo500,
@@ -87,7 +86,9 @@ class _SplitAndShareSecretPageState extends State<SplitAndShareSecretPage> {
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: FooterButton(
-                  text: 'Split and Share Secret', onPressed: state.nextScreen),
+                text: 'Split and Share Secret',
+                onPressed: state.nextScreen,
+              ),
             ),
             Container(height: 50),
           ],

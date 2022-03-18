@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 
 import '../core/service/event_bus.dart';
+import 'settings_model.dart';
 import 'settings_service.dart';
 
 class SettingsController with ChangeNotifier {
-  SettingsController(this._settingsService, this.eventBus);
+  SettingsController({
+    required SettingsService settingsService,
+    required EventBus eventBus,
+  })  : _settingsService = settingsService,
+        _eventBus = eventBus;
 
   final SettingsService _settingsService;
-  final EventBus eventBus;
-  late ThemeMode _themeMode;
+  final EventBus _eventBus;
+  late KeyPairModel _keyPair;
+
+  ThemeMode _themeMode = ThemeMode.system;
 
   ThemeMode get themeMode => _themeMode;
+  KeyPairModel get keyPair => _keyPair;
 
   Future<void> load() async {
     _themeMode = await _settingsService.themeMode();
+    _keyPair = await _settingsService.getKeyPair();
     notifyListeners();
   }
 
@@ -25,5 +34,9 @@ class SettingsController with ChangeNotifier {
     await _settingsService.updateThemeMode(newThemeMode);
   }
 
-  void clearRecoveryGroups() => eventBus.fire(RecoveryGroupClearEvent());
+  void clearRecoveryGroups() => _eventBus.fire(RecoveryGroupClearCommand());
+
+  void clearGuardianShards() => _eventBus.fire(GuardianShardsClearCommand());
+
+  void clearGuardianPeers() => _eventBus.fire(GuardianPeersClearCommand());
 }

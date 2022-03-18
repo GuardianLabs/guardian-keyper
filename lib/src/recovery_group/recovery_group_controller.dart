@@ -1,22 +1,106 @@
-import 'package:flutter/widgets.dart';
+import 'dart:async';
+import 'dart:typed_data';
+import 'package:flutter/widgets.dart' hide Router;
+import 'package:p2plib/p2plib.dart';
 
-import '../core/utils.dart';
 import '../core/service/event_bus.dart';
-
+import '../core/model/p2p_model.dart';
 import 'recovery_group_model.dart';
 import 'recovery_group_service.dart';
 
-class RecoveryGroupController with ChangeNotifier {
-  RecoveryGroupController(this._recoveryGroupService, this.eventBus) {
-    eventBus.on<RecoveryGroupClearEvent>().listen((event) => clear());
+class RecoveryGroupController extends TopicHandler with ChangeNotifier {
+  static const _topicOfThis = 100;
+  static const _topicSubscribeTo = 101;
+
+  final p2pNetwork = StreamController<P2PPacket>.broadcast();
+  final RecoveryGroupService _recoveryGroupService;
+  Map<String, RecoveryGroupModel> _groups = {};
+
+  RecoveryGroupController({
+    required RecoveryGroupService recoveryGroupService,
+    required EventBus eventBus,
+    required Router router,
+  })  : _recoveryGroupService = recoveryGroupService,
+        super(router) {
+    eventBus.on<RecoveryGroupClearCommand>().listen((event) => clear());
   }
 
-  final RecoveryGroupService _recoveryGroupService;
-  final EventBus eventBus;
-  late Map<String, RecoveryGroupModel> _groups;
-
   Map<String, RecoveryGroupModel> get groups => _groups;
-  String get qrCode => getRandomString(64);
+
+  @override
+  Uint64List topics() => Uint64List.fromList([_topicSubscribeTo]);
+
+  @override
+  void onMessage(Uint8List data, Peer peer) {
+    final header = Header.deserialize(data.sublist(0, Header.length));
+    p2pNetwork
+        .add(P2PPacket.fromCbor(data.sublist(Header.length), header.srcKey));
+  }
+
+  Future<void> sendAuthRequest(QRCode guardianQRCode) async {
+    final peerPubKey = PubKey(guardianQRCode.pubKey);
+    await router
+        .sendTo(
+            _topicOfThis,
+            peerPubKey,
+            P2PPacket(
+              type: MessageType.authPeer,
+              body: guardianQRCode.authToken,
+            ).toCbor())
+        .onError(p2pNetwork.addError);
+  }
+
+  Future<void> distributeShards(
+    Set<PubKey> peers,
+    GroupID groupId,
+    String secret,
+  ) async {
+    // final shards = _splitSecret(secret, peers.length);
+    final shard = Uint8List.fromList(secret.codeUnits);
+    for (var peer in peers) {
+      router
+          .sendTo(
+              _topicOfThis,
+              peer,
+              P2PPacket(
+                type: MessageType.setShard,
+                body: SetShardPacket(
+                  groupId: groupId.data,
+                  secretShard: shard,
+                ).toCbor(),
+              ).toCbor())
+          .onError(p2pNetwork.addError);
+    }
+  }
+
+  Future<void> requestShards(Set<PubKey> peers, GroupID groupId) async {
+    for (var peer in peers) {
+      router
+          .sendTo(
+              _topicOfThis,
+              peer,
+              P2PPacket(type: MessageType.getShard, body: groupId.data)
+                  .toCbor())
+          .onError(p2pNetwork.addError);
+    }
+  }
+
+  // List<Uint8List> _splitSecret(String secret, int shardsCount) {
+  //   List<Uint8List> result = [];
+  //   final shard = Uint8List.fromList(secret.codeUnits);
+  //   for (var i = 0; i < shardsCount; i++) {
+  //     result.add(shard);
+  //   }
+  //   return result;
+  // }
+
+  // String restoreSecret(List<Uint8List> shards) {
+  //   if (shards.isNotEmpty &&
+  //       shards.every((e) => const IterableEquality().equals(e, shards.first))) {
+  //     return String.fromCharCodes(shards.first);
+  //   }
+  //   return '';
+  // }
 
   Future<void> load() async {
     _groups = await _recoveryGroupService.getGroups();

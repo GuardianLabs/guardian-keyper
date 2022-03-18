@@ -59,11 +59,11 @@ class RecoveryGroupEditView extends StatelessWidget {
                   for (var guardian in recoveryGroup.guardians.values)
                     GuardianListTileWidget(
                       name: guardian.name,
-                      code: guardian.code,
+                      code: guardian.pubKey.toString(),
                       tag: guardian.tag,
-                      nameColor: guardian.code.isEmpty ? clRed : clWhite,
-                      iconColor: guardian.code.isEmpty ? clRed : clGreen,
-                      status: guardian.code.isEmpty ? clRed : clGreen,
+                      nameColor: guardian.pubKey.data.isEmpty ? clRed : clWhite,
+                      iconColor: guardian.pubKey.data.isEmpty ? clRed : clGreen,
+                      status: guardian.pubKey.data.isEmpty ? clRed : clGreen,
                     ),
                   if (!recoveryGroup.isCompleted)
                     ListTile(

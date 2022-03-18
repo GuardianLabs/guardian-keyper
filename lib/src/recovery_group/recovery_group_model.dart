@@ -1,9 +1,19 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:p2plib/p2plib.dart' show RawToken, PubKey;
 
 enum RecoveryGroupType { devices, fiduciaries }
 
+class GroupID extends RawToken {
+  static const length = 8;
+
+  const GroupID(Uint8List value) : super(data: value, len: length);
+}
+
 @immutable
 class RecoveryGroupModel {
+  final GroupID id;
   final String name;
   final RecoveryGroupType type;
   final int size;
@@ -12,6 +22,7 @@ class RecoveryGroupModel {
   final Map<String, RecoveryGroupSecretModel> secrets;
 
   const RecoveryGroupModel({
+    required this.id,
     required this.name,
     required this.type,
     this.size = 3,
@@ -30,6 +41,7 @@ class RecoveryGroupModel {
         RecoveryGroupGuardianModel.fromJson(value as Map<String, dynamic>));
 
     return RecoveryGroupModel(
+      id: GroupID(base64Decode(json['id'] as String)),
       name: json['name'] as String,
       type: RecoveryGroupType.values.byName(json['type']),
       size: json['size'] as int,
@@ -39,23 +51,25 @@ class RecoveryGroupModel {
     );
   }
 
-  static Map<String, dynamic> toJson(RecoveryGroupModel value) => {
-        'name': value.name,
-        'type': value.type.name,
-        'size': value.size,
-        'threshold': value.threshold,
-        'secrets': value.secrets,
-        'guardians': value.guardians,
+  Map<String, dynamic> toJson() => {
+        'id': base64Encode(id.data),
+        'name': name,
+        'type': type.name,
+        'size': size,
+        'threshold': threshold,
+        'secrets': secrets,
+        'guardians': guardians,
       };
 
   RecoveryGroupModel addGuardian(RecoveryGroupGuardianModel guardian) {
     if (guardians.containsKey(guardian.name)) {
       throw RecoveryGroupGuardianAlreadyExists();
     }
-    if (guardians.length == size) {
+    if (guardians.length >= size) {
       throw RecoveryGroupGuardianLimitexhausted();
     }
     return RecoveryGroupModel(
+      id: id,
       name: name,
       type: type,
       size: size,
@@ -70,6 +84,7 @@ class RecoveryGroupModel {
       throw RecoveryGroupSecretAlreadyExists();
     }
     return RecoveryGroupModel(
+      id: id,
       name: name,
       type: type,
       size: size,
@@ -103,52 +118,55 @@ class RecoveryGroupSecretAlreadyExists implements Exception {
 @immutable
 class RecoveryGroupGuardianModel {
   final String name;
-  final String code;
   final String tag;
+  final PubKey pubKey;
+  final PubKey signPubKey;
 
   const RecoveryGroupGuardianModel({
     required this.name,
-    this.code = '',
     this.tag = '',
-  })  : assert(name != ''),
-        assert(code != '');
+    required this.pubKey,
+    required this.signPubKey,
+  }) : assert(name != '');
 
   factory RecoveryGroupGuardianModel.fromJson(Map<String, dynamic> json) =>
       RecoveryGroupGuardianModel(
         name: json['name'] as String,
-        code: json['code'] as String,
         tag: json['tag'] as String,
+        pubKey: PubKey(base64Decode(json['pub_key'] as String)),
+        signPubKey: PubKey(base64Decode(json['sign_pub_key'] as String)),
       );
 
-  static Map<String, dynamic> toJson(RecoveryGroupGuardianModel value) => {
-        'name': value.name,
-        'code': value.code,
-        'tag': value.tag,
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'tag': tag,
+        'pub_key': base64Encode(pubKey.data),
+        'sign_pub_key': base64Encode(signPubKey.data),
       };
 }
 
 // RecoveryGroupSecretModel
-// Do not save\serialize token or delete token at all?
 
 @immutable
 class RecoveryGroupSecretModel {
+  final int id;
   final String name;
   final String token;
 
   const RecoveryGroupSecretModel({
     required this.name,
     this.token = '',
-  })  : assert(name != ''),
-        assert(token != '');
+    this.id = 0,
+  }) : assert(name != '');
 
   factory RecoveryGroupSecretModel.fromJson(Map<String, dynamic> json) =>
       RecoveryGroupSecretModel(
+        id: json['id'] as int,
         name: json['name'] as String,
-        token: json['token'] as String,
       );
 
-  static Map<String, dynamic> toJson(RecoveryGroupSecretModel value) => {
-        'name': value.name,
-        'token': value.token,
+  Map<String, dynamic> toJson() => {
+        'id': token.hashCode,
+        'name': name,
       };
 }

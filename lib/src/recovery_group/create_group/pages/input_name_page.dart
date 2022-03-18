@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/utils.dart';
 import '../../../core/theme_data.dart';
 import '../../../core/widgets/common.dart';
 
@@ -71,6 +72,7 @@ class InputNamePage extends StatelessWidget {
                 ? null
                 : () async {
                     final newGroup = RecoveryGroupModel(
+                      id: GroupID(getRandomBytes(8)),
                       name: state.groupName,
                       type: state.groupType!,
                     );

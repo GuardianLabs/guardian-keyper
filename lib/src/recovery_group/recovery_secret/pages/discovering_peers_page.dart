@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -5,7 +6,6 @@ import '../../../core/theme_data.dart';
 import '../../../core/widgets/common.dart';
 import '../../../core/widgets/icon_of.dart';
 
-import '../../recovery_group_model.dart';
 import '../recovery_secret_controller.dart';
 import '../../recovery_group_controller.dart';
 
@@ -17,78 +17,127 @@ class DiscoveryPeersPage extends StatefulWidget {
 }
 
 class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
-  late final RecoveryGroupModel _recoveryGroup;
+  Timer _timer = Timer(const Duration(seconds: 5), (() {}));
+  bool _isWaiting = true;
+
+  void _initTimer() {
+    if (_timer.isActive) _timer.cancel();
+    _timer = Timer(
+      const Duration(seconds: 5),
+      () => setState(() => _isWaiting = false),
+    );
+  }
 
   @override
   void initState() {
     super.initState();
+    final controller = context.read<RecoveryGroupController>();
     final state = context.read<RecoverySecretController>();
-    _recoveryGroup =
-        context.read<RecoveryGroupController>().groups[state.groupName]!;
-    state.recoverySecret(_recoveryGroup.guardians);
+    final recoveryGroup = controller.groups[state.groupName]!;
+    _initTimer();
+    controller.requestShards(
+      recoveryGroup.guardians.values
+          .map((e) => e.pubKey)
+          .toSet()
+          .difference(state.peers),
+      recoveryGroup.id,
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<RecoverySecretController>(context);
-    final guardiansLeft = _recoveryGroup.threshold - state.guardians.length + 1;
-    final isQuorum = state.guardians.length >= _recoveryGroup.threshold;
-    final isFullHouse =
-        state.guardians.length == _recoveryGroup.guardians.length;
+    final controller = context.read<RecoveryGroupController>();
+    final recoveryGroup = controller.groups[state.groupName]!;
+
+    final guardiansLeft = recoveryGroup.threshold - state.peers.length + 1;
+    final isQuorum = state.peers.length >= recoveryGroup.threshold;
+    final isFinished = state.peers.length == recoveryGroup.guardians.length;
+
+    if (isFinished) {
+      _isWaiting = false;
+      _timer.cancel();
+    }
     return Scaffold(
-        body: Column(
-      children: [
-        // Header
-        const HeaderBar(
-          caption: 'Discovery peers',
-          closeButton: HeaderBarCloseButton(),
-        ),
-        // Body
-        const Padding(
-          padding: EdgeInsets.only(top: 40, bottom: 10),
-          child: IconOf.app(),
-        ),
-        state.secret.isEmpty
-            ? Text('$guardiansLeft Guardian left to recover the secret',
-                textAlign: TextAlign.center)
-            : const Text('Your secret has been recovered and ready to be used.',
-                textAlign: TextAlign.center),
-        if (!isFullHouse)
+      body: Column(
+        children: [
+          // Header
+          const HeaderBar(
+            caption: 'Discovery peers',
+            closeButton: HeaderBarCloseButton(),
+          ),
+          // Body
           const Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: Align(child: CircularProgressIndicator()),
+            padding: EdgeInsets.only(top: 40, bottom: 10),
+            child: IconOf.app(),
           ),
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.all(20),
-            children: [
-              for (var guardian in _recoveryGroup.guardians.values)
-                GuardianListTileWidget(
-                  name: guardian.name,
-                  code: guardian.code,
-                  tag: guardian.tag,
-                  // nameColor: guardian.code.isEmpty ? clRed : clWhite,
-                  iconColor: state.guardians.containsKey(guardian.name)
-                      ? clGreen
-                      : clIndigo500,
-                  status: state.guardians.containsKey(guardian.name)
-                      ? null
-                      : clYellow,
-                ),
-            ],
-          ),
-        ),
-        // Footer
-        if (isQuorum)
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: FooterButton(
-              text: 'Access Secret',
-              onPressed: state.nextScreen,
+          isQuorum
+              ? Text('$guardiansLeft Guardian left to recover the secret',
+                  textAlign: TextAlign.center)
+              : const Text(
+                  'Your secret has been recovered and ready to be used.',
+                  textAlign: TextAlign.center),
+          if (_isWaiting)
+            const Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: Align(child: CircularProgressIndicator()),
+            ),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                state.error = null;
+                state.stackTrace = null;
+                if (_isWaiting) return;
+                _initTimer();
+                await controller.requestShards(
+                  recoveryGroup.guardians.values
+                      .map((e) => e.pubKey)
+                      .toSet()
+                      .difference(state.peers),
+                  recoveryGroup.id,
+                );
+              },
+              child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  for (var guardian in recoveryGroup.guardians.values)
+                    GuardianListTileWidget(
+                      name: guardian.name,
+                      code: guardian.pubKey.toString(),
+                      tag: guardian.tag,
+                      // nameColor: guardian.code.isEmpty ? clRed : clWhite,
+                      iconColor: state.peers.contains(guardian.pubKey)
+                          ? clGreen
+                          : clIndigo500,
+                      status: state.peers.contains(guardian.pubKey)
+                          ? null
+                          : clYellow,
+                    ),
+                  if (state.error != null) Text('Error: ${state.error}'),
+                  if (state.stackTrace != null)
+                    Text('Stack Trace: ${state.stackTrace}'),
+                ],
+              ),
             ),
           ),
-        Container(height: 50),
-      ],
-    ));
+          // Footer
+          if (isQuorum)
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: FooterButton(
+                text: 'Access Secret',
+                onPressed: state.nextScreen,
+              ),
+            ),
+          Container(height: 50),
+        ],
+      ),
+    );
   }
 }

@@ -274,7 +274,7 @@ class GuardianListTileWidget extends StatelessWidget {
             ),
         ],
       ),
-      subtitle: Text(code, maxLines: 1),
+      subtitle: Text(code.replaceAll('\\', r'\\'), maxLines: 1),
       isThreeLine: true,
       dense: true,
       // visualDensity: VisualDensity.comfortable,

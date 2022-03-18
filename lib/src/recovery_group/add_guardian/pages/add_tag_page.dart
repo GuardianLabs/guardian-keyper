@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:p2plib/p2plib.dart' show PubKey;
 
 import '../../../core/theme_data.dart';
 import '../../../core/widgets/common.dart';
-
+import '../../../core/model/p2p_model.dart';
 import '../../recovery_group_model.dart';
-import '../add_guardian_controller.dart';
 import '../../recovery_group_controller.dart';
+import '../add_guardian_controller.dart';
 
 class AddTagPage extends StatelessWidget {
   const AddTagPage({Key? key}) : super(key: key);
@@ -17,10 +18,9 @@ class AddTagPage extends StatelessWidget {
     return Column(
       children: [
         // Header
-        HeaderBar(
+        const HeaderBar(
           caption: 'Add Guardian',
-          backButton: HeaderBarBackButton(onPressed: state.previousScreen),
-          closeButton: const HeaderBarCloseButton(),
+          closeButton: HeaderBarCloseButton(),
         ),
         // Body
         Padding(
@@ -39,14 +39,13 @@ class AddTagPage extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: GuardianListTileWidget(
             name: state.guardianName,
-            code: state.guardianCodeHex,
+            code: state.guardianPubKey,
             tag: state.guardianTag,
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
           child: TextField(
-            restorationId: 'RecoveryGroupTagInput',
             keyboardType: TextInputType.name,
             onChanged: (value) => state.guardianTag = value,
             decoration: InputDecoration(
@@ -66,12 +65,14 @@ class AddTagPage extends StatelessWidget {
           child: FooterButton(
             text: 'Continue',
             onPressed: () async {
+              final qr = QRCode.fromBase64(state.guardianCode);
               await context.read<RecoveryGroupController>().addGuardian(
                     state.groupName,
                     RecoveryGroupGuardianModel(
                       name: state.guardianName,
-                      code: state.guardianCode,
                       tag: state.guardianTag,
+                      pubKey: PubKey(qr.pubKey),
+                      signPubKey: PubKey(qr.signPubKey),
                     ),
                   );
               state.showLastPage

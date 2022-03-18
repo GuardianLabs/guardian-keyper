@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../recovery_group_controller.dart';
 import 'add_guardian_controller.dart';
 import 'pages/add_guardian_page.dart';
 import 'pages/scan_qrcode_page.dart';
@@ -40,6 +41,7 @@ class AddGuardianView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => AddGuardianController(
+        p2pNetwork: context.read<RecoveryGroupController>().p2pNetwork.stream,
         pagesCount: _pages.length,
         groupName: groupName,
         showLastPage: showLastPage,

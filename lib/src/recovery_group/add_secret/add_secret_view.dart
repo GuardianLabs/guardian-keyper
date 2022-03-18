@@ -5,6 +5,7 @@ import 'pages/add_secret_page.dart';
 import 'pages/split_and_share_page.dart';
 import 'pages/secret_transmitting_page.dart';
 
+import '../recovery_group_controller.dart';
 import 'add_secret_controller.dart';
 
 class RecoveryGroupAddSecretView extends StatelessWidget {
@@ -28,6 +29,7 @@ class RecoveryGroupAddSecretView extends StatelessWidget {
       create: (context) => AddSecretController(
         pagesCount: _pages.length,
         groupName: recoveryGroupName,
+        p2pNetwork: context.read<RecoveryGroupController>().p2pNetwork.stream,
       ),
       child: Consumer<AddSecretController>(
           builder: (context, value, child) => _pages[value.currentPage]),

@@ -15,8 +15,8 @@ class GuardianAddedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AddGuardianController>(context);
-    final recoveryGroup =
-        Provider.of<RecoveryGroupController>(context).groups[state.groupName]!;
+    final controller = Provider.of<RecoveryGroupController>(context);
+    final recoveryGroup = controller.groups[state.groupName]!;
     return Column(
       children: [
         // Header
@@ -51,7 +51,7 @@ class GuardianAddedPage extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: GuardianListTileWidget(
             name: state.guardianName,
-            code: state.guardianCodeHex,
+            code: state.guardianPubKey,
             tag: state.guardianTag,
           ),
         ),
