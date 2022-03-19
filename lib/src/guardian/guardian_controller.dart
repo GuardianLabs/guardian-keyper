@@ -36,8 +36,14 @@ class GuardianController extends TopicHandler with ChangeNotifier {
   @override
   void onMessage(Uint8List data, Peer peer) async {
     final header = Header.deserialize(data.sublist(0, Header.length));
+    if (header.dstKey != router.pubKey) return;
+    router.addPeer(header.srcKey, peer);
     final peerPubKey = header.srcKey;
-    final p2pPacket = P2PPacket.fromCbor(data.sublist(Header.length));
+    final p2pPacket = P2PPacket.fromCbor(P2PCrypto.decrypt(
+      header.srcKey,
+      router.keyPair.secretKey,
+      data.sublist(Header.length),
+    ));
     MessageStatus status = MessageStatus.reject;
 
     switch (p2pPacket.type) {
@@ -51,13 +57,15 @@ class GuardianController extends TopicHandler with ChangeNotifier {
         }
         await router
             .sendTo(
-                _topicOfThis,
-                peerPubKey,
-                P2PPacket(
-                  type: MessageType.authPeer,
-                  status: status,
-                  body: Uint8List.fromList(_deviceName.codeUnits),
-                ).toCbor())
+              _topicOfThis,
+              peerPubKey,
+              P2PPacket(
+                type: MessageType.authPeer,
+                status: status,
+                body: Uint8List.fromList(_deviceName.codeUnits),
+              ).toCbor(),
+              true,
+            )
             .whenComplete(generateAuthToken)
             .onError(p2pNetwork.addError);
         break;
@@ -75,12 +83,14 @@ class GuardianController extends TopicHandler with ChangeNotifier {
         }
         await router
             .sendTo(
-                _topicOfThis,
-                peerPubKey,
-                P2PPacket.emptyBody(
-                  type: MessageType.setShard,
-                  status: status,
-                ).toCbor())
+              _topicOfThis,
+              peerPubKey,
+              P2PPacket.emptyBody(
+                type: MessageType.setShard,
+                status: status,
+              ).toCbor(),
+              true,
+            )
             .onError(p2pNetwork.addError);
         break;
 
@@ -93,13 +103,15 @@ class GuardianController extends TopicHandler with ChangeNotifier {
         if (secretShard.value.isNotEmpty) status = MessageStatus.success;
         await router
             .sendTo(
-                _topicOfThis,
-                peerPubKey,
-                P2PPacket(
-                  type: MessageType.getShard,
-                  status: status,
-                  body: secretShard.value,
-                ).toCbor())
+              _topicOfThis,
+              peerPubKey,
+              P2PPacket(
+                type: MessageType.getShard,
+                status: status,
+                body: secretShard.value,
+              ).toCbor(),
+              true,
+            )
             .onError(p2pNetwork.addError);
         break;
 

@@ -33,20 +33,29 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   @override
   void onMessage(Uint8List data, Peer peer) {
     final header = Header.deserialize(data.sublist(0, Header.length));
-    p2pNetwork
-        .add(P2PPacket.fromCbor(data.sublist(Header.length), header.srcKey));
+    if (header.dstKey != router.pubKey) return;
+    router.addPeer(header.srcKey, peer);
+    p2pNetwork.add(P2PPacket.fromCbor(
+        P2PCrypto.decrypt(
+          header.srcKey,
+          router.keyPair.secretKey,
+          data.sublist(Header.length),
+        ),
+        header.srcKey));
   }
 
   Future<void> sendAuthRequest(QRCode guardianQRCode) async {
     final peerPubKey = PubKey(guardianQRCode.pubKey);
     await router
         .sendTo(
-            _topicOfThis,
-            peerPubKey,
-            P2PPacket(
-              type: MessageType.authPeer,
-              body: guardianQRCode.authToken,
-            ).toCbor())
+          _topicOfThis,
+          peerPubKey,
+          P2PPacket(
+            type: MessageType.authPeer,
+            body: guardianQRCode.authToken,
+          ).toCbor(),
+          true,
+        )
         .onError(p2pNetwork.addError);
   }
 
@@ -60,15 +69,17 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     for (var peer in peers) {
       router
           .sendTo(
-              _topicOfThis,
-              peer,
-              P2PPacket(
-                type: MessageType.setShard,
-                body: SetShardPacket(
-                  groupId: groupId.data,
-                  secretShard: shard,
-                ).toCbor(),
-              ).toCbor())
+            _topicOfThis,
+            peer,
+            P2PPacket(
+              type: MessageType.setShard,
+              body: SetShardPacket(
+                groupId: groupId.data,
+                secretShard: shard,
+              ).toCbor(),
+            ).toCbor(),
+            true,
+          )
           .onError(p2pNetwork.addError);
     }
   }
@@ -77,10 +88,11 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     for (var peer in peers) {
       router
           .sendTo(
-              _topicOfThis,
-              peer,
-              P2PPacket(type: MessageType.getShard, body: groupId.data)
-                  .toCbor())
+            _topicOfThis,
+            peer,
+            P2PPacket(type: MessageType.getShard, body: groupId.data).toCbor(),
+            true,
+          )
           .onError(p2pNetwork.addError);
     }
   }
