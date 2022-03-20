@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:p2plib/p2plib.dart';
 
@@ -16,8 +15,7 @@ class RecoverySecretController with ChangeNotifier, PagesController {
       (p2pPacket) {
         if (p2pPacket.status == MessageStatus.success &&
             p2pPacket.type == MessageType.getShard) {
-          _peers.add(p2pPacket.peerPubKey!);
-          secret = String.fromCharCodes(p2pPacket.body);
+          _shards[p2pPacket.peerPubKey!] = String.fromCharCodes(p2pPacket.body);
           notifyListeners();
         }
       },
@@ -30,18 +28,10 @@ class RecoverySecretController with ChangeNotifier, PagesController {
   }
 
   final String groupName;
-  final Map<String, Uint8List> _shards = {};
   final Stream<P2PPacket> p2pNetwork;
-  final Set<PubKey> _peers = {};
-  String secret = '';
+  final Map<PubKey, String> _shards = {};
   String? error;
   String? stackTrace;
 
-  Map<String, Uint8List> get shards => _shards;
-  Set<PubKey> get peers => _peers;
-
-  void addShard(String guardianName, Uint8List shard) {
-    _shards[guardianName] = shard;
-    notifyListeners();
-  }
+  Map<PubKey, String> get shards => _shards;
 }

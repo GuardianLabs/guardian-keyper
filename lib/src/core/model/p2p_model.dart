@@ -56,22 +56,29 @@ class P2PPacket {
 
 @immutable
 class SetShardPacket {
+  final String groupName;
   final Uint8List groupId;
   final Uint8List secretShard;
 
-  const SetShardPacket({required this.groupId, required this.secretShard});
+  const SetShardPacket({
+    required this.groupName,
+    required this.groupId,
+    required this.secretShard,
+  });
 
   factory SetShardPacket.fromCbor(Uint8List value) {
     final packet = cbor.decode(value).toObject() as Map;
     return SetShardPacket(
-      groupId: Uint8List.fromList(packet[0]),
-      secretShard: Uint8List.fromList(packet[1]),
+      groupName: packet[0],
+      groupId: Uint8List.fromList(packet[1]),
+      secretShard: Uint8List.fromList(packet[2]),
     );
   }
 
   Uint8List toCbor() => Uint8List.fromList(cbor.encode(CborMap({
-        const CborSmallInt(0): CborBytes(groupId),
-        const CborSmallInt(1): CborBytes(secretShard),
+        const CborSmallInt(0): CborString(groupName),
+        const CborSmallInt(1): CborBytes(groupId),
+        const CborSmallInt(2): CborBytes(secretShard),
       })));
 }
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/widgets.dart' hide Router;
+import 'package:ntcdcrypto/ntcdcrypto.dart';
 import 'package:p2plib/p2plib.dart';
 
 import '../core/service/event_bus.dart';
@@ -59,23 +60,22 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
         .onError(p2pNetwork.addError);
   }
 
-  Future<void> distributeShards(
-    Set<PubKey> peers,
-    GroupID groupId,
+  void distributeShards(
+    Map<PubKey, String> shards,
+    String groupName,
     String secret,
-  ) async {
-    // final shards = _splitSecret(secret, peers.length);
-    final shard = Uint8List.fromList(secret.codeUnits);
-    for (var peer in peers) {
+  ) {
+    for (var shard in shards.entries) {
       router
           .sendTo(
             _topicOfThis,
-            peer,
+            shard.key,
             P2PPacket(
               type: MessageType.setShard,
               body: SetShardPacket(
-                groupId: groupId.data,
-                secretShard: shard,
+                groupName: groupName,
+                groupId: _groups[groupName]!.id.data,
+                secretShard: Uint8List.fromList(shard.value.codeUnits),
               ).toCbor(),
             ).toCbor(),
             true,
@@ -84,7 +84,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     }
   }
 
-  Future<void> requestShards(Set<PubKey> peers, GroupID groupId) async {
+  void requestShards(Set<PubKey> peers, GroupID groupId) {
     for (var peer in peers) {
       router
           .sendTo(
@@ -97,22 +97,16 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     }
   }
 
-  // List<Uint8List> _splitSecret(String secret, int shardsCount) {
-  //   List<Uint8List> result = [];
-  //   final shard = Uint8List.fromList(secret.codeUnits);
-  //   for (var i = 0; i < shardsCount; i++) {
-  //     result.add(shard);
-  //   }
-  //   return result;
-  // }
+  Map<PubKey, String> splitSecret(String secret, RecoveryGroupModel group) {
+    final shards =
+        SSS().create(group.threshold, group.guardians.length, secret, true);
+    final guardians = group.guardians.values.toList();
+    return {
+      for (var i = 0; i < shards.length; i++) guardians[i].pubKey: shards[i]
+    };
+  }
 
-  // String restoreSecret(List<Uint8List> shards) {
-  //   if (shards.isNotEmpty &&
-  //       shards.every((e) => const IterableEquality().equals(e, shards.first))) {
-  //     return String.fromCharCodes(shards.first);
-  //   }
-  //   return '';
-  // }
+  String restoreSecret(List<String> shards) => SSS().combine(shards, true);
 
   Future<void> load() async {
     _groups = await _recoveryGroupService.getGroups();
@@ -158,8 +152,8 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     //   throw RecoveryGroupAlreadyExists();
     // }
     final group = _groups[groupName]!;
-    final updatedgroup = group.addSecret(secret);
-    _groups[groupName] = updatedgroup;
+    final updatedGroup = group.addSecret(secret);
+    _groups[groupName] = updatedGroup;
     await _save();
   }
 }

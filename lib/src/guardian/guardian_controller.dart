@@ -77,6 +77,7 @@ class GuardianController extends TopicHandler with ChangeNotifier {
             owner: peerPubKey.data,
             value: secretShard.secretShard,
             groupId: secretShard.groupId,
+            groupName: secretShard.groupName,
           ));
           await _guardianService.setSecretShards(_secretShards);
           status = MessageStatus.success;
