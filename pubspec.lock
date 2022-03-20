@@ -362,7 +362,7 @@ packages:
     description:
       path: "."
       ref: legacy
-      resolved-ref: b956b2dd108ae09a497432617527dc93f1960e23
+      resolved-ref: "8925e508d05818b3f867c89d2441b43ce7bd1bb1"
       url: "git@gitlab.com:guardian-network/social-recovery-p2p/p2plib-dart.git"
     source: git
     version: "1.0.0"

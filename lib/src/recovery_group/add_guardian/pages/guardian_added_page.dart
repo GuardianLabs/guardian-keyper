@@ -87,10 +87,11 @@ class GuardianAddedPage extends StatelessWidget {
                   OutlinedButton(
                     child: const Text('Add Guardian'),
                     onPressed: () {
+                      final groupName = state.groupName;
                       Navigator.popAndPushNamed(
                         context,
                         AddGuardianView.routeNameShowLastPage,
-                        arguments: state.groupName,
+                        arguments: groupName,
                       );
                     },
                   ),
@@ -105,11 +106,14 @@ class GuardianAddedPage extends StatelessWidget {
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: FooterButton(
               text: 'Add Secret',
-              onPressed: () => Navigator.popAndPushNamed(
-                context,
-                RecoveryGroupAddSecretView.routeName,
-                arguments: state.groupName,
-              ),
+              onPressed: () {
+                final groupName = state.groupName;
+                Navigator.popAndPushNamed(
+                  context,
+                  RecoveryGroupAddSecretView.routeName,
+                  arguments: groupName,
+                );
+              },
             ),
           ),
         Container(height: 50),

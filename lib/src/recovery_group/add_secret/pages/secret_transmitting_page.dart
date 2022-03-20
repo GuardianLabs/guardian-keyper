@@ -37,8 +37,8 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
     final recoveryGroup = controller.groups[state.groupName]!;
     _initTimer();
     controller.distributeShards(
-      recoveryGroup.guardians.values.map((e) => e.pubKey).toSet(),
-      recoveryGroup.id,
+      state.shards,
+      recoveryGroup.name,
       state.secret,
     );
   }
@@ -54,7 +54,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
     final controller = context.read<RecoveryGroupController>();
     final state = Provider.of<AddSecretController>(context);
     final recoveryGroup = controller.groups[state.groupName]!;
-    final isFinished = state.peers.length == recoveryGroup.guardians.length;
+    final isFinished = state.shards.isEmpty;
 
     if (isFinished) {
       _isWaiting = false;
@@ -66,7 +66,6 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           // Header
           const HeaderBar(
             caption: 'Distribute Secret',
-            // backButton: HeaderBarBackButton(onPressed: state.previousScreen),
             closeButton: HeaderBarCloseButton(),
           ),
           // Body
@@ -88,12 +87,9 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                 state.stackTrace = null;
                 if (_isWaiting) return;
                 _initTimer();
-                await controller.distributeShards(
-                  recoveryGroup.guardians.values
-                      .map((e) => e.pubKey)
-                      .toSet()
-                      .difference(state.peers),
-                  recoveryGroup.id,
+                controller.distributeShards(
+                  state.shards,
+                  recoveryGroup.name,
                   state.secret,
                 );
               },
@@ -106,12 +102,12 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                       code: guardian.pubKey.toString(),
                       tag: guardian.tag,
                       // nameColor: guardian.code.isEmpty ? clRed : clWhite,
-                      iconColor: state.peers.contains(guardian.pubKey)
-                          ? clGreen
-                          : clIndigo500,
-                      status: state.peers.contains(guardian.pubKey)
-                          ? null
-                          : clYellow,
+                      iconColor: state.shards.containsKey(guardian.pubKey)
+                          ? clIndigo500
+                          : clGreen,
+                      status: state.shards.containsKey(guardian.pubKey)
+                          ? clYellow
+                          : null,
                     ),
                   if (state.error != null) Text('Error: ${state.error}'),
                   if (state.stackTrace != null)

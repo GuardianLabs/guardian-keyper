@@ -36,10 +36,7 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
     final recoveryGroup = controller.groups[state.groupName]!;
     _initTimer();
     controller.requestShards(
-      recoveryGroup.guardians.values
-          .map((e) => e.pubKey)
-          .toSet()
-          .difference(state.peers),
+      recoveryGroup.guardians.values.map((e) => e.pubKey).toSet(),
       recoveryGroup.id,
     );
   }
@@ -56,9 +53,9 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
     final controller = context.read<RecoveryGroupController>();
     final recoveryGroup = controller.groups[state.groupName]!;
 
-    final guardiansLeft = recoveryGroup.threshold - state.peers.length + 1;
-    final isQuorum = state.peers.length >= recoveryGroup.threshold;
-    final isFinished = state.peers.length == recoveryGroup.guardians.length;
+    final guardiansLeft = recoveryGroup.threshold - state.shards.length + 1;
+    final isQuorum = state.shards.length >= recoveryGroup.threshold;
+    final isFinished = state.shards.length == recoveryGroup.guardians.length;
 
     if (isFinished) {
       _isWaiting = false;
@@ -95,11 +92,11 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                 state.stackTrace = null;
                 if (_isWaiting) return;
                 _initTimer();
-                await controller.requestShards(
+                controller.requestShards(
                   recoveryGroup.guardians.values
                       .map((e) => e.pubKey)
                       .toSet()
-                      .difference(state.peers),
+                      .difference(state.shards.keys.toSet()),
                   recoveryGroup.id,
                 );
               },
@@ -112,10 +109,10 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                       code: guardian.pubKey.toString(),
                       tag: guardian.tag,
                       // nameColor: guardian.code.isEmpty ? clRed : clWhite,
-                      iconColor: state.peers.contains(guardian.pubKey)
+                      iconColor: state.shards.containsKey(guardian.pubKey)
                           ? clGreen
                           : clIndigo500,
-                      status: state.peers.contains(guardian.pubKey)
+                      status: state.shards.containsKey(guardian.pubKey)
                           ? null
                           : clYellow,
                     ),

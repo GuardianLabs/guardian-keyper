@@ -5,16 +5,17 @@ import '../../core/controller/page_controller.dart';
 import '../../core/model/p2p_model.dart';
 
 class AddSecretController with ChangeNotifier, PagesController {
-  AddSecretController(
-      {required int pagesCount,
-      required this.groupName,
-      required this.p2pNetwork}) {
+  AddSecretController({
+    required int pagesCount,
+    required this.groupName,
+    required this.p2pNetwork,
+  }) {
     this.pagesCount = pagesCount;
     p2pNetwork.listen(
       (p2pPacket) {
         if (p2pPacket.status == MessageStatus.success &&
             p2pPacket.type == MessageType.setShard) {
-          _peers.add(p2pPacket.peerPubKey!);
+          shards.remove(p2pPacket.peerPubKey!);
           notifyListeners();
         }
       },
@@ -28,10 +29,8 @@ class AddSecretController with ChangeNotifier, PagesController {
 
   final String groupName;
   final Stream<P2PPacket> p2pNetwork;
-  final Set<PubKey> _peers = {};
+  Map<PubKey, String> shards = {};
   String secret = '';
   String? error;
   String? stackTrace;
-
-  Set<PubKey> get peers => _peers;
 }

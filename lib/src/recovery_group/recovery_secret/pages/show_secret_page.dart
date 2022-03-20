@@ -6,6 +6,7 @@ import '../../../core/theme_data.dart';
 import '../../../core/widgets/common.dart';
 import '../../../core/widgets/icon_of.dart';
 
+import '../../recovery_group_controller.dart';
 import '../recovery_secret_controller.dart';
 
 class ShowSecretPage extends StatefulWidget {
@@ -17,10 +18,17 @@ class ShowSecretPage extends StatefulWidget {
 
 class _ShowSecretPageState extends State<ShowSecretPage> {
   bool isSecretObfuscated = true;
+  String secret = '';
+
+  @override
+  void initState() {
+    super.initState();
+    secret = context.read<RecoveryGroupController>().restoreSecret(
+        context.read<RecoverySecretController>().shards.values.toList());
+  }
 
   @override
   Widget build(BuildContext context) {
-    final state = Provider.of<RecoverySecretController>(context, listen: false);
     return Scaffold(
         body: Column(
       children: [
@@ -52,7 +60,7 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
                   maxLines: isSecretObfuscated ? 1 : 5,
                   readOnly: true,
                   obscureText: isSecretObfuscated,
-                  controller: TextEditingController(text: state.secret),
+                  controller: TextEditingController(text: secret),
                 ),
                 ElevatedButton(
                   child: isSecretObfuscated
@@ -71,9 +79,8 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: FooterButton(
             text: 'Copy to Clipboard',
-            onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: state.secret));
-            },
+            onPressed: () async =>
+                await Clipboard.setData(ClipboardData(text: secret)),
           ),
         ),
         Container(height: 50),
