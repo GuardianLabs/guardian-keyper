@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:collection/collection.dart' show IterableEquality;
@@ -26,6 +27,7 @@ class GuardianController extends TopicHandler with ChangeNotifier {
   final p2pNetwork = StreamController<P2PPacket>.broadcast();
   final GuardianService _guardianService;
   String _deviceName = 'Undefined';
+  InternetAddress? _deviceAddress;
   Set<SecretShard> _secretShards = {};
   Set<PubKey> _trustedPeers = {};
   RawToken _currentAuthToken = RawToken(len: 32, data: getRandomBytes(32));
@@ -120,8 +122,11 @@ class GuardianController extends TopicHandler with ChangeNotifier {
     }
   }
 
-  Future<void> load([String? deviceName]) async {
+  Future<void> load([String? deviceName, String? deviceAddress]) async {
     if (deviceName != null) _deviceName = deviceName;
+    if (deviceAddress != null) {
+      _deviceAddress = InternetAddress.tryParse(deviceAddress);
+    }
     _secretShards = await _guardianService.getSecretShards();
     _trustedPeers = (await _guardianService.getTrustedPeers())
         .map((e) => PubKey(e))
@@ -145,5 +150,7 @@ class GuardianController extends TopicHandler with ChangeNotifier {
         authToken: _currentAuthToken.data,
         pubKey: myPubKey,
         signPubKey: mySignPubKey ?? myPubKey,
+        address:
+            _deviceAddress == null ? Uint8List(0) : _deviceAddress!.rawAddress,
       );
 }

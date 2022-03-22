@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart' hide Router;
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:network_info_plus/network_info_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:sodium/sodium.dart' show KeyPair, SecureKey;
 import 'package:p2plib/p2plib.dart';
@@ -63,7 +64,10 @@ void main() async {
 
   FlutterNativeSplash.removeAfter((BuildContext context) async {
     await settingsController.load();
-    await guardianController.load(await _getDeviceName());
+    await guardianController.load(
+      await _getDeviceName(),
+      await NetworkInfo().getWifiIP(),
+    );
     await recoveryGroupController.load();
     await router.run();
   });
