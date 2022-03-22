@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/widgets.dart' hide Router;
 import 'package:ntcdcrypto/ntcdcrypto.dart';
@@ -47,6 +48,10 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
 
   Future<void> sendAuthRequest(QRCode guardianQRCode) async {
     final peerPubKey = PubKey(guardianQRCode.pubKey);
+    if (guardianQRCode.address.isNotEmpty) {
+      router.addPeer(peerPubKey,
+          Peer(InternetAddress.fromRawAddress(guardianQRCode.address), 7342));
+    }
     await router
         .sendTo(
           _topicOfThis,

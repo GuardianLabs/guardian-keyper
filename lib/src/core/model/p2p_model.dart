@@ -88,12 +88,14 @@ class QRCode {
   final Uint8List authToken;
   final Uint8List pubKey;
   final Uint8List signPubKey;
+  final Uint8List address;
 
   const QRCode({
     this.version = 1,
     required this.authToken,
     required this.pubKey,
     required this.signPubKey,
+    required this.address,
   });
 
   factory QRCode.fromBase64(String qrCode) {
@@ -103,6 +105,7 @@ class QRCode {
       authToken: Uint8List.fromList(packet[1]),
       pubKey: Uint8List.fromList(packet[2]),
       signPubKey: Uint8List.fromList(packet[3]),
+      address: Uint8List.fromList(packet[4]),
     );
   }
 
@@ -112,5 +115,6 @@ class QRCode {
         const CborSmallInt(1): CborBytes(authToken),
         const CborSmallInt(2): CborBytes(pubKey),
         const CborSmallInt(3): CborBytes(signPubKey),
+        const CborSmallInt(4): CborBytes(address),
       }))));
 }
