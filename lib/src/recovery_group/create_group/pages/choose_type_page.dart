@@ -5,7 +5,7 @@ import '../../../core/theme_data.dart';
 import '../../../core/widgets/common.dart';
 import '../../../core/widgets/icon_of.dart';
 
-import '../../recovery_group_model.dart';
+import '../../../core/model/p2p_model.dart' show RecoveryGroupType;
 import '../create_group_controller.dart';
 
 class ChooseTypePage extends StatelessWidget {
@@ -58,7 +58,7 @@ class ChooseTypePage extends StatelessWidget {
         // Footer
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: FooterButton(
+          child: PrimaryTextButton(
             text: 'Continue',
             onPressed: state.groupType == null ? null : state.nextScreen,
           ),

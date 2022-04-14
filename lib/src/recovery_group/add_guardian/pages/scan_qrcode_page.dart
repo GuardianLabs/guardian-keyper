@@ -1,52 +1,13 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
-// import '../../../core/utils.dart';
-import '../../../core/theme_data.dart';
-import '../../../core/widgets/common.dart';
-
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
 import '../add_guardian_controller.dart';
 
-class ScanQRCodePage extends StatefulWidget {
+class ScanQRCodePage extends StatelessWidget {
   const ScanQRCodePage({Key? key}) : super(key: key);
-
-  @override
-  State<ScanQRCodePage> createState() => _ScanQRCodePageState();
-}
-
-class _ScanQRCodePageState extends State<ScanQRCodePage> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
-
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller!.resumeCamera();
-    }
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      if (scanData.code == null || scanData.code!.isEmpty) return;
-      final state = context.read<AddGuardianController>();
-      state.guardianCode = scanData.code!;
-      state.nextScreen();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +25,16 @@ class _ScanQRCodePageState extends State<ScanQRCodePage> {
             child: SizedBox(
               height: 200,
               width: 200,
-              child: QRView(
-                key: qrKey,
-                onQRViewCreated: _onQRViewCreated,
+              child: MobileScanner(
+                allowDuplicates: false,
+                onDetect: (barcode, args) {
+                  if (barcode.rawValue == null || barcode.rawValue!.isEmpty) {
+                    return;
+                  }
+                  final state = context.read<AddGuardianController>();
+                  state.guardianCode = barcode.rawValue!;
+                  state.nextScreen();
+                },
               ),
             )),
         Expanded(child: Container()),

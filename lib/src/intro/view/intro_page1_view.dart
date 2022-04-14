@@ -84,7 +84,7 @@ class IntroPage1View extends StatelessWidget {
         // Footer
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: FooterButton(text: 'Get Started', onPressed: onPressed),
+          child: PrimaryTextButton(text: 'Get Started', onPressed: onPressed),
         ),
         Container(height: 50),
       ],

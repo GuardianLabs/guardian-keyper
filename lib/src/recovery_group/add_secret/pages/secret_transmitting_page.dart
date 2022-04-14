@@ -60,82 +60,80 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
       _isWaiting = false;
       _timer.cancel();
     }
-    return Scaffold(
-      body: Column(
-        children: [
-          // Header
-          const HeaderBar(
-            caption: 'Distribute Secret',
-            closeButton: HeaderBarCloseButton(),
-          ),
-          // Body
+    return Column(
+      children: [
+        // Header
+        const HeaderBar(
+          caption: 'Distribute Secret',
+          closeButton: HeaderBarCloseButton(),
+        ),
+        // Body
+        const Padding(
+          padding: EdgeInsets.only(top: 40, bottom: 10),
+          child: Icon(Icons.key_outlined, size: 40),
+        ),
+        const Text('The secret is being sharded and transmitted ',
+            textAlign: TextAlign.center),
+        if (_isWaiting)
           const Padding(
-            padding: EdgeInsets.only(top: 40, bottom: 10),
-            child: Icon(Icons.key_outlined, size: 40),
+            padding: EdgeInsets.only(top: 20),
+            child: Align(child: CircularProgressIndicator()),
           ),
-          const Text('The secret is being sharded and transmitted ',
-              textAlign: TextAlign.center),
-          if (_isWaiting)
-            const Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: Align(child: CircularProgressIndicator()),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              state.error = null;
+              state.stackTrace = null;
+              if (_isWaiting) return;
+              _initTimer();
+              controller.distributeShards(
+                state.shards,
+                recoveryGroup.name,
+                state.secret,
+              );
+            },
+            child: ListView(
+              padding: const EdgeInsets.all(20),
+              children: [
+                for (var guardian in recoveryGroup.guardians.values)
+                  GuardianListTileWidget(
+                    name: guardian.name,
+                    code: guardian.pubKey.toString(),
+                    tag: guardian.tag,
+                    // nameColor: guardian.code.isEmpty ? clRed : clWhite,
+                    iconColor: state.shards.containsKey(guardian.pubKey)
+                        ? clIndigo500
+                        : clGreen,
+                    status: state.shards.containsKey(guardian.pubKey)
+                        ? clYellow
+                        : null,
+                  ),
+                if (state.error != null) Text('Error: ${state.error}'),
+                if (state.stackTrace != null)
+                  Text('Stack Trace: ${state.stackTrace}'),
+              ],
             ),
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                state.error = null;
-                state.stackTrace = null;
-                if (_isWaiting) return;
-                _initTimer();
-                controller.distributeShards(
-                  state.shards,
-                  recoveryGroup.name,
-                  state.secret,
-                );
+          ),
+        ),
+        // Footer
+        if (isFinished)
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: PrimaryTextButton(
+              text: 'Done',
+              onPressed: () {
+                context.read<RecoveryGroupController>().addSecret(
+                    state.groupName,
+                    RecoveryGroupSecretModel(
+                      name: 'TheOne',
+                      token: state.secret,
+                    ));
+                Navigator.of(context).pop();
               },
-              child: ListView(
-                padding: const EdgeInsets.all(20),
-                children: [
-                  for (var guardian in recoveryGroup.guardians.values)
-                    GuardianListTileWidget(
-                      name: guardian.name,
-                      code: guardian.pubKey.toString(),
-                      tag: guardian.tag,
-                      // nameColor: guardian.code.isEmpty ? clRed : clWhite,
-                      iconColor: state.shards.containsKey(guardian.pubKey)
-                          ? clIndigo500
-                          : clGreen,
-                      status: state.shards.containsKey(guardian.pubKey)
-                          ? clYellow
-                          : null,
-                    ),
-                  if (state.error != null) Text('Error: ${state.error}'),
-                  if (state.stackTrace != null)
-                    Text('Stack Trace: ${state.stackTrace}'),
-                ],
-              ),
             ),
           ),
-          // Footer
-          if (isFinished)
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: FooterButton(
-                text: 'Done',
-                onPressed: () {
-                  context.read<RecoveryGroupController>().addSecret(
-                      state.groupName,
-                      RecoveryGroupSecretModel(
-                        name: 'TheOne',
-                        token: state.secret,
-                      ));
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-          Container(height: 50),
-        ],
-      ),
+        Container(height: 50),
+      ],
     );
   }
 }

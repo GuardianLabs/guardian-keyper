@@ -22,6 +22,8 @@
 		<string>$(FLUTTER_BUILD_NAME)</string>
 		<key>CFBundleSignature</key>
 		<string>????</string>
+        <key>com.apple.developer.networking.multicast</key>
+        <true/>
         <key>ITSAppUsesNonExemptEncryption</key>
         <false/>
         <key>CFBundleVersion</key>

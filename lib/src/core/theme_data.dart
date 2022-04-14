@@ -15,6 +15,8 @@ const clWhite50 = Color(0xFFE6F9FF);
 
 final borderRadius = BorderRadius.circular(8);
 
+final decorRoundedBox = BoxDecoration(borderRadius: borderRadius);
+
 final decorBlueButton = BoxDecoration(
     borderRadius: borderRadius,
     gradient: const LinearGradient(

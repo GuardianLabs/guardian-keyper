@@ -21,8 +21,9 @@ class CreateGroupView extends StatelessWidget {
       child: Consumer<CreateGroupController>(
         builder: (context, value, child) {
           return Scaffold(
+            primary: true,
             resizeToAvoidBottomInset: false,
-            body: _pages[value.currentPage],
+            body: SafeArea(child: _pages[value.currentPage]),
           );
         },
       ),

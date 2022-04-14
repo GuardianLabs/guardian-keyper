@@ -7,16 +7,20 @@ import 'package:p2plib/p2plib.dart';
 
 import '../core/service/event_bus.dart';
 import '../core/model/p2p_model.dart';
+import '../core/utils.dart';
 import 'recovery_group_model.dart';
 import 'recovery_group_service.dart';
 
 class RecoveryGroupController extends TopicHandler with ChangeNotifier {
-  static const _topicOfThis = 100;
-  static const _topicSubscribeTo = 101;
+  static const _topicOfOwner = 100;
+  static const _topicOfGuardian = 101;
 
   final p2pNetwork = StreamController<P2PPacket>.broadcast();
   final RecoveryGroupService _recoveryGroupService;
+
   Map<String, RecoveryGroupModel> _groups = {};
+  String _deviceName = 'Undefined';
+  InternetAddress? _deviceAddress;
 
   RecoveryGroupController({
     required RecoveryGroupService recoveryGroupService,
@@ -30,20 +34,82 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   Map<String, RecoveryGroupModel> get groups => _groups;
 
   @override
-  Uint64List topics() => Uint64List.fromList([_topicSubscribeTo]);
+  Uint64List topics() => Uint64List.fromList([_topicOfGuardian]);
 
   @override
   void onMessage(Uint8List data, Peer peer) {
     final header = Header.deserialize(data.sublist(0, Header.length));
     if (header.dstKey != router.pubKey) return;
     router.addPeer(header.srcKey, peer);
-    p2pNetwork.add(P2PPacket.fromCbor(
+    final p2pPacket = P2PPacket.fromCbor(
         P2PCrypto.decrypt(
           header.srcKey,
           router.keyPair.secretKey,
           data.sublist(Header.length),
         ),
-        header.srcKey));
+        header.srcKey);
+
+    if (p2pPacket.type == MessageType.takeOwnership &&
+        p2pPacket.status == MessageStatus.request) {
+      _processTakeOwnershipRequest(p2pPacket, header.srcKey);
+    }
+    p2pNetwork.add(p2pPacket);
+  }
+
+  //TBD: throw away this piece of shit, some day...
+  void _processTakeOwnershipRequest(P2PPacket p2pPacket, PubKey peerPubKey) {
+    final secretShard = SecretShardPacket.fromCbor(p2pPacket.body);
+    final group = _groups[secretShard.groupName];
+    final guardian = RecoveryGroupGuardianModel(
+      name: secretShard.ownerName, //TBD: use real peer name
+      pubKey: peerPubKey,
+      signPubKey: peerPubKey,
+    );
+
+    if (group == null) {
+      final secret = RecoveryGroupSecretModel(
+          name: secretShard.groupName); //TBD: use real secret name
+      _groups[secretShard.groupName] = RecoveryGroupModel(
+        id: GroupID(secretShard.groupId),
+        name: secretShard.groupName,
+        type: RecoveryGroupType.devices,
+        isRestoring: true,
+        size: secretShard.groupSize,
+        threshold: secretShard.groupThreshold,
+        guardians: {guardian.name: guardian},
+        secrets: {secret.name: secret},
+      );
+      notifyListeners();
+      _sendTakeOwnershipResponse(peerPubKey, secretShard.groupId);
+    } else {
+      if (group.isRestoring) {
+        if (group.isNotCompleted) {
+          _groups[group.name] = group.addGuardian(guardian);
+          notifyListeners();
+          _sendTakeOwnershipResponse(peerPubKey, secretShard.groupId);
+        }
+      } else {
+        p2pNetwork.addError(RecoveryGroupAlreadyExists());
+      }
+    }
+  }
+
+  Future<void> _sendTakeOwnershipResponse(
+    PubKey peerPubKey,
+    Uint8List groupId,
+  ) async {
+    await router
+        .sendTo(
+          _topicOfGuardian,
+          peerPubKey,
+          P2PPacket(
+            type: MessageType.takeOwnership,
+            status: MessageStatus.success,
+            body: groupId,
+          ).toCbor(),
+          true,
+        )
+        .onError(p2pNetwork.addError);
   }
 
   Future<void> sendAuthRequest(QRCode guardianQRCode) async {
@@ -54,7 +120,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     }
     await router
         .sendTo(
-          _topicOfThis,
+          _topicOfOwner,
           peerPubKey,
           P2PPacket(
             type: MessageType.authPeer,
@@ -70,16 +136,20 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     String groupName,
     String secret,
   ) {
+    final recoveryGroup = _groups[groupName]!;
     for (var shard in shards.entries) {
       router
           .sendTo(
-            _topicOfThis,
+            _topicOfOwner,
             shard.key,
             P2PPacket(
               type: MessageType.setShard,
-              body: SetShardPacket(
+              body: SecretShardPacket(
+                ownerName: _deviceName,
                 groupName: groupName,
-                groupId: _groups[groupName]!.id.data,
+                groupSize: recoveryGroup.size,
+                groupThreshold: recoveryGroup.threshold,
+                groupId: recoveryGroup.id.data,
                 secretShard: Uint8List.fromList(shard.value.codeUnits),
               ).toCbor(),
             ).toCbor(),
@@ -93,13 +163,32 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     for (var peer in peers) {
       router
           .sendTo(
-            _topicOfThis,
+            _topicOfOwner,
             peer,
             P2PPacket(type: MessageType.getShard, body: groupId.data).toCbor(),
             true,
           )
           .onError(p2pNetwork.addError);
     }
+  }
+
+  Future<void> takeOwnershipRequest(QRCode guardianQRCode) async {
+    final peerPubKey = PubKey(guardianQRCode.pubKey);
+    if (guardianQRCode.address.isNotEmpty) {
+      router.addPeer(peerPubKey,
+          Peer(InternetAddress.fromRawAddress(guardianQRCode.address), 7342));
+    }
+    await router
+        .sendTo(
+          _topicOfOwner,
+          peerPubKey,
+          P2PPacket(
+            type: MessageType.takeOwnership,
+            body: guardianQRCode.authToken,
+          ).toCbor(),
+          true,
+        )
+        .onError(p2pNetwork.addError);
   }
 
   Map<PubKey, String> splitSecret(String secret, RecoveryGroupModel group) {
@@ -113,7 +202,21 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
 
   String restoreSecret(List<String> shards) => SSS().combine(shards, true);
 
-  Future<void> load() async {
+  QRCode getQRCode() => QRCode(
+        authToken: RawToken(len: 32, data: getRandomBytes(32)).data,
+        pubKey: router.pubKey.data,
+        signPubKey: router.pubKey.data,
+        type: MessageType.takeOwnership,
+        peerName: _deviceName,
+        address:
+            _deviceAddress == null ? Uint8List(0) : _deviceAddress!.rawAddress,
+      );
+
+  Future<void> load([String? deviceName, String? deviceAddress]) async {
+    if (deviceName != null) _deviceName = deviceName;
+    if (deviceAddress != null) {
+      _deviceAddress = InternetAddress.tryParse(deviceAddress);
+    }
     _groups = await _recoveryGroupService.getGroups();
   }
 
@@ -129,9 +232,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   }
 
   Future<void> addGroup(RecoveryGroupModel group) async {
-    if (_groups.containsKey(group.name)) {
-      throw RecoveryGroupAlreadyExists();
-    }
+    if (_groups.containsKey(group.name)) throw RecoveryGroupAlreadyExists();
     _groups[group.name] = group;
     await _save();
   }
@@ -140,9 +241,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     String groupName,
     RecoveryGroupGuardianModel guardian,
   ) async {
-    if (!_groups.containsKey(groupName)) {
-      throw RecoveryGroupDoesNotExist();
-    }
+    if (!_groups.containsKey(groupName)) throw RecoveryGroupDoesNotExist();
     final group = _groups[groupName]!;
     _groups[groupName] = group.addGuardian(guardian);
     await _save();

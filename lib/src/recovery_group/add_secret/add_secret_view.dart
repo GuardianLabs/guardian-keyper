@@ -31,8 +31,13 @@ class RecoveryGroupAddSecretView extends StatelessWidget {
         groupName: recoveryGroupName,
         p2pNetwork: context.read<RecoveryGroupController>().p2pNetwork.stream,
       ),
-      child: Consumer<AddSecretController>(
-          builder: (context, value, child) => _pages[value.currentPage]),
+      child: Consumer<AddSecretController>(builder: (context, value, child) {
+        return Scaffold(
+          primary: true,
+          resizeToAvoidBottomInset: false,
+          body: SafeArea(child: _pages[value.currentPage]),
+        );
+      }),
     );
   }
 }

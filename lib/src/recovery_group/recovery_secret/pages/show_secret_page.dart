@@ -29,8 +29,7 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(
+    return Column(
       children: [
         // Header
         const HeaderBar(
@@ -77,7 +76,7 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
         // Footer
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: FooterButton(
+          child: PrimaryTextButton(
             text: 'Copy to Clipboard',
             onPressed: () async =>
                 await Clipboard.setData(ClipboardData(text: secret)),
@@ -85,6 +84,6 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
         ),
         Container(height: 50),
       ],
-    ));
+    );
   }
 }

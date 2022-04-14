@@ -104,7 +104,7 @@ class GuardianAddedPage extends StatelessWidget {
         if (!recoveryGroup.isMissed)
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
-            child: FooterButton(
+            child: PrimaryTextButton(
               text: 'Add Secret',
               onPressed: () {
                 final groupName = state.groupName;

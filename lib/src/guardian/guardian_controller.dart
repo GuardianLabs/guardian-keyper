@@ -11,9 +11,19 @@ import '../core/model/p2p_model.dart';
 import 'guardian_model.dart';
 import 'guardian_service.dart';
 
-class GuardianController extends TopicHandler with ChangeNotifier {
-  static const _topicOfThis = 101;
-  static const _topicSubscribeTo = 100;
+class GuardianController extends TopicHandler
+    with ChangeNotifier, WidgetsBindingObserver {
+  static const _topicOfGuardian = 101;
+  static const _topicOfOwner = 100;
+
+  final p2pNetwork = StreamController<P2PPacket>.broadcast();
+  final GuardianService _guardianService;
+
+  String _deviceName = 'Undefined';
+  InternetAddress? _deviceAddress;
+  Set<SecretShard> secretShards = {};
+  Set<PubKey> _trustedPeers = {};
+  RawToken _currentAuthToken = RawToken(len: 32, data: getRandomBytes(32));
 
   GuardianController({
     required GuardianService guardianService,
@@ -21,19 +31,22 @@ class GuardianController extends TopicHandler with ChangeNotifier {
     required Router router,
   })  : _guardianService = guardianService,
         super(router) {
+    WidgetsBinding.instance!.addObserver(this);
     eventBus.on<RecoveryGroupClearCommand>().listen((event) => clearStorage());
   }
 
-  final p2pNetwork = StreamController<P2PPacket>.broadcast();
-  final GuardianService _guardianService;
-  String _deviceName = 'Undefined';
-  InternetAddress? _deviceAddress;
-  Set<SecretShard> _secretShards = {};
-  Set<PubKey> _trustedPeers = {};
-  RawToken _currentAuthToken = RawToken(len: 32, data: getRandomBytes(32));
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.paused) {
+      router.connection.closeConnection();
+    } else if (state == AppLifecycleState.resumed) {
+      await router.connection.openConnection();
+      await router.connection.startListen();
+    }
+  }
 
   @override
-  Uint64List topics() => Uint64List.fromList([_topicSubscribeTo]);
+  Uint64List topics() => Uint64List.fromList([_topicOfOwner]);
 
   @override
   void onMessage(Uint8List data, Peer peer) async {
@@ -59,46 +72,47 @@ class GuardianController extends TopicHandler with ChangeNotifier {
         }
         await router
             .sendTo(
-              _topicOfThis,
-              peerPubKey,
-              P2PPacket(
-                type: MessageType.authPeer,
-                status: status,
-                body: Uint8List.fromList(_deviceName.codeUnits),
-              ).toCbor(),
-              true,
-            )
+                _topicOfGuardian,
+                peerPubKey,
+                P2PPacket(
+                  type: MessageType.authPeer,
+                  status: status,
+                  body: Uint8List.fromList(_deviceName.codeUnits),
+                ).toCbor(),
+                true)
             .whenComplete(generateAuthToken)
             .onError(p2pNetwork.addError);
         break;
 
       case MessageType.setShard:
         if (_trustedPeers.contains(peerPubKey)) {
-          final secretShard = SetShardPacket.fromCbor(p2pPacket.body);
-          _secretShards.add(SecretShard(
+          final secretShard = SecretShardPacket.fromCbor(p2pPacket.body);
+          secretShards.add(SecretShard(
             owner: peerPubKey.data,
             value: secretShard.secretShard,
             groupId: secretShard.groupId,
+            groupSize: secretShard.groupSize,
+            groupThreshold: secretShard.groupThreshold,
             groupName: secretShard.groupName,
+            ownerName: secretShard.ownerName,
           ));
-          await _guardianService.setSecretShards(_secretShards);
+          await _guardianService.setSecretShards(secretShards);
           status = MessageStatus.success;
         }
         await router
             .sendTo(
-              _topicOfThis,
-              peerPubKey,
-              P2PPacket.emptyBody(
-                type: MessageType.setShard,
-                status: status,
-              ).toCbor(),
-              true,
-            )
+                _topicOfGuardian,
+                peerPubKey,
+                P2PPacket.emptyBody(
+                  type: MessageType.setShard,
+                  status: status,
+                ).toCbor(),
+                true)
             .onError(p2pNetwork.addError);
         break;
 
       case MessageType.getShard:
-        final secretShard = _secretShards.firstWhere(
+        final secretShard = secretShards.firstWhere(
             (e) =>
                 PubKey(e.owner) == peerPubKey &&
                 const IterableEquality().equals(e.groupId, p2pPacket.body),
@@ -106,20 +120,74 @@ class GuardianController extends TopicHandler with ChangeNotifier {
         if (secretShard.value.isNotEmpty) status = MessageStatus.success;
         await router
             .sendTo(
-              _topicOfThis,
-              peerPubKey,
-              P2PPacket(
-                type: MessageType.getShard,
-                status: status,
-                body: secretShard.value,
-              ).toCbor(),
-              true,
-            )
+                _topicOfGuardian,
+                peerPubKey,
+                P2PPacket(
+                  type: MessageType.getShard,
+                  status: status,
+                  body: secretShard.value,
+                ).toCbor(),
+                true)
             .onError(p2pNetwork.addError);
+        break;
+
+      case MessageType.takeOwnership:
+        p2pNetwork.add(p2pPacket);
         break;
 
       default:
     }
+  }
+
+  Future<void> sendTakeOwnershipRequest(
+    QRCode guardianQRCode,
+    SecretShard secretShard,
+  ) async {
+    final peerPubKey = PubKey(guardianQRCode.pubKey);
+    if (guardianQRCode.address.isNotEmpty) {
+      router.addPeer(peerPubKey,
+          Peer(InternetAddress.fromRawAddress(guardianQRCode.address), 7342));
+    }
+    await router
+        .sendTo(
+          _topicOfGuardian,
+          peerPubKey,
+          P2PPacket(
+            type: MessageType.takeOwnership,
+            body: SecretShardPacket(
+              groupId: secretShard.groupId,
+              groupName: secretShard.groupName,
+              ownerName: secretShard.ownerName,
+              groupSize: secretShard.groupSize,
+              groupThreshold: secretShard.groupThreshold,
+              secretShard: Uint8List(0),
+            ).toCbor(),
+          ).toCbor(),
+          true,
+        )
+        .onError(p2pNetwork.addError);
+  }
+
+  Future<void> changeOwnership(
+    SecretShard secretShard,
+    Uint8List peerPubKey,
+    String ownerName,
+  ) async {
+    final updatedSecretShard = SecretShard(
+      owner: peerPubKey,
+      ownerName: ownerName,
+      groupId: secretShard.groupId,
+      groupName: secretShard.groupName,
+      groupSize: secretShard.groupSize,
+      groupThreshold: secretShard.groupThreshold,
+      value: secretShard.value,
+    );
+    secretShards.removeWhere((e) =>
+        const IterableEquality().equals(e.groupId, secretShard.groupId) &&
+        const IterableEquality().equals(e.owner, secretShard.owner));
+    secretShards.add(updatedSecretShard);
+    await _guardianService.setSecretShards(secretShards);
+    notifyListeners();
   }
 
   Future<void> load([String? deviceName, String? deviceAddress]) async {
@@ -127,7 +195,7 @@ class GuardianController extends TopicHandler with ChangeNotifier {
     if (deviceAddress != null) {
       _deviceAddress = InternetAddress.tryParse(deviceAddress);
     }
-    _secretShards = await _guardianService.getSecretShards();
+    secretShards = await _guardianService.getSecretShards();
     _trustedPeers = (await _guardianService.getTrustedPeers())
         .map((e) => PubKey(e))
         .toSet();
@@ -136,13 +204,13 @@ class GuardianController extends TopicHandler with ChangeNotifier {
 
   Future<void> clearStorage() async {
     await _guardianService.clearSecretShards();
-    _secretShards.clear();
+    secretShards.clear();
     notifyListeners();
   }
 
   void generateAuthToken() {
     _currentAuthToken = RawToken(len: 32, data: getRandomBytes(32));
-    p2pNetwork.add(P2PPacket.emptyBody());
+    p2pNetwork.add(P2PPacket.emptyBody()); // Is it needed?
     notifyListeners();
   }
 
@@ -150,6 +218,8 @@ class GuardianController extends TopicHandler with ChangeNotifier {
         authToken: _currentAuthToken.data,
         pubKey: myPubKey,
         signPubKey: mySignPubKey ?? myPubKey,
+        type: MessageType.authPeer,
+        peerName: _deviceName,
         address:
             _deviceAddress == null ? Uint8List(0) : _deviceAddress!.rawAddress,
       );
