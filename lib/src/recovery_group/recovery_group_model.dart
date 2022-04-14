@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:p2plib/p2plib.dart' show RawToken, PubKey;
 
-enum RecoveryGroupType { devices, fiduciaries }
+import '../core/model/p2p_model.dart' show RecoveryGroupType;
 
 class GroupID extends RawToken {
   static const length = 8;
@@ -16,6 +16,7 @@ class RecoveryGroupModel {
   final GroupID id;
   final String name;
   final RecoveryGroupType type;
+  final bool isRestoring;
   final int size;
   final int threshold;
   final Map<String, RecoveryGroupGuardianModel> guardians;
@@ -25,6 +26,7 @@ class RecoveryGroupModel {
     required this.id,
     required this.name,
     required this.type,
+    this.isRestoring = false,
     this.size = 3,
     this.threshold = 2,
     this.secrets = const {},
@@ -96,7 +98,7 @@ class RecoveryGroupModel {
 
   bool get isCompleted => guardians.length == size;
   bool get isMissed => guardians.length < threshold;
-  bool get isNotCompleted => !isCompleted && !isMissed;
+  bool get isNotCompleted => guardians.length != size;
 }
 
 class RecoveryGroupGuardianAlreadyExists implements Exception {

@@ -49,8 +49,9 @@ class AddGuardianView extends StatelessWidget {
       child: Consumer<AddGuardianController>(
         builder: (context, value, child) {
           return Scaffold(
+            primary: true,
             resizeToAvoidBottomInset: false,
-            body: _pages[value.currentPage],
+            body: SafeArea(child: _pages[value.currentPage]),
           );
         },
       ),

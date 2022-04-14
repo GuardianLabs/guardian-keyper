@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../recovery_group_model.dart';
+import '../../core/model/p2p_model.dart' show RecoveryGroupType;
 import '../../core/controller/page_controller.dart';
 
 class CreateGroupController with ChangeNotifier, PagesController {

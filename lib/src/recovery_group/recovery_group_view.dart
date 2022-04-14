@@ -5,144 +5,76 @@ import '../core/theme_data.dart';
 import '../core/widgets/icon_of.dart';
 import '../core/widgets/common.dart';
 import 'create_group/create_group_view.dart';
-import 'recovery_group_model.dart';
 import 'recovery_group_controller.dart';
-// import 'create_group/create_group_view.dart';
 import 'edit_group/recovery_group_edit_view.dart';
 
-class RecoveryGroupView extends StatefulWidget {
-  const RecoveryGroupView({Key? key}) : super(key: key);
-
+class RecoveryGroupView extends StatelessWidget {
   static const routeName = '/recovery_group';
 
-  @override
-  State<RecoveryGroupView> createState() => _RecoveryGroupViewState();
-}
-
-class _RecoveryGroupViewState extends State<RecoveryGroupView> {
-  final _ctrl = TextEditingController();
-  String _filter = '';
+  const RecoveryGroupView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<RecoveryGroupController>(context);
+    final groups = Provider.of<RecoveryGroupController>(context).groups;
 
-    if (controller.groups.isEmpty) {
-      return Scaffold(
-          body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const IconOf.group(),
-          const Padding(
-            padding: EdgeInsets.all(20),
-            child: Text('You don`t have any recovery groups'),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: FooterButton(
-              text: 'Create Recovery Group',
-              onPressed: () =>
-                  Navigator.pushNamed(context, CreateGroupView.routeName),
-            ),
-          ),
-        ],
-      ));
-    }
-    final recoveryGroups =
-        List<RecoveryGroupModel>.from(controller.groups.values)
-            .where((element) =>
-                element.name.toLowerCase().startsWith(_filter.toLowerCase()))
-            .toList();
-    recoveryGroups.sort((a, b) => a.name.compareTo(b.name));
-
-    return Scaffold(
-        restorationId: 'RecoveryGroup',
-        resizeToAvoidBottomInset: false,
-        body: Column(
-          children: [
-            // Header
-            const HeaderBar(
-              caption: 'Recovery Groups',
-              // backButton: HeaderBarBackButton(),
-            ),
-            // Search bar
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-              child: TextField(
-                controller: _ctrl,
-                restorationId: 'RecoveryGroupFilterInput',
-                keyboardType: TextInputType.name,
-                onChanged: (value) => setState(() => _filter = value),
-                decoration: InputDecoration(
-                  border: Theme.of(context).inputDecorationTheme.border,
-                  filled: Theme.of(context).inputDecorationTheme.filled,
-                  fillColor: Theme.of(context).inputDecorationTheme.fillColor,
-                  hintText: 'Search',
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () => setState(() {
-                      _filter = '';
-                      _ctrl.text = '';
-                    }),
-                  ),
+    return groups.isEmpty
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: IconOf.group(radius: 40),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Text('You don`t have any recovery groups'),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: PrimaryTextButton(
+                  text: 'Create Recovery Group',
+                  onPressed: () =>
+                      Navigator.pushNamed(context, CreateGroupView.routeName),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'GROUP',
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                    Text(
-                      'GUARDIANS / STATUS',
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                  ]),
-            ),
-            Expanded(
-              child: ListView(
-                children: [
-                  for (final group in recoveryGroups)
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 1, bottom: 1, left: 20, right: 20),
-                      child: ListTile(
-                        tileColor: clIndigo700,
-                        textColor: group.isMissed ? clRed : null,
-                        iconColor: group.isMissed ? clRed : clIndigo700,
-                        title: Text(group.name),
-                        leading: const IconOf.app(),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Text(
-                                  '${group.guardians.length}/${group.size}'),
-                            ),
-                            DotColored(
-                                color: group.isCompleted
-                                    ? clGreen
-                                    : group.isNotCompleted
-                                        ? clYellow
-                                        : clRed),
-                          ],
+            ],
+          )
+        : ListView(
+            primary: true,
+            shrinkWrap: true,
+            children: [
+              for (final group in groups.values)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 1),
+                  child: ListTile(
+                    tileColor: clIndigo700,
+                    textColor: group.isMissed ? clRed : null,
+                    iconColor: group.isMissed ? clRed : clIndigo700,
+                    title: Text(group.name),
+                    leading: const IconOf.app(),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child:
+                              Text('${group.guardians.length}/${group.size}'),
                         ),
-                        onTap: () => Navigator.pushNamed(
-                            context, RecoveryGroupEditView.routeName,
-                            arguments: group.name),
-                      ),
-                    )
-                ],
-              ),
-            ),
-          ],
-        ));
+                        DotColored(
+                            color: group.isCompleted
+                                ? clGreen
+                                : group.isNotCompleted
+                                    ? clYellow
+                                    : clRed),
+                      ],
+                    ),
+                    onTap: () => Navigator.pushNamed(
+                        context, RecoveryGroupEditView.routeName,
+                        arguments: group.name),
+                  ),
+                )
+            ],
+          );
   }
 }

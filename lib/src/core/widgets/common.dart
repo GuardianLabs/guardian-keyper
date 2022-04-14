@@ -103,8 +103,8 @@ class HeaderBarBackButton extends StatelessWidget {
   }
 }
 
-class FooterButton extends StatelessWidget {
-  const FooterButton({
+class PrimaryTextButton extends StatelessWidget {
+  const PrimaryTextButton({
     Key? key,
     required this.text,
     required this.onPressed,
@@ -116,20 +116,185 @@ class FooterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 50,
+        height: 48,
         width: double.infinity,
         decoration: decorBlueButton,
         child: TextButton(
           child: Text(
             text,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.poppins(
               fontSize: 16,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
               color: Colors.white,
             ),
           ),
           onPressed: onPressed,
         ));
+  }
+}
+
+class SecondaryTextButton extends StatelessWidget {
+  const SecondaryTextButton({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+  }) : super(key: key);
+
+  final String text;
+  final void Function()? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: 48,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: clIndigo500,
+          borderRadius: borderRadius,
+        ),
+        child: TextButton(
+          child: Text(
+            text,
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+          onPressed: onPressed,
+        ));
+  }
+}
+
+class BottomSheetWidget extends StatelessWidget {
+  static const _padding = EdgeInsets.only(right: 20, left: 20, bottom: 20);
+  final Widget icon;
+  final String title;
+  final String text;
+  final Widget? body;
+  final Widget? footer;
+
+  const BottomSheetWidget({
+    Key? key,
+    required this.icon,
+    required this.title,
+    required this.text,
+    this.body,
+    this.footer,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.all(20),
+          child: const HeaderBarCloseButton(),
+        ),
+        Container(
+          alignment: Alignment.center,
+          padding: _padding,
+          child: icon,
+        ),
+        Container(
+          alignment: Alignment.center,
+          padding: _padding,
+          child: Text(
+            title,
+            style: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        Container(
+          alignment: Alignment.center,
+          padding: _padding,
+          child: Text(
+            text,
+            style: GoogleFonts.sourceSansPro(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        if (body != null)
+          Container(
+            alignment: Alignment.center,
+            padding: _padding,
+            child: body,
+          ),
+        if (footer != null)
+          Container(
+            alignment: Alignment.center,
+            padding: _padding,
+            child: footer,
+          ),
+      ],
+    );
+  }
+}
+
+class CircleNumber extends StatelessWidget {
+  final double size;
+  final int number;
+
+  const CircleNumber({
+    Key? key,
+    this.size = 24,
+    required this.number,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blueAccent),
+        shape: BoxShape.circle,
+      ),
+      height: size,
+      width: size,
+      child: Center(child: Text(number.toString())),
+    );
+  }
+}
+
+class NumberedListWidget extends StatelessWidget {
+  final List<String> list;
+
+  const NumberedListWidget({Key? key, required this.list}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var i = 0; i < list.length; i++)
+          Container(
+            alignment: Alignment.centerLeft,
+            margin: const EdgeInsets.symmetric(vertical: 12),
+            child: Row(children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: CircleNumber(number: i),
+              ),
+              Expanded(
+                child: Text(
+                  list[i],
+                  softWrap: true,
+                  style: GoogleFonts.sourceSansPro(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ]),
+          )
+      ],
+    );
   }
 }
 

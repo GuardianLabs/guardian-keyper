@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// import '../core/utils.dart';
 import '../core/theme_data.dart';
 // import '../core/widgets/common.dart';
 // import '../core/widgets/icon_of.dart';
-import '../dashboard/dashboard_view.dart';
+import 'pages/dashboard_page.dart';
+import 'pages/recovery_groups_page.dart';
 import '../settings/settings_view.dart';
-import '../recovery_group/recovery_group_view.dart';
 import '../recovery_group/create_group/create_group_view.dart';
 
 import '../recovery_group/recovery_group_controller.dart';
@@ -18,8 +17,8 @@ class HomeView extends StatefulWidget {
   static const routeName = '/';
 
   static const _pages = [
-    DashboardView(),
-    RecoveryGroupView(),
+    DashboardPage(),
+    RecoveryGroupsPage(),
     null,
     null,
     SettingsView(),
@@ -37,9 +36,12 @@ class _HomeViewState extends State<HomeView> {
     final controller = Provider.of<RecoveryGroupController>(context);
     controller.runtimeType;
     return Scaffold(
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 250),
-        child: HomeView._pages[_page],
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          child: HomeView._pages[_page],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: clBlue,
@@ -78,7 +80,6 @@ class _HomeViewState extends State<HomeView> {
               break;
             case 1:
               setState(() => _page = 1);
-              // Navigator.pushNamed(context, RecoveryGroupView.routeName);
               break;
             case 2:
               Navigator.pushNamed(context, CreateGroupView.routeName);

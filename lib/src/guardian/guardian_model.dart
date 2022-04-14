@@ -1,7 +1,6 @@
 import 'dart:typed_data' show Uint8List;
 import 'dart:convert' show base64Decode, base64Encode;
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:collection/collection.dart' show IterableEquality;
 
 @immutable
 class SecretShard {
@@ -9,12 +8,18 @@ class SecretShard {
   final Uint8List owner;
   final Uint8List groupId;
   final String groupName;
+  final String ownerName;
+  final int groupSize;
+  final int groupThreshold;
 
   const SecretShard({
     required this.value,
     required this.owner,
     required this.groupId,
     required this.groupName,
+    required this.ownerName,
+    required this.groupSize,
+    required this.groupThreshold,
   });
 
   factory SecretShard.empty() => SecretShard(
@@ -22,6 +27,9 @@ class SecretShard {
         owner: Uint8List(0),
         groupId: Uint8List(0),
         groupName: '',
+        ownerName: '',
+        groupSize: 0,
+        groupThreshold: 0,
       );
 
   factory SecretShard.fromJson(Map<String, dynamic> json) => SecretShard(
@@ -29,6 +37,9 @@ class SecretShard {
         value: base64Decode(json['secret']),
         groupId: base64Decode(json['group_id']),
         groupName: json['group_name'],
+        ownerName: json['owner_name'],
+        groupSize: json['group_size'],
+        groupThreshold: json['group_threshold'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -36,19 +47,26 @@ class SecretShard {
         'secret': base64Encode(value),
         'group_id': base64Encode(groupId),
         'group_name': groupName,
+        'owner_name': ownerName,
+        'group_size': groupSize,
+        'group_threshold': groupThreshold,
       };
 
   @override
-  String toString() => '$groupName: ${base64Encode(owner)}';
+  String toString() => '$groupName of $ownerName}';
 
   @override
   bool operator ==(Object other) =>
-      other is SecretShard &&
-      groupName == other.groupName &&
-      const IterableEquality().equals(groupId, other.groupId) &&
-      const IterableEquality().equals(owner, other.owner) &&
-      const IterableEquality().equals(value, other.value);
+      other is SecretShard && hashCode == other.hashCode;
 
   @override
-  int get hashCode => Object.hashAll([owner, groupId, groupName, value]);
+  int get hashCode => Object.hashAll([
+        owner,
+        ownerName,
+        groupId,
+        groupName,
+        groupSize,
+        groupThreshold,
+        value,
+      ]);
 }

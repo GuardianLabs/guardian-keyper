@@ -62,7 +62,7 @@ class AddTagPage extends StatelessWidget {
         // Footer
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: FooterButton(
+          child: PrimaryTextButton(
             text: 'Continue',
             onPressed: () async {
               final qr = QRCode.fromBase64(state.guardianCode);

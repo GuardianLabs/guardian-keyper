@@ -15,6 +15,7 @@ import 'recovery_group/edit_group/recovery_group_edit_view.dart';
 import 'recovery_group/add_guardian/add_guardian_view.dart';
 import 'recovery_group/add_secret/add_secret_view.dart';
 import 'recovery_group/recovery_secret/recovery_secret_view.dart';
+import 'recovery_group/restore_group/restore_group_view.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -24,7 +25,6 @@ class App extends StatelessWidget {
     final settingsController = Provider.of<SettingsController>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      restorationScopeId: 'app',
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -75,6 +75,9 @@ class App extends StatelessWidget {
 
               case SettingsView.routeName:
                 return const SettingsView();
+
+              case RestoreGroupView.routeName:
+                return const RestoreGroupView();
 
               default:
                 return const HomeView();

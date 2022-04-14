@@ -45,7 +45,8 @@ class AddGuardianPage extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 20, left: 115, right: 115),
-          child: FooterButton(text: 'Scan QR', onPressed: state.nextScreen),
+          child:
+              PrimaryTextButton(text: 'Scan QR', onPressed: state.nextScreen),
         ),
         const Padding(
           padding: EdgeInsets.all(8.0),

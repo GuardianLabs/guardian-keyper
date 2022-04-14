@@ -8,21 +8,20 @@ class SettingsController with ChangeNotifier {
   SettingsController({
     required SettingsService settingsService,
     required EventBus eventBus,
+    required this.keyPair,
   })  : _settingsService = settingsService,
         _eventBus = eventBus;
 
   final SettingsService _settingsService;
   final EventBus _eventBus;
-  late KeyPairModel _keyPair;
+  final KeyPairModel keyPair;
 
   ThemeMode _themeMode = ThemeMode.system;
 
   ThemeMode get themeMode => _themeMode;
-  KeyPairModel get keyPair => _keyPair;
 
   Future<void> load() async {
     _themeMode = await _settingsService.themeMode();
-    _keyPair = await _settingsService.getKeyPair();
     notifyListeners();
   }
 
