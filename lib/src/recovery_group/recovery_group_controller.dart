@@ -5,9 +5,9 @@ import 'package:flutter/widgets.dart' hide Router;
 import 'package:ntcdcrypto/ntcdcrypto.dart';
 import 'package:p2plib/p2plib.dart';
 
-import '../core/service/event_bus.dart';
-import '../core/model/p2p_model.dart';
-import '../core/utils.dart';
+import '/src/core/service/event_bus.dart';
+import '/src/core/model/p2p_model.dart';
+import '/src/core/utils.dart';
 import 'recovery_group_model.dart';
 import 'recovery_group_service.dart';
 
@@ -29,6 +29,10 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   })  : _recoveryGroupService = recoveryGroupService,
         super(router) {
     eventBus.on<RecoveryGroupClearCommand>().listen((event) => clear());
+    eventBus.on<SettingsChangedEvent>().listen((event) {
+      _deviceName = event.deviceName;
+      notifyListeners();
+    });
   }
 
   Map<String, RecoveryGroupModel> get groups => _groups;
@@ -74,8 +78,6 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
         name: secretShard.groupName,
         type: RecoveryGroupType.devices,
         isRestoring: true,
-        size: secretShard.groupSize,
-        threshold: secretShard.groupThreshold,
         guardians: {guardian.name: guardian},
         secrets: {secret.name: secret},
       );
@@ -83,7 +85,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
       _sendTakeOwnershipResponse(peerPubKey, secretShard.groupId);
     } else {
       if (group.isRestoring) {
-        if (group.isNotCompleted) {
+        if (!group.isCompleted) {
           _groups[group.name] = group.addGuardian(guardian);
           notifyListeners();
           _sendTakeOwnershipResponse(peerPubKey, secretShard.groupId);
@@ -131,14 +133,14 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
         .onError(p2pNetwork.addError);
   }
 
-  void distributeShards(
+  Future<void> distributeShards(
     Map<PubKey, String> shards,
     String groupName,
     String secret,
-  ) {
+  ) async {
     final recoveryGroup = _groups[groupName]!;
     for (var shard in shards.entries) {
-      router
+      await router
           .sendTo(
             _topicOfOwner,
             shard.key,
@@ -159,13 +161,25 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     }
   }
 
-  void requestShards(Set<PubKey> peers, GroupID groupId) {
+  Future<void> requestShards(
+    String groupName, [
+    Set<PubKey> excludePeers = const {},
+  ]) async {
+    final recoveryGroup = _groups[groupName]!;
+    final peers = recoveryGroup.guardians.values
+        .map((e) => e.pubKey)
+        .toSet()
+        .difference(excludePeers);
+
     for (var peer in peers) {
-      router
+      await router
           .sendTo(
             _topicOfOwner,
             peer,
-            P2PPacket(type: MessageType.getShard, body: groupId.data).toCbor(),
+            P2PPacket(
+              type: MessageType.getShard,
+              body: recoveryGroup.id.data,
+            ).toCbor(),
             true,
           )
           .onError(p2pNetwork.addError);
@@ -217,7 +231,9 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     if (deviceAddress != null) {
       _deviceAddress = InternetAddress.tryParse(deviceAddress);
     }
-    _groups = await _recoveryGroupService.getGroups();
+    try {
+      _groups = await _recoveryGroupService.getGroups();
+    } catch (_) {}
   }
 
   Future<void> _save() async {
@@ -237,6 +253,11 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     await _save();
   }
 
+  Future<void> removeGroup(String groupName) async {
+    _groups.remove(groupName);
+    await _save();
+  }
+
   Future<void> addGuardian(
     String groupName,
     RecoveryGroupGuardianModel guardian,
@@ -251,10 +272,6 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
     String groupName,
     RecoveryGroupSecretModel secret,
   ) async {
-    // TBD: do all checks
-    // if (_groups.containsKey(groupName)) {
-    //   throw RecoveryGroupAlreadyExists();
-    // }
     final group = _groups[groupName]!;
     final updatedGroup = group.addSecret(secret);
     _groups[groupName] = updatedGroup;

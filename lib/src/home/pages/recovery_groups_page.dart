@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme_data.dart';
-import '../../core/widgets/common.dart';
-import '../../recovery_group/recovery_group_view.dart';
-import '../../guardian/guardian_view.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
+import '/src/recovery_group/recovery_group_view.dart';
+import '/src/guardian/guardian_view.dart';
 
 class RecoveryGroupsPage extends StatefulWidget {
   const RecoveryGroupsPage({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class _RecoveryGroupsPageState extends State<RecoveryGroupsPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: paddingH20,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -31,10 +31,8 @@ class _RecoveryGroupsPageState extends State<RecoveryGroupsPage> {
           const HeaderBar(caption: 'Recovery Groups'),
           // Switcher
           Container(
-            decoration: BoxDecoration(
-              color: clIndigo800,
-              borderRadius: borderRadius,
-            ),
+            decoration:
+                BoxDecoration(color: clIndigo800, borderRadius: borderRadius),
             height: 40,
             child: Row(
               children: [
@@ -45,7 +43,7 @@ class _RecoveryGroupsPageState extends State<RecoveryGroupsPage> {
                       borderRadius: borderRadius,
                     ),
                     child: TextButton(
-                      child: const Text('OWNER'),
+                      child: Text('OWNER', style: textStyleSourceSansProBold12),
                       onPressed: () => setState(() => _currentTab = 0),
                     ),
                   ),
@@ -57,7 +55,8 @@ class _RecoveryGroupsPageState extends State<RecoveryGroupsPage> {
                       borderRadius: borderRadius,
                     ),
                     child: TextButton(
-                      child: const Text('GUARDIAN'),
+                      child:
+                          Text('GUARDIAN', style: textStyleSourceSansProBold12),
                       onPressed: () => setState(() => _currentTab = 1),
                     ),
                   ),
@@ -65,11 +64,12 @@ class _RecoveryGroupsPageState extends State<RecoveryGroupsPage> {
               ],
             ),
           ),
-          // Body
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: RecoveryGroupsPage._tabs[_currentTab],
+          Container(
+            height: 40,
+            color: Theme.of(context).colorScheme.background,
           ),
+          // Body
+          Expanded(child: RecoveryGroupsPage._tabs[_currentTab]),
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:equatable/equatable.dart';
 import 'package:p2plib/p2plib.dart' show RawToken, PubKey;
 
 import '../core/model/p2p_model.dart' show RecoveryGroupType;
@@ -12,53 +13,57 @@ class GroupID extends RawToken {
 }
 
 @immutable
-class RecoveryGroupModel {
+class RecoveryGroupModel extends Equatable {
+  static const currentVersion = 1;
+
+  final minSize = 2; //(3) for test purposes
+  final maxSize = 3; //(5) for test purposes
   final GroupID id;
   final String name;
   final RecoveryGroupType type;
   final bool isRestoring;
-  final int size;
-  final int threshold;
   final Map<String, RecoveryGroupGuardianModel> guardians;
   final Map<String, RecoveryGroupSecretModel> secrets;
 
   const RecoveryGroupModel({
     required this.id,
     required this.name,
-    required this.type,
+    this.type = RecoveryGroupType.devices,
     this.isRestoring = false,
-    this.size = 3,
-    this.threshold = 2,
     this.secrets = const {},
     this.guardians = const {},
   }) : assert(name != '');
 
   factory RecoveryGroupModel.fromJson(Map<String, dynamic> json) {
+    // switch (json['version']) {
+    //   case null:
+    //     break;
+    //   default:
+    // }
     Map<String, dynamic> secretsMap = json['secrets'];
-    secretsMap.updateAll((key, value) =>
-        RecoveryGroupSecretModel.fromJson(value as Map<String, dynamic>));
+    secretsMap
+        .updateAll((key, value) => RecoveryGroupSecretModel.fromJson(value));
 
     Map<String, dynamic> guardiansMap = json['guardians'];
-    guardiansMap.updateAll((key, value) =>
-        RecoveryGroupGuardianModel.fromJson(value as Map<String, dynamic>));
+    guardiansMap
+        .updateAll((key, value) => RecoveryGroupGuardianModel.fromJson(value));
 
     return RecoveryGroupModel(
-      id: GroupID(base64Decode(json['id'] as String)),
-      name: json['name'] as String,
+      id: GroupID(base64Decode(json['id'])),
+      name: json['name'],
       type: RecoveryGroupType.values.byName(json['type']),
-      size: json['size'] as int,
-      threshold: json['threshold'] as int,
+      isRestoring: json['isRestoring'],
       secrets: secretsMap.cast<String, RecoveryGroupSecretModel>(),
       guardians: guardiansMap.cast<String, RecoveryGroupGuardianModel>(),
     );
   }
 
   Map<String, dynamic> toJson() => {
+        'version': currentVersion,
         'id': base64Encode(id.data),
         'name': name,
         'type': type.name,
-        'size': size,
-        'threshold': threshold,
+        'isRestoring': isRestoring,
         'secrets': secrets,
         'guardians': guardians,
       };
@@ -67,38 +72,45 @@ class RecoveryGroupModel {
     if (guardians.containsKey(guardian.name)) {
       throw RecoveryGroupGuardianAlreadyExists();
     }
-    if (guardians.length >= size) {
+    if (isCompleted || guardians.length >= maxSize) {
       throw RecoveryGroupGuardianLimitexhausted();
     }
     return RecoveryGroupModel(
       id: id,
       name: name,
       type: type,
-      size: size,
-      threshold: threshold,
+      isRestoring: isRestoring,
       secrets: secrets,
       guardians: {...guardians, guardian.name: guardian},
     );
   }
 
   RecoveryGroupModel addSecret(RecoveryGroupSecretModel secret) {
-    if (secrets.containsKey(secret.name)) {
-      throw RecoveryGroupSecretAlreadyExists();
-    }
+    // if (secrets.containsKey(secret.name)) {
+    //   throw RecoveryGroupSecretAlreadyExists();
+    // }
     return RecoveryGroupModel(
       id: id,
       name: name,
       type: type,
-      size: size,
-      threshold: threshold,
+      isRestoring: isRestoring,
       secrets: {...secrets, secret.name: secret},
       guardians: guardians,
     );
   }
 
-  bool get isCompleted => guardians.length == size;
+  int get size => guardians.length;
+
+  int get threshold => guardians.length == maxSize ? 3 : 2;
+
+  bool get isCompleted => secrets.isNotEmpty;
+
+  bool get hasMinimal => guardians.length >= minSize;
+
   bool get isMissed => guardians.length < threshold;
-  bool get isNotCompleted => guardians.length != size;
+
+  @override
+  List<Object> get props => [id, name, type];
 }
 
 class RecoveryGroupGuardianAlreadyExists implements Exception {
@@ -118,7 +130,9 @@ class RecoveryGroupSecretAlreadyExists implements Exception {
 // RecoveryGroupGuardianModel
 
 @immutable
-class RecoveryGroupGuardianModel {
+class RecoveryGroupGuardianModel extends Equatable {
+  static const currentVersion = 1;
+
   final String name;
   final String tag;
   final PubKey pubKey;
@@ -132,25 +146,36 @@ class RecoveryGroupGuardianModel {
   }) : assert(name != '');
 
   factory RecoveryGroupGuardianModel.fromJson(Map<String, dynamic> json) =>
+      // switch (json['version']) {
+      //   case null:
+      //     break;
+      //   default:
+      // }
       RecoveryGroupGuardianModel(
-        name: json['name'] as String,
-        tag: json['tag'] as String,
-        pubKey: PubKey(base64Decode(json['pub_key'] as String)),
-        signPubKey: PubKey(base64Decode(json['sign_pub_key'] as String)),
+        name: json['name'],
+        tag: json['tag'],
+        pubKey: PubKey(base64Decode(json['pub_key'])),
+        signPubKey: PubKey(base64Decode(json['sign_pub_key'])),
       );
 
   Map<String, dynamic> toJson() => {
+        'version': currentVersion,
         'name': name,
         'tag': tag,
         'pub_key': base64Encode(pubKey.data),
         'sign_pub_key': base64Encode(signPubKey.data),
       };
+
+  @override
+  List<Object> get props => [pubKey, signPubKey];
 }
 
 // RecoveryGroupSecretModel
 
 @immutable
-class RecoveryGroupSecretModel {
+class RecoveryGroupSecretModel extends Equatable {
+  static const currentVersion = 1;
+
   final int id;
   final String name;
   final String token;
@@ -162,13 +187,22 @@ class RecoveryGroupSecretModel {
   }) : assert(name != '');
 
   factory RecoveryGroupSecretModel.fromJson(Map<String, dynamic> json) =>
+      // switch (json['version']) {
+      //   case null:
+      //     break;
+      //   default:
+      // }
       RecoveryGroupSecretModel(
-        id: json['id'] as int,
-        name: json['name'] as String,
+        id: json['id'],
+        name: json['name'],
       );
 
   Map<String, dynamic> toJson() => {
+        'version': currentVersion,
         'id': token.hashCode,
         'name': name,
       };
+
+  @override
+  List<Object> get props => [name];
 }

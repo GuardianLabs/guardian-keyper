@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import '../core/service/kv_storage.dart';
+import '/src/core/service/kv_storage.dart';
 import 'guardian_model.dart';
 
 class GuardianService {
-  const GuardianService({required this.storage});
-
   static const _secretShardsPath = 'secret_shards';
   static const _trustedPeersPath = 'trusted_peers';
 
   final KVStorage storage;
+
+  const GuardianService({required this.storage});
 
   Future<Set<Uint8List>> getTrustedPeers() async {
     final peersStr = await storage.read(key: _trustedPeersPath);

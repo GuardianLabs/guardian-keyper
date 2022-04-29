@@ -1,14 +1,14 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/theme_data.dart';
-import '../../../core/widgets/common.dart';
-// import '../../../core/widgets/icon_of.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
+import '/src/core/widgets/icon_of.dart';
 
-import '../../recovery_group_model.dart';
 import '../add_secret_controller.dart';
 import '../../recovery_group_controller.dart';
+import '../../widgets/guardian_tile_widget.dart';
+import '../../widgets/shields_row_widget.dart';
 
 class SecretTransmittingPage extends StatefulWidget {
   const SecretTransmittingPage({Key? key}) : super(key: key);
@@ -18,34 +18,15 @@ class SecretTransmittingPage extends StatefulWidget {
 }
 
 class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
-  Timer _timer = Timer(const Duration(seconds: 5), (() {}));
-  bool _isWaiting = true;
-
-  void _initTimer() {
-    if (_timer.isActive) _timer.cancel();
-    _timer = Timer(
-      const Duration(seconds: 5),
-      () => setState(() => _isWaiting = false),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
-    final controller = context.read<RecoveryGroupController>();
-    final state = context.read<AddSecretController>();
-    final recoveryGroup = controller.groups[state.groupName]!;
-    _initTimer();
-    controller.distributeShards(
-      state.shards,
-      recoveryGroup.name,
-      state.secret,
-    );
+    context.read<AddSecretController>().distributeShards();
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    context.read<AddSecretController>().timer?.cancel();
     super.dispose();
   }
 
@@ -54,85 +35,70 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
     final controller = context.read<RecoveryGroupController>();
     final state = Provider.of<AddSecretController>(context);
     final recoveryGroup = controller.groups[state.groupName]!;
-    final isFinished = state.shards.isEmpty;
+    final confirmed = recoveryGroup.guardians.length - state.shards.length;
 
-    if (isFinished) {
-      _isWaiting = false;
-      _timer.cancel();
-    }
     return Column(
       children: [
         // Header
-        const HeaderBar(
-          caption: 'Distribute Secret',
-          closeButton: HeaderBarCloseButton(),
-        ),
+        const HeaderBar(closeButton: HeaderBarCloseButton()),
         // Body
-        const Padding(
-          padding: EdgeInsets.only(top: 40, bottom: 10),
-          child: Icon(Icons.key_outlined, size: 40),
-        ),
-        const Text('The secret is being sharded and transmitted ',
-            textAlign: TextAlign.center),
-        if (_isWaiting)
-          const Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: Align(child: CircularProgressIndicator()),
-          ),
         Expanded(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              state.error = null;
-              state.stackTrace = null;
-              if (_isWaiting) return;
-              _initTimer();
-              controller.distributeShards(
-                state.shards,
-                recoveryGroup.name,
-                state.secret,
-              );
-            },
-            child: ListView(
-              padding: const EdgeInsets.all(20),
-              children: [
-                for (var guardian in recoveryGroup.guardians.values)
-                  GuardianListTileWidget(
-                    name: guardian.name,
-                    code: guardian.pubKey.toString(),
-                    tag: guardian.tag,
-                    // nameColor: guardian.code.isEmpty ? clRed : clWhite,
-                    iconColor: state.shards.containsKey(guardian.pubKey)
-                        ? clIndigo500
-                        : clGreen,
-                    status: state.shards.containsKey(guardian.pubKey)
-                        ? clYellow
-                        : null,
+          child: ListView(
+            padding: paddingAll20,
+            children: [
+              const IconOf.splitAndShare(radius: 40, size: 40),
+              Padding(
+                padding: paddingAll20,
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: '$confirmed of ${recoveryGroup.size} ',
+                        style: textStylePoppinsBold20Blue,
+                      ),
+                      TextSpan(
+                          text: 'Guardians have confirmed receipt',
+                          style: textStylePoppinsBold20),
+                    ],
                   ),
-                if (state.error != null) Text('Error: ${state.error}'),
-                if (state.stackTrace != null)
-                  Text('Stack Trace: ${state.stackTrace}'),
-              ],
-            ),
+                ),
+              ),
+              Padding(
+                padding: paddingAll20,
+                child: ShieldsRow(
+                  highlighted: confirmed,
+                  total: recoveryGroup.size,
+                  isInSquare: true,
+                ),
+              ),
+              Container(
+                decoration: boxDecoration,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var guardian in recoveryGroup.guardians.values)
+                      GuardianTileWidget(
+                        guardian: guardian,
+                        isHighlighted:
+                            !state.shards.containsKey(guardian.pubKey),
+                        isWaiting: state.shards.containsKey(guardian.pubKey),
+                      )
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         // Footer
-        if (isFinished)
+        if (state.shards.isEmpty)
           Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: PrimaryTextButton(
+            padding: paddingFooter,
+            child: PrimaryButtonBig(
               text: 'Done',
-              onPressed: () {
-                context.read<RecoveryGroupController>().addSecret(
-                    state.groupName,
-                    RecoveryGroupSecretModel(
-                      name: 'TheOne',
-                      token: state.secret,
-                    ));
-                Navigator.of(context).pop();
-              },
+              onPressed: Navigator.of(context).pop,
             ),
           ),
-        Container(height: 50),
       ],
     );
   }

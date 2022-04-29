@@ -21,9 +21,24 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
+  final deviceAddress = await NetworkInfo().getWifiIP();
+  String? deviceName;
+  final deviceInfoPlugin = DeviceInfoPlugin();
+
+  if (Platform.isAndroid) {
+    final androidInfo = await deviceInfoPlugin.androidInfo;
+    deviceName = androidInfo.model ?? androidInfo.id;
+  } else if (Platform.isIOS) {
+    final iosInfo = await deviceInfoPlugin.iosInfo;
+    deviceName = iosInfo.model ?? iosInfo.name;
+  }
+
   final eventBus = EventBus();
   final kvStorage = KVStorage();
-  final settingsService = SettingsService(kvStorage);
+  final settingsService = SettingsService(
+    storage: kvStorage,
+    deviceName: deviceName ?? '',
+  );
 
   final crypto = P2PCrypto();
   await crypto.init();
@@ -51,20 +66,18 @@ void main() async {
     router: router,
   );
 
-  final deviceAddress = await NetworkInfo().getWifiIP();
-  String? deviceName;
-  final deviceInfoPlugin = DeviceInfoPlugin();
+  try {
+    await settingsController.load();
+    await guardianController.load(
+      settingsController.deviceName,
+      deviceAddress,
+    );
+    await recoveryGroupController.load(
+      settingsController.deviceName,
+      deviceAddress,
+    );
+  } catch (_) {}
 
-  if (Platform.isAndroid) {
-    final androidInfo = await deviceInfoPlugin.androidInfo;
-    deviceName = androidInfo.model ?? androidInfo.id;
-  } else if (Platform.isIOS) {
-    final iosInfo = await deviceInfoPlugin.iosInfo;
-    deviceName = iosInfo.model ?? iosInfo.name;
-  }
-  await settingsController.load();
-  await guardianController.load(deviceName, deviceAddress);
-  await recoveryGroupController.load(deviceName, deviceAddress);
   await router.run();
 
   runApp(DIProvider(

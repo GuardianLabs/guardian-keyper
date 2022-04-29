@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../../core/theme_data.dart';
-import '../../core/widgets/common.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
+import '/src/core/widgets/misc.dart';
 
 class IntroPage1View extends StatelessWidget {
   const IntroPage1View({Key? key, required this.onPressed}) : super(key: key);
@@ -18,10 +18,7 @@ class IntroPage1View extends StatelessWidget {
         Expanded(child: Container()),
         Stack(
           children: [
-            CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: height,
-            ),
+            CircleAvatar(backgroundColor: Colors.white, radius: height),
             Positioned(
               bottom: -20,
               child: Container(
@@ -33,13 +30,7 @@ class IntroPage1View extends StatelessWidget {
                 height: 40,
                 width: 40,
                 child: Center(
-                    child: Text(
-                  '1',
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                )),
+                    child: Text('1', style: textStyleSourceSansProBold14)),
               ),
             ),
           ],
@@ -52,10 +43,7 @@ class IntroPage1View extends StatelessWidget {
           child: RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: textStylePoppinsBold20,
                 children: const <TextSpan>[
                   TextSpan(text: 'Secure your secrets\n'),
                   TextSpan(
@@ -68,10 +56,7 @@ class IntroPage1View extends StatelessWidget {
           child: RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: textStyleSourceSansProBold16,
                 text:
                     'Guardian Network is a decentralized app to store your secret phrases, and private keys',
               )),
@@ -84,7 +69,7 @@ class IntroPage1View extends StatelessWidget {
         // Footer
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: PrimaryTextButton(text: 'Get Started', onPressed: onPressed),
+          child: PrimaryButtonBig(text: 'Get Started', onPressed: onPressed),
         ),
         Container(height: 50),
       ],

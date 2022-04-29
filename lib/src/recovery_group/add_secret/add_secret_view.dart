@@ -29,7 +29,7 @@ class RecoveryGroupAddSecretView extends StatelessWidget {
       create: (context) => AddSecretController(
         pagesCount: _pages.length,
         groupName: recoveryGroupName,
-        p2pNetwork: context.read<RecoveryGroupController>().p2pNetwork.stream,
+        recoveryGroupController: context.read<RecoveryGroupController>(),
       ),
       child: Consumer<AddSecretController>(builder: (context, value, child) {
         return Scaffold(

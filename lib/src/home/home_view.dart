@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../core/theme_data.dart';
-// import '../core/widgets/common.dart';
-// import '../core/widgets/icon_of.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/icon_of.dart';
+import '/src/settings/settings_view.dart';
+import '/src/recovery_group/create_group/create_group_view.dart';
+import '/src/recovery_group/recovery_group_controller.dart';
+// import '/src/settings/settings_controller.dart';
+
 import 'pages/dashboard_page.dart';
 import 'pages/recovery_groups_page.dart';
-import '../settings/settings_view.dart';
-import '../recovery_group/create_group/create_group_view.dart';
-
-import '../recovery_group/recovery_group_controller.dart';
+import 'pages/notifications_page.dart';
+// import 'pages/login_page.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({Key? key}) : super(key: key);
-
   static const routeName = '/';
-
-  static const _pages = [
+  static const pages = [
     DashboardPage(),
     RecoveryGroupsPage(),
     null,
-    null,
+    NotificationsPage(),
     SettingsView(),
   ];
+
+  const HomeView({Key? key}) : super(key: key);
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -33,61 +34,82 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<RecoveryGroupController>(context);
-    controller.runtimeType;
+    final theme = Theme.of(context);
+    // final settingsController = Provider.of<SettingsController>(context);
+    // if (settingsController.isLocked) return const LoginPage();
+
+    final groupController = Provider.of<RecoveryGroupController>(context);
+    groupController.runtimeType;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 250),
-          child: HomeView._pages[_page],
+          child: HomeView.pages[_page],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         selectedItemColor: clBlue,
         showSelectedLabels: false,
+        showUnselectedLabels: false,
         unselectedItemColor: clWhite,
         currentIndex: _page,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
+            icon: IconOf.bottomHome(
+              size: 22,
+              color: _page == 0 ? clBlue : clWhite,
+              bgColor: theme.colorScheme.background,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.health_and_safety_outlined),
+            icon: IconOf.bottomShield(
+              size: 22,
+              color: _page == 1 ? clBlue : clWhite,
+              bgColor: theme.colorScheme.background,
+            ),
             label: 'Recovery Groups',
           ),
           BottomNavigationBarItem(
-            icon: CircleAvatar(
-              child: Icon(Icons.add, color: clWhite),
-              backgroundColor: clBlue,
+            icon: Container(
+              height: 40,
+              width: 40,
+              child: const Icon(Icons.add, color: clWhite),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFF7BE7FF), Color(0xFF3AABF0)],
+                ),
+                shape: BoxShape.circle,
+              ),
             ),
             label: 'Add Recovery Group',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_none_outlined),
+            icon: IconOf.bottomBell(
+              size: 22,
+              color: _page == 3 ? clBlue : clWhite,
+              bgColor: theme.colorScheme.background,
+            ),
             label: 'Notifications',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
+            icon: IconOf.bottomSettings(
+              size: 22,
+              color: _page == 4 ? clBlue : clWhite,
+              bgColor: theme.colorScheme.background,
+            ),
             label: 'Settings',
           ),
         ],
         onTap: (value) {
-          switch (value) {
-            case 0:
-              setState(() => _page = 0);
-              break;
-            case 1:
-              setState(() => _page = 1);
-              break;
-            case 2:
-              Navigator.pushNamed(context, CreateGroupView.routeName);
-              break;
-            case 4:
-              setState(() => _page = 4);
-              break;
-            default:
+          if (value == 2) {
+            Navigator.pushNamed(context, CreateGroupView.routeName);
+          } else {
+            setState(() => _page = value);
           }
         },
       ),

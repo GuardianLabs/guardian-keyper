@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
-import '../../../core/theme_data.dart';
-import '../../../core/widgets/common.dart';
-import '../../../core/widgets/icon_of.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
+import '/src/core/widgets/icon_of.dart';
+import '/src/core/widgets/selectable_card.dart';
 
 import '../add_guardian_controller.dart';
 
@@ -21,56 +23,125 @@ class AddGuardianPage extends StatelessWidget {
           closeButton: HeaderBarCloseButton(),
         ),
         // Body
-        const Padding(
-          // padding: EdgeInsets.only(top: 60),
-          padding: EdgeInsets.only(top: 20),
-          child: CircleAvatar(
-            backgroundColor: clIndigo500,
-            radius: 40,
-            child: Icon(Icons.qr_code_scanner_rounded),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: RichText(
-            textAlign: TextAlign.center,
-            text: const TextSpan(
-              children: <TextSpan>[
-                TextSpan(text: 'Invite '),
-                TextSpan(text: 'members', style: TextStyle(color: clBlue)),
-                TextSpan(text: ' to your\n recovery group'),
-              ],
+        Expanded(
+            child: ListView(
+          primary: true,
+          shrinkWrap: true,
+          children: [
+            const Padding(
+              padding: paddingTop20,
+              child: IconOf.scanQR(radius: 40, size: 32),
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 20, left: 115, right: 115),
-          child:
-              PrimaryTextButton(text: 'Scan QR', onPressed: state.nextScreen),
-        ),
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text('Upload QR Code'),
-        ),
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text(
-            'You can ask your members to open Guardian app, authorize and click "Show QR Code"',
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Expanded(child: Container()),
-        // Footer
-        const Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          child: SimpleCard(
-            caption: 'Download the app',
-            bgColor: clIndigo800,
-            leading: IconOf.app(),
-            text: 'Users can download the app\nby scanning the QR Code',
-          ),
-        ),
-        Container(height: 50),
+            Padding(
+              padding: paddingAll20,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: textStylePoppinsBold20,
+                  children: const <TextSpan>[
+                    TextSpan(text: 'Invite '),
+                    TextSpan(
+                        text: 'Guardians', style: TextStyle(color: clBlue)),
+                    TextSpan(text: ' to your\n recovery group'),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 20, horizontal: 115),
+              child: PrimaryButtonBig(
+                  text: 'Scan QR', onPressed: state.nextScreen),
+            ),
+            Padding(
+              padding: paddingAll20,
+              child: Text(
+                'Upload QR Code',
+                style: textStylePoppinsBold20Blue,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: paddingAll20,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text:
+                          'You can ask your members to open Guardian\napp, authorize and click ',
+                      style: textStyleSourceSansProRegular14.copyWith(
+                          color: clPurpleLight),
+                    ),
+                    TextSpan(
+                        text: 'Show QR Code',
+                        style: textStyleSourceSansProBold14),
+                  ],
+                ),
+              ),
+            ),
+            if (MediaQuery.of(context).size.height > heightSmall)
+              const SizedBox(height: 40),
+            Padding(
+              padding: paddingFooter,
+              child: SelectableCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Download App',
+                                textAlign: TextAlign.left,
+                                style: textStylePoppinsBold16,
+                              ),
+                              const SizedBox(height: 16),
+                              RichText(
+                                textAlign: TextAlign.left,
+                                softWrap: true,
+                                overflow: TextOverflow.clip,
+                                text: TextSpan(
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text:
+                                          'Users can download the app\nby scanning the',
+                                      style: textStyleSourceSansProRegular14,
+                                    ),
+                                    TextSpan(
+                                      text: ' QR Code.',
+                                      style: textStyleSourceSansProBold14,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                '',
+                                style: textStyleSourceSansProBold14,
+                              ),
+                            ]),
+                        SizedBox(
+                          height: 80,
+                          width: 80,
+                          child:
+                              QrImage(foregroundColor: Colors.white, data: ''),
+                        ),
+                      ],
+                    ),
+                    ElevatedButton(
+                      child: const Text('Share App'),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        )),
       ],
     );
   }

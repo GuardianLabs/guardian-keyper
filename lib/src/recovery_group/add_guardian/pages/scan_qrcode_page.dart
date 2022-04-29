@@ -11,7 +11,9 @@ class ScanQRCodePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size.width * 0.66;
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Header
         const HeaderBar(
@@ -19,44 +21,23 @@ class ScanQRCodePage extends StatelessWidget {
           closeButton: HeaderBarCloseButton(),
         ),
         // Body
-        Expanded(child: Container()),
-        Align(
-            alignment: Alignment.center,
-            child: SizedBox(
-              height: 200,
-              width: 200,
-              child: MobileScanner(
-                allowDuplicates: false,
-                onDetect: (barcode, args) {
-                  if (barcode.rawValue == null || barcode.rawValue!.isEmpty) {
-                    return;
-                  }
-                  final state = context.read<AddGuardianController>();
-                  state.guardianCode = barcode.rawValue!;
-                  state.nextScreen();
-                },
-              ),
-            )),
-        Expanded(child: Container()),
-        Padding(
-          padding: const EdgeInsets.only(left: 95, right: 95),
-          child: Container(
-            height: 50,
-            color: clIndigo700,
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(Icons.share_outlined),
-                Text('   Share app'),
-              ],
-            ),
+        SizedBox(
+          height: size,
+          width: size,
+          child: MobileScanner(
+            allowDuplicates: false,
+            onDetect: (barcode, args) {
+              if (barcode.rawValue != null && barcode.rawValue!.isNotEmpty) {
+                final state = context.read<AddGuardianController>();
+                state.guardianCode = barcode.rawValue!;
+                state.nextScreen();
+              }
+            },
           ),
         ),
-        Container(
-          height: 50,
-          alignment: Alignment.center,
-          child: const Text('Upload QR Code'),
+        Padding(
+          padding: paddingFooter,
+          child: Text('Upload QR Code', style: textStylePoppinsBold16Blue),
         ),
       ],
     );

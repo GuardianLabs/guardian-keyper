@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/theme_data.dart';
-import '../../../core/widgets/common.dart';
-// import '../../../core/widgets/icon_of.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
+import '/src/core/widgets/icon_of.dart';
 
 import '../add_secret_controller.dart';
 import '../../recovery_group_controller.dart';
+import '../../widgets/guardian_tile_widget.dart';
 
-class SplitAndShareSecretPage extends StatefulWidget {
+class SplitAndShareSecretPage extends StatelessWidget {
   const SplitAndShareSecretPage({Key? key}) : super(key: key);
-
-  @override
-  State<SplitAndShareSecretPage> createState() =>
-      _SplitAndShareSecretPageState();
-}
-
-class _SplitAndShareSecretPageState extends State<SplitAndShareSecretPage> {
-  bool _isSecretObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -28,62 +21,63 @@ class _SplitAndShareSecretPageState extends State<SplitAndShareSecretPage> {
     return Column(
       children: [
         // Header
-        const HeaderBar(
-          caption: 'Split And Share Secret',
-          // backButton: HeaderBarBackButton(onPressed: state.previousScreen),
-          closeButton: HeaderBarCloseButton(),
-        ),
+        const HeaderBar(closeButton: HeaderBarCloseButton()),
         // Body
-        const Padding(
-          padding: EdgeInsets.only(top: 40, bottom: 10),
-          child: Icon(Icons.key_outlined, size: 40),
-        ),
-        const Text(
-            'The secret will be split and shared among the following Guardians',
-            textAlign: TextAlign.center),
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-          child: TextField(
-            controller: TextEditingController(text: state.secret),
-            obscureText: _isSecretObscure,
-            readOnly: true,
-            decoration: InputDecoration(
-              border: Theme.of(context).inputDecorationTheme.border,
-              filled: Theme.of(context).inputDecorationTheme.filled,
-              fillColor: Theme.of(context).inputDecorationTheme.fillColor,
-              labelText: 'YOUR SECRET',
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              isDense: true,
-              suffix: _isSecretObscure
-                  ? TextButton(
-                      child: const Text('Show'),
-                      onPressed: () =>
-                          setState(() => _isSecretObscure = !_isSecretObscure),
-                    )
-                  : null,
-            ),
-          ),
-        ),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.all(20),
+            padding: paddingH20,
+            primary: true,
+            shrinkWrap: true,
             children: [
-              for (var guardian in group.guardians.values)
-                GuardianListTileWidget(
-                  name: guardian.name,
-                  code: guardian.pubKey.toString(),
-                  tag: guardian.tag,
-                  // nameColor: guardian.code.isEmpty ? clRed : clWhite,
-                  iconColor: clIndigo500,
-                  status: clYellow,
+              const IconOf.splitAndShare(radius: 40, size: 40),
+              Padding(
+                padding: paddingAll20,
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: 'Your secret ', style: textStylePoppinsBold20),
+                      TextSpan(
+                          text: 'will be split and shared ',
+                          style: textStylePoppinsBold20Blue),
+                      TextSpan(
+                          text: 'among the following Guardians',
+                          style: textStylePoppinsBold20),
+                    ],
+                  ),
                 ),
+              ),
+              Padding(
+                padding: paddingBottom20,
+                child: RichText(
+                  text: TextSpan(
+                    style: textStyleSourceSansProBold12,
+                    children: <TextSpan>[
+                      const TextSpan(text: 'GUARDIANS '),
+                      TextSpan(
+                          text: group.size.toString(),
+                          style: const TextStyle(color: clBlue)),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var guardian in group.guardians.values)
+                      GuardianTileWidget(guardian: guardian)
+                  ],
+                ),
+              ),
             ],
           ),
         ),
         // Footer
         Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: PrimaryTextButton(
+          padding: paddingFooter,
+          child: PrimaryButtonBig(
             text: 'Split and Share Secret',
             onPressed: () {
               state.shards = controller.splitSecret(state.secret, group);
@@ -91,7 +85,6 @@ class _SplitAndShareSecretPageState extends State<SplitAndShareSecretPage> {
             },
           ),
         ),
-        Container(height: 50),
       ],
     );
   }

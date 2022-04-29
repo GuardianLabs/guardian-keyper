@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../core/service/event_bus.dart';
+import '/src/core/service/event_bus.dart';
+
 import 'settings_model.dart';
 import 'settings_service.dart';
 
 class SettingsController with ChangeNotifier {
+  final SettingsService _settingsService;
+  final EventBus _eventBus;
+  final themeMode = ThemeMode.dark;
+  final KeyPairModel keyPair;
+
+  String _deviceName = '';
+  String _pinCode = '';
+  bool _isLocked = true;
+
   SettingsController({
     required SettingsService settingsService,
     required EventBus eventBus,
@@ -12,25 +22,24 @@ class SettingsController with ChangeNotifier {
   })  : _settingsService = settingsService,
         _eventBus = eventBus;
 
-  final SettingsService _settingsService;
-  final EventBus _eventBus;
-  final KeyPairModel keyPair;
+  String get deviceName => _deviceName;
+  String get pinCode => _pinCode;
+  bool get isLocked => _isLocked;
 
-  ThemeMode _themeMode = ThemeMode.system;
-
-  ThemeMode get themeMode => _themeMode;
-
-  Future<void> load() async {
-    _themeMode = await _settingsService.themeMode();
+  set isLocked(bool value) {
+    _isLocked = value;
     notifyListeners();
   }
 
-  Future<void> updateThemeMode(ThemeMode? newThemeMode) async {
-    if (newThemeMode == null) return;
-    if (newThemeMode == _themeMode) return;
-    _themeMode = newThemeMode;
-    notifyListeners();
-    await _settingsService.updateThemeMode(newThemeMode);
+  Future<void> setDeviceName(String deviceName) async {
+    _deviceName = deviceName;
+    _eventBus.fire(SettingsChangedEvent(deviceName: deviceName));
+    await _save();
+  }
+
+  Future<void> setPinCode(String pinCode) async {
+    _pinCode = pinCode;
+    await _save();
   }
 
   void clearRecoveryGroups() => _eventBus.fire(RecoveryGroupClearCommand());
@@ -38,4 +47,20 @@ class SettingsController with ChangeNotifier {
   void clearGuardianShards() => _eventBus.fire(GuardianShardsClearCommand());
 
   void clearGuardianPeers() => _eventBus.fire(GuardianPeersClearCommand());
+
+  Future<void> load() async {
+    final settings = await _settingsService.load();
+    _deviceName = settings.deviceName;
+    _pinCode = settings.pinCode;
+    _isLocked = _pinCode.isNotEmpty;
+    notifyListeners();
+  }
+
+  Future<void> _save() async {
+    await _settingsService.save(SettingsModel(
+      deviceName: _deviceName,
+      pinCode: _pinCode,
+    ));
+    notifyListeners();
+  }
 }

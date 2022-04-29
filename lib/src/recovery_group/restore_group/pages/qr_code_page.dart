@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import '../../../core/theme_data.dart';
-import '../../../core/widgets/common.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
+
 import '../restore_group_controller.dart';
 import '../../recovery_group_controller.dart';
 
@@ -27,7 +28,7 @@ class QRCodePage extends StatelessWidget {
         // Body
         Container(
           alignment: Alignment.center,
-          margin: const EdgeInsets.all(20),
+          margin: paddingAll20,
           padding: const EdgeInsets.all(10),
           height: size,
           width: size,
@@ -41,11 +42,12 @@ class QRCodePage extends StatelessWidget {
           children: [
             const Padding(
               padding: EdgeInsets.all(40),
-              child: Text('Please show this QR code to your Guardians'),
+              child: Text('Please show this QR code to\nyour Guardians',
+                  textAlign: TextAlign.center),
             ),
             if (state.groupName != null)
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: paddingAll20,
                 child: Center(child: Text(state.groupName!)),
               ),
             if (recoveryGroup != null)

@@ -5,9 +5,10 @@ import 'package:collection/collection.dart' show IterableEquality;
 import 'package:flutter/material.dart' hide Router;
 import 'package:p2plib/p2plib.dart';
 
-import '../core/utils.dart';
-import '../core/service/event_bus.dart';
-import '../core/model/p2p_model.dart';
+import '/src/core/utils.dart';
+import '/src/core/service/event_bus.dart';
+import '/src/core/model/p2p_model.dart';
+
 import 'guardian_model.dart';
 import 'guardian_service.dart';
 
@@ -32,7 +33,11 @@ class GuardianController extends TopicHandler
   })  : _guardianService = guardianService,
         super(router) {
     WidgetsBinding.instance!.addObserver(this);
-    eventBus.on<RecoveryGroupClearCommand>().listen((event) => clearStorage());
+    eventBus.on<RecoveryGroupClearCommand>().listen((_) => clearStorage());
+    eventBus.on<SettingsChangedEvent>().listen((event) {
+      _deviceName = event.deviceName;
+      notifyListeners();
+    });
   }
 
   @override
@@ -98,6 +103,7 @@ class GuardianController extends TopicHandler
           ));
           await _guardianService.setSecretShards(secretShards);
           status = MessageStatus.success;
+          notifyListeners();
         }
         await router
             .sendTo(
@@ -168,6 +174,12 @@ class GuardianController extends TopicHandler
         .onError(p2pNetwork.addError);
   }
 
+  Future<void> removeShard(SecretShard secretShard) async {
+    secretShards.remove(secretShard);
+    await _guardianService.setSecretShards(secretShards);
+    notifyListeners();
+  }
+
   Future<void> changeOwnership(
     SecretShard secretShard,
     Uint8List peerPubKey,
@@ -195,10 +207,14 @@ class GuardianController extends TopicHandler
     if (deviceAddress != null) {
       _deviceAddress = InternetAddress.tryParse(deviceAddress);
     }
-    secretShards = await _guardianService.getSecretShards();
-    _trustedPeers = (await _guardianService.getTrustedPeers())
-        .map((e) => PubKey(e))
-        .toSet();
+    try {
+      secretShards = await _guardianService.getSecretShards();
+    } catch (_) {}
+    try {
+      _trustedPeers = (await _guardianService.getTrustedPeers())
+          .map((e) => PubKey(e))
+          .toSet();
+    } catch (_) {}
     generateAuthToken();
   }
 
@@ -210,14 +226,14 @@ class GuardianController extends TopicHandler
 
   void generateAuthToken() {
     _currentAuthToken = RawToken(len: 32, data: getRandomBytes(32));
-    p2pNetwork.add(P2PPacket.emptyBody()); // Is it needed?
+    p2pNetwork.add(P2PPacket.emptyBody());
     notifyListeners();
   }
 
-  QRCode getQRCode(Uint8List myPubKey, [Uint8List? mySignPubKey]) => QRCode(
+  QRCode getQRCode([Uint8List? myPubKey, Uint8List? mySignPubKey]) => QRCode(
         authToken: _currentAuthToken.data,
-        pubKey: myPubKey,
-        signPubKey: mySignPubKey ?? myPubKey,
+        pubKey: myPubKey ?? router.keyPair.publicKey,
+        signPubKey: mySignPubKey ?? myPubKey ?? router.keyPair.publicKey,
         type: MessageType.authPeer,
         peerName: _deviceName,
         address:
