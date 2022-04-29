@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../core/widgets/common.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
 
-import 'settings_controller.dart';
-import 'widgets/app_version.dart';
-// import '../recovery_group/restore_group/widgets/restore_group_tile.dart';
+import 'pages/device_name_page.dart';
+import 'pages/pincode_page.dart';
+import 'widgets/hidden_card_widget.dart';
 
 class SettingsView extends StatelessWidget {
-  const SettingsView({Key? key}) : super(key: key);
-
   static const routeName = '/settings';
+
+  const SettingsView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<SettingsController>(context);
     return Scaffold(
       primary: true,
       resizeToAvoidBottomInset: false,
@@ -24,61 +23,53 @@ class SettingsView extends StatelessWidget {
           children: [
             // Header
             const HeaderBar(caption: 'Settings'),
-            // Version
-            const Padding(
-              padding: EdgeInsets.all(20),
-              child: AppVersionWidget(),
-            ),
-            // Theme
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: DropdownButton<ThemeMode>(
-                value: controller.themeMode,
-                onChanged: null,
-                // onChanged: controller.updateThemeMode,
-                items: const [
-                  DropdownMenuItem(
-                    value: ThemeMode.system,
-                    child: Text('System Theme'),
+            // Body
+            ListView(
+              primary: true,
+              shrinkWrap: true,
+              children: [
+                Padding(
+                  padding: paddingH20V5,
+                  child: ListTile(
+                    leading: const Icon(Icons.account_circle_outlined),
+                    title: Text(
+                      'Your Device Name',
+                      style: textStylePoppinsBold16,
+                    ),
+                    subtitle: Text(
+                      'Change your device name',
+                      style: textStyleSourceSansProRegular14.copyWith(
+                          color: clPurpleLight),
+                    ),
+                    trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const DeviceNamePage())),
                   ),
-                  DropdownMenuItem(
-                    value: ThemeMode.light,
-                    child: Text('Light Theme'),
+                ),
+                Padding(
+                  padding: paddingH20V1,
+                  child: ListTile(
+                    leading: const Icon(Icons.lock_open_rounded),
+                    title: Text(
+                      'Passcode',
+                      style: textStylePoppinsBold16,
+                    ),
+                    subtitle: Text(
+                      'Change authentication passcode',
+                      style: textStyleSourceSansProRegular14.copyWith(
+                          color: clPurpleLight),
+                    ),
+                    trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                    onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const PinCodePage())),
                   ),
-                  DropdownMenuItem(
-                    value: ThemeMode.dark,
-                    child: Text('Dark Theme'),
-                  )
-                ],
-              ),
+                ),
+                const Padding(
+                  padding: paddingAll20,
+                  child: HiddenCardWidget(),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: ElevatedButton(
-                child: const Text('Delete all  recovery groups'),
-                onPressed: controller.clearRecoveryGroups,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: ElevatedButton(
-                child: const Text('Delete all trusted peers'),
-                onPressed: controller.clearGuardianShards,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: ElevatedButton(
-                child: const Text('Delete all secret shards'),
-                onPressed: controller.clearGuardianPeers,
-              ),
-            ),
-            // const Padding(
-            //   padding: EdgeInsets.all(20),
-            //   child: RestoreGroupListTile(),
-            // ),
-            // Footer
-            Expanded(child: Container()),
           ],
         ),
       ),

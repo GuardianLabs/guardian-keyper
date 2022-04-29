@@ -1,21 +1,40 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:p2plib/p2plib.dart' show PubKey;
 
-import '../../core/controller/page_controller.dart';
-import '../../core/model/p2p_model.dart';
+import '/src/core/controller/page_controller.dart';
+import '/src/core/model/p2p_model.dart';
+
+import '../recovery_group_model.dart';
+import '../recovery_group_controller.dart';
 
 class AddSecretController with ChangeNotifier, PagesController {
+  final RecoveryGroupController recoveryGroupController;
+  final String groupName;
+  Map<PubKey, String> shards = {};
+  String secret = '';
+  Timer? timer;
+  String? error;
+  String? stackTrace;
+
   AddSecretController({
     required int pagesCount,
     required this.groupName,
-    required this.p2pNetwork,
+    required this.recoveryGroupController,
   }) {
     this.pagesCount = pagesCount;
-    p2pNetwork.listen(
-      (p2pPacket) {
+    recoveryGroupController.p2pNetwork.stream.listen(
+      (p2pPacket) async {
         if (p2pPacket.status == MessageStatus.success &&
             p2pPacket.type == MessageType.setShard) {
-          shards.remove(p2pPacket.peerPubKey!);
+          shards.remove(p2pPacket.peerPubKey);
+          if (shards.isEmpty) {
+            await recoveryGroupController.addSecret(
+              groupName,
+              RecoveryGroupSecretModel(name: 'TheOne', token: secret),
+            );
+            timer?.cancel();
+          }
           notifyListeners();
         }
       },
@@ -27,10 +46,16 @@ class AddSecretController with ChangeNotifier, PagesController {
     );
   }
 
-  final String groupName;
-  final Stream<P2PPacket> p2pNetwork;
-  Map<PubKey, String> shards = {};
-  String secret = '';
-  String? error;
-  String? stackTrace;
+  void distributeShards() async {
+    try {
+      await recoveryGroupController.distributeShards(shards, groupName, secret);
+    } catch (_) {}
+
+    timer = Timer.periodic(const Duration(seconds: 3), ((_) async {
+      try {
+        await recoveryGroupController.distributeShards(
+            shards, groupName, secret);
+      } catch (_) {}
+    }));
+  }
 }

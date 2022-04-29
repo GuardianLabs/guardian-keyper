@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-// import '../../../core/theme_data.dart';
-import '../../../core/widgets/common.dart';
-// import '../../../core/widgets/icon_of.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
+import '/src/core/widgets/icon_of.dart';
 
 import '../add_secret_controller.dart';
 
@@ -22,65 +22,113 @@ class _AddSecretPageState extends State<AddSecretPage> {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AddSecretController>(context);
+    final isEmpty = _ctrl.text.isEmpty || state.secret.isEmpty;
     return Column(
       children: [
         // Header
-        const HeaderBar(
-          title: Padding(
-            padding: EdgeInsets.only(top: 55),
-            child: Text('Add secret'),
+        HeaderBar(
+          title: HeaderBarTitleWithSubtitle(
+            title: 'Recovery Group',
+            subtitle: state.groupName,
           ),
-          backButton: HeaderBarBackButton(),
+          closeButton: const HeaderBarCloseButton(),
         ),
         // Body
-        const Padding(
-          padding: EdgeInsets.only(top: 40, bottom: 10),
-          child: Icon(Icons.key_outlined, size: 40),
-        ),
-        const Text('Add your secret', textAlign: TextAlign.center),
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-          child: TextField(
-            controller: _ctrl,
-            keyboardType: TextInputType.name,
-            obscureText: _isSecretObscure,
-            onChanged: (value) => setState(() => state.secret = value),
-            decoration: InputDecoration(
-              border: Theme.of(context).inputDecorationTheme.border,
-              filled: Theme.of(context).inputDecorationTheme.filled,
-              fillColor: Theme.of(context).inputDecorationTheme.fillColor,
-              labelText: 'YOUR SECRET',
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffix: _ctrl.text.isEmpty || state.secret.isEmpty
-                  ? TextButton(
-                      child: const Text('Paste'),
-                      onPressed: () async {
-                        final cdata =
-                            await Clipboard.getData(Clipboard.kTextPlain);
-                        if (cdata != null && cdata.text != null) {
-                          // _ctrl.text = cdata.text!;
-                          setState(() {
-                            _ctrl.text = cdata.text!;
-                            state.secret = cdata.text!;
-                          });
-                        }
-                      },
-                    )
-                  : _isSecretObscure
-                      ? TextButton(
-                          child: const Text('Show'),
-                          onPressed: () => setState(
-                              () => _isSecretObscure = !_isSecretObscure),
-                        )
-                      : null,
+        Expanded(
+            child: ListView(
+          primary: true,
+          shrinkWrap: true,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(top: 40, bottom: 10),
+              child: IconOf.secret(radius: 40, size: 40),
             ),
-          ),
-        ),
-        Expanded(child: Container()),
+            Padding(
+              padding: paddingAll20,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(text: 'Add your ', style: textStylePoppinsBold20),
+                    TextSpan(text: 'secret', style: textStylePoppinsBold20Blue),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: paddingAll20,
+              child: TextField(
+                controller: _ctrl,
+                keyboardType: TextInputType.name,
+                obscureText: _isSecretObscure,
+                maxLines: _isSecretObscure ? 1 : 10,
+                minLines: 1,
+                style: textStyleSourceSansProRegular16,
+                onChanged: (value) => setState(() => state.secret = value),
+                decoration: InputDecoration(
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  labelText: 'YOUR SECRET',
+                  counterText: '${_ctrl.text.length} symbols',
+                  counterStyle: textStyleSourceSansProRegular14.copyWith(
+                      color: clPurpleLight),
+                  suffix: isEmpty
+                      ? ElevatedButton(
+                          child: Text('Paste', style: textStylePoppinsBold12),
+                          onPressed: () async {
+                            final cdata =
+                                await Clipboard.getData(Clipboard.kTextPlain);
+                            if (cdata != null && cdata.text != null) {
+                              setState(() {
+                                _ctrl.text = cdata.text!;
+                                state.secret = cdata.text!;
+                              });
+                            }
+                          },
+                        )
+                      : _isSecretObscure
+                          ? Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: clBlue),
+                                shape: BoxShape.circle,
+                              ),
+                              height: 40,
+                              child: IconButton(
+                                color: clWhite,
+                                icon: const Icon(Icons.visibility_outlined),
+                                onPressed: () => setState(
+                                    () => _isSecretObscure = !_isSecretObscure),
+                              ),
+                            )
+                          : Container(
+                              decoration: const BoxDecoration(
+                                color: clBlue,
+                                shape: BoxShape.circle,
+                              ),
+                              height: 40,
+                              child: IconButton(
+                                color: clWhite,
+                                icon: const Icon(Icons.visibility_off_outlined),
+                                onPressed: () => setState(
+                                    () => _isSecretObscure = !_isSecretObscure),
+                              ),
+                            ),
+                ),
+              ),
+            ),
+            Padding(
+                padding: paddingAll20,
+                child: isEmpty
+                    ? const InfoPanel.warning(
+                        text: 'Make sure no one can see your screen.')
+                    : const InfoPanel.info(
+                        text:
+                            'After sharding (splitting) the secret, shards will be encrypted and shared among your Guardians and erased from your device.')),
+          ],
+        )),
         // Footer
         Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: PrimaryTextButton(
+          padding: paddingFooter,
+          child: PrimaryButtonBig(
               text: 'Continue',
               onPressed: state.secret.isEmpty
                   ? () {}
@@ -89,7 +137,6 @@ class _AddSecretPageState extends State<AddSecretPage> {
                       state.nextScreen();
                     }),
         ),
-        Container(height: 50),
       ],
     );
   }

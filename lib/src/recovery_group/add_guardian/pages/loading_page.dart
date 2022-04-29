@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:guardian_network/src/core/widgets/icon_of.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/model/p2p_model.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
+
 import '../add_guardian_controller.dart';
-import '../../recovery_group_controller.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({Key? key}) : super(key: key);
@@ -16,25 +18,76 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
-    final controller = context.read<RecoveryGroupController>();
-    controller.sendAuthRequest(
-        QRCode.fromBase64(context.read<AddGuardianController>().guardianCode));
+    context.read<AddGuardianController>().sendAuthRequest();
+  }
+
+  @override
+  void dispose() {
+    context.read<AddGuardianController>().timer?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AddGuardianController>(context);
-    if (state.guardianName.isNotEmpty) {
-      Future.delayed(const Duration(seconds: 1), state.nextScreen);
-    }
-    if (state.error != null) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text('Error: ${state.error}'),
-            Text('Stack Trace: ${state.stackTrace}'),
-          ]);
-    }
-    return const Center(child: CircularProgressIndicator.adaptive());
+    return state.isDuplicate
+        ? Column(
+            children: [
+              //Header
+              const HeaderBar(caption: 'Add Guardian'),
+              // Body
+              const Padding(
+                padding: paddingTop40,
+                child: IconOf.owner(
+                  radius: 40,
+                  size: 40,
+                  bage: BageType.warning,
+                ),
+              ),
+              Padding(
+                padding: paddingAll20,
+                child: Text(
+                  'Guardian has been already added',
+                  style: textStylePoppinsBold20,
+                ),
+              ),
+              Padding(
+                padding: paddingAll20,
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: textStyleSourceSansProRegular16.copyWith(
+                      color: clPurpleLight,
+                      height: 1.5,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: state.guardianName,
+                        style: textStyleSourceSansProBold16.copyWith(
+                            color: clWhite),
+                      ),
+                      const TextSpan(text: ' has been already added to the '),
+                      TextSpan(
+                        text: state.groupName,
+                        style: textStyleSourceSansProBold16.copyWith(
+                            color: clWhite),
+                      ),
+                      const TextSpan(text: ' Recovery Group'),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(child: Container()),
+              // Footer
+              Padding(
+                padding: paddingFooter,
+                child: PrimaryButtonBig(
+                  text: 'Done',
+                  onPressed: Navigator.of(context).pop,
+                ),
+              ),
+            ],
+          )
+        : const Center(child: CircularProgressIndicator.adaptive());
   }
 }

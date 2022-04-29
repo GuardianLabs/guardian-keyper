@@ -1,9 +1,12 @@
 import 'dart:typed_data' show Uint8List;
 import 'dart:convert' show base64Decode, base64Encode;
 import 'package:flutter/foundation.dart' show immutable;
+import 'package:equatable/equatable.dart';
 
 @immutable
-class SecretShard {
+class SecretShard extends Equatable {
+  static const currentVersion = 1;
+
   final Uint8List value;
   final Uint8List owner;
   final Uint8List groupId;
@@ -33,6 +36,11 @@ class SecretShard {
       );
 
   factory SecretShard.fromJson(Map<String, dynamic> json) => SecretShard(
+        // switch (json['version']) {
+        //   case null:
+        //     break;
+        //   default:
+        // }
         owner: base64Decode(json['owner']),
         value: base64Decode(json['secret']),
         groupId: base64Decode(json['group_id']),
@@ -43,6 +51,7 @@ class SecretShard {
       );
 
   Map<String, dynamic> toJson() => {
+        'version': currentVersion,
         'owner': base64Encode(owner),
         'secret': base64Encode(value),
         'group_id': base64Encode(groupId),
@@ -56,17 +65,5 @@ class SecretShard {
   String toString() => '$groupName of $ownerName}';
 
   @override
-  bool operator ==(Object other) =>
-      other is SecretShard && hashCode == other.hashCode;
-
-  @override
-  int get hashCode => Object.hashAll([
-        owner,
-        ownerName,
-        groupId,
-        groupName,
-        groupSize,
-        groupThreshold,
-        value,
-      ]);
+  List<Object> get props => [owner, groupId, value];
 }

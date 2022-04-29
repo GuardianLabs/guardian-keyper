@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
 import 'package:sodium/sodium.dart' show KeyPair;
 
@@ -9,23 +8,26 @@ class SettingsService {
   static const _keyPairPath = 'key_pair';
   static const _settingsPath = 'settings';
 
-  const SettingsService(this._storage);
+  final KVStorage storage;
+  final String deviceName;
 
-  final KVStorage _storage;
+  const SettingsService({
+    required this.storage,
+    required this.deviceName,
+  });
 
-  // void init() async {
-  //   if (!await _storage.containsKey(key: 'settings')) {}
-
-  // }
-
-  Future<ThemeMode> themeMode() async => ThemeMode.dark;
-
-  Future<void> updateThemeMode(ThemeMode theme) async {
-    if (!await _storage.containsKey(key: _settingsPath)) {}
+  Future<SettingsModel> load() async {
+    final settings = await storage.read(key: _settingsPath);
+    return settings == null
+        ? SettingsModel(deviceName: deviceName, pinCode: '') // Defaults
+        : SettingsModel.fromJson(settings);
   }
 
+  Future<void> save(SettingsModel settings) async =>
+      await storage.write(key: _settingsPath, value: settings.toJson());
+
   Future<KeyPairModel> getKeyPair() async {
-    final keyPairString = await _storage.read(key: _keyPairPath);
+    final keyPairString = await storage.read(key: _keyPairPath);
 
     if (keyPairString == null) {
       final keyPair = p2p.P2PCrypto().sodium.crypto.box.keyPair() as KeyPair;
@@ -34,7 +36,7 @@ class SettingsService {
         privateKey: keyPair.secretKey.extractBytes(),
         publicKey: keyPair.publicKey,
       );
-      await _storage.write(
+      await storage.write(
         key: _keyPairPath,
         value: KeyPairModel.toJson(keyPairModel),
       );

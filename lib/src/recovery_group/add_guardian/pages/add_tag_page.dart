@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:p2plib/p2plib.dart' show PubKey;
 
-import '../../../core/theme_data.dart';
-import '../../../core/widgets/common.dart';
-import '../../../core/model/p2p_model.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
+import '/src/recovery_group/widgets/guardian_tile_widget.dart';
+
 import '../../recovery_group_model.dart';
 import '../../recovery_group_controller.dart';
 import '../add_guardian_controller.dart';
@@ -15,6 +16,12 @@ class AddTagPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AddGuardianController>(context);
+    final guardian = RecoveryGroupGuardianModel(
+      name: state.guardianName,
+      tag: state.guardianTag,
+      pubKey: PubKey(state.guardianQRCode.pubKey),
+      signPubKey: PubKey(state.guardianQRCode.signPubKey),
+    );
     return Column(
       children: [
         // Header
@@ -23,65 +30,65 @@ class AddTagPage extends StatelessWidget {
           closeButton: HeaderBarCloseButton(),
         ),
         // Body
-        Padding(
-          padding: const EdgeInsets.only(top: 60),
-          child: RichText(
-            textAlign: TextAlign.center,
-            text: const TextSpan(
-              children: <TextSpan>[
-                TextSpan(text: 'The wallet was scanned\n'),
-                TextSpan(text: 'successfuly', style: TextStyle(color: clBlue)),
-              ],
-            ),
+        Expanded(
+          child: ListView(
+            primary: true,
+            shrinkWrap: true,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 60),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: 'Guardian ', style: textStylePoppinsBold20),
+                      TextSpan(
+                        text: 'identified',
+                        style: textStylePoppinsBold20Blue,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: paddingAll20,
+                child: GuardianTileWidget(
+                  guardian: guardian,
+                  isHighlighted: true,
+                ),
+              ),
+              Padding(
+                padding: paddingAll20,
+                child: TextField(
+                  keyboardType: TextInputType.name,
+                  onChanged: (value) => state.guardianTag = value,
+                  decoration: const InputDecoration(labelText: 'ADD TAG'),
+                ),
+              ),
+              const Padding(
+                padding: paddingAll20,
+                child: InfoPanel.info(
+                    text: 'Please add a tag to name this Guardian device'),
+              ),
+            ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: GuardianListTileWidget(
-            name: state.guardianName,
-            code: state.guardianPubKey,
-            tag: state.guardianTag,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-          child: TextField(
-            keyboardType: TextInputType.name,
-            onChanged: (value) => state.guardianTag = value,
-            decoration: InputDecoration(
-              border: Theme.of(context).inputDecorationTheme.border,
-              filled: Theme.of(context).inputDecorationTheme.filled,
-              fillColor: Theme.of(context).inputDecorationTheme.fillColor,
-              labelText: 'ADD TAG',
-              helperText:
-                  'You can create a tag for this device to not forget it',
-            ),
-          ),
-        ),
-        Expanded(child: Container()),
         // Footer
         Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: PrimaryTextButton(
+          padding: paddingFooter,
+          child: PrimaryButtonBig(
             text: 'Continue',
             onPressed: () async {
-              final qr = QRCode.fromBase64(state.guardianCode);
-              await context.read<RecoveryGroupController>().addGuardian(
-                    state.groupName,
-                    RecoveryGroupGuardianModel(
-                      name: state.guardianName,
-                      tag: state.guardianTag,
-                      pubKey: PubKey(qr.pubKey),
-                      signPubKey: PubKey(qr.signPubKey),
-                    ),
-                  );
+              await context
+                  .read<RecoveryGroupController>()
+                  .addGuardian(state.groupName, guardian);
               state.showLastPage
                   ? state.nextScreen()
                   : Navigator.of(context).pop();
             },
           ),
         ),
-        Container(height: 50),
       ],
     );
   }

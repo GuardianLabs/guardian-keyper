@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../core/theme_data.dart';
-import '../core/widgets/icon_of.dart';
-import '../core/widgets/common.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/icon_of.dart';
+import '/src/core/widgets/common.dart';
+
+import 'widgets/recovery_group_tile_widget.dart';
 import 'create_group/create_group_view.dart';
 import 'recovery_group_controller.dart';
-import 'edit_group/recovery_group_edit_view.dart';
 
 class RecoveryGroupView extends StatelessWidget {
   static const routeName = '/recovery_group';
@@ -16,23 +17,35 @@ class RecoveryGroupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final groups = Provider.of<RecoveryGroupController>(context).groups;
-
     return groups.isEmpty
         ? Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: IconOf.group(radius: 40),
+                padding: paddingV20,
+                child: IconOf.groups(radius: 40, size: 30),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Text('You don`t have any recovery groups'),
+              RichText(
+                textAlign: TextAlign.center,
+                softWrap: true,
+                overflow: TextOverflow.clip,
+                text: TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: 'You don`t have any\n',
+                      style: textStylePoppinsBold20,
+                    ),
+                    TextSpan(
+                      text: 'recovery groups',
+                      style: textStylePoppinsBold20Blue,
+                    ),
+                  ],
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: PrimaryTextButton(
+                padding: const EdgeInsets.only(top: 40),
+                child: PrimaryButtonBig(
                   text: 'Create Recovery Group',
                   onPressed: () =>
                       Navigator.pushNamed(context, CreateGroupView.routeName),
@@ -47,32 +60,7 @@ class RecoveryGroupView extends StatelessWidget {
               for (final group in groups.values)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 1),
-                  child: ListTile(
-                    tileColor: clIndigo700,
-                    textColor: group.isMissed ? clRed : null,
-                    iconColor: group.isMissed ? clRed : clIndigo700,
-                    title: Text(group.name),
-                    leading: const IconOf.app(),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child:
-                              Text('${group.guardians.length}/${group.size}'),
-                        ),
-                        DotColored(
-                            color: group.isCompleted
-                                ? clGreen
-                                : group.isNotCompleted
-                                    ? clYellow
-                                    : clRed),
-                      ],
-                    ),
-                    onTap: () => Navigator.pushNamed(
-                        context, RecoveryGroupEditView.routeName,
-                        arguments: group.name),
-                  ),
+                  child: RecoveryGroupTileWidget(group: group),
                 )
             ],
           );

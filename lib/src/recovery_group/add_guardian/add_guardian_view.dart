@@ -41,7 +41,7 @@ class AddGuardianView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => AddGuardianController(
-        p2pNetwork: context.read<RecoveryGroupController>().p2pNetwork.stream,
+        recoveryGroupController: context.read<RecoveryGroupController>(),
         pagesCount: _pages.length,
         groupName: groupName,
         showLastPage: showLastPage,
@@ -50,7 +50,7 @@ class AddGuardianView extends StatelessWidget {
         builder: (context, value, child) {
           return Scaffold(
             primary: true,
-            resizeToAvoidBottomInset: false,
+            // resizeToAvoidBottomInset: false,
             body: SafeArea(child: _pages[value.currentPage]),
           );
         },

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/theme_data.dart';
-import '../../../core/widgets/common.dart';
-import '../../../core/widgets/icon_of.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
+import '/src/core/widgets/icon_of.dart';
 
-import '../../recovery_group_controller.dart';
 import '../recovery_secret_controller.dart';
 
 class ShowSecretPage extends StatefulWidget {
@@ -17,14 +16,19 @@ class ShowSecretPage extends StatefulWidget {
 }
 
 class _ShowSecretPageState extends State<ShowSecretPage> {
+  final _ctrl = TextEditingController();
   bool isSecretObfuscated = true;
-  String secret = '';
 
   @override
   void initState() {
     super.initState();
-    secret = context.read<RecoveryGroupController>().restoreSecret(
-        context.read<RecoverySecretController>().shards.values.toList());
+    _ctrl.text = context.read<RecoverySecretController>().secret;
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -32,57 +36,75 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
     return Column(
       children: [
         // Header
-        const HeaderBar(
-          caption: 'Discovery peers',
-          closeButton: HeaderBarCloseButton(),
-        ),
+        const HeaderBar(closeButton: HeaderBarCloseButton()),
         // Body
-        const Padding(
-          padding: EdgeInsets.only(top: 40, bottom: 10),
-          child: IconOf.app(),
-        ),
-        const Text('This is your secret'),
-        Padding(
-          padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-          child: Container(
-            padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-            decoration: BoxDecoration(
-              borderRadius: borderRadius,
-              color: clIndigo800,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TextField(
-                  decoration: const InputDecoration(isCollapsed: true),
-                  maxLines: isSecretObfuscated ? 1 : 5,
-                  readOnly: true,
-                  obscureText: isSecretObfuscated,
-                  controller: TextEditingController(text: secret),
+        Expanded(
+            child: ListView(
+          primary: true,
+          shrinkWrap: true,
+          padding: paddingH20,
+          children: [
+            // Icon
+            const PaddingTop(child: IconOf.secret(radius: 40, size: 40)),
+            // Text
+            Padding(
+              padding: paddingTop20,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: 'This is your ',
+                      style: textStylePoppinsBold20,
+                    ),
+                    TextSpan(
+                      text: 'secret',
+                      style: textStylePoppinsBold20Blue,
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  child: isSecretObfuscated
-                      ? const Text('Show Secret')
-                      : const Text('Hide Secret'),
-                  onPressed: () =>
-                      setState(() => isSecretObfuscated = !isSecretObfuscated),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-        Expanded(child: Container()),
+            // Secret
+            Padding(
+              padding: paddingTop40,
+              child: Card(
+                child: Padding(
+                  padding: paddingAll20,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextField(
+                        controller: _ctrl,
+                        maxLines: isSecretObfuscated ? 1 : null,
+                        readOnly: true,
+                        obscureText: isSecretObfuscated,
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        child: isSecretObfuscated
+                            ? const Text('Show Secret')
+                            : const Text('Hide Secret'),
+                        onPressed: () => setState(
+                            () => isSecretObfuscated = !isSecretObfuscated),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )),
         // Footer
         Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: PrimaryTextButton(
-            text: 'Copy to Clipboard',
+          padding: paddingFooter,
+          child: PrimaryButtonBig(
+            text: 'Copy',
             onPressed: () async =>
-                await Clipboard.setData(ClipboardData(text: secret)),
+                await Clipboard.setData(ClipboardData(text: _ctrl.value.text)),
           ),
         ),
-        Container(height: 50),
       ],
     );
   }

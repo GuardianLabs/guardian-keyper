@@ -8,18 +8,19 @@ import 'pages/discovering_peers_page.dart';
 import 'pages/show_secret_page.dart';
 
 class RecoveryGroupRecoverySecretView extends StatelessWidget {
-  const RecoveryGroupRecoverySecretView({
-    Key? key,
-    required this.recoveryGroupName,
-  }) : super(key: key);
-
   static const routeName = '/recovery_group/recovery_secret';
   static const _pages = [
     DiscoveryPeersPage(),
+    // LoginPage(),
     ShowSecretPage(),
   ];
 
   final String recoveryGroupName;
+
+  const RecoveryGroupRecoverySecretView({
+    Key? key,
+    required this.recoveryGroupName,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class RecoveryGroupRecoverySecretView extends StatelessWidget {
       create: (context) => RecoverySecretController(
         pagesCount: _pages.length,
         groupName: recoveryGroupName,
-        p2pNetwork: context.read<RecoveryGroupController>().p2pNetwork.stream,
+        recoveryGroupController: context.read<RecoveryGroupController>(),
       ),
       child:
           Consumer<RecoverySecretController>(builder: (context, value, child) {

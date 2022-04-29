@@ -36,7 +36,7 @@ class App extends StatelessWidget {
       ],
       onGenerateTitle: (BuildContext context) => 'Guardian Network',
       // AppLocalizations.of(context)!.appTitle,
-      theme: theme,
+      theme: themeLight,
       darkTheme: themeDark,
       themeMode: settingsController.themeMode,
       onGenerateRoute: (RouteSettings routeSettings) {

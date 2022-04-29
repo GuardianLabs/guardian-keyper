@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/utils.dart';
-import '../../../core/theme_data.dart';
-import '../../../core/widgets/common.dart';
+import '/src/core/utils.dart';
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
 
 import '../../add_guardian/add_guardian_view.dart';
 import '../../recovery_group_model.dart';
-import '../create_group_controller.dart';
 import '../../recovery_group_controller.dart';
+import '../create_group_controller.dart';
 
 class InputNamePage extends StatelessWidget {
   const InputNamePage({Key? key}) : super(key: key);
@@ -27,12 +27,12 @@ class InputNamePage extends StatelessWidget {
           closeButton: const HeaderBarCloseButton(),
         ),
         // Body
-        Padding(
-          padding: const EdgeInsets.only(top: 60),
+        PaddingTop(
           child: RichText(
             textAlign: TextAlign.center,
-            text: const TextSpan(
-              children: <TextSpan>[
+            text: TextSpan(
+              style: Theme.of(context).textTheme.headline6,
+              children: const <TextSpan>[
                 TextSpan(text: 'Create a '),
                 TextSpan(text: 'name', style: TextStyle(color: clBlue)),
                 TextSpan(text: ' for your\n recovery group'),
@@ -41,32 +41,27 @@ class InputNamePage extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
           child: TextField(
-            restorationId: 'RecoveryGroupNameInput',
+            autofocus: true,
             keyboardType: TextInputType.name,
-            onChanged: (value) {
-              state.groupName = value;
-              if (recoveryGroups.containsKey(value)) {
-                state.groupNameError = 'Name already used!';
-              } else {
-                state.groupNameError = null;
-              }
-            },
             decoration: InputDecoration(
-              border: Theme.of(context).inputDecorationTheme.border,
-              filled: Theme.of(context).inputDecorationTheme.filled,
-              fillColor: Theme.of(context).inputDecorationTheme.fillColor,
-              labelText: 'GROUP NAME',
+              labelText: ' GROUP NAME ',
               errorText: state.groupNameError,
             ),
+            onChanged: (value) {
+              state.groupName = value;
+              state.groupNameError = recoveryGroups.containsKey(value)
+                  ? 'Name already used!'
+                  : null;
+            },
           ),
         ),
         Expanded(child: Container()),
         // Footer
         Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: PrimaryTextButton(
+          padding: paddingFooter,
+          child: PrimaryButtonBig(
             text: 'Continue',
             onPressed: state.groupName.isEmpty || state.groupNameError != null
                 ? null
@@ -93,7 +88,6 @@ class InputNamePage extends StatelessWidget {
                   },
           ),
         ),
-        Container(height: 50),
       ],
     );
   }

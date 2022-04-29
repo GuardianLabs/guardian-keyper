@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../theme_data.dart';
 
 class HeaderBar extends StatelessWidget {
+  final String? caption;
+  final Widget? title;
+  final Widget? backButton;
+  final Widget? closeButton;
+
   const HeaderBar({
     Key? key,
     this.caption,
@@ -13,174 +17,191 @@ class HeaderBar extends StatelessWidget {
     this.closeButton,
   }) : super(key: key);
 
-  final String? caption;
-  final Widget? title;
-  final Widget? backButton;
-  final Widget? closeButton;
-
   @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          height: 100,
-          width: 70,
-          alignment: Alignment.centerRight,
-          child: backButton,
-        ),
-        Container(
-          height: 100,
-          alignment: Alignment.center,
-          child: caption == null ? title : Text(caption!),
-        ),
-        Container(
-          height: 100,
-          width: 70,
-          alignment: Alignment.centerLeft,
-          child: closeButton,
-        ),
-      ],
-    );
-  }
+  Widget build(BuildContext context) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: 100,
+            width: 70,
+            alignment: Alignment.centerRight,
+            child: backButton,
+          ),
+          Container(
+            height: 100,
+            alignment: Alignment.center,
+            child: caption == null
+                ? title
+                : Text(caption!, style: textStylePoppinsBold14),
+          ),
+          Container(
+            height: 100,
+            width: 70,
+            alignment: Alignment.centerLeft,
+            child: closeButton,
+          ),
+        ],
+      );
 }
 
 class HeaderBarTitleLogo extends StatelessWidget {
   const HeaderBarTitleLogo({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgPicture.asset('assets/icons/logo.svg', height: 32, width: 32),
-        const SizedBox(height: 8),
-        const Text('Guardian'),
-      ],
-    );
-  }
+  Widget build(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset('assets/icons/logo.svg', height: 32, width: 32),
+          const SizedBox(height: 8),
+          const Text('Guardian'),
+        ],
+      );
+}
+
+class HeaderBarTitleWithSubtitle extends StatelessWidget {
+  final String title;
+  final String subtitle;
+
+  const HeaderBarTitleWithSubtitle({
+    Key? key,
+    required this.title,
+    required this.subtitle,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style:
+                textStyleSourceSansProRegular12.copyWith(color: clPurpleLight),
+          ),
+          Text(
+            subtitle,
+            style: textStylePoppinsBold14.copyWith(height: 2),
+          ),
+        ],
+      );
 }
 
 class HeaderBarCloseButton extends StatelessWidget {
-  const HeaderBarCloseButton({Key? key, this.onPressed}) : super(key: key);
-
   final void Function()? onPressed;
 
+  const HeaderBarCloseButton({Key? key, this.onPressed}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-      backgroundColor: Theme.of(context).listTileTheme.tileColor,
-      child: IconButton(
-        color: Colors.white,
-        icon: const Icon(Icons.close),
-        onPressed: onPressed ??
-            () {
-              if (Navigator.of(context).canPop()) Navigator.of(context).pop();
-            },
-      ),
-    );
-  }
+  Widget build(BuildContext context) => CircleAvatar(
+        backgroundColor: Theme.of(context).listTileTheme.tileColor,
+        child: IconButton(
+          color: Colors.white,
+          icon: const Icon(Icons.close),
+          onPressed: onPressed ??
+              () {
+                if (Navigator.of(context).canPop()) Navigator.of(context).pop();
+              },
+        ),
+      );
+}
+
+class HeaderBarMoreButton extends StatelessWidget {
+  final void Function()? onPressed;
+
+  const HeaderBarMoreButton({Key? key, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => CircleAvatar(
+        backgroundColor: Theme.of(context).listTileTheme.tileColor,
+        child: IconButton(
+          color: Colors.white,
+          icon: const Icon(Icons.keyboard_control),
+          onPressed: onPressed,
+        ),
+      );
 }
 
 class HeaderBarBackButton extends StatelessWidget {
+  final void Function()? onPressed;
+
   const HeaderBarBackButton({Key? key, this.onPressed}) : super(key: key);
 
-  final void Function()? onPressed;
-
   @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-      backgroundColor: Theme.of(context).listTileTheme.tileColor,
-      child: IconButton(
-        color: Colors.white,
-        icon: const Icon(Icons.arrow_back),
-        onPressed: onPressed ??
-            () {
-              if (Navigator.of(context).canPop()) Navigator.of(context).pop();
-            },
-      ),
-    );
-  }
-}
-
-class PrimaryTextButton extends StatelessWidget {
-  const PrimaryTextButton({
-    Key? key,
-    required this.text,
-    required this.onPressed,
-  }) : super(key: key);
-
-  final String text;
-  final void Function()? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: 48,
-        width: double.infinity,
-        decoration: decorBlueButton,
-        child: TextButton(
-          child: Text(
-            text,
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-            ),
-          ),
-          onPressed: onPressed,
-        ));
-  }
-}
-
-class SecondaryTextButton extends StatelessWidget {
-  const SecondaryTextButton({
-    Key? key,
-    required this.text,
-    required this.onPressed,
-  }) : super(key: key);
-
-  final String text;
-  final void Function()? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: 48,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: clIndigo500,
-          borderRadius: borderRadius,
+  Widget build(BuildContext context) => CircleAvatar(
+        backgroundColor: Theme.of(context).listTileTheme.tileColor,
+        child: IconButton(
+          color: Colors.white,
+          icon: const Icon(Icons.arrow_back),
+          onPressed: onPressed ??
+              () {
+                if (Navigator.of(context).canPop()) Navigator.of(context).pop();
+              },
         ),
-        child: TextButton(
-          child: Text(
-            text,
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-            ),
+      );
+}
+
+class PrimaryButtonBig extends StatelessWidget {
+  final String text;
+  final void Function()? onPressed;
+
+  const PrimaryButtonBig({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Ink(
+        decoration: BoxDecoration(
+          borderRadius: borderRadius,
+          gradient: onPressed == null
+              ? const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFF548BB4), Color(0xFF2E68AC)],
+                )
+              : const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFF7BE7FF), Color(0xFF3AABF0)],
+                ),
+        ),
+        height: 48,
+        child: InkWell(
+          borderRadius: borderRadius,
+          child: Center(
+            child: Text(text,
+                style: textStylePoppinsBold16.copyWith(
+                    color:
+                        onPressed == null ? const Color(0xFF8FB1D0) : clWhite)),
           ),
-          onPressed: onPressed,
-        ));
-  }
+          onTap: onPressed,
+          splashColor: clBlue,
+        ),
+      );
 }
 
 class BottomSheetWidget extends StatelessWidget {
-  static const _padding = EdgeInsets.only(right: 20, left: 20, bottom: 20);
-  final Widget icon;
-  final String title;
-  final String text;
+  static const _padding = EdgeInsets.only(right: 20, left: 20, top: 20);
+
+  final Widget? icon;
+  final String? titleString;
+  final String? textString;
+  final Widget? title;
+  final List<TextSpan>? textSpan;
   final Widget? body;
   final Widget? footer;
+  final bool haveCloseButton;
 
   const BottomSheetWidget({
     Key? key,
-    required this.icon,
-    required this.title,
-    required this.text,
+    this.icon,
+    this.titleString,
+    this.textString,
+    this.title,
+    this.textSpan,
     this.body,
     this.footer,
+    this.haveCloseButton = false,
   }) : super(key: key);
 
   @override
@@ -188,261 +209,151 @@ class BottomSheetWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          alignment: Alignment.centerRight,
-          padding: const EdgeInsets.all(20),
-          child: const HeaderBarCloseButton(),
-        ),
-        Container(
-          alignment: Alignment.center,
-          padding: _padding,
-          child: icon,
-        ),
-        Container(
-          alignment: Alignment.center,
-          padding: _padding,
-          child: Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        Container(
-          alignment: Alignment.center,
-          padding: _padding,
-          child: Text(
-            text,
-            style: GoogleFonts.sourceSansPro(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        if (body != null)
-          Container(
-            alignment: Alignment.center,
+        const SizedBox(height: 20),
+        if (icon != null) Padding(padding: _padding, child: icon),
+        if (title != null || titleString != null)
+          Padding(
             padding: _padding,
-            child: body,
+            child: titleString == null
+                ? title
+                : Text(titleString!, style: textStylePoppinsBold20),
           ),
+        if (textString != null || textSpan != null)
+          Padding(
+            padding: _padding,
+            child: textString == null
+                ? RichText(
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                    overflow: TextOverflow.clip,
+                    text: TextSpan(children: textSpan),
+                  )
+                : Text(
+                    textString!,
+                    style: textStyleSourceSansProRegular16,
+                    textAlign: TextAlign.center,
+                  ),
+          ),
+        if (body != null) Padding(padding: _padding, child: body),
         if (footer != null)
-          Container(
-            alignment: Alignment.center,
-            padding: _padding,
+          Padding(
+            padding: const EdgeInsets.only(right: 20, left: 20, top: 40),
             child: footer,
           ),
-      ],
-    );
-  }
-}
-
-class CircleNumber extends StatelessWidget {
-  final double size;
-  final int number;
-
-  const CircleNumber({
-    Key? key,
-    this.size = 24,
-    required this.number,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.blueAccent),
-        shape: BoxShape.circle,
-      ),
-      height: size,
-      width: size,
-      child: Center(child: Text(number.toString())),
-    );
-  }
-}
-
-class NumberedListWidget extends StatelessWidget {
-  final List<String> list;
-
-  const NumberedListWidget({Key? key, required this.list}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (var i = 0; i < list.length; i++)
-          Container(
-            alignment: Alignment.centerLeft,
-            margin: const EdgeInsets.symmetric(vertical: 12),
-            child: Row(children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: CircleNumber(number: i),
-              ),
-              Expanded(
-                child: Text(
-                  list[i],
-                  softWrap: true,
-                  style: GoogleFonts.sourceSansPro(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-            ]),
-          )
-      ],
-    );
-  }
-}
-
-class DotColored extends StatelessWidget {
-  const DotColored({
-    Key? key,
-    this.color = Colors.white,
-    this.size = 8,
-  }) : super(key: key);
-
-  final Color color;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-      height: size,
-      width: size,
-    );
-  }
-}
-
-class DotBar extends StatelessWidget {
-  const DotBar({
-    Key? key,
-    this.active = 0,
-    required this.count,
-  }) : super(key: key);
-
-  final int count;
-  final int active;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (var i = 0; i < count; i++)
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: DotColored(color: i == active ? Colors.white : clIndigo700),
+        if (haveCloseButton)
+          const Padding(
+            padding: EdgeInsets.only(top: 40),
+            child: HeaderBarCloseButton(),
           ),
+        const SizedBox(height: 56),
       ],
     );
   }
 }
 
-class SimpleCard extends StatelessWidget {
-  const SimpleCard({
+class PaddingTop extends StatelessWidget {
+  final Widget child;
+  final bool withHorizontal;
+
+  const PaddingTop({
     Key? key,
-    this.leading,
-    this.trailing,
-    required this.caption,
-    this.text = '',
-    this.bgColor,
-    this.isSelected = false,
+    required this.child,
+    this.withHorizontal = true,
   }) : super(key: key);
 
-  final Widget? leading;
-  final Widget? trailing;
-  final String caption;
-  final String text;
-  final Color? bgColor;
-  final bool isSelected;
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    if (height >= heightBig) {
+      return Padding(
+        child: child,
+        padding: withHorizontal
+            ? const EdgeInsets.only(top: 40, left: 20, right: 20)
+            : const EdgeInsets.only(top: 40),
+      );
+    }
+    if (height >= heightMedium) {
+      return Padding(
+        child: child,
+        padding: withHorizontal
+            ? const EdgeInsets.only(top: 20, left: 20, right: 20)
+            : paddingTop20,
+      );
+    }
+    if (height >= heightSmall) {
+      return Padding(
+        child: child,
+        padding: withHorizontal
+            ? const EdgeInsets.only(top: 10, left: 20, right: 20)
+            : paddingTop10,
+      );
+    }
+    return withHorizontal
+        ? Padding(
+            padding: paddingH20,
+            child: child,
+          )
+        : child;
+  }
+}
+
+class InfoPanel extends StatelessWidget {
+  final String? text;
+  final Widget? child;
+  final IconData icon;
+  final Color color;
+
+  const InfoPanel({
+    Key? key,
+    this.text,
+    this.child,
+    required this.icon,
+    required this.color,
+  }) : super(key: key);
+
+  const InfoPanel.info({
+    Key? key,
+    this.text,
+    this.child,
+    this.icon = Icons.info_outline,
+    this.color = clBlue,
+  }) : super(key: key);
+
+  const InfoPanel.warning({
+    Key? key,
+    this.text,
+    this.child,
+    this.icon = Icons.error_outline,
+    this.color = clYellow,
+  }) : super(key: key);
+
+  const InfoPanel.error({
+    Key? key,
+    this.text,
+    this.child,
+    this.icon = Icons.error,
+    this.color = clRed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: borderRadius,
-        color: isSelected ? Colors.transparent : bgColor,
-        border: isSelected
-            ? Border.all(
-                color: clBlue,
-                width: 2,
-              )
-            : null,
-      ),
-      height: 192,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                leading ?? Container(),
-                trailing ?? Container(),
-              ],
-            ),
-            Text(caption),
-            Text(text),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class GuardianListTileWidget extends StatelessWidget {
-  const GuardianListTileWidget({
-    Key? key,
-    this.iconColor = clGreen,
-    required this.name,
-    this.nameColor = clWhite,
-    required this.code,
-    this.tag,
-    this.status,
-  }) : super(key: key);
-
-  final Color iconColor;
-  final String name;
-  final Color? nameColor;
-  final String code;
-  final String? tag;
-  final Color? status;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-          backgroundColor: iconColor,
-          foregroundColor: clWhite,
-          child: const Icon(Icons.health_and_safety_outlined)),
-      trailing: status == null ? null : DotColored(color: status!),
-      title: Row(
+      decoration: boxDecoration,
+      padding: paddingAll20,
+      child: Column(
         children: [
-          Text(name, maxLines: 1, style: TextStyle(color: nameColor)),
-          if (tag != null && tag!.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: borderRadius,
-                  color: clIndigo500,
-                ),
-                child: Text('   ${tag!}   '),
-              ),
+          Icon(icon, color: color, size: 20),
+          const SizedBox(height: 14),
+          if (text != null)
+            Text(
+              text!,
+              textAlign: TextAlign.center,
+              style: textStyleSourceSansProRegular14.copyWith(
+                  color: clPurpleLight),
             ),
+          if (child != null) child!,
         ],
       ),
-      subtitle: Text(code.replaceAll('\\', r'\\'), maxLines: 1),
-      isThreeLine: true,
-      dense: true,
-      // visualDensity: VisualDensity.comfortable,
     );
   }
 }
