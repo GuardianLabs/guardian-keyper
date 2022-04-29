@@ -85,8 +85,10 @@ class GuardianController extends TopicHandler
                   body: Uint8List.fromList(_deviceName.codeUnits),
                 ).toCbor(),
                 true)
-            .whenComplete(generateAuthToken)
-            .onError(p2pNetwork.addError);
+            .whenComplete(() {
+          // TBD: security leak, use transaction
+          if (status == MessageStatus.success) generateAuthToken();
+        }).onError(p2pNetwork.addError);
         break;
 
       case MessageType.setShard:
