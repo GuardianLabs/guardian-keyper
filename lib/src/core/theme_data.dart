@@ -98,6 +98,7 @@ final textStyleLinkSmall = GoogleFonts.spaceGrotesk(
 
 final buttonStyleSecondary = ButtonStyle(
   fixedSize: _fixedSizeHeight48,
+  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(paddingAll8),
   textStyle: MaterialStateProperty.all<TextStyle>(textStylePoppinsBold16),
 );
 

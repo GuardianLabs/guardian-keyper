@@ -11,7 +11,7 @@ class RestoreGroupView extends StatelessWidget {
   static const routeName = '/restore_recovery_group';
   static const _pages = [
     ExplainerPage(),
-    QRCodePage(),
+    ShowQRCodePage(),
   ];
 
   const RestoreGroupView({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class RestoreGroupView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => RestoreGroupController(
         pagesCount: _pages.length,
-        p2pNetwork: context.read<RecoveryGroupController>().p2pNetwork.stream,
+        recoveryGroupController: context.read<RecoveryGroupController>(),
       ),
       child: Consumer<RestoreGroupController>(
         builder: (context, value, child) {

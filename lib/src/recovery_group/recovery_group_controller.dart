@@ -61,18 +61,20 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
   }
 
   //TBD: throw away this piece of shit, some day...
-  void _processTakeOwnershipRequest(P2PPacket p2pPacket, PubKey peerPubKey) {
+  void _processTakeOwnershipRequest(
+    P2PPacket p2pPacket,
+    PubKey peerPubKey,
+  ) async {
     final secretShard = SecretShardPacket.fromCbor(p2pPacket.body);
     final group = _groups[secretShard.groupName];
     final guardian = RecoveryGroupGuardianModel(
-      name: secretShard.ownerName, //TBD: use real peer name
+      name: secretShard.ownerName,
       pubKey: peerPubKey,
       signPubKey: peerPubKey,
     );
 
     if (group == null) {
-      final secret = RecoveryGroupSecretModel(
-          name: secretShard.groupName); //TBD: use real secret name
+      final secret = RecoveryGroupSecretModel(name: secretShard.groupName);
       _groups[secretShard.groupName] = RecoveryGroupModel(
         id: GroupID(secretShard.groupId),
         name: secretShard.groupName,
@@ -81,25 +83,11 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
         guardians: {guardian.name: guardian},
         secrets: {secret.name: secret},
       );
-      notifyListeners();
-      _sendTakeOwnershipResponse(peerPubKey, secretShard.groupId);
     } else {
-      if (group.isRestoring) {
-        if (!group.isCompleted) {
-          _groups[group.name] = group.addGuardian(guardian);
-          notifyListeners();
-          _sendTakeOwnershipResponse(peerPubKey, secretShard.groupId);
-        }
-      } else {
-        p2pNetwork.addError(RecoveryGroupAlreadyExists());
-      }
+      if (!group.isRestoring) p2pNetwork.addError(RecoveryGroupAlreadyExists());
+      if (group.isCompleted) p2pNetwork.addError(RecoveryGroupIsFull());
+      _groups[group.name] = group.addGuardian(guardian);
     }
-  }
-
-  Future<void> _sendTakeOwnershipResponse(
-    PubKey peerPubKey,
-    Uint8List groupId,
-  ) async {
     await router
         .sendTo(
           _topicOfGuardian,
@@ -107,11 +95,12 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
           P2PPacket(
             type: MessageType.takeOwnership,
             status: MessageStatus.success,
-            body: groupId,
+            body: secretShard.groupId,
           ).toCbor(),
           true,
         )
         .onError(p2pNetwork.addError);
+    notifyListeners();
   }
 
   Future<void> sendAuthRequest(QRCode guardianQRCode) async {
@@ -281,6 +270,10 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
 
 class RecoveryGroupAlreadyExists implements Exception {
   static const description = 'Group with given name already exists!';
+}
+
+class RecoveryGroupIsFull implements Exception {
+  static const description = 'Group with given name is full!';
 }
 
 class RecoveryGroupDoesNotExist implements Exception {

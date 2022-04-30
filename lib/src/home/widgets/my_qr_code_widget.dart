@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import '../pages/show_qr_code_page.dart';
+import '../qr_code/qr_code_view.dart';
 import '/src/core/theme_data.dart';
 import '/src/core/widgets/selectable_card.dart';
 
@@ -69,7 +69,7 @@ class MyQRCodeWidget extends StatelessWidget {
               child: ElevatedButton(
                 child: const Text('Show QR'),
                 onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: ((_) => const ShowQRCodePage()))),
+                    builder: ((_) => const ShowQRCodeView()))),
               ),
             ),
           ],

@@ -251,52 +251,6 @@ class BottomSheetWidget extends StatelessWidget {
   }
 }
 
-class PaddingTop extends StatelessWidget {
-  final Widget child;
-  final bool withHorizontal;
-
-  const PaddingTop({
-    Key? key,
-    required this.child,
-    this.withHorizontal = true,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    if (height >= heightBig) {
-      return Padding(
-        child: child,
-        padding: withHorizontal
-            ? const EdgeInsets.only(top: 40, left: 20, right: 20)
-            : const EdgeInsets.only(top: 40),
-      );
-    }
-    if (height >= heightMedium) {
-      return Padding(
-        child: child,
-        padding: withHorizontal
-            ? const EdgeInsets.only(top: 20, left: 20, right: 20)
-            : paddingTop20,
-      );
-    }
-    if (height >= heightSmall) {
-      return Padding(
-        child: child,
-        padding: withHorizontal
-            ? const EdgeInsets.only(top: 10, left: 20, right: 20)
-            : paddingTop10,
-      );
-    }
-    return withHorizontal
-        ? Padding(
-            padding: paddingH20,
-            child: child,
-          )
-        : child;
-  }
-}
-
 class InfoPanel extends StatelessWidget {
   final String? text;
   final Widget? child;
@@ -355,5 +309,97 @@ class InfoPanel extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class PaddingTop extends StatelessWidget {
+  final Widget child;
+  final bool withHorizontal;
+
+  const PaddingTop({
+    Key? key,
+    required this.child,
+    this.withHorizontal = true,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    if (height >= heightBig) {
+      return Padding(
+        child: child,
+        padding: withHorizontal
+            ? const EdgeInsets.only(top: 40, left: 20, right: 20)
+            : const EdgeInsets.only(top: 40),
+      );
+    }
+    if (height >= heightMedium) {
+      return Padding(
+        child: child,
+        padding: withHorizontal
+            ? const EdgeInsets.only(top: 20, left: 20, right: 20)
+            : paddingTop20,
+      );
+    }
+    if (height >= heightSmall) {
+      return Padding(
+        child: child,
+        padding: withHorizontal
+            ? const EdgeInsets.only(top: 10, left: 20, right: 20)
+            : paddingTop10,
+      );
+    }
+    return withHorizontal
+        ? Padding(
+            padding: paddingH20,
+            child: child,
+          )
+        : child;
+  }
+}
+
+class PaddingBottom extends StatelessWidget {
+  final Widget child;
+  final bool withHorizontal;
+
+  const PaddingBottom({
+    Key? key,
+    required this.child,
+    this.withHorizontal = true,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    if (height >= heightBig) {
+      return Padding(
+        child: child,
+        padding: withHorizontal
+            ? const EdgeInsets.only(bottom: 40, left: 20, right: 20)
+            : const EdgeInsets.only(bottom: 40),
+      );
+    }
+    if (height >= heightMedium) {
+      return Padding(
+        child: child,
+        padding: withHorizontal
+            ? const EdgeInsets.only(bottom: 20, left: 20, right: 20)
+            : paddingTop20,
+      );
+    }
+    if (height >= heightSmall) {
+      return Padding(
+        child: child,
+        padding: withHorizontal
+            ? const EdgeInsets.only(bottom: 10, left: 20, right: 20)
+            : paddingTop10,
+      );
+    }
+    return withHorizontal
+        ? Padding(
+            padding: paddingH20,
+            child: child,
+          )
+        : child;
   }
 }
