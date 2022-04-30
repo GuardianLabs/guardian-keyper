@@ -13,7 +13,6 @@ class SettingsController with ChangeNotifier {
 
   String _deviceName = '';
   String _pinCode = '';
-  bool _isLocked = true;
 
   SettingsController({
     required SettingsService settingsService,
@@ -24,12 +23,6 @@ class SettingsController with ChangeNotifier {
 
   String get deviceName => _deviceName;
   String get pinCode => _pinCode;
-  bool get isLocked => _isLocked;
-
-  set isLocked(bool value) {
-    _isLocked = value;
-    notifyListeners();
-  }
 
   Future<void> setDeviceName(String deviceName) async {
     _deviceName = deviceName;
@@ -52,7 +45,6 @@ class SettingsController with ChangeNotifier {
     final settings = await _settingsService.load();
     _deviceName = settings.deviceName;
     _pinCode = settings.pinCode;
-    _isLocked = _pinCode.isNotEmpty;
     notifyListeners();
   }
 
