@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '/src/core/theme_data.dart';
 import '/src/core/widgets/common.dart';
@@ -22,11 +23,13 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
   void initState() {
     super.initState();
     context.read<AddSecretController>().distributeShards();
+    Wakelock.enable();
   }
 
   @override
   void dispose() {
     context.read<AddSecretController>().timer?.cancel();
+    Wakelock.disable();
     super.dispose();
   }
 
