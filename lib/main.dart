@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart' hide Router;
+import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -20,6 +21,7 @@ import 'src/guardian/guardian_controller.dart';
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   final deviceAddress = await NetworkInfo().getWifiIP();
   String? deviceName;
