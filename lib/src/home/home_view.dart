@@ -41,6 +41,9 @@ class _HomeViewState extends State<HomeView> {
             correctString: settings.pinCode,
             canCancel: false,
             digits: 6,
+            secretsConfig: SettingsView.secretsConfig,
+            inputButtonConfig:
+                InputButtonConfig(buttonStyle: buttonStylePincode),
           ));
     }
     super.initState();

@@ -110,6 +110,10 @@ final buttonStyleDestructive = ButtonStyle(
   textStyle: MaterialStateProperty.all<TextStyle>(textStylePoppinsBold16),
 );
 
+final buttonStylePincode = ButtonStyle(
+  backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+);
+
 final themeLight = ThemeData.light();
 
 final themeDark = ThemeData.dark().copyWith(
