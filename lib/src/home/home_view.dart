@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 
 import '/src/core/theme_data.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/settings/settings_view.dart';
 import '/src/recovery_group/create_group/create_group_view.dart';
 import '/src/recovery_group/recovery_group_controller.dart';
-// import '/src/settings/settings_controller.dart';
+import '/src/settings/settings_controller.dart';
 
 import 'pages/dashboard_page.dart';
 import 'pages/recovery_groups_page.dart';
 import 'pages/notifications_page.dart';
-// import 'pages/login_page.dart';
 
 class HomeView extends StatefulWidget {
   static const routeName = '/';
@@ -33,11 +33,22 @@ class _HomeViewState extends State<HomeView> {
   int _page = 0;
 
   @override
+  void initState() {
+    final settings = context.read<SettingsController>();
+    if (settings.pinCode.isNotEmpty) {
+      Future.microtask(() async => screenLock(
+            context: context,
+            correctString: settings.pinCode,
+            canCancel: false,
+            digits: 6,
+          ));
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // final settingsController = Provider.of<SettingsController>(context);
-    // if (settingsController.isLocked) return const LoginPage();
-
     final groupController = Provider.of<RecoveryGroupController>(context);
     groupController.runtimeType;
     return Scaffold(
