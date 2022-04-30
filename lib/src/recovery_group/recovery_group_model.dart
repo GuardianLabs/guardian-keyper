@@ -72,7 +72,7 @@ class RecoveryGroupModel extends Equatable {
     if (guardians.containsKey(guardian.name)) {
       throw RecoveryGroupGuardianAlreadyExists();
     }
-    if (isCompleted || guardians.length >= maxSize) {
+    if (guardians.length >= maxSize) {
       throw RecoveryGroupGuardianLimitexhausted();
     }
     return RecoveryGroupModel(

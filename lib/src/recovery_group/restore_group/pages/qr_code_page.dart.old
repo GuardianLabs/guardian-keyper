@@ -1,0 +1,85 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+
+import '/src/core/theme_data.dart';
+import '/src/core/widgets/common.dart';
+
+// import '../restore_group_controller.dart';
+import '../../recovery_group_controller.dart';
+
+class QRCodePage extends StatelessWidget {
+  const QRCodePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Provider.of<RecoveryGroupController>(context);
+    // final state = Provider.of<RestoreGroupController>(context);
+    final height = MediaQuery.of(context).size.height;
+    final size = height > heightBig ? height / 3 : height / 2;
+    // final recoveryGroup = controller.groups[state.groupName];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // Header
+        const HeaderBar(
+          caption: 'My QR Code',
+          closeButton: HeaderBarCloseButton(),
+        ),
+        // Body
+        Expanded(
+          child: ListView(
+            primary: true,
+            shrinkWrap: true,
+            children: [
+              //QRCode
+              SizedBox(
+                height: size,
+                width: size,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: QrImage(
+                    data: controller.getQRCode().toString(),
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ),
+              // Text
+              PaddingTop(
+                child: Text('Please show this QR code to\nyour Guardians',
+                    style: textStyleSourceSansProBold16,
+                    textAlign: TextAlign.center),
+              ),
+              // if (state.groupName != null)
+              //   Padding(
+              //     padding: paddingAll20,
+              //     child: Text(
+              //       state.groupName!,
+              //       textAlign: TextAlign.center,
+              //     ),
+              //   ),
+              // if (recoveryGroup != null)
+              //   Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       for (var i = 0; i < recoveryGroup.size; i++)
+              //         Padding(
+              //           padding: const EdgeInsets.all(5),
+              //           child: CircleAvatar(
+              //             foregroundColor: clWhite,
+              //             backgroundColor: recoveryGroup.guardians.length > i
+              //                 ? clGreen
+              //                 : clIndigo500,
+              //             child: const Icon(Icons.health_and_safety_outlined),
+              //           ),
+              //         ),
+              //     ],
+              //   ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

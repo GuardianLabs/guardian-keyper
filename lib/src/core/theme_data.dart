@@ -98,6 +98,7 @@ final textStyleLinkSmall = GoogleFonts.spaceGrotesk(
 
 final buttonStyleSecondary = ButtonStyle(
   fixedSize: _fixedSizeHeight48,
+  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(paddingAll8),
   textStyle: MaterialStateProperty.all<TextStyle>(textStylePoppinsBold16),
 );
 
@@ -107,6 +108,10 @@ final buttonStyleDestructive = ButtonStyle(
   foregroundColor: MaterialStateProperty.all<Color>(const Color(0xFFEC5F59)),
   shape: _buttonShape,
   textStyle: MaterialStateProperty.all<TextStyle>(textStylePoppinsBold16),
+);
+
+final buttonStylePincode = ButtonStyle(
+  backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
 );
 
 final themeLight = ThemeData.light();

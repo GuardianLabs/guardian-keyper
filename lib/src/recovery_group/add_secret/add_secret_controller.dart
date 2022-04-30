@@ -31,7 +31,7 @@ class AddSecretController with ChangeNotifier, PagesController {
           if (shards.isEmpty) {
             await recoveryGroupController.addSecret(
               groupName,
-              RecoveryGroupSecretModel(name: 'TheOne', token: secret),
+              RecoveryGroupSecretModel(name: groupName, token: secret),
             );
             timer?.cancel();
           }

@@ -128,6 +128,11 @@ class IconOf extends StatelessWidget {
       : icon = 'assets/icons/notitications_v1.svg',
         super(key: key);
 
+  const IconOf.share(
+      {Key? key, this.radius, this.color, this.bgColor, this.size, this.bage})
+      : icon = 'assets/icons/share_v1.svg',
+        super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final dSize = size ?? IconTheme.of(context).size ?? 40;
