@@ -80,6 +80,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
         name: secretShard.groupName,
         type: RecoveryGroupType.devices,
         isRestoring: true,
+        fixedSize: secretShard.groupSize,
         guardians: {guardian.name: guardian},
         secrets: {secret.name: secret},
       );

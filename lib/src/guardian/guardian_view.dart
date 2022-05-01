@@ -12,7 +12,8 @@ class GuardianView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shards = Provider.of<GuardianController>(context).secretShards;
+    final controller = Provider.of<GuardianController>(context);
+    final shards = controller.secretShards;
     return shards.isEmpty
         ? Column(
             mainAxisSize: MainAxisSize.min,

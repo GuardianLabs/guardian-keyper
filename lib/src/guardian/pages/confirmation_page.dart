@@ -98,7 +98,7 @@ class ConfirmationPage extends StatelessWidget {
                         text: qrCode.peerName,
                         style: textStyleSourceSansProBold16,
                       ),
-                      const TextSpan(text: 'will become a new owner of '),
+                      const TextSpan(text: ' will become a new owner of '),
                       TextSpan(
                         text: secretShard.groupName,
                         style: textStyleSourceSansProBold16,
@@ -129,9 +129,8 @@ class ConfirmationPage extends StatelessWidget {
                   onPressed: () async {
                     await controller.sendTakeOwnershipRequest(
                         qrCode, secretShard);
-                    await controller.changeOwnership(
-                        secretShard, qrCode.pubKey, qrCode.peerName);
-                    Navigator.of(context).pop();
+                    await controller.changeOwnership(qrCode, secretShard);
+                    Navigator.of(context).popUntil(ModalRoute.withName('/'));
                   },
                 ),
               ),
