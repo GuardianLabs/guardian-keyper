@@ -72,6 +72,7 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
       pubKey: peerPubKey,
       signPubKey: peerPubKey,
     );
+    var status = MessageStatus.success;
 
     if (group == null) {
       final secret = RecoveryGroupSecretModel(name: secretShard.groupName);
@@ -84,10 +85,15 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
         guardians: {guardian.name: guardian},
         secrets: {secret.name: secret},
       );
+      await _save();
     } else {
-      if (!group.isRestoring) p2pNetwork.addError(RecoveryGroupAlreadyExists());
-      if (group.isCompleted) p2pNetwork.addError(RecoveryGroupIsFull());
-      _groups[group.name] = group.addGuardian(guardian);
+      if (group.isRestoring) {
+        _groups[group.name] = group.addGuardian(guardian);
+        await _save();
+      } else {
+        p2pNetwork.addError(RecoveryGroupAlreadyExists());
+        status = MessageStatus.reject;
+      }
     }
     await router
         .sendTo(
@@ -95,13 +101,12 @@ class RecoveryGroupController extends TopicHandler with ChangeNotifier {
           peerPubKey,
           P2PPacket(
             type: MessageType.takeOwnership,
-            status: MessageStatus.success,
+            status: status,
             body: secretShard.groupId,
           ).toCbor(),
           true,
         )
         .onError(p2pNetwork.addError);
-    notifyListeners();
   }
 
   Future<void> sendAuthRequest(QRCode guardianQRCode) async {
