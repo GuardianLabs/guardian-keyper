@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../theme_data.dart';
 import '../widgets/common.dart';
 import '../widgets/icon_of.dart';
 
-class QRCodePage extends StatelessWidget {
+class QRCodePage extends StatefulWidget {
   final String qrCode;
   final Widget? child;
 
@@ -14,6 +15,23 @@ class QRCodePage extends StatelessWidget {
     required this.qrCode,
     this.child,
   }) : super(key: key);
+
+  @override
+  State<QRCodePage> createState() => _QRCodePageState();
+}
+
+class _QRCodePageState extends State<QRCodePage> {
+  @override
+  void initState() {
+    super.initState();
+    Wakelock.enable();
+  }
+
+  @override
+  void dispose() {
+    Wakelock.disable();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +54,10 @@ class QRCodePage extends StatelessWidget {
             alignment: Alignment.center,
             height: size,
             width: size,
-            child: QrImage(foregroundColor: Colors.white, data: qrCode),
+            child: QrImage(foregroundColor: Colors.white, data: widget.qrCode),
           ),
         ),
-        if (child != null) PaddingTop(child: child!),
+        if (widget.child != null) PaddingTop(child: widget.child!),
         Expanded(child: Container()),
         Padding(
           padding: paddingBottom20,

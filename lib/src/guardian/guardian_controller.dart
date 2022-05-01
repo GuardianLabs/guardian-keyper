@@ -165,7 +165,9 @@ class GuardianController extends TopicHandler
             body: SecretShardPacket(
               groupId: secretShard.groupId,
               groupName: secretShard.groupName,
-              ownerName: secretShard.ownerName,
+              // ownerName: guardianQRCode.peerName,
+              // ownerName: secretShard.ownerName,
+              ownerName: _deviceName, // this is guardianName in real
               groupSize: secretShard.groupSize,
               groupThreshold: secretShard.groupThreshold,
               secretShard: Uint8List(0),
@@ -183,13 +185,14 @@ class GuardianController extends TopicHandler
   }
 
   Future<void> changeOwnership(
+    QRCode qrCode,
     SecretShard secretShard,
-    Uint8List peerPubKey,
-    String ownerName,
+    // Uint8List peerPubKey,
+    // String ownerName,
   ) async {
     final updatedSecretShard = SecretShard(
-      owner: peerPubKey,
-      ownerName: ownerName,
+      owner: qrCode.pubKey,
+      ownerName: qrCode.peerName,
       groupId: secretShard.groupId,
       groupName: secretShard.groupName,
       groupSize: secretShard.groupSize,

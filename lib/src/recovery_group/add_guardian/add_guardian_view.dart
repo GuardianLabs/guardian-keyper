@@ -10,18 +10,6 @@ import 'pages/add_tag_page.dart';
 import 'pages/guardian_added_page.dart';
 
 class AddGuardianView extends StatelessWidget {
-  const AddGuardianView({
-    Key? key,
-    this.showLastPage = false,
-    required this.groupName,
-  }) : super(key: key);
-
-  const AddGuardianView.showLastPage({
-    Key? key,
-    this.showLastPage = true,
-    required this.groupName,
-  }) : super(key: key);
-
   static const routeName = '/recovery_group_add_guardian';
   static const routeNameShowLastPage =
       '/recovery_group_add_guardian?showLastPage';
@@ -36,6 +24,18 @@ class AddGuardianView extends StatelessWidget {
 
   final bool showLastPage;
   final String groupName;
+
+  const AddGuardianView({
+    Key? key,
+    this.showLastPage = false,
+    required this.groupName,
+  }) : super(key: key);
+
+  const AddGuardianView.showLastPage({
+    Key? key,
+    this.showLastPage = true,
+    required this.groupName,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

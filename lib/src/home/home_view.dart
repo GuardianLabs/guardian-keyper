@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 
 import '/src/core/theme_data.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/settings/settings_view.dart';
 import '/src/recovery_group/create_group/create_group_view.dart';
 import '/src/recovery_group/recovery_group_controller.dart';
+import '/src/settings/widgets/set_pincode_widget.dart';
 import '/src/settings/settings_controller.dart';
 
 import 'pages/dashboard_page.dart';
@@ -35,17 +35,12 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     final settings = context.read<SettingsController>();
-    if (settings.pinCode.isNotEmpty) {
-      Future.microtask(() async => screenLock(
-            context: context,
-            correctString: settings.pinCode,
+    Future.microtask(() async => settings.pinCode.isEmpty
+        ? const SetPinCodeWidget().enterNewPincode(context)
+        : const SetPinCodeWidget().enterCurrentPincode(
+            context,
             canCancel: false,
-            digits: 6,
-            secretsConfig: SettingsView.secretsConfig,
-            inputButtonConfig:
-                InputButtonConfig(buttonStyle: buttonStylePincode),
           ));
-    }
     super.initState();
   }
 

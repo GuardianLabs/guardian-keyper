@@ -22,6 +22,7 @@ class RecoveryGroupModel extends Equatable {
   final String name;
   final RecoveryGroupType type;
   final bool isRestoring;
+  final int? fixedSize;
   final Map<String, RecoveryGroupGuardianModel> guardians;
   final Map<String, RecoveryGroupSecretModel> secrets;
 
@@ -30,6 +31,7 @@ class RecoveryGroupModel extends Equatable {
     required this.name,
     this.type = RecoveryGroupType.devices,
     this.isRestoring = false,
+    this.fixedSize,
     this.secrets = const {},
     this.guardians = const {},
   }) : assert(name != '');
@@ -52,7 +54,8 @@ class RecoveryGroupModel extends Equatable {
       id: GroupID(base64Decode(json['id'])),
       name: json['name'],
       type: RecoveryGroupType.values.byName(json['type']),
-      isRestoring: json['isRestoring'],
+      isRestoring: json['is_restoring'] ?? false,
+      fixedSize: json['fixed_size'],
       secrets: secretsMap.cast<String, RecoveryGroupSecretModel>(),
       guardians: guardiansMap.cast<String, RecoveryGroupGuardianModel>(),
     );
@@ -63,23 +66,30 @@ class RecoveryGroupModel extends Equatable {
         'id': base64Encode(id.data),
         'name': name,
         'type': type.name,
-        'isRestoring': isRestoring,
+        'is_restoring': isRestoring,
+        'fixed_size': fixedSize,
         'secrets': secrets,
         'guardians': guardians,
       };
 
   RecoveryGroupModel addGuardian(RecoveryGroupGuardianModel guardian) {
+    bool _isRestoring = isRestoring;
+    if (isRestoring) {
+      if (fixedSize == null) throw Exception('Size should be fixed!');
+      if (guardians.length == fixedSize) _isRestoring = false;
+    }
     if (guardians.containsKey(guardian.name)) {
       throw RecoveryGroupGuardianAlreadyExists();
     }
-    if (guardians.length >= maxSize) {
+    if (guardians.length >= (fixedSize ?? maxSize)) {
       throw RecoveryGroupGuardianLimitexhausted();
     }
     return RecoveryGroupModel(
       id: id,
       name: name,
       type: type,
-      isRestoring: isRestoring,
+      isRestoring: _isRestoring,
+      fixedSize: fixedSize,
       secrets: secrets,
       guardians: {...guardians, guardian.name: guardian},
     );
@@ -94,14 +104,16 @@ class RecoveryGroupModel extends Equatable {
       name: name,
       type: type,
       isRestoring: isRestoring,
+      fixedSize: guardians.length,
       secrets: {...secrets, secret.name: secret},
       guardians: guardians,
     );
   }
 
-  int get size => guardians.length;
+  int get size => fixedSize ?? guardians.length;
 
-  int get threshold => guardians.length == maxSize ? 3 : 2;
+  // int get threshold => guardians.length == maxSize ? 3 : 2;
+  int get threshold => 2; // for test purposes
 
   bool get isCompleted => secrets.isNotEmpty;
 
