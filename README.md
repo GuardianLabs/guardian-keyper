@@ -11,7 +11,8 @@
 ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=flat&logo=Flutter&logoColor=white)
 <br />
 ![Lines of code](https://img.shields.io/tokei/lines/github/GuardianLabs/guardian-keyper?style=flat)
-
+<br />
+<a href="https://play.google.com/store/apps/details?id=com.guardianlabs.keyper"><img alt="Get it on Google Play" src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white"/></a>
 
 
 
@@ -26,13 +27,6 @@
 
   <p align="center">
     Guardian Keyper is a P2P app for backing up secrets by splitting them between multiple friends.
-    <br />
-     <a href="https://play.google.com/store/apps/details?id=com.guardianlabs.keyper"><img alt="Get it on Google Play" src="https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white"/></a>
-
-| Android | Android (F-Droid) | iOS |
-|:-:|:-:|:-:|
-| [<img src="resources/img/google-play-badge.png" height="50">](https://play.google.com/store/apps/details?id=org.jitsi.meet) | [<img src="resources/img/f-droid-badge.png" height="50">](https://f-droid.org/en/packages/org.jitsi.meet/) | [<img src="resources/img/appstore-badge.png" height="50">](https://itunes.apple.com/us/app/jitsi-meet/id1165103905) |
-
   </p>
 </div>
 
