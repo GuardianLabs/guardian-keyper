@@ -41,6 +41,10 @@
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#key-features">Key features</a></li>
+      </ul>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -49,60 +53,58 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contacts">Contacts</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
-
-
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-TBD
+Guardian Keyper is an open source project that was created to solve the problem of seed phrase security. The existing options for storing and moving your digital assets do not provide a sufficient level of security: the entire portfolio of digital assets could be permanently and irrevocably lost if your seed phrase is misplaced, stolen or hacked.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- USAGE -->
+### Usage
+TBD Место для гифки. Показываем запуск-создание группы-добавление гварда-добавление секретной фразы. https://i.imgur.com/ptY5Xqa.png – вот на это можно опереться, тут: https://myguardian.network/
+
+Install the app, create a group to store the secret, add other Guardians to it – devices whose owners you trust – and add your secret. The secret is encrypted and sharded to military grade standards and then wiped out from your phone before you put it back online. It’s sent out to your Guardians in shards – each shard is useless – even if it were intercepted your seed phrase is secure.
+
+> **Note:**  putting your phone in airplane mode before typing the seed phrase into the secure entry window, you ensure that your device is offline and the seed phrase cannot be seen or spied on electronically.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- KEY FEATURES -->
+### Key features
+<details><summary>Decentralization</summary>The shards of the secret phrase are stored on several independent devices and are useless on their own. Even if someone gains unplanned access to one of them, the owner's digital assets will remain safe.</details>
+<details><summary>Strong data protection</summary>Guardian’s Mesh Network uses public and private key pairs much like a blockchain, and does so to the highest encryption and security standards – so it’s fully encrypted end-to-end.  And if that’s not enough, it’s sharded as well.
+
+We use the latest, and most cutting edge version of these technologies.  Things like : 
+ - PGP style asymmetric public-key-based cryptography;
+ - NAT puncturing;
+ - Perfect Forward Secrecy (PFS) schemes, like those used in Signal, WhatsApp and Telegram.</details>
+<details><summary>Versatility</summary>Guardian Keyper suitable for use with any password, seed phrase or other information that you want to keep secret.</details>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
-
-TBD
+You can build Guardian Keyper from source code. Installation instructions are given for the Linux; for Windows and MacOS, follow the same steps in the context of your operating system.
 
 ### Prerequisites
+Check the requirements first:
+TBD:  Список требований. Пара слов про p2plib и линк на неё
 
-TBD
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Installation
-
-TBD
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-TBD
+Шаг за шагом, без скринов пока, просто текстом с форматированием – как у https://milvus.io/docs/v2.0.x/install_standalone-docker.md
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-TBD
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -123,15 +125,12 @@ Note that Guardian Labs requires every contributor to sign the Contributor Licen
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- LICENSE -->
 ## License
 
 Guardian Keyper is distributed under GPLv3 License with special permission to use MPL for AppStore publication. See `LICENSE` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- CONTACTS -->
 ## Contacts
