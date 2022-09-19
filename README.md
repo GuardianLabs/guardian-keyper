@@ -145,7 +145,8 @@ Don't forget to give the project a star! Thanks again!
 5. Open a Pull Request
 6. If you have never committed to this repository before, accept our Contributor License Agreement (served by `cla-bot`)
 
-Note that Guardian Labs requires every contributor to sign the Contributor License Agreement to facilitate publishing Guardian Keyper to GPL-incompatible app repositories, such as the AppStore. See `CLA.md` for details.
+Note that Guardian Labs requires every contributor to sign the Contributor License Agreement to facilitate publishing Guardian Keyper to GPL-incompatible app repositories, such as the AppStore. You can do it electronically during filing a pull request into this repository. See [`CLA_instructions.md`](https://github.com/GuardianLabs/keyper-cla-signatures/blob/main/CLA_instructions.md) for details.
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
