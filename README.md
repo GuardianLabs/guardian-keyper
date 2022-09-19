@@ -102,7 +102,30 @@ TBD:  Список требований. Пара слов про p2plib и ли
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Installation
-Шаг за шагом, без скринов пока, просто текстом с форматированием – как у https://milvus.io/docs/v2.0.x/install_standalone-docker.md
+
+Сlone the project:
+```sh
+git clone git@github.com:GuardianLabs/guardian-keyper.git
+```
+Guardian Keyper requires [__Flutter__](https://docs.flutter.dev/get-started/install) to run. Use this guide to make sure the installation is correct. 
+For checking all SDK dependencies, use:
+```sh
+flutter doctor
+```
+Go to your project folder and get *project* dependencies:
+```sh
+flutter pub get
+```
+If there are no errors, you can build the project with the following command:
+```sh
+flutter build apk --debug
+```
+Also, you can start building and run on the android-simulator:
+```sh
+flutter emulator --launch <Your Emulator ID>
+flutter run --debug
+```
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
