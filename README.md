@@ -107,12 +107,12 @@ TBD:  Список требований. Пара слов про p2plib и ли
 ```sh
 git clone git@github.com:GuardianLabs/guardian-keyper.git
 ```
-Guardian Keyper requires [__Flutter__](https://docs.flutter.dev/get-started/install) to run. Use this guide to make sure the installation is correct. 
+Guardian Keyper requires Flutter to run. Use [__this guide__](https://docs.flutter.dev/get-started/install) to make sure the installation is correct. 
 For checking all SDK dependencies, use:
 ```sh
 flutter doctor
 ```
-Go to your project folder and get *project* dependencies:
+Go to your project folder and get project dependencies:
 ```sh
 flutter pub get
 ```
