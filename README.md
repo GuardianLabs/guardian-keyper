@@ -29,7 +29,7 @@
   <h3 align="center">Guardian Keyper</h3>
 
   <p align="center">
-    Guardian Keyper is a P2P app for backing up secrets by splitting them between multiple friends.
+    Guardian Keyper is a P2P app for backing up secrets by splitting them between multiple devices.
   </p>
 </div>
 
@@ -61,7 +61,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Guardian Keyper is an open source project that was created to solve the problem of seed phrase security. The existing options for storing and moving your digital assets do not provide a sufficient level of security: the entire portfolio of digital assets could be permanently and irrevocably lost if your seed phrase is misplaced, stolen or hacked.
+Guardian Keyper is a mobile app for solving the problem of securely storing seed phrases and secrets. With Keyper, the user can designate several devices (e.g. his friends or family's phones) as her personal "Guardians". After that, the user can back up a seed phrase by splitting it into several Shards and sending those to the Guardians. Every shard by itself is useless: to reassemble the secret, one needs to collect a certain majority (e.g. 3 out of 5) of shards of the secret.
+
+The general idea of Keyper is that to secure the most precious information we possess - our seed phrases - we should employ the power of our social connections.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -74,28 +76,22 @@ Guardian Keyper is an open source project that was created to solve the problem 
 
 </p>
 
-Install the app, create a group to store the secret, add other Guardians to it – devices whose owners you trust – and add your secret. The secret is encrypted and sharded to military grade standards and then wiped out from your phone before you put it back online. It’s sent out to your Guardians in shards – each shard is useless – even if it were intercepted your seed phrase is secure.
-
-> **Note:**  putting your phone in airplane mode before typing the seed phrase into the secure entry window, you ensure that your device is offline and the seed phrase cannot be seen or spied on electronically.
+Install the app, create a group to store the secret, add other Guardians to it – devices whose owners you trust – and add your secret. As soon as you enter the secret, it is immediately sharded, the shards are encrypted by your Guardians' public keys and the original secret is deleted from memory. The original secret is never stored in the non-volatile memory of your device. The shards are then sent to your Guardians. Each shard is useless on its own: depending on your choice, one will require either 2 out of 3, or 3 out of 5 secret shards to restore the secret - approved by the corresponding Guardianss. No Keyper data ever goes through the network unencrypted, and nothing is stored on a server: the app is completely peer-to-peer and is designed to work without Internet access (e.g. in an isolated WiFi network).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- KEY FEATURES -->
 ### Key features
-<details><summary>Decentralization</summary>The shards of the secret phrase are stored on several independent devices and are useless on their own. Even if someone gains unplanned access to one of them, the owner's digital assets will remain safe.</details>
-<details><summary>Strong data protection</summary>Guardian’s Mesh Network uses public and private key pairs much like a blockchain, and does so to the highest encryption and security standards – so it’s fully encrypted end-to-end.  And if that’s not enough, it’s sharded as well.
+<details><summary>Decentralization</summary>The shards of the secret phrase are stored on several independent devices and are useless on their own. Even if someone gains unplanned access to one of them, the owner's digital assets will remain safe. The only kind of server we use is the bootstrap server for NAT puncturing. And even that is completely unnecessary - Keyper instances can communicate without Internet access in a WiFi LAN by utilising broadcast packets (mDNS protocol).</details>
+<details><summary>Strong data protection</summary>Keyper uses industry-standard asymmetric public-key cryptography PGP-style – so it’s fully P2P and encrypted end-to-end. The complete secret is never stored on a device, while the shards are stored in the device's protected storage.
 
-We use the latest, and most cutting edge version of these technologies.  Things like : 
- - PGP style asymmetric public-key-based cryptography;
- - NAT puncturing;
- - Perfect Forward Secrecy (PFS) schemes, like those used in Signal, WhatsApp and Telegram.</details>
-<details><summary>Versatility</summary>Guardian Keyper suitable for use with any password, seed phrase or other information that you want to keep secret.</details>
+<details><summary>Versatility</summary>Guardian Keyper is suitable for use with any password, seed phrase or other information that you want to keep secret.</details>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
-You can build Guardian Keyper from source code. Installation instructions are given for the Linux; for Windows and MacOS, follow the same steps in the context of your operating system.
+You can build Guardian Keyper from source code. Installation instructions are given for Linux; for Windows and macOS, follow the same steps in the context of your operating system.
 
 ### Installation
 
@@ -116,7 +112,7 @@ If there are no issues, you can build the project with the following command:
 ```sh
 flutter build apk --debug
 ```
-Also, you can start building and run on the android-simulator:
+Also, you can use android-simulator:
 ```sh
 flutter emulator --launch <Your Emulator ID>
 flutter run --debug
@@ -138,7 +134,7 @@ Don't forget to give the project a star! Thanks again!
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-6. If you never committed to this repository before, accept our Contributor License Agreement (served by `cla-bot`)
+6. If you have never committed to this repository before, accept our Contributor License Agreement (served by `cla-bot`)
 
 Note that Guardian Labs requires every contributor to sign the Contributor License Agreement to facilitate publishing Guardian Keyper to GPL-incompatible app repositories, such as the AppStore. See `CLA.md` for details.
 
@@ -160,7 +156,3 @@ Guardian Keyper is distributed under GPLv3 License with special permission to us
 * [![](https://dcbadge.vercel.app/api/server/keyper?style=flat)](https://discord.gg/keyper)
 * Email: Keyper.support@guardianlabs.org
 * [![Telegram Group](https://img.shields.io/endpoint?color=neon&style=flat&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fguardian_keyper_support)](https://telegram.dog/guardian_keyper_support)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
