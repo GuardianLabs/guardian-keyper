@@ -61,9 +61,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Guardian Keyper is a mobile app for solving the problem of securely storing seed phrases and secrets. With Keyper, the user can designate several devices (e.g. his friends or family's phones) as her personal "Guardians". After that, the user can back up a seed phrase by splitting it into several Shards and sending those to the Guardians. Every shard by itself is useless: to reassemble the secret, one needs to collect a certain majority (e.g. 3 out of 5) of shards of the secret.
+Guardian Keyper is a mobile app for securely backing up seed phrases and secrets. The user can choose several devices (e.g. his friends or family's phones) as her personal "Guardians". After that, the user can back up a seed phrase by splitting it into several Shards and sending those to the designated Guardians. Every shard by itself is useless: to reassemble the secret, one needs to collect a certain majority of the shards (e.g. 3 out of 5).
 
-The general idea of Keyper is that to secure the most precious information we possess - our seed phrases - we should employ the power of our social connections.
+The general idea of Keyper is: to secure the most precious information we possess - our seed phrases - we should employ the power of our social connections.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -76,14 +76,23 @@ The general idea of Keyper is that to secure the most precious information we po
 
 </p>
 
-Install the app, create a group to store the secret, add other Guardians to it – devices whose owners you trust – and add your secret. As soon as you enter the secret, it is immediately sharded, the shards are encrypted by your Guardians' public keys and the original secret is deleted from memory. The original secret is never stored in the non-volatile memory of your device. The shards are then sent to your Guardians. Each shard is useless on its own: depending on your choice, one will require either 2 out of 3, or 3 out of 5 secret shards to restore the secret - approved by the corresponding Guardianss. No Keyper data ever goes through the network unencrypted, and nothing is stored on a server: the app is completely peer-to-peer and is designed to work without Internet access (e.g. in an isolated WiFi network).
+1. Install the app to your device, and devices of your Guardians
+2. Create a group to store the secret
+3. Add Guardians (trusted devices) to the group by scanning their single-use QR codes, or getting single-use invite messages from them
+4. Add your secret.
+5. Send the secret shards to your Guardians. Note that due to the P2P nature of Keyper, the Guardian you're sending the shard to must be online simultaneously with you.
+
+
+As soon as you enter the secret, it is immediately sharded, the shards are encrypted by your Guardians' public keys and the original secret is deleted from memory. The original secret is never stored in the non-volatile memory of your device. The shards are then sent to your Guardians. Each shard is useless on its own: depending on your choice, one will require either 2 out of 3, or 3 out of 5 secret shards to restore the secret - approved by the corresponding Guardianss. No Keyper data ever goes through the network unencrypted, and nothing is stored on a server: the app is completely peer-to-peer and is designed to work without Internet access (e.g. in an isolated WiFi network).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- KEY FEATURES -->
 ### Key features
 <details><summary>Decentralization</summary>The shards of the secret phrase are stored on several independent devices and are useless on their own. Even if someone gains unplanned access to one of them, the owner's digital assets will remain safe. The only kind of server we use is the bootstrap server for NAT puncturing. And even that is completely unnecessary - Keyper instances can communicate without Internet access in a WiFi LAN by utilising broadcast packets (mDNS protocol).</details>
-<details><summary>Strong data protection</summary>Keyper uses industry-standard asymmetric public-key cryptography PGP-style – so it’s fully P2P and encrypted end-to-end. The complete secret is never stored on a device, while the shards are stored in the device's protected storage.
+
+
+<details><summary>Strong data protection</summary>Keyper uses industry-standard asymmetric public-key cryptography PGP-style – so it’s fully P2P and encrypted end-to-end. The complete secret is never stored on a device, while the shards are stored in the device's protected storage.</details>
 
 <details><summary>Versatility</summary>Guardian Keyper is suitable for use with any password, seed phrase or other information that you want to keep secret.</details>
 
