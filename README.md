@@ -159,7 +159,7 @@ Guardian Keyper is distributed under GPLv3 License with special permission to us
 * [Guardian Keyper support page](https://myguardian.network/support/)
 * [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Follow%20%40guardian_labs)](https://twitter.com/guardian_labs)
 * [![](https://dcbadge.vercel.app/api/server/keyper?style=flat)](https://discord.gg/keyper)
-* [Email](mailto:Keyper.support@guardianlabs.org?subject=[GitHub]%20Keyper%20Support)
+* Email: Keyper.support@guardianlabs.org
 * [![Telegram Group](https://img.shields.io/endpoint?color=neon&style=flat&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fguardian_keyper_support)](https://telegram.dog/guardian_keyper_support)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
