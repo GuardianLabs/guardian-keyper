@@ -75,7 +75,7 @@ Guardian Keyper is an open source project that was created to solve the problem 
 
 <p align="center">
 
-  <img width="438" height="882" src="https://github.com/GuardianLabs/guardian-keyper/blob/main/doc/keyper.gif">
+  <img style='height: 600px; width: auto' src="https://github.com/GuardianLabs/guardian-keyper/blob/main/doc/keyper.gif">
 
 </p>
 
