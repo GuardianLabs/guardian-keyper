@@ -70,7 +70,14 @@ Guardian Keyper is an open source project that was created to solve the problem 
 
 <!-- USAGE -->
 ### Usage
-TBD Место для гифки. Показываем запуск-создание группы-добавление гварда-добавление секретной фразы. https://i.imgur.com/ptY5Xqa.png – вот на это можно опереться, тут: https://myguardian.network/
+
+
+
+<p align="center">
+
+  <img width="438" height="882" src="https://github.com/GuardianLabs/guardian-keyper/blob/main/doc/keyper.gif">
+
+</p>
 
 Install the app, create a group to store the secret, add other Guardians to it – devices whose owners you trust – and add your secret. The secret is encrypted and sharded to military grade standards and then wiped out from your phone before you put it back online. It’s sent out to your Guardians in shards – each shard is useless – even if it were intercepted your seed phrase is secure.
 
