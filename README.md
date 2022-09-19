@@ -69,8 +69,6 @@ Guardian Keyper is an open source project that was created to solve the problem 
 <!-- USAGE -->
 ### Usage
 
-
-
 <p align="center">
 
   <img style='height: 600px; width: auto' src="https://github.com/GuardianLabs/guardian-keyper/blob/main/doc/keyper.gif">
@@ -100,12 +98,6 @@ We use the latest, and most cutting edge version of these technologies.  Things 
 ## Getting Started
 You can build Guardian Keyper from source code. Installation instructions are given for the Linux; for Windows and MacOS, follow the same steps in the context of your operating system.
 
-### Prerequisites
-Check the requirements first:
-TBD:  Список требований. Пара слов про p2plib и линк на неё
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ### Installation
 
 Сlone the project:
@@ -121,7 +113,7 @@ Go to your project folder and get project dependencies:
 ```sh
 flutter pub get
 ```
-If there are no errors, you can build the project with the following command:
+If there are no issues, you can build the project with the following command:
 ```sh
 flutter build apk --debug
 ```
@@ -167,7 +159,7 @@ Guardian Keyper is distributed under GPLv3 License with special permission to us
 * [Guardian Keyper support page](https://myguardian.network/support/)
 * [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Follow%20%40guardian_labs)](https://twitter.com/guardian_labs)
 * [![](https://dcbadge.vercel.app/api/server/keyper?style=flat)](https://discord.gg/keyper)
-* [Email Keyper Support](Keyper.support@guardianlabs.org)
+* [Email](mailto:Keyper.support@guardianlabs.org?subject=[GitHub]%20Keyper%20Support)
 * [![Telegram Group](https://img.shields.io/endpoint?color=neon&style=flat&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fguardian_keyper_support)](https://telegram.dog/guardian_keyper_support)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
