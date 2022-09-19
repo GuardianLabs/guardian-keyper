@@ -61,7 +61,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Guardian Keyper is a mobile app for securely backing up seed phrases and secrets. The user can choose several devices (e.g. his friends or family's phones) as her personal "Guardians". After that, the user can back up a seed phrase by splitting it into several Shards and sending those to the designated Guardians. Every shard by itself is useless: to reassemble the secret, one needs to collect a certain majority of the shards (e.g. 3 out of 5).
+Guardian Keyper is a mobile app for securely backing up seed phrases and secrets. The user can choose several devices (e.g. his friends or family's smartphones) as her personal "Guardians". After that, the user can back up a seed phrase by splitting it into several Shards and sending those to the designated Guardians. Then, the user can reassemble the secret, by collecting a certain majority of the shards (e.g. 3 out of 5) from her Guardians.
 
 The general idea of Keyper is: to secure the most precious information we possess - our seed phrases - we should employ the power of our social connections.
 
@@ -76,14 +76,14 @@ The general idea of Keyper is: to secure the most precious information we posses
 
 </p>
 
-1. Install the app to your device, and devices of your Guardians
-2. Create a group to store the secret
-3. Add Guardians (trusted devices) to the group by scanning their single-use QR codes, or getting single-use invite messages from them
+1. Install the app to your device, and devices of your Guardians.
+2. Create a group to store the secret.
+3. Add Guardians (trusted devices) to the group by scanning their single-use QR codes, or getting single-use invite messages from them (PGP-style invites).
 4. Add your secret.
 5. Send the secret shards to your Guardians. Note that due to the P2P nature of Keyper, the Guardian you're sending the shard to must be online simultaneously with you.
 
 
-As soon as you enter the secret, it is immediately sharded, the shards are encrypted by your Guardians' public keys and the original secret is deleted from memory. The original secret is never stored in the non-volatile memory of your device. The shards are then sent to your Guardians. Each shard is useless on its own: depending on your choice, one will require either 2 out of 3, or 3 out of 5 secret shards to restore the secret - approved by the corresponding Guardianss. No Keyper data ever goes through the network unencrypted, and nothing is stored on a server: the app is completely peer-to-peer and is designed to work without Internet access (e.g. in an isolated WiFi network).
+As soon as you enter the secret, it is immediately sharded, the shards are encrypted by the Guardians' public keys and the secret is deleted from memory. The original secret is never stored in the non-volatile memory to protect it from the "stolen phone" problem. The encrypted shards are then ready to be sent to your Guardians - in a direct P2P fashion, avoiding any kind of intermediate server. Each shard is useless on its own: depending on your choice, you will require either 2 out of 3, or 3 out of 5 secret shards to restore the secret - collected from the corresponding number of your Guardians. No Keyper data ever goes through the network unencrypted, and nothing is stored on a server: the app is completely peer-to-peer and is designed to work without Internet access (e.g. in an isolated WiFi network).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
