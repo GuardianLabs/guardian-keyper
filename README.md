@@ -62,8 +62,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 Guardian Keyper is an open source project that was created to solve the problem of seed phrase security. The existing options for storing and moving your digital assets do not provide a sufficient level of security: the entire portfolio of digital assets could be permanently and irrevocably lost if your seed phrase is misplaced, stolen or hacked.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
