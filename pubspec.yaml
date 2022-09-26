@@ -52,7 +52,7 @@ dependencies:
   # P2P networking
   p2plib:
     git:
-      url: "git@github.com:GuardianLabs/p2plib-dart.git"
+      url: "https://github.com/GuardianLabs/p2plib-dart.git"
       ref: "v0.9.2"
 
 dev_dependencies:
