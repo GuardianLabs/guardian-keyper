@@ -121,10 +121,16 @@ If there are no issues, you can build the project with the following command:
 ```sh
 flutter build apk --debug
 ```
+
 Also, you can use android-simulator:
 ```sh
 flutter emulator --launch <Your Emulator ID>
 flutter run --debug
+```
+#### Bootstrap server
+To facilitate p2p connections thorough NAT, Guardian Keyper introduces peers to each other through a bootstrap/proxy server. The markets version uses the bootstrap server that is operated by Guardian Labs. You can start your own bootstrap by downloading the code or a Docker container from the [P2PLib repository](https://github.com/GuardianLabs/p2plib-dart). To set the addresses for the bootstrap server, use compilation-time environment variables:
+```sh
+flutter build apk --dart-define BS_V4=192.168.12.34 --dart-define BS_V6=2001:0db8:85a3:0000:0000:8a2e:0370:7334
 ```
 
 
