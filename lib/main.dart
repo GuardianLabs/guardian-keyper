@@ -1,3 +1,4 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
@@ -32,12 +33,22 @@ Future<void> main() async {
   const bsAddressV6 = bool.hasEnvironment("BS_V6")
       ? String.fromEnvironment("BS_V6", defaultValue: "")
       : null;
+  const amplitudeApiKey = String.fromEnvironment('AMPLITUDE_KEY', defaultValue: "");
+
+  // Create the instance
   await SentryFlutter.init(
     (options) => options
       ..dsn = sentryUrl
       ..tracesSampleRate = 1.0,
     appRunner: () async {
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+      // Amplitude is a singleton
+      final Amplitude analytics = Amplitude.getInstance();
+      analytics.init(amplitudeApiKey);
+      analytics.trackingSessionEvents(true);
+
+      // Enable COPPA privacy guard. This is useful when you choose not to report sensitive user information.
+      analytics.enableCoppaControl();
       runApp(App(
           diContainer: await DIContainer.bootstrap(
         globals: const GlobalsModel(

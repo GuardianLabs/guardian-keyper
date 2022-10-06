@@ -1,3 +1,5 @@
+import 'package:amplitude_flutter/amplitude.dart';
+
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/theme_data.dart';
@@ -9,6 +11,13 @@ import '../create_group/create_group_view.dart';
 
 class ManagedGroupsPage extends StatelessWidget {
   const ManagedGroupsPage({super.key});
+
+  Function() _addGroupLogged(BuildContext context){
+    return((){
+      Amplitude.getInstance().logEvent('Start CreateGroup');
+      Navigator.pushNamed(context, CreateGroupView.routeName);
+      });
+  }
 
   @override
   Widget build(BuildContext context) =>
@@ -38,10 +47,7 @@ class ManagedGroupsPage extends StatelessWidget {
                       padding: paddingV32H20,
                       child: PrimaryButton(
                         text: 'Add new Group',
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          CreateGroupView.routeName,
-                        ),
+                        onPressed: _addGroupLogged(context),
                       ),
                     ),
                   ] else
@@ -58,10 +64,7 @@ class ManagedGroupsPage extends StatelessWidget {
                             padding: paddingV32,
                             child: PrimaryButton(
                               text: 'Add new Group',
-                              onPressed: () => Navigator.pushNamed(
-                                context,
-                                CreateGroupView.routeName,
-                              ),
+                              onPressed: _addGroupLogged(context),
                             ),
                           ),
                         ],

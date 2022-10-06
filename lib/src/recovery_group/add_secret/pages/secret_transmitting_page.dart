@@ -1,3 +1,4 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:wakelock/wakelock.dart';
 
 import '/src/core/di_container.dart';
@@ -111,7 +112,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
             ),
           ),
         ),
-      ).then(Navigator.of(context).pop);
+      ).then((_)=>Amplitude.getInstance().logEvent('Finish CreateGroup')).then(Navigator.of(context).pop);
 
   void _showRejected(MessageModel message) => showModalBottomSheet(
         context: context,
