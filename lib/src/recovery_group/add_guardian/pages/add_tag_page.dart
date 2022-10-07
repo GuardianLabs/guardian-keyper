@@ -1,3 +1,5 @@
+import 'package:amplitude_flutter/amplitude.dart';
+
 import '/src/core/theme_data.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
@@ -70,8 +72,12 @@ class AddTagPage extends StatelessWidget {
                 padding: paddingTop32,
                 child: PrimaryButton(
                   text: 'Continue',
-                  onPressed: () async => Navigator.of(context)
-                      .pop(await controller.addGuardianToGroup()),
+                  onPressed: () => controller.addGuardianToGroup().then(
+                    (_) {
+                      Amplitude.getInstance().logEvent('Finish AddGuardian');
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
               ),
             ],

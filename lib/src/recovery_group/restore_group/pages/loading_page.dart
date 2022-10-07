@@ -1,3 +1,4 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:wakelock/wakelock.dart';
 
 import '/src/core/theme_data.dart';
@@ -75,7 +76,7 @@ class _LoadingPageState extends State<LoadingPage> {
   void _showSuccess(MessageModel message, RecoveryGroupModel group) {
     final controller = context.read<RestoreGroupController>();
     final count = group.maxSize - group.currentSize;
-    count == 0
+    count == 0 // is last Guardian
         ? showModalBottomSheet(
             context: context,
             isDismissible: false,
@@ -93,7 +94,10 @@ class _LoadingPageState extends State<LoadingPage> {
               ],
               footer: PrimaryButton(
                 text: 'Done',
-                onPressed: Navigator.of(context).pop,
+                onPressed: () {
+                  Amplitude.getInstance().logEvent('Finish RestoreGroup');
+                  Navigator.of(context).pop();
+                },
               ),
             ),
           ).then(Navigator.of(context).pop)

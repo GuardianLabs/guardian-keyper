@@ -26,14 +26,12 @@ Future<void> main() async {
       ..tracesSampleRate = 1.0,
     appRunner: () async {
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
       Amplitude.getInstance()
         ..init(const String.fromEnvironment('AMPLITUDE_KEY'))
         ..trackingSessionEvents(true)
         // Enable COPPA privacy guard.
         // This is useful when you choose not to report sensitive user information.
         ..enableCoppaControl();
-
       runApp(App(
           diContainer: await DIContainer.bootstrap(
         globals: const GlobalsModel(
@@ -42,7 +40,6 @@ Future<void> main() async {
         ),
         platformService: await PlatformService.bootstrap(),
       )));
-
       FlutterNativeSplash.remove();
     },
   );

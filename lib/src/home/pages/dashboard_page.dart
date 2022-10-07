@@ -1,3 +1,5 @@
+import 'package:amplitude_flutter/amplitude.dart';
+
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/theme_data.dart';
@@ -61,8 +63,10 @@ class DashboardPage extends StatelessWidget {
         Padding(
           padding: paddingV20,
           child: OutlinedButton(
-            onPressed: () =>
-                Navigator.of(context).pushNamed(RestoreGroupView.routeName),
+            onPressed: () {
+              Amplitude.getInstance().logEvent('Start RestoreGroup');
+              Navigator.of(context).pushNamed(RestoreGroupView.routeName);
+            },
             child: const Text('Restore Group'),
           ),
         ),

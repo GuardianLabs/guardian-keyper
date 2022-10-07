@@ -126,7 +126,8 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
             const TextSpan(text: 'Sharding process for '),
             TextSpan(text: message.secretShard.groupName, style: textStyleBold),
             const TextSpan(
-                text: ' has been terminated by one of you Guardians.'),
+              text: ' has been terminated by one of you Guardians.',
+            ),
           ],
           footer: Padding(
             padding: paddingV20,
@@ -137,7 +138,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                     .read<DIContainer>()
                     .boxRecoveryGroup
                     .delete(message.secretShard.groupId.asKey);
-                await Amplitude.getInstance().logEvent('Finish CreateGroup');
+                await Amplitude.getInstance().logEvent('Finish AddSecret');
                 if (mounted) Navigator.of(context).popUntil((r) => r.isFirst);
               },
             ),
