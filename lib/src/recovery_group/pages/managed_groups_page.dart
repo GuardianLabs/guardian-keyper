@@ -1,3 +1,5 @@
+import 'package:amplitude_flutter/amplitude.dart';
+
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/theme_data.dart';
@@ -38,10 +40,13 @@ class ManagedGroupsPage extends StatelessWidget {
                       padding: paddingV32H20,
                       child: PrimaryButton(
                         text: 'Add new Group',
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          CreateGroupView.routeName,
-                        ),
+                        onPressed: () {
+                          Amplitude.getInstance().logEvent('Start CreateGroup');
+                          Navigator.pushNamed(
+                            context,
+                            CreateGroupView.routeName,
+                          );
+                        },
                       ),
                     ),
                   ] else

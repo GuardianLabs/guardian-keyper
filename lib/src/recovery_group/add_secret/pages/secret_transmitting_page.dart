@@ -1,4 +1,5 @@
 import 'package:wakelock/wakelock.dart';
+import 'package:amplitude_flutter/amplitude.dart';
 
 import '/src/core/di_container.dart';
 import '/src/core/theme_data.dart';
@@ -131,12 +132,14 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
             padding: paddingV20,
             child: PrimaryButton(
               text: 'Done',
-              onPressed: () => context
-                  .read<DIContainer>()
-                  .boxRecoveryGroup
-                  .delete(message.secretShard.groupId.asKey)
-                  .then(
-                      (_) => Navigator.of(context).popUntil((r) => r.isFirst)),
+              onPressed: () async {
+                await context
+                    .read<DIContainer>()
+                    .boxRecoveryGroup
+                    .delete(message.secretShard.groupId.asKey);
+                await Amplitude.getInstance().logEvent('Finish CreateGroup');
+                if (mounted) Navigator.of(context).popUntil((r) => r.isFirst);
+              },
             ),
           ),
         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -20,32 +20,29 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  // ACHTUNG! Due to a quirk in String.fromEnvironment:
-  // "is only guaranteed to work when invoked as const", so it MUST have
-  // defaultValue defined - otherwise, running the app in AndroidStudio
-  // with environment variables set through --dart-define doesn't work.
-  const sentryUrl =
-      kDebugMode ? '' : String.fromEnvironment('SENTRY_URL', defaultValue: "");
-  const bsAddressV4 = bool.hasEnvironment("BS_V4")
-      ? String.fromEnvironment("BS_V4", defaultValue: "")
-      : null;
-  const bsAddressV6 = bool.hasEnvironment("BS_V6")
-      ? String.fromEnvironment("BS_V6", defaultValue: "")
-      : null;
   await SentryFlutter.init(
     (options) => options
-      ..dsn = sentryUrl
+      ..dsn = const String.fromEnvironment('SENTRY_URL')
       ..tracesSampleRate = 1.0,
     appRunner: () async {
       FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+      Amplitude.getInstance()
+        ..init(const String.fromEnvironment('AMPLITUDE_KEY'))
+        ..trackingSessionEvents(true)
+        // Enable COPPA privacy guard.
+        // This is useful when you choose not to report sensitive user information.
+        ..enableCoppaControl();
+
       runApp(App(
           diContainer: await DIContainer.bootstrap(
         globals: const GlobalsModel(
-          bsAddressV4: bsAddressV4,
-          bsAddressV6: bsAddressV6,
+          bsAddressV4: String.fromEnvironment('BS_V4'),
+          bsAddressV6: String.fromEnvironment('BS_V6'),
         ),
         platformService: await PlatformService.bootstrap(),
       )));
+
       FlutterNativeSplash.remove();
     },
   );
