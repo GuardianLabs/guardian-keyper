@@ -1,4 +1,5 @@
 import 'package:wakelock/wakelock.dart';
+import 'package:amplitude_flutter/amplitude.dart';
 
 import '/src/core/di_container.dart';
 import '/src/core/theme_data.dart';
@@ -125,18 +126,21 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
             const TextSpan(text: 'Sharding process for '),
             TextSpan(text: message.secretShard.groupName, style: textStyleBold),
             const TextSpan(
-                text: ' has been terminated by one of you Guardians.'),
+              text: ' has been terminated by one of you Guardians.',
+            ),
           ],
           footer: Padding(
             padding: paddingV20,
             child: PrimaryButton(
               text: 'Done',
-              onPressed: () => context
-                  .read<DIContainer>()
-                  .boxRecoveryGroup
-                  .delete(message.secretShard.groupId.asKey)
-                  .then(
-                      (_) => Navigator.of(context).popUntil((r) => r.isFirst)),
+              onPressed: () async {
+                await context
+                    .read<DIContainer>()
+                    .boxRecoveryGroup
+                    .delete(message.secretShard.groupId.asKey);
+                await Amplitude.getInstance().logEvent('Finish AddSecret');
+                if (mounted) Navigator.of(context).popUntil((r) => r.isFirst);
+              },
             ),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:wakelock/wakelock.dart';
 
 import '/src/core/di_container.dart';
@@ -71,9 +72,10 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                       style: textStyleSourceSansPro414Purple,
                       children: const [
                         TextSpan(
-                            text:
-                                'Ask Guardians to log into the app and approve'
-                                ' a Secret Recovery. Once they approve, their icon will go '),
+                          text: 'Ask Guardians to log into the app and approve'
+                              ' a Secret Recovery. Once they approve,'
+                              ' their icon will go ',
+                        ),
                         TextSpan(
                           text: 'green.',
                           style: TextStyle(color: clGreen),
@@ -145,6 +147,7 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
   }
 
   void _pass() {
+    Amplitude.getInstance().logEvent('Finish RecoverSecret');
     Navigator.of(context).pop();
     context.read<RecoverySecretController>().nextScreen();
   }

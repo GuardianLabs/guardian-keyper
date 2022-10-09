@@ -1,3 +1,5 @@
+import 'package:amplitude_flutter/amplitude.dart';
+
 import '/src/core/theme_data.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
@@ -39,17 +41,23 @@ class InputNamePage extends StatelessWidget {
                 text: 'Continue',
                 onPressed: controller.groupName.isEmpty
                     ? null
-                    : () async => Navigator.popAndPushNamed(
-                          context,
-                          RecoveryGroupEditView.routeName,
-                          arguments:
-                              (await controller.addGroup(RecoveryGroupModel(
-                            id: GroupId.aNew(),
-                            name: controller.groupName,
-                            type: controller.groupType!,
-                            maxSize: controller.groupSize,
-                          )))
-                                  .id,
+                    : () => controller
+                        .addGroup(RecoveryGroupModel(
+                          id: GroupId.aNew(),
+                          name: controller.groupName,
+                          type: controller.groupType!,
+                          maxSize: controller.groupSize,
+                        ))
+                        .then(
+                          (group) => Navigator.popAndPushNamed(
+                            context,
+                            RecoveryGroupEditView.routeName,
+                            arguments: group.id,
+                          ),
+                        )
+                        .then(
+                          (_) => Amplitude.getInstance()
+                              .logEvent('Finish CreateGroup'),
                         ),
               ),
             ),

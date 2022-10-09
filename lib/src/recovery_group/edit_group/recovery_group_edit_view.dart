@@ -1,3 +1,5 @@
+import 'package:amplitude_flutter/amplitude.dart';
+
 import '/src/core/di_container.dart';
 import '/src/core/theme_data.dart';
 import '/src/core/widgets/common.dart';
@@ -17,158 +19,173 @@ class RecoveryGroupEditView extends StatelessWidget {
   const RecoveryGroupEditView({super.key, required this.groupId});
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder<
-          Box<RecoveryGroupModel>>(
-      valueListenable:
-          context.read<DIContainer>().boxRecoveryGroup.listenable(),
-      builder: (_, boxRecoveryGroup, __) {
-        final group = boxRecoveryGroup.get(groupId.asKey);
-        if (group == null) return const Scaffold();
-        return ScaffoldWidget(
-            child: Column(
-          children: [
-            // Header
-            HeaderBar(
-              caption: group.name,
-              backButton: const HeaderBarBackButton(),
-              closeButton: HeaderBarMoreButton(
-                onPressed: () => showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) => BottomSheetWidget(
-                    footer: ElevatedButton(
-                      child: const SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            'Remove Group',
-                            textAlign: TextAlign.center,
-                          )),
-                      onPressed: () => showModalBottomSheet<Object?>(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (_) => _RemoveGroupConfirmWidget(group: group),
-                      ).then(Navigator.of(context).pop),
+  Widget build(BuildContext context) =>
+      ValueListenableBuilder<Box<RecoveryGroupModel>>(
+          valueListenable:
+              context.read<DIContainer>().boxRecoveryGroup.listenable(),
+          builder: (_, boxRecoveryGroup, __) {
+            final group = boxRecoveryGroup.get(groupId.asKey);
+            if (group == null) return const Scaffold();
+            return ScaffoldWidget(
+                child: Column(
+              children: [
+                // Header
+                HeaderBar(
+                  caption: group.name,
+                  backButton: const HeaderBarBackButton(),
+                  closeButton: HeaderBarMoreButton(
+                    onPressed: () => showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => BottomSheetWidget(
+                        footer: ElevatedButton(
+                          child: const SizedBox(
+                              width: double.infinity,
+                              child: Text(
+                                'Remove Group',
+                                textAlign: TextAlign.center,
+                              )),
+                          onPressed: () => showModalBottomSheet<Object?>(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (_) =>
+                                _RemoveGroupConfirmWidget(group: group),
+                          ).then(Navigator.of(context).pop),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            // Body
-            Expanded(
-              child: ListView(
-                padding: paddingAll20,
-                children: [
-                  // Group is not full
-                  if (group.canAddGuardian)
-                    Container(
-                      decoration: boxDecoration,
-                      padding: paddingAll20,
-                      margin: paddingV20,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: paddingBottom12,
-                            child: Text(
-                              'Complete the Recovery Group',
-                              style: textStylePoppins620,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(children: [
-                              TextSpan(
-                                text: 'Add ${group.neededMore} more Guardian',
-                                style: textStyleBold,
+                // Body
+                Expanded(
+                  child: ListView(
+                    padding: paddingAll20,
+                    children: [
+                      // Group is not full
+                      if (group.canAddGuardian)
+                        Container(
+                          decoration: boxDecoration,
+                          padding: paddingAll20,
+                          margin: paddingV20,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: paddingBottom12,
+                                child: Text(
+                                  'Complete the Recovery Group',
+                                  style: textStylePoppins620,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              TextSpan(
-                                text: ' to the group via QR Code to split '
-                                    'and securely share parts of your Secret.',
+                              RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(children: [
+                                  TextSpan(
+                                    text:
+                                        'Add ${group.neededMore} more Guardian',
+                                    style: textStyleBold,
+                                  ),
+                                  TextSpan(
+                                    text: ' to the group via QR Code to split '
+                                        'and securely share parts of your Secret.',
+                                    style: textStyleSourceSansPro416,
+                                  ),
+                                ]),
+                              ),
+                              Padding(
+                                padding: paddingTop20,
+                                child: PrimaryButton(
+                                  text: 'Add via QR Code',
+                                  onPressed: () => Amplitude.getInstance()
+                                      .logEvent('Start AddSecret')
+                                      .then(
+                                        (_) => Navigator.of(context).pushNamed(
+                                          AddGuardianView.routeName,
+                                          arguments: groupId,
+                                        ),
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      // Group is full
+                      if (group.canAddSecret)
+                        Container(
+                          decoration: boxDecoration,
+                          padding: paddingAll20,
+                          margin: paddingV20,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: paddingBottom12,
+                                child: Text(
+                                  'Group is ready, let’s add your Secret',
+                                  style: textStylePoppins620,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Text(
+                                'Remember: in order to restore your Secret'
+                                ' in the future you’d have to get an approval'
+                                ' from at least ${group.threshold} Guardians.',
                                 style: textStyleSourceSansPro416,
+                                textAlign: TextAlign.center,
                               ),
-                            ]),
-                          ),
-                          Padding(
-                            padding: paddingTop20,
-                            child: PrimaryButton(
-                              text: 'Add via QR Code',
-                              onPressed: () => Navigator.of(context).pushNamed(
-                                AddGuardianView.routeName,
-                                arguments: groupId,
+                              Padding(
+                                padding: paddingTop20,
+                                child: PrimaryButton(
+                                  text: 'Add Secret',
+                                  onPressed: () => Amplitude.getInstance()
+                                      .logEvent('Start AddGuardian')
+                                      .then(
+                                        (_) => Navigator.of(context).pushNamed(
+                                          RecoveryGroupAddSecretView.routeName,
+                                          arguments: groupId,
+                                        ),
+                                      ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  // Group is full
-                  if (group.canAddSecret)
-                    Container(
-                      decoration: boxDecoration,
-                      padding: paddingAll20,
-                      margin: paddingV20,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: paddingBottom12,
-                            child: Text(
-                              'Group is ready, let’s add your Secret',
-                              style: textStylePoppins620,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Text(
-                            'Remember: in order to restore your Secret'
-                            ' in the future you’d have to get an approval'
-                            ' from at least ${group.threshold} Guardians.',
-                            style: textStyleSourceSansPro416,
+                        ),
+                      if (group.canRecoverSecret)
+                        Padding(
+                          padding: paddingV20,
+                          child: Text(
+                            'Guardians',
+                            style: textStylePoppins620,
                             textAlign: TextAlign.center,
                           ),
-                          Padding(
-                            padding: paddingTop20,
-                            child: PrimaryButton(
-                              text: 'Add Secret',
-                              onPressed: () => Navigator.of(context).pushNamed(
-                                RecoveryGroupAddSecretView.routeName,
-                                arguments: groupId,
-                              ),
-                            ),
+                        ),
+                      // List of Guardians
+                      for (var guardian in group.guardians.values)
+                        Padding(
+                          padding: paddingV6,
+                          child: _GuardianTileWidget(guardian: guardian),
+                        ),
+                      // Group have Secret
+                      if (group.canRecoverSecret)
+                        Padding(
+                          padding: paddingV32,
+                          child: PrimaryButton(
+                            text: 'Recover my Secret',
+                            onPressed: () => Amplitude.getInstance()
+                                .logEvent('Start RecoverSecret')
+                                .then(
+                                  (_) => Navigator.of(context).pushNamed(
+                                    RecoveryGroupRecoverySecretView.routeName,
+                                    arguments: groupId,
+                                  ),
+                                ),
                           ),
-                        ],
-                      ),
-                    ),
-                  if (group.canRecoverSecret)
-                    Padding(
-                      padding: paddingV20,
-                      child: Text(
-                        'Guardians',
-                        style: textStylePoppins620,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  // List of Guardians
-                  for (var guardian in group.guardians.values)
-                    Padding(
-                      padding: paddingV6,
-                      child: _GuardianTileWidget(guardian: guardian),
-                    ),
-                  // Group have Secret
-                  if (group.canRecoverSecret)
-                    Padding(
-                      padding: paddingV32,
-                      child: PrimaryButton(
-                          text: 'Recover my Secret',
-                          onPressed: () => Navigator.of(context).pushNamed(
-                                RecoveryGroupRecoverySecretView.routeName,
-                                arguments: groupId,
-                              )),
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ));
-      });
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ));
+          });
 }
 
 class _GuardianTileWidget extends StatefulWidget {
