@@ -5,7 +5,7 @@
 		<!-- <key>UIRequiresPersistentWiFi</key>
 		<true/> -->
 		<key>NSLocalNetworkUsageDescription</key>
-		<string>Keyper dartshare service</string>
+		<string>To increase security and facilitate off-the-grid workflows Keyper establishes direct connections with other Keyper instances in the same local network.</string>
 		<key>NSBonjourServices</key>
 		<array>
     	<string>_dartshare._udp</string>
