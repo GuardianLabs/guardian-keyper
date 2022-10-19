@@ -147,7 +147,7 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
   }
 
   void _pass() {
-    Amplitude.getInstance().logEvent('Finish RecoverSecret');
+    Amplitude.getInstance().logEvent('RecoverSecret Finish');
     Navigator.of(context).pop();
     context.read<RecoverySecretController>().nextScreen();
   }

@@ -64,7 +64,7 @@ class DashboardPage extends StatelessWidget {
           padding: paddingV20,
           child: OutlinedButton(
             onPressed: () {
-              Amplitude.getInstance().logEvent('Start RestoreGroup');
+              Amplitude.getInstance().logEvent('RestoreGroup Start');
               Navigator.of(context).pushNamed(RestoreGroupView.routeName);
             },
             child: const Text('Restore Group'),

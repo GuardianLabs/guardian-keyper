@@ -108,7 +108,10 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
             padding: paddingV20,
             child: PrimaryButton(
               text: 'Done',
-              onPressed: Navigator.of(context).pop,
+              onPressed: () {
+                Amplitude.getInstance().logEvent('AddSecret Finish');
+                Navigator.of(context).pop();
+              },
             ),
           ),
         ),
@@ -138,7 +141,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                     .read<DIContainer>()
                     .boxRecoveryGroup
                     .delete(message.secretShard.groupId.asKey);
-                await Amplitude.getInstance().logEvent('Finish AddSecret');
+                await Amplitude.getInstance().logEvent('AddSecret Rejected');
                 if (mounted) Navigator.of(context).popUntil((r) => r.isFirst);
               },
             ),

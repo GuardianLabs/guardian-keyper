@@ -57,7 +57,7 @@ class InputNamePage extends StatelessWidget {
                         )
                         .then(
                           (_) => Amplitude.getInstance()
-                              .logEvent('Finish CreateGroup'),
+                              .logEvent('CreateGroup Finish'),
                         ),
               ),
             ),
