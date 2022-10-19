@@ -97,7 +97,7 @@ class RecoveryGroupEditView extends StatelessWidget {
                                 child: PrimaryButton(
                                   text: 'Add via QR Code',
                                   onPressed: () => Amplitude.getInstance()
-                                      .logEvent('Start AddSecret')
+                                      .logEvent('AddGuardian Start')
                                       .then(
                                         (_) => Navigator.of(context).pushNamed(
                                           AddGuardianView.routeName,
@@ -137,7 +137,7 @@ class RecoveryGroupEditView extends StatelessWidget {
                                 child: PrimaryButton(
                                   text: 'Add Secret',
                                   onPressed: () => Amplitude.getInstance()
-                                      .logEvent('Start AddGuardian')
+                                      .logEvent('AddSecret Start')
                                       .then(
                                         (_) => Navigator.of(context).pushNamed(
                                           RecoveryGroupAddSecretView.routeName,
@@ -171,7 +171,7 @@ class RecoveryGroupEditView extends StatelessWidget {
                           child: PrimaryButton(
                             text: 'Recover my Secret',
                             onPressed: () => Amplitude.getInstance()
-                                .logEvent('Start RecoverSecret')
+                                .logEvent('RecoverSecret Start')
                                 .then(
                                   (_) => Navigator.of(context).pushNamed(
                                     RecoveryGroupRecoverySecretView.routeName,

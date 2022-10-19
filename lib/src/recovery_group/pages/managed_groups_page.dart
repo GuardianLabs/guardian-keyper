@@ -41,7 +41,7 @@ class ManagedGroupsPage extends StatelessWidget {
                       child: PrimaryButton(
                         text: 'Add new Group',
                         onPressed: () {
-                          Amplitude.getInstance().logEvent('Start CreateGroup');
+                          Amplitude.getInstance().logEvent('CreateGroup Start ');
                           Navigator.pushNamed(
                             context,
                             CreateGroupView.routeName,

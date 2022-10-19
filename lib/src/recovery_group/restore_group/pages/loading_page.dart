@@ -95,7 +95,8 @@ class _LoadingPageState extends State<LoadingPage> {
               footer: PrimaryButton(
                 text: 'Done',
                 onPressed: () {
-                  Amplitude.getInstance().logEvent('Finish RestoreGroup');
+                  Amplitude.getInstance()
+                      .logEvent('RestoreGroup Finish ');
                   Navigator.of(context).pop();
                 },
               ),
