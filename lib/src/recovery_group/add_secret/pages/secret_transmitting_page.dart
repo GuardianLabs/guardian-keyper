@@ -1,8 +1,7 @@
 import 'package:wakelock/wakelock.dart';
-import 'package:amplitude_flutter/amplitude.dart';
 
 import '/src/core/di_container.dart';
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -26,6 +25,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
     context.read<AddSecretController>().startRequest(
           onSuccess: _showSuccess,
           onReject: _showRejected,
+          onFailed: _showRejected, // TBD: specify
         );
   }
 
@@ -54,9 +54,10 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                 title: 'Waiting for Guardians',
                 subtitleSpans: [
                   TextSpan(
-                      text: 'Ask each Guardian to log into the app '
-                          'to receive a Secret Shard. Once Shard is received '
-                          'Guardian icon will go '),
+                    text: 'Ask each Guardian to log into the app '
+                        'to receive a Secret Shard. Once Shard is received '
+                        'Guardian icon will go ',
+                  ),
                   TextSpan(
                     text: 'green.',
                     style: TextStyle(color: clGreen),
@@ -66,18 +67,20 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  for (var guardian in controller.group.guardians.values)
+                  for (final guardian in controller.group.guardians.keys)
                     Padding(
                       padding: paddingV6,
-                      child: GuardianTileWidget(
-                        guardian: guardian,
-                        isSuccess: controller.responses[guardian.peerId] == null
-                            ? null
-                            : controller.responses[guardian.peerId] ==
-                                MessageStatus.accepted,
-                        isWaiting:
-                            !controller.responses.containsKey(guardian.peerId),
-                        isOnline: controller.statuses[guardian.peerId] ?? false,
+                      child: StreamBuilder<MessageModel>(
+                        initialData: null,
+                        stream: controller.messagesStream.where(
+                          (message) => message.peerId == guardian,
+                        ),
+                        builder: (context, snapshot) => GuardianTileWidget(
+                          guardian: guardian,
+                          isSuccess: snapshot.data?.isAccepted,
+                          isWaiting: snapshot.data == null,
+                          checkStatus: true,
+                        ),
                       ),
                     )
                 ],
@@ -99,7 +102,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           textSpan: [
             const TextSpan(text: 'Now you can restore your '),
             TextSpan(
-              text: message.secretShard.groupName,
+              text: message.groupId.name,
               style: textStyleBold,
             ),
             const TextSpan(text: ' Secret with the help of Guardians.'),
@@ -108,10 +111,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
             padding: paddingV20,
             child: PrimaryButton(
               text: 'Done',
-              onPressed: () {
-                Amplitude.getInstance().logEvent('AddSecret Finish');
-                Navigator.of(context).pop();
-              },
+              onPressed: Navigator.of(context).pop,
             ),
           ),
         ),
@@ -124,26 +124,28 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
         builder: (context) => BottomSheetWidget(
           icon: const IconOf.splitAndShare(isBig: true, bage: BageType.error),
           titleString:
-              'Guardian rejected your Secret. The group will be removed.',
+              'Guardian rejected your Secret. The Secret will be removed.',
           textSpan: [
             const TextSpan(text: 'Sharding process for '),
-            TextSpan(text: message.secretShard.groupName, style: textStyleBold),
+            TextSpan(
+              text: message.groupId.name,
+              style: textStyleBold,
+            ),
             const TextSpan(
-              text: ' has been terminated by one of you Guardians.',
+              text: ' has been terminated by one of your Guardians.',
             ),
           ],
           footer: Padding(
             padding: paddingV20,
             child: PrimaryButton(
               text: 'Done',
-              onPressed: () async {
-                await context
-                    .read<DIContainer>()
-                    .boxRecoveryGroup
-                    .delete(message.secretShard.groupId.asKey);
-                await Amplitude.getInstance().logEvent('AddSecret Rejected');
-                if (mounted) Navigator.of(context).popUntil((r) => r.isFirst);
-              },
+              onPressed: () => context
+                  .read<DIContainer>()
+                  .boxRecoveryGroups
+                  .delete(message.groupId.asKey)
+                  .then(
+                    (_) => Navigator.of(context).popUntil((r) => r.isFirst),
+                  ),
             ),
           ),
         ),

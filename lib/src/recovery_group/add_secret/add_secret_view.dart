@@ -3,6 +3,8 @@ import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 
 import 'add_secret_controller.dart';
+
+import 'pages/add_name_page.dart';
 import 'pages/add_secret_page.dart';
 import 'pages/split_and_share_page.dart';
 import 'pages/secret_transmitting_page.dart';
@@ -10,6 +12,7 @@ import 'pages/secret_transmitting_page.dart';
 class RecoveryGroupAddSecretView extends StatelessWidget {
   static const routeName = '/recovery_group/add_secret';
   static const _pages = [
+    AddNamePage(),
     AddSecretPage(),
     SplitAndShareSecretPage(),
     SecretTransmittingPage(),

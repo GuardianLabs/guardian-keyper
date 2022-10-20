@@ -2,11 +2,11 @@ name: guardian_keyper
 description: "A Guardian Network-based secrets backup app"
 publish_to: 'none'
 
-version: 1.1.2+1
+version: 2.0.0+1
 
 environment:
-  sdk: ">=2.18.0 <3.0.0"
-  flutter: ^3.3.0
+  sdk: ">=2.18.2 <3.0.0"
+  flutter: ^3.3.3
 
 dependencies:
   flutter:
@@ -14,18 +14,15 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_launcher_icons: ^0.10.0
-  flutter_native_splash: ^2.2.9
+  flutter_native_splash: ^2.2.11
   flutter_secure_storage: ^6.0.0
   flutter_screen_lock: ^7.0.4
   flutter_svg: ^1.1.5
   google_fonts: ^3.0.1
-  amplitude_flutter: ^3.2.1
-  sentry_flutter: ^6.11.1
   hive_flutter: ^1.1.0
   hive: ^2.2.3
   intl: ^0.17.0
-  provider: ^6.0.3
-  event_bus: ^2.0.0
+  provider: ^6.0.4
   equatable: ^2.0.5
   messagepack: ^0.2.1
   # qr_flutter: ^4.0.0
@@ -42,13 +39,17 @@ dependencies:
   bonsoir: ^2.0.0
   local_auth: ^2.1.2
   mobile_scanner: ^2.0.0
-  share_plus: ^4.1.0
-  connectivity_plus: ^2.3.6+1
-  package_info_plus: ^1.4.3+1
-  device_info_plus: ^4.1.2
+  share_plus: ^6.0.0
+  connectivity_plus: ^3.0.0
+  package_info_plus: ^2.0.0
+  device_info_plus: ^7.0.0
   airplane_mode_checker: ^1.0.2
   app_settings: ^4.1.8
   vibration: ^1.7.6
+
+  # Analytics
+  amplitude_flutter: ^3.2.1
+  sentry_flutter: ^6.13.0
 
   # P2P networking
   p2plib:

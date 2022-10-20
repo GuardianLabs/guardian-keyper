@@ -1,9 +1,8 @@
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '/src/core/di_container.dart';
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
-import '/src/home/home_view.dart';
 
 class SetBiometricPage extends StatelessWidget {
   const SetBiometricPage({super.key});
@@ -41,8 +40,7 @@ class SetBiometricPage extends StatelessWidget {
                         .read<DIContainer>()
                         .boxSettings
                         .isBiometricsEnabled = false;
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => const HomeView()));
+                    Navigator.of(context).pushReplacementNamed('/home');
                   },
                   child: const Text('No'),
                 )),
@@ -54,8 +52,7 @@ class SetBiometricPage extends StatelessWidget {
                         .read<DIContainer>()
                         .boxSettings
                         .isBiometricsEnabled = true;
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => const HomeView()));
+                    Navigator.of(context).pushReplacementNamed('/home');
                   },
                   text: 'Yes',
                 )),

@@ -1,10 +1,7 @@
-import 'core/theme_data.dart';
+import 'core/theme/theme.dart';
 import 'core/di_container.dart';
 import 'core/widgets/auth.dart';
 import 'core/widgets/common.dart';
-
-import 'intro/intro_view.dart';
-import 'home/home_view.dart';
 
 class StartView extends StatefulWidget {
   const StartView({super.key});
@@ -20,8 +17,7 @@ class _StartViewState extends State<StartView> {
     final diContainer = context.read<DIContainer>();
     Future.microtask(
       diContainer.boxSettings.passCode.isEmpty
-          ? () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const IntroView()))
+          ? () => Navigator.of(context).pushReplacementNamed('/intro')
           : () => screenLock(
                 context: context,
                 correctString: diContainer.boxSettings.passCode,
@@ -31,8 +27,8 @@ class _StartViewState extends State<StartView> {
                 secretsConfig: secretsConfig,
                 screenLockConfig: screenLockConfig,
                 customizedButtonChild: BiometricLogonButton(
-                  callback: () => Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (_) => const HomeView()),
+                  callback: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/home',
                     (_) => false,
                   ),
                 ),
@@ -44,8 +40,9 @@ class _StartViewState extends State<StartView> {
                       style: textStylePoppins620,
                       textAlign: TextAlign.center,
                     )),
-                didUnlocked: () => Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const HomeView()),
+                didUnlocked: () =>
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/home',
                   (_) => false,
                 ),
                 didError: (_) async {

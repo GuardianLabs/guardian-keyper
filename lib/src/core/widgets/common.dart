@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme_data.dart';
+import '/src/core/theme/theme.dart';
 
 export 'package:flutter/material.dart';
 
@@ -267,7 +267,7 @@ class BottomSheetWidget extends StatelessWidget {
                   softWrap: true,
                   overflow: TextOverflow.clip,
                   text: TextSpan(
-                    style: textStyleSourceSansPro414Purple,
+                    style: textStyleSourceSansPro616Purple,
                     text: textString,
                     children: textSpan,
                   ),

@@ -1,11 +1,7 @@
-import 'package:amplitude_flutter/amplitude.dart';
-
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
-import '/src/core/model/core_model.dart';
 
 import '../create_group_controller.dart';
-import '../../edit_group/recovery_group_edit_view.dart';
 
 class InputNamePage extends StatelessWidget {
   const InputNamePage({super.key});
@@ -17,52 +13,42 @@ class InputNamePage extends StatelessWidget {
       children: [
         // Header
         HeaderBar(
-          caption: 'Add Name',
+          caption: 'Name the Vault',
           backButton: HeaderBarBackButton(onPressed: controller.previousScreen),
           closeButton: const HeaderBarCloseButton(),
         ),
         // Body
         Expanded(
-            child: ListView(
-          padding: paddingH20,
-          children: [
-            const PageTitle(title: 'Create a name for your Recovery Group'),
-            TextFormField(
-              autofocus: true,
-              keyboardType: TextInputType.text,
-              maxLength: controller.diContainer.globals.maxNameLength,
-              decoration: const InputDecoration(labelText: ' Group name '),
-              onChanged: (value) => controller.groupName = value,
-            ),
-            // Footer
-            Padding(
-              padding: paddingV32,
-              child: PrimaryButton(
-                text: 'Continue',
-                onPressed: controller.groupName.isEmpty
-                    ? null
-                    : () => controller
-                        .addGroup(RecoveryGroupModel(
-                          id: GroupId.aNew(),
-                          name: controller.groupName,
-                          type: controller.groupType!,
-                          maxSize: controller.groupSize,
-                        ))
-                        .then(
-                          (group) => Navigator.popAndPushNamed(
-                            context,
-                            RecoveryGroupEditView.routeName,
-                            arguments: group.id,
-                          ),
-                        )
-                        .then(
-                          (_) => Amplitude.getInstance()
-                              .logEvent('CreateGroup Finish'),
-                        ),
+          child: ListView(
+            padding: paddingH20,
+            children: [
+              const PageTitle(title: 'Create a name for your Vault'),
+              TextFormField(
+                autofocus: true,
+                keyboardType: TextInputType.text,
+                maxLength: controller.diContainer.globals.maxNameLength,
+                decoration: const InputDecoration(labelText: ' Vault name '),
+                onChanged: (value) => controller.groupName = value,
               ),
-            ),
-          ],
-        )),
+              // Footer
+              Padding(
+                padding: paddingV32,
+                child: PrimaryButton(
+                  text: 'Continue',
+                  onPressed: controller.groupName.isEmpty
+                      ? null
+                      : () => controller.createVault().then(
+                            (vault) => Navigator.popAndPushNamed(
+                              context,
+                              '/recovery_group/edit',
+                              arguments: vault.id,
+                            ),
+                          ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

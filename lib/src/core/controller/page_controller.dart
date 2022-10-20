@@ -1,10 +1,14 @@
 import 'base_controller.dart';
 
 class PageController extends BaseController {
-  late int pagesCount;
-  int currentPage = 0;
+  final int pagesCount;
+  int currentPage;
 
-  PageController({required super.diContainer, required this.pagesCount});
+  PageController({
+    required super.diContainer,
+    required this.pagesCount,
+    this.currentPage = 0,
+  });
 
   void gotoScreen(int value) {
     if (value < 0 || value > pagesCount - 1) return;

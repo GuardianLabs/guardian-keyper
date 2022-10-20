@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
+import '/src/core/di_container.dart';
 
 import '../guardian_controller.dart';
 
@@ -24,37 +25,37 @@ class MessageActionWidget extends StatefulWidget {
 class _MessageActionWidgetState extends State<MessageActionWidget>
     with TickerProviderStateMixin {
   static const _subtitles = {
-    OperationType.authPeer: ' asks you to become a Guardian for ',
-    OperationType.setShard: ' asks you to accept the Secret Shard for ',
-    OperationType.getShard: ' asks you to approve a recovery of Secret for ',
-    OperationType.takeOwnership:
-        ' asks you to approve a change of ownership for ',
+    MessageCode.createGroup: ' asks you to become a Guardian for ',
+    MessageCode.setShard: ' asks you to accept the Secret Shard for ',
+    MessageCode.getShard: ' asks you to approve a recovery of Secret for ',
+    MessageCode.takeGroup: ' asks you to approve a change of ownership for ',
   };
-  late final StreamSubscription<bool> _peerStatusSubscription;
-  late final AnimationController _animationController;
+  late StreamSubscription<bool> _peerStatusSubscription;
+  late AnimationController _animationController;
   bool _isPeerOnline = false;
   bool _isRequestError = false;
   bool _isRequestActive = false;
 
   @override
   void initState() {
+    super.initState();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
     )..addListener(() => setState(() {}));
 
-    final networkService =
-        context.read<GuardianController>().diContainer.networkService;
+    final networkService = context.read<DIContainer>().networkService;
 
-    networkService
-        .pingPeer(peerId: widget.message.peerId)
-        .then((isOnline) => setState(() => _isPeerOnline = isOnline));
+    networkService.pingPeer(peerId: widget.message.peerId).then(
+      (isOnline) {
+        if (mounted) setState(() => _isPeerOnline = isOnline);
+      },
+    );
 
     _peerStatusSubscription = networkService.onPeerStatusChanged(
       (isOnline) => setState(() => _isPeerOnline = isOnline),
       widget.message.peerId,
     );
-    super.initState();
   }
 
   @override
@@ -69,14 +70,14 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
         titleString: widget.title,
         textSpan: [
           TextSpan(
-            text: widget.message.secretShard.ownerName,
+            text: widget.message.peerId.name,
             style: textStyleSourceSansPro616,
           ),
           TextSpan(
-            text: _subtitles[widget.message.type]!,
+            text: _subtitles[widget.message.code]!,
           ),
           TextSpan(
-            text: widget.message.secretShard.groupName,
+            text: widget.message.groupId.name,
             style: textStyleSourceSansPro616,
           ),
         ],
@@ -141,7 +142,7 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
                                 ),
                                 TextSpan(
                                   text: '. Ask '
-                                      '${widget.message.secretShard.ownerName}'
+                                      '${widget.message.peerId.name}'
                                       ' to log in.',
                                 ),
                               ],
@@ -175,20 +176,20 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
   Future<void> _sendRespone(MessageStatus status) async {
     final response = widget.message.copyWith(status: status);
     setState(() => _isRequestActive = true);
+    final controller = context.read<GuardianController>();
     try {
-      final controller = context.read<GuardianController>();
-      switch (response.type) {
-        case OperationType.authPeer:
-          await controller.sendAuthPeerResponse(response);
+      switch (response.code) {
+        case MessageCode.createGroup:
+          await controller.sendCreateGroupResponse(response);
           break;
-        case OperationType.setShard:
+        case MessageCode.setShard:
           await controller.sendSetShardResponse(response);
           break;
-        case OperationType.getShard:
+        case MessageCode.getShard:
           await controller.sendGetShardResponse(response);
           break;
-        case OperationType.takeOwnership:
-          await controller.sendTakeOwnershipResponse(response);
+        case MessageCode.takeGroup:
+          await controller.sendTakeGroupResponse(response);
           break;
       }
       if (mounted) Navigator.of(context).pop();

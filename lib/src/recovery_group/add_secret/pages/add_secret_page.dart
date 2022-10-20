@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:app_settings/app_settings.dart';
 import 'package:airplane_mode_checker/airplane_mode_checker.dart';
 
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/misc.dart';
 import '/src/core/widgets/common.dart';
 
@@ -45,9 +45,12 @@ class _AddSecretPageState extends State<AddSecretPage> {
     return Column(
       children: [
         // Header
-        const HeaderBar(
-          caption: 'Add secret',
-          closeButton: AddSecretCloseButton(),
+        HeaderBar(
+          caption: 'Add your Secret',
+          backButton: HeaderBarBackButton(
+            onPressed: controller.previousScreen,
+          ),
+          closeButton: const AddSecretCloseButton(),
         ),
         // Body
         Expanded(
@@ -57,7 +60,7 @@ class _AddSecretPageState extends State<AddSecretPage> {
             padding: paddingH20,
             children: [
               PageTitle(
-                title: 'Add your Secret for ${controller.group.name}',
+                title: 'Add your Secret for ${controller.group.id.name}',
                 subtitle: 'Make sure no one can see your screen.',
               ),
               // Open Settings Tile
@@ -98,7 +101,7 @@ class _AddSecretPageState extends State<AddSecretPage> {
                 style: textStyleSourceSansPro416,
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  labelText: 'YOUR SECRET',
+                  labelText: ' Your Secret ',
                   counterStyle: textStyleSourceSansPro414Purple,
                   suffix: _isSecretObscure
                       ? Container(

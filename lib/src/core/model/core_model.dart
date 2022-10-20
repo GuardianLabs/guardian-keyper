@@ -6,20 +6,30 @@ import 'package:messagepack/messagepack.dart';
 
 import '../utils/random_utils.dart';
 
-export 'dart:typed_data' show Uint8List;
-
 part 'recovery_group_model.dart';
 part 'secret_shard_model.dart';
-part 'event_bus_model.dart';
 part 'settings_model.dart';
-part 'qr_code_model.dart';
 part 'message_model.dart';
-part 'token_model.dart';
+part 'peer_address.dart';
+part 'id_model.dart';
+
+abstract class Serializable extends Equatable {
+  const Serializable();
+
+  bool get isEmpty;
+
+  bool get isNotEmpty;
+
+  Uint8List toBytes();
+
+  String toBase64url() => base64UrlEncode(toBytes());
+}
 
 @immutable
-class GlobalsModel {
-  final String? bsAddressV4;
-  final String? bsAddressV6;
+class Globals {
+  final String storageName;
+  final String bsAddressV4;
+  final String bsAddressV6;
   final int maxNameLength;
   final int minNameLength;
   final int passCodeLength;
@@ -29,9 +39,10 @@ class GlobalsModel {
   final Duration snackBarDuration;
   final Duration qrCodeExpires;
 
-  const GlobalsModel({
-    this.bsAddressV4,
-    this.bsAddressV6,
+  const Globals({
+    this.storageName = 'data',
+    this.bsAddressV4 = '',
+    this.bsAddressV6 = '',
     this.maxNameLength = 25,
     this.minNameLength = 3,
     this.passCodeLength = 6,

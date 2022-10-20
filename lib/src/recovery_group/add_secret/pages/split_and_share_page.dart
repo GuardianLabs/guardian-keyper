@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:app_settings/app_settings.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 import '../add_secret_controller.dart';
@@ -45,9 +45,12 @@ class _SplitAndShareSecretPageState extends State<SplitAndShareSecretPage> {
     return Column(
       children: [
         // Header
-        const HeaderBar(
+        HeaderBar(
           caption: 'Split Secret',
-          closeButton: AddSecretCloseButton(),
+          backButton: HeaderBarBackButton(
+            onPressed: controller.previousScreen,
+          ),
+          closeButton: const AddSecretCloseButton(),
         ),
         // Body
         Expanded(
@@ -60,16 +63,19 @@ class _SplitAndShareSecretPageState extends State<SplitAndShareSecretPage> {
                 title: 'Split and share Secret with Guardians below',
                 subtitleSpans: [
                   const TextSpan(
-                      text: 'You are about to split your Secret in '),
+                    text: 'You are about to split your Secret in ',
+                  ),
                   TextSpan(
-                      text: '${controller.group.maxSize} encrypted Shards.'),
+                    text: '${controller.group.maxSize} encrypted Shards.',
+                  ),
                   const TextSpan(
-                      text: ' Each Guardian will receieve their own'
-                          ' Shard which can be used to restore your Secret.'),
+                    text: ' Each Guardian will receieve their own'
+                        ' Shard which can be used to restore your Secret.',
+                  ),
                 ],
               ),
               Column(children: [
-                for (var guardian in controller.group.guardians.values)
+                for (final guardian in controller.group.guardians.keys)
                   Padding(
                     padding: paddingV6,
                     child: GuardianTileWidget(guardian: guardian),

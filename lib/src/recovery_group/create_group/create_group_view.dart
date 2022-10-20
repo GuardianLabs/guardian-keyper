@@ -7,7 +7,7 @@ import 'pages/choose_type_page.dart';
 import 'pages/input_name_page.dart';
 
 class CreateGroupView extends StatelessWidget {
-  static const routeName = '/recovery_group_create';
+  static const routeName = '/recovery_group/create';
 
   static const _pages = [
     ChooseTypePage(),
@@ -21,13 +21,13 @@ class CreateGroupView extends StatelessWidget {
   Widget build(BuildContext context) {
     final diContainer = context.read<DIContainer>();
     return ChangeNotifierProvider(
-      create: (_) => CreateGroupController(
+      create: (context) => CreateGroupController(
         diContainer: diContainer,
         pagesCount: _pages.length,
       ),
       child: ScaffoldWidget(
         child: Selector<CreateGroupController, int>(
-          selector: (_, controller) => controller.currentPage,
+          selector: (context, controller) => controller.currentPage,
           builder: (context, currentPage, __) => AnimatedSwitcher(
             duration: diContainer.globals.pageChangeDuration,
             child: _pages[currentPage],

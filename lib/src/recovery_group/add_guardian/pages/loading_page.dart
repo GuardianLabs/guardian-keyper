@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:wakelock/wakelock.dart';
 
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
+import '/src/core/model/core_model.dart';
 
 import '../add_guardian_controller.dart';
 
@@ -21,14 +22,18 @@ class _LoadingPageState extends State<LoadingPage> {
     Wakelock.enable();
     final controller = context.read<AddGuardianController>();
     if (controller.qrCode == null ||
-        controller.qrCode!.createdAt
-            .add(controller.globals.qrCodeExpires)
+        controller.qrCode!.timestamp
+            .subtract(controller.globals.qrCodeExpires)
             .isAfter(DateTime.now())) {
       Future.microtask(_showErrorFailed);
       return;
     }
+    if (controller.qrCode!.version != MessageModel.currentVersion) {
+      Future.microtask(() => _showErrorAppVersion(controller.qrCode!));
+      return;
+    }
     if (controller.isDuplicate) {
-      Future.microtask(_showErrorDuplicate);
+      Future.microtask(() => _showErrorDuplicate(controller.qrCode!));
       return;
     }
     controller.startRequest(
@@ -51,7 +56,7 @@ class _LoadingPageState extends State<LoadingPage> {
       children: [
         // Header
         const HeaderBar(
-          caption: 'Add Guardians',
+          caption: 'Adding a Guardian',
           closeButton: HeaderBarCloseButton(),
         ),
         // Body
@@ -71,7 +76,7 @@ class _LoadingPageState extends State<LoadingPage> {
               Padding(
                 padding: paddingAll20,
                 child: Text(
-                  'Awaiting ${controller.qrCode?.peerName}’s response',
+                  'Awaiting ${controller.qrCode!.peerId.name}’s response',
                   style: textStyleSourceSansPro416,
                 ),
               ),
@@ -82,14 +87,14 @@ class _LoadingPageState extends State<LoadingPage> {
     );
   }
 
-  void _showRejected([_]) => showModalBottomSheet(
+  void _showRejected([MessageModel? qrCode]) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
         builder: (BuildContext context) => BottomSheetWidget(
           titleString: 'Guardian rejected',
-          textString: 'Guardian has rejected the invitation to your '
-              'Recovery Group. You can try again or add another Guardian.',
+          textString: 'Guardian has rejected the invitation to your Vault.'
+              ' You can try again or add another Guardian.',
           icon: const IconOf.shield(isBig: true, bage: BageType.error),
           footer: PrimaryButton(
             text: 'Done',
@@ -98,33 +103,57 @@ class _LoadingPageState extends State<LoadingPage> {
         ),
       ).then(Navigator.of(context).pop);
 
-  void _showErrorDuplicate() => showModalBottomSheet(
+  void _showErrorDuplicate(MessageModel qrCode) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
         builder: (BuildContext context) => BottomSheetWidget(
           titleString: 'You can’t add the same Guardian twice',
-          textString: 'Seems like this Guardian you’ve already added.'
-              ' Try adding a different Guardian. ',
+          textString: 'Seems like you’ve already added ${qrCode.peerId.name} '
+              'to this Vault. Try adding a different Guardian.',
           icon: const IconOf.shield(isBig: true, bage: BageType.error),
           footer: PrimaryButton(
-            text: 'Done',
+            text: 'Add another Guardian',
             onPressed: Navigator.of(context).pop,
           ),
         ),
-      ).then(Navigator.of(context).pop);
+      ).then(
+        (_) => Navigator.of(context)
+            .popAndPushNamed('/recovery_group/add_guardian'),
+      );
 
-  void _showErrorFailed([_]) => showModalBottomSheet(
+  void _showErrorFailed([MessageModel? qrCode]) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
         builder: (BuildContext context) => BottomSheetWidget(
           titleString: 'Invalid QR Code',
           textString:
-              'Please ask the Guardian to generate a new QR Code via dashboard. ',
+              'Please ask the Guardian to generate a new QR Code via dashboard.',
           icon: const IconOf.shield(isBig: true, bage: BageType.error),
           footer: PrimaryButton(
             text: 'Done',
+            onPressed: Navigator.of(context).pop,
+          ),
+        ),
+      ).then(Navigator.of(context).pop);
+
+  void _showErrorAppVersion(MessageModel qrCode) => showModalBottomSheet(
+        context: context,
+        isDismissible: false,
+        isScrollControlled: true,
+        builder: (BuildContext context) => BottomSheetWidget(
+          titleString: qrCode.version < MessageModel.currentVersion
+              ? 'Guardian’s app is outdated'
+              : 'Update the app',
+          textString: qrCode.version < MessageModel.currentVersion
+              ? 'Seems like your Guardian is using the older version'
+                  ' of the Guardian Keyper. Ask them to update the app.'
+              : 'Seems like your Guardian is using the latest version'
+                  ' of the Guardian Keyper. Please update the app.',
+          icon: const IconOf.shield(isBig: true, bage: BageType.error),
+          footer: PrimaryButton(
+            text: 'Got it',
             onPressed: Navigator.of(context).pop,
           ),
         ),
