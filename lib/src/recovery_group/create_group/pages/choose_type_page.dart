@@ -1,12 +1,22 @@
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/misc.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/model/core_model.dart';
 
 import '../create_group_controller.dart';
 
 class ChooseTypePage extends StatelessWidget {
+  static const _textYourDevices = '''
+Your devices and devices that belong to your
+Guardians, trusted people, friends and family
+who act on your behalf when required.
+''';
+
+  static const _textFiduciaries = '''
+Trusted appointed fiduciary third parties
+appointed to act as Guardians on your
+behalf on a professional basis.''';
+
   const ChooseTypePage({super.key});
 
   @override
@@ -14,7 +24,7 @@ class ChooseTypePage extends StatelessWidget {
         children: [
           // Header
           const HeaderBar(
-            caption: 'Create a Recovery Group',
+            caption: 'Add a new Vault',
             closeButton: HeaderBarCloseButton(),
           ),
           // Body
@@ -24,11 +34,7 @@ class ChooseTypePage extends StatelessWidget {
               children: [
                 // Your Devices
                 GestureDetector(
-                  onTap: () {
-                    final controller = context.read<CreateGroupController>();
-                    controller.groupType = RecoveryGroupType.devices;
-                    controller.nextScreen();
-                  },
+                  onTap: context.read<CreateGroupController>().nextScreen,
                   child: SelectableCard(
                       isSelected: true,
                       child: Column(
@@ -66,8 +72,9 @@ class ChooseTypePage extends StatelessWidget {
                           height: 28,
                           width: 53,
                           alignment: Alignment.center,
-                          decoration:
-                              boxDecoration.copyWith(color: clIndigo500),
+                          decoration: boxDecoration.copyWith(
+                            color: clIndigo500,
+                          ),
                           child: Text('Soon', style: textStyleSourceSansPro614),
                         ),
                       ],
@@ -91,14 +98,3 @@ class ChooseTypePage extends StatelessWidget {
         ],
       );
 }
-
-const _textYourDevices = '''
-Your devices and devices that belong to your
-Guardians, trusted people, friends and family
-who act on your behalf when required.
-''';
-
-const _textFiduciaries = '''
-Trusted appointed fiduciary third parties
-appointed to act as Guardians on your
-behalf on a professional basis.''';

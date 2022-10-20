@@ -14,7 +14,9 @@ class RestoreGroupView extends StatelessWidget {
     LoadingPage(),
   ];
 
-  const RestoreGroupView({super.key});
+  final bool skipExplainer;
+
+  const RestoreGroupView({super.key, this.skipExplainer = false});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class RestoreGroupView extends StatelessWidget {
       create: (context) => RestoreGroupController(
         diContainer: diContainer,
         pagesCount: _pages.length,
+        currentPage: skipExplainer ? 1 : 0,
       ),
       lazy: false,
       child: ScaffoldWidget(

@@ -1,4 +1,4 @@
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 import '../create_group_controller.dart';
@@ -18,16 +18,14 @@ class _ChooseSizePageState extends State<ChooseSizePage>
     gradient: const RadialGradient(
       center: Alignment.bottomCenter,
       radius: 1.4,
-      colors: [
-        Color(0xFF7E4CDE),
-        Color(0xFF35088B),
-      ],
+      colors: [Color(0xFF7E4CDE), Color(0xFF35088B)],
     ),
   );
 
-  late final AnimationController _animationController =
-      AnimationController(vsync: this, duration: const Duration(seconds: 1))
-        ..forward();
+  late final AnimationController _animationController = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 1),
+  )..forward();
 
   @override
   void dispose() {
@@ -42,7 +40,7 @@ class _ChooseSizePageState extends State<ChooseSizePage>
       children: [
         // Header
         HeaderBar(
-          caption: 'Group Size',
+          caption: 'Vault Size',
           backButton: HeaderBarBackButton(onPressed: controller.previousScreen),
           closeButton: const HeaderBarCloseButton(),
         ),
@@ -54,7 +52,7 @@ class _ChooseSizePageState extends State<ChooseSizePage>
               Padding(
                 padding: paddingBottom20,
                 child: Text(
-                  'Choose how many Guardians will keep parts of your Secret',
+                  'Choose how many Guardians will secure your Vault',
                   style: textStylePoppins620,
                   textAlign: TextAlign.center,
                 ),
@@ -62,7 +60,8 @@ class _ChooseSizePageState extends State<ChooseSizePage>
               Padding(
                 padding: paddingBottom32,
                 child: Text(
-                  'You can join parts to recover your Secret at any time.',
+                  'Guardians keep Secrets’ parts. '
+                  'You can join them to recover your Secrets at any time.',
                   style: textStyleSourceSansPro416,
                   textAlign: TextAlign.center,
                 ),
@@ -81,6 +80,7 @@ class _ChooseSizePageState extends State<ChooseSizePage>
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
                           controller.groupSize = 3;
+                          controller.groupThreshold = 2;
                           _animationController.forward(from: 0);
                         },
                         child: Container(
@@ -111,6 +111,7 @@ class _ChooseSizePageState extends State<ChooseSizePage>
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
                           controller.groupSize = 5;
+                          controller.groupThreshold = 3;
                           _animationController.forward(from: 0);
                         },
                         child: Container(
@@ -144,25 +145,28 @@ class _ChooseSizePageState extends State<ChooseSizePage>
                 child: InfoPanel.info(
                   animationController: _animationController,
                   textSpan: <TextSpan>[
-                    const TextSpan(text: 'You will need atleast '),
+                    const TextSpan(
+                      text: 'Recovering Secrets from this Vault '
+                          'will require approval of at least ',
+                    ),
                     TextSpan(
                       text: controller.groupSize == 3
                           ? '2 out of 3'
                           : '3 out of 5',
                       style: textStyleSourceSansPro616.copyWith(color: clWhite),
                     ),
-                    const TextSpan(
-                        text: ' Guardians to approve Secret recovery.'),
+                    const TextSpan(text: ' Guardians'),
                   ],
                 ),
               ),
               // Footer
               Padding(
-                  padding: paddingV32,
-                  child: PrimaryButton(
-                    text: 'Continue',
-                    onPressed: controller.nextScreen,
-                  )),
+                padding: paddingV32,
+                child: PrimaryButton(
+                  text: 'Continue',
+                  onPressed: controller.nextScreen,
+                ),
+              ),
             ],
           ),
         ),

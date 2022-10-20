@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
-import 'package:guardian_keyper/src/core/theme_data.dart';
 
 export 'package:flutter_screen_lock/flutter_screen_lock.dart';
 
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/icon_of.dart';
 
 const secretsConfig = SecretsConfig(

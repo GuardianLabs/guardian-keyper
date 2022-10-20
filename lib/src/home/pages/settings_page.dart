@@ -1,6 +1,6 @@
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 

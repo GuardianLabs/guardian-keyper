@@ -1,5 +1,5 @@
 import '/src/core/di_container.dart';
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 class SetDeviceNamePage extends StatefulWidget {

@@ -1,138 +1,123 @@
-import 'dart:io' show InternetAddress;
 import 'package:guardian_keyper/src/core/model/core_model.dart';
 import 'package:guardian_keyper/src/core/utils/random_utils.dart';
 
+final now = DateTime.now();
+
 //Token model
-final peerIdA = PeerId(value: getRandomBytes(64));
-final peerIdB = PeerId(value: getRandomBytes(64));
-final peerIdAA = PeerId(value: peerIdA.value);
-final emptyPeerId = PeerId.empty();
+final peerIdA = PeerId(token: getRandomBytes(64), name: 'Alice');
+final peerIdB = PeerId(token: getRandomBytes(64), name: 'Bob');
+final peerIdAA = PeerId(token: peerIdA.token, name: peerIdA.name);
 
-final groupIdA = GroupId.aNew();
-final groupIdB = GroupId.aNew();
-final groupIdAA = GroupId(value: groupIdA.value);
-final emptyGroupId = GroupId.empty();
+final groupIdA = GroupId(name: 'GroupA');
+final groupIdB = GroupId(name: 'GroupB');
+final groupIdAA = GroupId(token: groupIdA.token, name: 'GroupAA');
 
-final requestIdA = Nonce.aNew();
-final requestIdB = Nonce.aNew();
-final requestIdAA = Nonce(value: requestIdA.value);
-final emptyRequestId = Nonce.empty();
+final requestIdA = MessageId();
+final requestIdB = MessageId();
+final requestIdAA = MessageId(token: requestIdA.token);
 
-final secretIdA = SecretId.aNew();
-final secretIdB = SecretId.aNew();
-final secretIdAA = SecretId(value: secretIdA.value);
-final emptySecretId = SecretId.empty();
+final secretIdA = SecretId(name: 'SecretA');
+final secretIdB = SecretId(name: 'SecretB');
+final secretIdAA = SecretId(token: secretIdA.token, name: 'SecretAA');
 
 //QRCode model
-final qrCode1 = QRCode(
-  nonce: Nonce.aNew(),
+final qrCode1 = MessageModel(
   peerId: peerIdA,
-  type: OperationType.authPeer,
-  peerName: 'Tester qrCodeA',
-  addresses: const [],
+  code: MessageCode.createGroup,
 );
-final qrCode2 = QRCode(
-  nonce: Nonce.aNew(),
+final qrCode2 = MessageModel(
   peerId: peerIdB,
-  type: OperationType.authPeer,
-  peerName: 'Tester qrCodeB',
-  addresses: [InternetAddress.anyIPv4, InternetAddress.loopbackIPv4],
+  code: MessageCode.createGroup,
 );
 
 //Secret shard model
 final secretShardA = SecretShardModel(
-  value: 'TopSecret',
+  id: secretIdA,
+  shard: 'TopSecret',
   ownerId: peerIdA,
-  ownerName: 'Alice',
   groupId: groupIdA,
-  groupName: 'to Bob',
   groupSize: 3,
   groupThreshold: 2,
 );
 final secretShardB = SecretShardModel(
-  value: 'TopSecret',
+  id: secretIdB,
+  shard: 'TopSecret',
   ownerId: peerIdB,
-  ownerName: 'Bob',
   groupId: groupIdB,
-  groupName: 'to Alice',
   groupSize: 3,
   groupThreshold: 2,
 );
-final clearedSecretSecretShardA = secretShardA.copyWith(value: '');
+final clearedSecretSecretShardA = secretShardA.copyWith(shard: '');
 
 //Message model
 final p2pPacketA = MessageModel(
+  id: requestIdA,
   peerId: peerIdA,
-  type: OperationType.getShard,
+  timestamp: now,
+  code: MessageCode.getShard,
   status: MessageStatus.accepted,
-  secretShard: secretShardA,
+  payload: secretShardA,
 );
 final p2pPacketB = MessageModel(
+  id: requestIdB,
   peerId: peerIdB,
-  type: OperationType.authPeer,
+  timestamp: now,
+  code: MessageCode.createGroup,
   status: MessageStatus.rejected,
-  secretShard: secretShardB,
-);
-
-final p2pPacketAisProcessedByB = MessageModel(
-  peerId: peerIdB,
-  type: OperationType.getShard,
-  status: MessageStatus.processed,
-  secretShard: secretShardA.copyWith(ownerId: peerIdB),
+  payload: secretShardB,
 );
 
 //Recovery Group model
-final guardianA = GuardianModel(
-  peerId: peerIdA,
-  name: 'iPhone',
-  tag: 'Piece of ...',
-);
+// final guardianA = GuardianModel(
+//   id: peerIdA,
+//   name: 'iPhone',
+//   tag: 'Piece of ...',
+// );
 
-final guardianB = GuardianModel(
-  peerId: peerIdB,
-  name: 'SuperPhone',
-  tag: 'My treasure',
-);
+// final guardianB = GuardianModel(
+//   id: peerIdB,
+//   name: 'SuperPhone',
+//   tag: 'My treasure',
+// );
 
-const recoveryGroupAName = 'Recovery Group A';
-final recoveryGroupA = RecoveryGroupModel(
-  id: groupIdA,
-  name: recoveryGroupAName,
-  guardians: {guardianA.peerId: guardianA},
-);
+// const recoveryGroupAName = 'Recovery Group A';
+// final recoveryGroupA = RecoveryGroupModel(
+//   id: groupIdA,
+//   name: recoveryGroupAName,
+//   guardians: {guardianA.id: guardianA},
+// );
 
-final emptyRecoveryGroupA = RecoveryGroupModel(
-  id: groupIdA,
-  name: recoveryGroupAName,
-  // ignore: prefer_const_literals_to_create_immutables
-  guardians: {},
-);
+// final emptyRecoveryGroupA = RecoveryGroupModel(
+//   id: groupIdA,
+//   name: recoveryGroupAName,
+//   // ignore: prefer_const_literals_to_create_immutables
+//   guardians: {},
+// );
 
-final recoveryGroupAwithGuardianB = RecoveryGroupModel(
-  id: groupIdA,
-  name: recoveryGroupAName,
-  guardians: {guardianA.peerId: guardianA, guardianB.peerId: guardianB},
-);
+// final recoveryGroupAwithGuardianB = RecoveryGroupModel(
+//   id: groupIdA,
+//   name: recoveryGroupAName,
+//   guardians: {guardianA.id: guardianA, guardianB.id: guardianB},
+// );
 
-final fullRecoveryGroupA = RecoveryGroupModel(
-  id: groupIdA,
-  name: recoveryGroupAName,
-  guardians: {guardianA.peerId: guardianA, guardianB.peerId: guardianB},
-  maxSize: 2,
-);
+// final fullRecoveryGroupA = RecoveryGroupModel(
+//   id: groupIdA,
+//   name: recoveryGroupAName,
+//   guardians: {guardianA.id: guardianA, guardianB.id: guardianB},
+//   maxSize: 2,
+// );
 
-final completedRecoveryGroupA = RecoveryGroupModel(
-  id: groupIdA,
-  name: recoveryGroupAName,
-  guardians: {guardianA.peerId: guardianA},
-  hasSecret: true,
-);
+// final completedRecoveryGroupA = RecoveryGroupModel(
+//   id: groupIdA,
+//   name: recoveryGroupAName,
+//   guardians: {guardianA.id: guardianA},
+// );
 
-final recoveryGroupB = RecoveryGroupModel(
-  id: groupIdB,
-  name: 'Recovery Group B',
-  guardians: {guardianB.peerId: guardianB},
-);
+// final recoveryGroupB = RecoveryGroupModel(
+//   id: groupIdB,
+//   name: 'Recovery Group B',
+//   guardians: {guardianB.id: guardianB},
+// );
 
 //Settings Model
 const settingsA = SettingsModel(

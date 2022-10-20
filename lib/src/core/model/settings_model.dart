@@ -1,8 +1,9 @@
 part of 'core_model.dart';
 
-@immutable
 class SettingsModel extends Equatable {
   static const currentVersion = 1;
+  static const boxName = 'settings';
+  static const typeId = 1;
 
   final String passCode;
   final String deviceName;

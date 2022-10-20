@@ -1,119 +1,107 @@
 import 'package:flutter/material.dart';
 
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
+import 'online_status_widget.dart';
 
 class GuardianTileWidget extends StatelessWidget {
-  final GuardianModel guardian;
-  final bool? isOnline;
+  final PeerId guardian;
+  final String tag; //TBD: remove
   final bool? isSuccess;
   final bool isWaiting;
+  final bool checkStatus;
 
   const GuardianTileWidget({
     super.key,
     required this.guardian,
-    this.isOnline,
+    this.tag = '',
     this.isSuccess,
     this.isWaiting = false,
+    this.checkStatus = false,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      decoration: boxDecoration,
-      padding: paddingV12,
-      child: Row(
-        children: [
-          // Leading
-          Padding(
-            padding: paddingH20,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconOf.shield(
-                  color: theme.colorScheme.onSecondary,
-                  bgColor: isSuccess == null
-                      ? null
-                      : isSuccess == true
-                          ? clGreen
-                          : clRed,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Visibility(
-                    visible: isOnline != null,
-                    child: isOnline == true
-                        ? Text(
-                            'Online',
-                            style: textStyleSourceSansPro412.copyWith(
-                                color: clGreen),
-                          )
-                        : Text(
-                            'Offline',
-                            style: textStyleSourceSansPro412.copyWith(
-                                color: clRed),
-                          ),
+  Widget build(BuildContext context) => Container(
+        decoration: boxDecoration,
+        padding: paddingV12,
+        child: Row(
+          children: [
+            // Leading
+            Padding(
+              padding: paddingH20,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconOf.shield(
+                    color: Theme.of(context).colorScheme.onSecondary,
+                    bgColor: isSuccess == null
+                        ? null
+                        : isSuccess == true
+                            ? clGreen
+                            : clRed,
                   ),
-                ),
-              ],
-            ),
-          ),
-          // Body
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Tag
-                if (guardian.tag.isNotEmpty)
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: borderRadius,
-                      color: theme.colorScheme.secondary,
+                  if (checkStatus)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: OnlineStatusWidget(peerId: guardian),
                     ),
-                    child: Text(
-                      '   ${guardian.tag}   ',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: textStyleSourceSansPro412Purple,
+                ],
+              ),
+            ),
+            // Body
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Tag
+                  if (tag.isNotEmpty)
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: borderRadius,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                      child: Text(
+                        '   $tag   ',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: textStyleSourceSansPro412Purple,
+                      ),
+                    ),
+                  // Title
+                  Text(
+                    guardian.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: textStyleSourceSansPro614.copyWith(
+                      color: guardian.token.isEmpty
+                          ? clRed
+                          : Theme.of(context).colorScheme.primary,
+                      height: 1.5,
                     ),
                   ),
-                // Title
-                Text(
-                  guardian.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: textStyleSourceSansPro614.copyWith(
-                    color: guardian.peerId.value.isEmpty
-                        ? clRed
-                        : theme.colorScheme.primary,
-                    height: 1.5,
+                  // Subtitle
+                  Text(
+                    guardian.toHexShort(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: textStyleSourceSansPro414Purple,
                   ),
-                ),
-                // Subtitle
-                Text(
-                  guardian.peerId.toHexShort(),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: textStyleSourceSansPro414Purple,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          // Trailing
-          Padding(
-            padding: paddingH20,
-            child: SizedBox(
-              height: 20,
-              width: 20,
-              child: isWaiting
-                  ? const CircularProgressIndicator.adaptive(strokeWidth: 2)
-                  : null,
+            // Trailing
+            Padding(
+              padding: paddingH20,
+              child: SizedBox(
+                height: 20,
+                width: 20,
+                child: isWaiting
+                    ? const CircularProgressIndicator.adaptive(strokeWidth: 2)
+                    : null,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 }

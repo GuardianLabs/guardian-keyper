@@ -1,124 +1,210 @@
 part of 'core_model.dart';
 
-enum OperationType { authPeer, getShard, setShard, takeOwnership }
+enum MessageCode { createGroup, getShard, setShard, takeGroup }
 
-enum MessageStatus { started, processed, accepted, rejected, failed }
+enum MessageStatus {
+  requested,
+  received,
+  accepted,
+  rejected,
+  failed,
+  duplicated,
+}
 
-@immutable
-class MessageModel extends Equatable {
-  static const currentVersion = 1;
+const typeId2Type = {
+  PeerAddressList.typeId: PeerAddressList.fromBytes,
+  SecretShardModel.typeId: SecretShardModel.fromBytes,
+  RecoveryGroupModel.typeId: RecoveryGroupModel.fromBytes,
+};
 
+const type2TypeId = {
+  PeerAddressList: PeerAddressList.typeId,
+  SecretShardModel: SecretShardModel.typeId,
+  RecoveryGroupModel: RecoveryGroupModel.typeId,
+};
+
+class MessageModel extends Serializable {
+  static const currentVersion = 2;
+  static const boxName = 'messages';
+  static const typeId = 11;
+
+  static MessageModel? tryFromBase64(String value) {
+    try {
+      return MessageModel.fromBase64(value);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static MessageModel? tryFromBytes(Uint8List value) {
+    try {
+      return MessageModel.fromBytes(value);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  final int version;
+  final MessageId id;
   final PeerId peerId;
   final DateTime timestamp;
-  final OperationType type;
+  final MessageCode code;
   final MessageStatus status;
-  final Nonce nonce;
-  final SecretShardModel secretShard;
+  final int? payloadTypeId;
+  final Serializable? payload;
 
   MessageModel({
+    this.version = currentVersion,
+    MessageId? id,
     PeerId? peerId,
     DateTime? timestamp,
-    required this.type,
-    this.status = MessageStatus.started,
-    Nonce? nonce,
-    SecretShardModel? secretShard,
-  })  : peerId = peerId ?? PeerId.empty(),
+    required this.code,
+    this.status = MessageStatus.requested,
+    this.payload,
+  })  : peerId = peerId ?? PeerId(),
         timestamp = timestamp ?? DateTime.now(),
-        nonce = nonce ?? Nonce.empty(),
-        secretShard = secretShard ?? SecretShardModel();
+        payloadTypeId = type2TypeId[payload.runtimeType],
+        id = id ?? MessageId();
 
   @override
-  List<Object> get props => [
-        type,
-        status,
-        peerId,
-        nonce,
-        secretShard,
-      ];
+  List<Object> get props => [id];
 
-  bool get isStarted => status == MessageStatus.started;
+  @override
+  bool get isEmpty => payload == null;
+
+  @override
+  bool get isNotEmpty => payload != null;
+
+  String get aKey => id.asKey;
+
+  SecretShardModel get secretShard => payload as SecretShardModel;
+
+  RecoveryGroupModel get recoveryGroup => payload as RecoveryGroupModel;
+
+  PeerId get ownerId {
+    switch (payload.runtimeType) {
+      case SecretShardModel:
+        return (payload as SecretShardModel).ownerId;
+      case RecoveryGroupModel:
+        return (payload as RecoveryGroupModel).ownerId;
+      default:
+        throw const FormatException('Payload have no ownerId!');
+    }
+  }
+
+  GroupId get groupId {
+    switch (payload.runtimeType) {
+      case SecretShardModel:
+        return (payload as SecretShardModel).groupId;
+      case RecoveryGroupModel:
+        return (payload as RecoveryGroupModel).id;
+      default:
+        throw const FormatException('Payload have no groupId!');
+    }
+  }
+
+  bool get isRequested => status == MessageStatus.requested;
+  bool get isNotRequested => status != MessageStatus.requested;
+  bool get isReceived => status == MessageStatus.received;
+  bool get isNotReceived => status != MessageStatus.received;
   bool get isAccepted => status == MessageStatus.accepted;
-  bool get isProcessed => status == MessageStatus.processed;
   bool get isRejected => status == MessageStatus.rejected;
   bool get isFailed => status == MessageStatus.failed;
+  bool get isDuplicated => status == MessageStatus.duplicated;
+
   bool get isResolved =>
       status == MessageStatus.accepted || status == MessageStatus.rejected;
+
   bool get hasResponse =>
       status == MessageStatus.accepted ||
       status == MessageStatus.rejected ||
       status == MessageStatus.failed;
 
-  String get aKey {
-    switch (type) {
-      case OperationType.authPeer:
-        return nonce.asKey;
-      case OperationType.setShard:
-        return secretShard.groupId.asKey;
-      case OperationType.getShard:
-        return secretShard.groupId.asKey;
-      case OperationType.takeOwnership:
-        return nonce.asKey;
+  bool get hasNoResponse =>
+      status == MessageStatus.requested || status == MessageStatus.received;
+
+  factory MessageModel.fromBase64(String value) =>
+      MessageModel.fromBytes(base64Decode(value));
+
+  factory MessageModel.fromBytes(List<int> value) {
+    final u = Unpacker(value is Uint8List ? value : Uint8List.fromList(value));
+    final version = u.unpackInt()!;
+    switch (version) {
+      case 1:
+        final timestamp = DateTime.fromMillisecondsSinceEpoch(
+          u.unpackInt()!,
+          isUtc: true,
+        );
+        final code = MessageCode.values[u.unpackInt()!];
+        final status = MessageStatus.values[u.unpackInt()!];
+        final id = MessageId(token: Uint8List.fromList(u.unpackBinary()));
+        final secretShard = SecretShardModel.fromBytes(u.unpackBinary());
+        return MessageModel(
+          version: version,
+          id: id,
+          peerId: secretShard.ownerId,
+          timestamp: timestamp,
+          code: code,
+          status: status,
+          payload: code == MessageCode.getShard || code == MessageCode.setShard
+              ? secretShard
+              : RecoveryGroupModel(
+                  id: secretShard.groupId,
+                  ownerId: secretShard.ownerId,
+                ),
+        );
+
+      case 2:
+        final id = MessageId.fromBytes(u.unpackBinary());
+        final peerId = PeerId.fromBytes(u.unpackBinary());
+        final timestamp =
+            DateTime.fromMillisecondsSinceEpoch(u.unpackInt()!, isUtc: true);
+        final code = MessageCode.values[u.unpackInt()!];
+        final status = MessageStatus.values[u.unpackInt()!];
+        final payloadTypeId = u.unpackInt();
+        final payloadRaw = u.unpackBinary();
+        final payload = typeId2Type[payloadTypeId]?.call(payloadRaw);
+        return MessageModel(
+          version: version,
+          id: id,
+          peerId: peerId,
+          timestamp: timestamp,
+          code: code,
+          status: status,
+          payload: payload,
+        );
+
+      default:
+        throw const FormatException('Unsupported version of MessageModel!');
     }
   }
 
-  factory MessageModel.fromBytes(Uint8List value, [PeerId? peerId]) {
-    final u = Unpacker(value);
-    if (u.unpackInt() != currentVersion) throw const FormatException();
-    final timestamp =
-        DateTime.fromMillisecondsSinceEpoch(u.unpackInt()!, isUtc: true);
-    final type = OperationType.values[u.unpackInt()!];
-    final status = MessageStatus.values[u.unpackInt()!];
-    final nonce = Nonce(value: Uint8List.fromList(u.unpackBinary()));
-    final secretShardBytes = Uint8List.fromList(u.unpackBinary());
-    final secretShard = secretShardBytes.isEmpty
-        ? SecretShardModel()
-        : SecretShardModel.fromBytes(secretShardBytes);
-    return MessageModel(
-      peerId: peerId ?? secretShard.ownerId,
-      timestamp: timestamp,
-      type: type,
-      status: status,
-      nonce: nonce,
-      secretShard: secretShard,
-    );
-  }
-
+  @override
   Uint8List toBytes() {
     final p = Packer()
       ..packInt(currentVersion)
+      ..packBinary(id.toBytes())
+      ..packBinary(peerId.toBytes())
       ..packInt(timestamp.millisecondsSinceEpoch)
-      ..packInt(type.index)
+      ..packInt(code.index)
       ..packInt(status.index)
-      ..packBinary(nonce.value)
-      ..packBinary(secretShard.toBytes());
+      ..packInt(payloadTypeId)
+      ..packBinary(payload?.toBytes());
     return p.takeBytes();
   }
 
   MessageModel copyWith({
     PeerId? peerId,
-    OperationType? type,
     MessageStatus? status,
-    Nonce? nonce,
-    SecretShardModel? secretShard,
+    Serializable? payload,
   }) =>
       MessageModel(
+        version: version,
+        id: id,
         peerId: peerId ?? this.peerId,
         timestamp: timestamp,
-        type: type ?? this.type,
+        code: code,
         status: status ?? this.status,
-        nonce: nonce ?? this.nonce,
-        secretShard: secretShard ?? this.secretShard,
+        payload: payload ?? this.payload,
       );
-
-  MessageModel process(PeerId ownerId, [String? ownerName]) => copyWith(
-        peerId: ownerId,
-        status: MessageStatus.processed,
-        secretShard: secretShard.copyWith(
-          ownerId: ownerId,
-          ownerName: ownerName,
-        ),
-      );
-
-  MessageModel clearSecret() =>
-      copyWith(secretShard: secretShard.copyWith(value: ''));
 }

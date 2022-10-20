@@ -1,168 +1,184 @@
-import '/src/core/di_container.dart' show SettingsModelExt;
-import '/src/core/controller/base_controller.dart';
+import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
 
 export 'package:provider/provider.dart';
 
-class GuardianController extends BaseController {
-  GuardianController({required super.diContainer}) {
+class GuardianController {
+  final DIContainer diContainer;
+
+  GuardianController({required this.diContainer}) {
     diContainer.networkService.guardianStream.listen(onMessage);
-    _cleanMessageBox();
+    Future.microtask(_cleanMessageBox);
   }
 
-  Iterable<MessageModel> get messages => diContainer.boxMessages.values;
-
-  Iterable<MessageModel> get messagesProcessed =>
-      diContainer.boxMessages.values.where((e) => e.isProcessed);
-
-  Iterable<SecretShardModel> get secretShards =>
-      diContainer.boxSecretShards.values;
-
-  MessageModel? getMessageByKey(String? key) =>
-      diContainer.boxMessages.get(key);
-
-  SecretShardModel? getSecretShardByKey(String? key) =>
-      diContainer.boxSecretShards.get(key);
-
-  QRCode getQrCode([SecretShardModel? secretShard]) {
-    final message = MessageModel(
-      type: secretShard == null
-          ? OperationType.authPeer
-          : OperationType.takeOwnership,
-      status: MessageStatus.started,
-      nonce: Nonce.aNew(),
-      secretShard: secretShard,
-    );
-    _putMessage(message);
-    return QRCode(
-      type: message.type,
-      nonce: message.nonce,
-      peerId: diContainer.networkService.myPeerId,
-      peerName: diContainer.boxSettings.readWhole().deviceName,
-      addresses: diContainer.networkService.myIPs,
+  /// Create ticket to create\take group
+  MessageModel generateQrCode([GroupId? groupId]) {
+    final message = groupId == null
+        ? MessageModel(code: MessageCode.createGroup)
+        : MessageModel(
+            code: MessageCode.takeGroup,
+            payload: RecoveryGroupModel(id: groupId),
+          );
+    // save groupId for transaction
+    diContainer.boxMessages.put(message.aKey, message);
+    return message.copyWith(
+      peerId: diContainer.myPeerId,
+      payload: PeerAddressList(
+        addresses: diContainer.networkService.myAddresses,
+      ),
     );
   }
 
   void onMessage(MessageModel message) {
-    if (message.secretShard.isEmpty) return;
-    final request = getMessageByKey(message.aKey);
-    if (message.type != OperationType.getShard) {
-      if (request == null ||
-          request.type != message.type ||
-          request.hasResponse) {
-        diContainer.networkService.sendToRecoveryGroup(
-            message.copyWith(status: MessageStatus.failed));
-        return;
-      }
-      if (message.isProcessed) return;
+    if (message.isEmpty) return;
+    final ticket = diContainer.boxMessages.get(message.aKey);
+
+    switch (message.code) {
+      case MessageCode.createGroup:
+        if (ticket == null) return; // qrCode was not generated
+        if (message.isNotRequested) return; // qrCode was processed already
+        if (message.code != ticket.code) return;
+        if (diContainer.boxRecoveryGroups.containsKey(message.groupId.asKey)) {
+          return; // group already exists
+        }
+        break;
+
+      case MessageCode.takeGroup:
+        if (ticket == null) return; // qrCode was not generated
+        if (message.isNotRequested) return; // qrCode was processed already
+        if (message.code != ticket.code) return;
+        if (!diContainer.boxRecoveryGroups.containsKey(message.groupId.asKey)) {
+          return; // group does not exists
+        }
+        message = message.copyWith(payload: ticket.payload);
+        break;
+
+      case MessageCode.setShard:
+        if (ticket != null) return; // request already processed
+        final recoveryGroup =
+            diContainer.boxRecoveryGroups.get(message.groupId.asKey);
+        if (recoveryGroup == null) return; // group does not exists
+        if (recoveryGroup.ownerId != message.peerId) return; // not owner
+        // already have this Secret
+        if (recoveryGroup.secrets.containsKey(message.secretShard.id)) return;
+        break;
+
+      case MessageCode.getShard:
+        if (ticket != null) return; // request already processed
+        final recoveryGroup =
+            diContainer.boxRecoveryGroups.get(message.groupId.asKey);
+        if (recoveryGroup == null) return; // group does not exists
+        if (recoveryGroup.ownerId != message.peerId) return; // not owner
+        // Have no such Secret
+        if (!recoveryGroup.secrets.containsKey(message.secretShard.id)) return;
+        break;
     }
-
-    switch (message.type) {
-      case OperationType.authPeer:
-        _putMessage(message.process(message.peerId));
-        break;
-
-      case OperationType.setShard:
-        if (message.peerId != request!.secretShard.ownerId) return;
-        _putMessage(message.process(message.peerId));
-        break;
-
-      case OperationType.getShard:
-        final secretShard =
-            diContainer.boxSecretShards.get(message.secretShard.asKey);
-        if (secretShard?.ownerId != message.peerId) return;
-        _putMessage(MessageModel(
-          peerId: secretShard!.ownerId,
-          type: OperationType.getShard,
-          status: MessageStatus.processed,
-          nonce: message.nonce,
-          secretShard: secretShard,
-        ));
-        break;
-
-      case OperationType.takeOwnership:
-        _putMessage(request!.process(
-          message.peerId,
-          message.secretShard.ownerName,
-        ));
-        break;
-    }
+    diContainer.boxMessages.put(
+      message.aKey,
+      message.copyWith(status: MessageStatus.received),
+    );
   }
 
-  Future<void> sendAuthPeerResponse(MessageModel request) async {
-    await diContainer.networkService.sendToRecoveryGroup(request);
-    await _archiveMessage(request);
-    await _putMessage(MessageModel(
-      type: OperationType.setShard,
-      status: MessageStatus.started,
-      secretShard: request.secretShard.copyWith(ownerId: request.peerId),
-    ));
+  Future<void> sendCreateGroupResponse(MessageModel request) async {
+    if (request.isAccepted) {
+      final recoveryGroup = RecoveryGroupModel(
+        id: request.recoveryGroup.id,
+        ownerId: request.peerId,
+        maxSize: request.recoveryGroup.maxSize,
+        threshold: request.recoveryGroup.threshold,
+      );
+      await diContainer.boxRecoveryGroups
+          .put(recoveryGroup.aKey, recoveryGroup);
+    }
+    await _sendResponse(request.copyWith(payload: null));
+    await archivateMessage(request);
+  }
+
+  Future<void> sendTakeGroupResponse(MessageModel request) async {
+    if (request.isAccepted) {
+      final recoveryGroup = diContainer.boxRecoveryGroups
+          .get(request.recoveryGroup.aKey)!
+          .copyWith(ownerId: request.peerId);
+      await _sendResponse(
+        request.copyWith(
+          payload: recoveryGroup.copyWith(
+            secrets: {
+              for (final secretId in recoveryGroup.secrets.keys) secretId: ''
+            },
+          ),
+        ),
+      );
+      await diContainer.boxRecoveryGroups.put(
+        recoveryGroup.aKey,
+        recoveryGroup,
+      );
+    } else {
+      await _sendResponse(request.copyWith(payload: null));
+    }
+    await archivateMessage(request);
   }
 
   Future<void> sendSetShardResponse(MessageModel request) async {
     if (request.isAccepted) {
-      await diContainer.boxSecretShards
-          .put(request.secretShard.asKey, request.secretShard);
+      final recoveryGroup =
+          diContainer.boxRecoveryGroups.get(request.groupId.asKey)!;
+      await diContainer.boxRecoveryGroups.put(
+        request.groupId.asKey,
+        recoveryGroup.copyWith(secrets: {
+          ...recoveryGroup.secrets,
+          request.secretShard.id: request.secretShard.shard,
+        }),
+      );
     }
-    request = request.clearSecret();
-    await diContainer.networkService.sendToRecoveryGroup(request);
-    await _archiveMessage(request);
+    await _sendResponse(request.copyWith(payload: null));
+    await archivateMessage(request.copyWith(
+      payload: (request.payload as SecretShardModel).copyWith(shard: ''),
+    ));
   }
 
   Future<void> sendGetShardResponse(MessageModel request) async {
-    request = request.copyWith();
-    if (request.isRejected) request = request.clearSecret();
-    await diContainer.networkService.sendToRecoveryGroup(request);
-    await _archiveMessage(request);
-  }
-
-  Future<void> sendTakeOwnershipResponse(MessageModel request) async {
-    await diContainer.networkService.sendToRecoveryGroup(request.clearSecret());
     if (request.isAccepted) {
-      await diContainer.boxSecretShards.put(
-        request.secretShard.asKey,
-        request.secretShard,
+      final recoveryGroup =
+          diContainer.boxRecoveryGroups.get(request.groupId.asKey)!;
+      await _sendResponse(
+        request.copyWith(
+          payload: SecretShardModel(
+            id: request.secretShard.id,
+            ownerId: recoveryGroup.ownerId,
+            groupId: recoveryGroup.id,
+            groupSize: recoveryGroup.maxSize,
+            groupThreshold: recoveryGroup.threshold,
+            shard: recoveryGroup.secrets[request.secretShard.id]!,
+          ),
+        ),
       );
+    } else {
+      await _sendResponse(request.copyWith(payload: null));
     }
-    await _archiveMessage(request);
+    await archivateMessage(request);
   }
 
-  Future<void> archivateRequest(MessageModel request) async {
-    if (!request.isProcessed) return;
-    await _archiveMessage(request.copyWith(status: MessageStatus.rejected));
-  }
+  Future<void> _sendResponse(MessageModel message) =>
+      diContainer.networkService.sendToRecoveryGroup(
+        peerId: message.peerId,
+        message: message.copyWith(peerId: diContainer.myPeerId),
+      );
 
-  Future<void> removeShard(SecretShardModel secretShard) async {
-    await diContainer.boxSecretShards.delete(secretShard.asKey);
-    notifyListeners();
-  }
-
-  Future<void> _putMessage(MessageModel message) async {
-    if (getMessageByKey(message.aKey) == message) return;
-    await diContainer.boxMessages.put(message.aKey, message);
-    if (message.isProcessed) {
-      diContainer.eventBus.fire(NewMessageProcessedEvent(message: message));
-    }
-    notifyListeners();
-  }
-
-  Future<void> _archiveMessage(MessageModel message) async {
+  Future<void> archivateMessage(MessageModel message) async {
     await diContainer.boxMessages.delete(message.aKey);
-    if (message.secretShard.value.isNotEmpty) message = message.clearSecret();
     await diContainer.boxMessages.put(
       message.timestamp.millisecondsSinceEpoch.toString(),
       message,
     );
-    notifyListeners();
   }
 
   Future<void> _cleanMessageBox() async {
     if (diContainer.boxMessages.isEmpty) return;
     final expired = diContainer.boxMessages.values
         .where((e) =>
-            e.isStarted &&
-            (e.type == OperationType.authPeer ||
-                e.type == OperationType.takeOwnership) &&
+            e.isRequested &&
+            (e.code == MessageCode.createGroup ||
+                e.code == MessageCode.takeGroup) &&
             e.timestamp
                 .isBefore(DateTime.now().subtract(const Duration(days: 1))))
         .toList(growable: false);

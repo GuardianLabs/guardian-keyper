@@ -1,9 +1,7 @@
 import '/src/core/di_container.dart';
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/auth.dart';
-
-import '/src/home/home_view.dart';
 
 import '../intro_controller.dart';
 
@@ -29,8 +27,9 @@ class _SetPasscodePageState extends State<SetPasscodePage> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Container(color: Theme.of(context).colorScheme.background);
+  Widget build(BuildContext context) => Container(
+        color: Theme.of(context).colorScheme.background,
+      );
 
   void _createPincode() {
     final diContainer = context.read<DIContainer>();
@@ -45,14 +44,14 @@ class _SetPasscodePageState extends State<SetPasscodePage> {
       screenLockConfig: screenLockConfig,
       inputController: _passcodeController,
       title: Padding(
-          padding: paddingV32H20,
+          padding: paddingV32 + paddingH20,
           child: Text(
             'Create your passcode',
             style: textStylePoppins620,
             textAlign: TextAlign.center,
           )),
       confirmTitle: Padding(
-          padding: paddingV32H20,
+          padding: paddingV32 + paddingH20,
           child: Text(
             'Enter it once more',
             style: textStylePoppins620,
@@ -70,8 +69,8 @@ class _SetPasscodePageState extends State<SetPasscodePage> {
           context.read<IntroController>().nextScreen();
           Navigator.of(context).pop();
         } else {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const HomeView()),
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/home',
             (route) => false,
           );
         }

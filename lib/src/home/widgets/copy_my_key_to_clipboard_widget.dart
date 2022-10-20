@@ -25,8 +25,9 @@ class _CopyMyKeyToClipboardWidgetState
       onPressed: isDisabled
           ? null
           : () async {
-              await Clipboard.setData(
-                  ClipboardData(text: diContainer.myPeerId.asHex));
+              await Clipboard.setData(ClipboardData(
+                text: diContainer.myPeerId.asHex,
+              ));
               setState(() => isDisabled = true);
               timer = Timer(
                 diContainer.globals.snackBarDuration,

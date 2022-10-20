@@ -2,13 +2,13 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/di_container.dart';
 
 class GetQRCodeWidget extends StatefulWidget {
-  final void Function(QRCode qrCode) resultCallback;
+  final void Function(MessageModel qrCode) resultCallback;
 
   const GetQRCodeWidget({super.key, required this.resultCallback});
 
@@ -17,21 +17,22 @@ class GetQRCodeWidget extends StatefulWidget {
 }
 
 class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
-  late final Duration _snackBarDuration;
-  late final PeerId _myPeerId;
+  late Duration _snackBarDuration;
+  late PeerId _myPeerId;
   var _scanAreaSize = 0.0;
   var _canPaste = false;
   Timer? _snackBarTimer;
 
   @override
   void initState() {
+    super.initState();
     final diContainer = context.read<DIContainer>();
     _snackBarDuration = diContainer.globals.snackBarDuration;
-    _myPeerId = diContainer.networkService.myPeerId;
+    _myPeerId = diContainer.myPeerId;
+
     Future.microtask(() async {
       if (await Clipboard.hasStrings()) setState(() => _canPaste = true);
     });
-    super.initState();
   }
 
   @override
@@ -93,7 +94,7 @@ class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
 
   void _processCode(String code) {
     SnackBar? errorSnackBar;
-    final qrCode = QRCode.tryParseBase64(code);
+    final qrCode = MessageModel.tryFromBase64(code);
 
     if (qrCode == null) {
       errorSnackBar = buildSnackBar(
@@ -103,7 +104,7 @@ class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
       );
     } else if (qrCode.peerId == _myPeerId) {
       errorSnackBar = buildSnackBar(
-        text: qrCode.type == OperationType.takeOwnership
+        text: qrCode.code == MessageCode.takeGroup
             ? 'Transferring ownership to a guardian device is not supported yet.'
             : 'This operation is not supported yet.',
         isError: true,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../theme_data.dart';
+import '/src/core/theme/theme.dart';
 
 enum BageType { ok, warning, error }
 

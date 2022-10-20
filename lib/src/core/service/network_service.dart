@@ -20,19 +20,21 @@ class NetworkService extends TopicHandler with WidgetsBindingObserver {
     bool useMdnsService = true,
   }) : super(router) {
     WidgetsBinding.instance.addObserver(this);
+
     if (useMdnsService) {
       MdnsService(
         router: router,
         mdnsBroadcastDiscover: MdnsBroadcastDiscovery(router.pubKey),
       );
     }
+
     Future.microtask(router.run);
   }
 
   factory NetworkService.udp({
     required KeyBunch keyBunch,
-    String? bsAddressV4,
-    String? bsAddressV6,
+    String bsAddressV4 = '',
+    String bsAddressV6 = '',
     int bsPort = 4349,
   }) =>
       NetworkService(
@@ -46,29 +48,35 @@ class NetworkService extends TopicHandler with WidgetsBindingObserver {
             pubKey: keyBunch.singPublicKey,
             secretKey: keyBunch.singPrivateKey,
           ),
-          bootstrapServerAddress: bsAddressV4 != null
-              ? Peer(
+          bootstrapServerAddress: bsAddressV4.isEmpty
+              ? null
+              : Peer(
                   InternetAddress(bsAddressV4, type: InternetAddressType.IPv4),
                   bsPort,
-                )
-              : null,
-          bootstrapServerAddressIpv6: bsAddressV6 != null
-              ? Peer(
+                ),
+          bootstrapServerAddressIpv6: bsAddressV6.isEmpty
+              ? null
+              : Peer(
                   InternetAddress(bsAddressV6, type: InternetAddressType.IPv6),
                   bsPort,
-                )
-              : null,
+                ),
         ),
       );
-
-  PeerId get myPeerId => PeerId(value: router.pubKey.data);
-
-  List<InternetAddress> get myIPs => router.connection.addresses;
 
   Stream<MessageModel> get guardianStream => _guardianStreamController.stream;
 
   Stream<MessageModel> get recoveryGroupStream =>
       _recoveryGroupStreamController.stream;
+
+  List<PeerAddress> get myAddresses => [
+        for (final address in router.connection.addresses)
+          PeerAddress(
+            address: address,
+            port: address.type == InternetAddressType.IPv4
+                ? router.connection.ipv4Port
+                : router.connection.ipv6Port,
+          )
+      ];
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async =>
@@ -83,22 +91,28 @@ class NetworkService extends TopicHandler with WidgetsBindingObserver {
   @override
   void onMessage(Header header, Uint8List data, Peer peer) {
     if (data.isEmpty) return;
+
+    final message = MessageModel.tryFromBytes(data);
+    if (message == null) return;
+    if (message.version != MessageModel.currentVersion) return;
+    if (message.peerId != PeerId(token: header.srcKey.data)) return;
+
     switch (header.topic) {
       case _topicOfGuardian:
-        _guardianStreamController.add(
-            MessageModel.fromBytes(data, PeerId(value: header.srcKey.data)));
+        _guardianStreamController.add(message);
         break;
       case _topicOfRecoveryGroup:
-        _recoveryGroupStreamController.add(
-            MessageModel.fromBytes(data, PeerId(value: header.srcKey.data)));
+        _recoveryGroupStreamController.add(message);
         break;
     }
   }
 
   void setBootstrapServer(String? ipV4, String? ipV6, [int bsPort = 4349]) {
     final isProxyEnabled = ipV4 != null && ipV6 != null;
+
     Settings.enableBootstrapProxy = isProxyEnabled;
     Settings.enableBootstrapSearch = isProxyEnabled;
+
     router.setBootstrapServer(
       ipV4 == null ? null : Peer(InternetAddress(ipV4), bsPort),
       ipV6 == null ? null : Peer(InternetAddress(ipV6), bsPort),
@@ -107,8 +121,9 @@ class NetworkService extends TopicHandler with WidgetsBindingObserver {
 
   void addPeer(PeerId peerId, Uint8List address, {bool enableSearch = false}) {
     final ip = InternetAddress.fromRawAddress(address);
+
     router.addPeer(
-      PubKey(peerId.value),
+      PubKey(peerId.token),
       Peer(
         ip,
         ip.type == InternetAddressType.IPv4
@@ -120,7 +135,7 @@ class NetworkService extends TopicHandler with WidgetsBindingObserver {
   }
 
   bool getPeerStatus(PeerId peerId) =>
-      router.getPeerStatus(PubKey(peerId.value));
+      router.getPeerStatus(PubKey(peerId.token));
 
   Future<bool> pingPeer({
     required PeerId peerId,
@@ -128,7 +143,7 @@ class NetworkService extends TopicHandler with WidgetsBindingObserver {
     Duration? timeout,
   }) =>
       router.pingPeer(
-        PubKey(peerId.value),
+        PubKey(peerId.token),
         staticCheck: staticCheck,
         timeout: timeout,
       );
@@ -137,26 +152,35 @@ class NetworkService extends TopicHandler with WidgetsBindingObserver {
     void Function(bool) callback,
     PeerId peerId,
   ) =>
-      router.onPeerStatusChanged(callback, PubKey(peerId.value));
+      router.onPeerStatusChanged(callback, PubKey(peerId.token));
 
-  Future<void> sendToRecoveryGroup(MessageModel message, {withAck = true}) =>
+  Future<void> sendToRecoveryGroup({
+    required PeerId peerId,
+    required MessageModel message,
+    bool withAck = true,
+  }) =>
       router
           .sendTo(
             _topicOfRecoveryGroup,
-            PubKey(message.peerId.value),
+            PubKey(peerId.token),
             message.toBytes(),
             ack: withAck ? Ack.required : Ack.no,
           )
           .catchError((_) {}, test: (e) => e is TimeoutException);
 
-  Future<void> sendToGuardian(MessageModel message, {withAck = true}) => router
-      .sendTo(
-        _topicOfGuardian,
-        PubKey(message.peerId.value),
-        message.toBytes(),
-        ack: withAck ? Ack.required : Ack.no,
-      )
-      .catchError((_) {}, test: (e) => e is TimeoutException);
+  Future<void> sendToGuardian({
+    required PeerId peerId,
+    required MessageModel message,
+    bool withAck = true,
+  }) =>
+      router
+          .sendTo(
+            _topicOfGuardian,
+            PubKey(peerId.token),
+            message.toBytes(),
+            ack: withAck ? Ack.required : Ack.no,
+          )
+          .catchError((_) {}, test: (e) => e is TimeoutException);
 }
 
 Future<void> initCrypto() => P2PCrypto().init();
@@ -165,6 +189,7 @@ Future<KeyBunch> generateKeyBunch() async {
   final encryptionAesKey = (await P2PCrypto().encryptionKeyPair()).pubKey;
   final encryptionKeyPair = await P2PCrypto().encryptionKeyPair();
   final signKeyPair = await P2PCrypto().signKeyPair();
+
   return KeyBunch(
     encryptionPrivateKey: encryptionKeyPair.secretKey,
     encryptionPublicKey: encryptionKeyPair.pubKey,

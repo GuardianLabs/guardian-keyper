@@ -23,7 +23,7 @@ class AddGuardianView extends StatelessWidget {
   Widget build(BuildContext context) {
     final diContainer = context.read<DIContainer>();
     return ChangeNotifierProvider(
-      create: (_) => AddGuardianController(
+      create: (context) => AddGuardianController(
         diContainer: diContainer,
         pagesCount: _pages.length,
         groupId: groupId,

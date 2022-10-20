@@ -1,64 +1,160 @@
-import '/src/core/di_container.dart' show SettingsModelExt;
-import '/src/core/controller/page_controller.dart';
+import 'dart:async';
+
 import '/src/core/model/core_model.dart';
+import '/src/core/controller/page_controller.dart';
 
 typedef Callback = void Function(MessageModel message);
 
 class RecoveryGroupController extends PageController {
+  StreamSubscription<MessageModel>? networkSubscription;
+  Timer? timer;
+
   RecoveryGroupController({
     required super.diContainer,
     required super.pagesCount,
+    super.currentPage,
   });
 
-  GlobalsModel get globals => diContainer.globals;
-
-  PeerId get myPeerId =>
-      PeerId(value: diContainer.networkService.router.pubKey.data);
-
-  String get myDeviceName => diContainer.boxSettings.deviceName;
-
-  Iterable get storedGroups => diContainer.boxRecoveryGroup.keys;
-
-  Iterable<RecoveryGroupModel> get groups =>
-      diContainer.boxRecoveryGroup.values;
+  Globals get globals => diContainer.globals;
 
   Stream<MessageModel> get networkStream =>
       diContainer.networkService.recoveryGroupStream;
 
-  void addPeer(
-    PeerId peerId,
-    Uint8List address, {
-    bool enableSearch = false,
-  }) =>
-      diContainer.networkService
-          .addPeer(peerId, address, enableSearch: enableSearch);
+  bool get isWaiting =>
+      networkSubscription != null && !networkSubscription!.isPaused;
+
+  @override
+  void dispose() {
+    stopListenResponse();
+    super.dispose();
+  }
+
+  void stopListenResponse() {
+    timer?.cancel();
+    networkSubscription?.pause();
+  }
+
+  void startNetworkRequest(void Function([Timer?]) callback) {
+    timer = Timer.periodic(globals.retryNetworkTimeout, callback);
+    callback();
+  }
+
+  void assignPeersAddresses(PeerId peerId, PeerAddressList list) {
+    for (final address in list.addresses) {
+      try {
+        diContainer.networkService.addPeer(
+          peerId,
+          address.address.rawAddress,
+        );
+      } catch (_) {}
+    }
+  }
 
   Future<void> sendToGuardian(MessageModel message) =>
-      diContainer.networkService.sendToGuardian(message);
+      diContainer.networkService.sendToGuardian(
+        peerId: message.peerId,
+        message: message.copyWith(peerId: diContainer.myPeerId),
+      );
 
   RecoveryGroupModel? getGroupById(GroupId groupId) =>
-      diContainer.boxRecoveryGroup.get(groupId.asKey);
+      diContainer.boxRecoveryGroups.get(groupId.asKey);
 
-  Future<RecoveryGroupModel> addGroup(RecoveryGroupModel group) async {
-    await diContainer.boxRecoveryGroup.put(group.id.asKey, group);
+  Future<RecoveryGroupModel> createGroup(RecoveryGroupModel group) async {
+    await diContainer.boxRecoveryGroups.put(group.aKey, group);
     notifyListeners();
     return group;
   }
 
-  Future<void> removeGroup(GroupId groupId) async {
-    await diContainer.boxRecoveryGroup.delete(groupId.asKey);
+  Future<RecoveryGroupModel> addGuardian(
+    GroupId groupId,
+    PeerId guardian, [
+    String tag = '',
+  ]) async {
+    var group = diContainer.boxRecoveryGroups.get(groupId.asKey)!;
+    group = group.copyWith(
+      guardians: {...group.guardians, guardian: tag},
+    );
+    await diContainer.boxRecoveryGroups.put(groupId.asKey, group);
+    return group;
+  }
+}
+
+class RecoveryGroupGuardianController extends RecoveryGroupController {
+  MessageModel? _qrCode;
+
+  RecoveryGroupGuardianController({
+    required super.diContainer,
+    required super.pagesCount,
+    super.currentPage,
+  });
+
+  MessageModel? get qrCode => _qrCode;
+
+  set qrCode(MessageModel? qrCode) {
+    if (_qrCode != qrCode) {
+      _qrCode = qrCode;
+      if (qrCode != null) {
+        assignPeersAddresses(
+          qrCode.peerId,
+          qrCode.payload as PeerAddressList,
+        );
+        nextScreen();
+      }
+    }
+  }
+}
+
+class RecoveryGroupSecretController extends RecoveryGroupController {
+  SecretId secretId;
+  final GroupId groupId;
+  late final RecoveryGroupModel group;
+  final Set<MessageModel> messages = {};
+  final _messagesStreamController = StreamController<MessageModel>.broadcast();
+
+  RecoveryGroupSecretController({
+    required super.diContainer,
+    required super.pagesCount,
+    super.currentPage,
+    required this.groupId,
+    required this.secretId,
+  }) {
+    group = getGroupById(groupId)!;
+  }
+
+  Set<MessageModel> get messagesWithResponse =>
+      messages.where((m) => m.hasResponse).toSet();
+
+  Set<MessageModel> get messagesHasNoResponse =>
+      messages.where((m) => m.hasNoResponse).toSet();
+
+  Set<MessageModel> get messagesWithSuccess =>
+      messages.where((m) => m.isAccepted).toSet();
+
+  Set<MessageModel> get messagesNotSuccess =>
+      messages.where((m) => m.isRejected || m.isFailed).toSet();
+
+  Stream<MessageModel> get messagesStream => _messagesStreamController.stream;
+
+  @override
+  void dispose() {
+    _messagesStreamController.close();
+    super.dispose();
+  }
+
+  void updateMessage(MessageModel message) {
+    messages.remove(message);
+    messages.add(message);
+    _messagesStreamController.add(message);
     notifyListeners();
   }
 
-  Future<RecoveryGroupModel?> addGuardian(
-    GroupId groupId,
-    GuardianModel guardian,
-  ) async {
-    final group = diContainer.boxRecoveryGroup.get(groupId.asKey);
-    if (group == null) return null;
-    final updatedGroup = group.addGuardian(guardian);
-    await diContainer.boxRecoveryGroup.put(updatedGroup.id.asKey, updatedGroup);
-    notifyListeners();
-    return updatedGroup;
+  Future<void> requestShards([_]) async {
+    if (messagesWithResponse.length == group.maxSize) {
+      stopListenResponse();
+    } else {
+      await Future.wait(
+        [for (final message in messagesHasNoResponse) sendToGuardian(message)],
+      );
+    }
   }
 }

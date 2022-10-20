@@ -1,23 +1,27 @@
-import 'package:amplitude_flutter/amplitude.dart';
-
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
-import '/src/core/model/core_model.dart';
 
 import '../add_guardian_controller.dart';
 import '../../widgets/guardian_tile_widget.dart';
 
-class AddTagPage extends StatelessWidget {
+class AddTagPage extends StatefulWidget {
   const AddTagPage({super.key});
 
   @override
+  State<AddTagPage> createState() => _AddTagPageState();
+}
+
+class _AddTagPageState extends State<AddTagPage> {
+  String _tag = '';
+
+  @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<AddGuardianController>(context);
+    final controller = context.read<AddGuardianController>();
     return Column(
       children: [
         // Header
         const HeaderBar(
-          caption: 'Add Guardians',
+          caption: 'Adding a Guardian',
           closeButton: HeaderBarCloseButton(),
         ),
         // Body
@@ -48,19 +52,16 @@ class AddTagPage extends StatelessWidget {
                 padding: paddingTop32,
                 child: GuardianTileWidget(
                   isSuccess: true,
-                  guardian: GuardianModel(
-                    name: controller.qrCode!.peerName,
-                    tag: controller.guardianTag,
-                    peerId: controller.qrCode!.peerId,
-                  ),
+                  guardian: controller.qrCode!.peerId,
+                  tag: _tag,
                 ),
               ),
               Padding(
                 padding: paddingTop32,
                 child: TextFormField(
                   keyboardType: TextInputType.name,
-                  maxLength: controller.diContainer.globals.maxNameLength,
-                  onChanged: (value) => controller.guardianTag = value,
+                  maxLength: controller.globals.maxNameLength,
+                  onChanged: (value) => setState(() => _tag = value),
                   decoration: const InputDecoration(
                     labelText: ' Tag name ',
                     helperText: 'You can leave it blank',
@@ -72,15 +73,21 @@ class AddTagPage extends StatelessWidget {
                 padding: paddingTop32,
                 child: PrimaryButton(
                   text: 'Continue',
-                  onPressed: () => controller.addGuardianToGroup().then(
-                    (_) {
-                      if (controller.guardianTag != "") {
-                        Amplitude.getInstance().logEvent('AddGuardian TagAdded');
-                      }
-                      Amplitude.getInstance().logEvent('AddGuardian Finish');
+                  onPressed: () async {
+                    await controller.addGuardian(
+                      controller.groupId,
+                      controller.qrCode!.peerId,
+                      _tag,
+                    );
+                    if (mounted) {
                       Navigator.of(context).pop();
-                    },
-                  ),
+                      ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+                        text: 'You have successfully added '
+                            '${controller.qrCode!.peerId.name} '
+                            'as a Guardian for ${controller.groupId.name}.',
+                      ));
+                    }
+                  },
                 ),
               ),
             ],

@@ -6,20 +6,20 @@ import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 
 import '/src/guardian/pages/message_page.dart';
-import '/src/guardian/pages/managed_secrets_page.dart';
-import '/src/guardian/widgets/message_list_tile_widget.dart';
-import '/src/guardian/widgets/notification_icon_widget.dart';
-import '/src/recovery_group/pages/managed_groups_page.dart';
+import '/src/guardian/widgets/message_list_tile.dart';
 
 import 'home_controller.dart';
 import 'pages/dashboard_page.dart';
+import 'pages/shards_page.dart';
+import 'pages/vaults_page.dart';
+import 'widgets/notification_icon.dart';
 
 class HomeView extends StatefulWidget {
   static const routeName = '/home';
   static const pages = [
     DashboardPage(),
-    ManagedGroupsPage(),
-    ManagedSecretsPage(),
+    VaultsPage(),
+    ShardsPage(),
     MessagesPage(),
   ];
 
@@ -37,23 +37,26 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
-  late final StreamSubscription<NewMessageProcessedEvent> _subscription;
+  late final StreamSubscription<BoxEvent> _subscription;
   bool _hasModal = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _subscription = context
-        .read<DIContainer>()
-        .eventBus
-        .on<NewMessageProcessedEvent>()
-        .listen((NewMessageProcessedEvent event) {
-      if (_hasModal || !event.message.isProcessed) return;
-      _hasModal = true;
-      MessageListTile.showActiveMessage(context, event.message)
-          .then((_) => _hasModal = false);
-    });
+    _subscription = context.read<DIContainer>().boxMessages.watch().listen(
+      (event) async {
+        if (_hasModal) return;
+        if (event.deleted) return;
+        final message = event.value as MessageModel;
+        if (!message.isReceived) return;
+        _hasModal = true;
+        await Future.microtask(
+          () => MessageListTile.showActiveMessage(context, message),
+        ); // Give QrCodePage time to pop itself
+        _hasModal = false;
+      },
+    );
   }
 
   @override
@@ -61,8 +64,7 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
     if (state != AppLifecycleState.resumed) {
       final diContainer = context.read<DIContainer>();
       await diContainer.boxSettings.flush();
-      await diContainer.boxSecretShards.flush();
-      await diContainer.boxRecoveryGroup.flush();
+      await diContainer.boxRecoveryGroups.flush();
       await diContainer.boxMessages.flush();
     }
   }
@@ -93,7 +95,7 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
                 BottomNavigationBarItem(
                   icon: IconOf.navBarKey(),
                   activeIcon: IconOf.navBarKeySelected(),
-                  label: 'My secrets',
+                  label: 'Vaults',
                 ),
                 BottomNavigationBarItem(
                   icon: IconOf.navBarShield(),
@@ -101,8 +103,8 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
                   label: 'Shards',
                 ),
                 BottomNavigationBarItem(
-                  icon: NotificationIconWidget(),
-                  activeIcon: NotificationIconWidget.selected(),
+                  icon: MessagesIcon(),
+                  activeIcon: MessagesIcon.selected(),
                   label: 'Messages',
                 ),
               ],

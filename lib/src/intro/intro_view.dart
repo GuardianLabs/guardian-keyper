@@ -8,6 +8,7 @@ import 'pages/set_passcode_page.dart';
 import 'pages/set_biometric_page.dart';
 
 class IntroView extends StatelessWidget {
+  static const routeName = '/intro';
   static const _pages = [
     IntrosPage(),
     SetDeviceNamePage(),

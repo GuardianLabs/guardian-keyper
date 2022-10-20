@@ -1,5 +1,5 @@
 import '/src/core/di_container.dart';
-import '/src/core/theme_data.dart';
+import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/widgets/auth.dart';
@@ -26,7 +26,7 @@ class ChangePassCodeWidget extends StatelessWidget {
             secretsConfig: secretsConfig,
             keyPadConfig: keyPadConfig,
             title: Padding(
-                padding: paddingV32H20,
+                padding: paddingV32 + paddingH20,
                 child: Text(
                   'Please enter your current passcode',
                   style: textStylePoppins620,
@@ -61,14 +61,14 @@ class ChangePassCodeWidget extends StatelessWidget {
       secretsConfig: secretsConfig,
       screenLockConfig: screenLockConfig,
       title: Padding(
-          padding: paddingV32H20,
+          padding: paddingV32 + paddingH20,
           child: Text(
             'Please create your new passcode',
             style: textStylePoppins620,
             textAlign: TextAlign.center,
           )),
       confirmTitle: Padding(
-          padding: paddingV32H20,
+          padding: paddingV32 + paddingH20,
           child: Text(
             'Please repeate your new passcode',
             style: textStylePoppins620,
