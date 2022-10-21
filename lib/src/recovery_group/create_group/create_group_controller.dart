@@ -7,9 +7,9 @@ import '../recovery_group_controller.dart';
 export 'package:provider/provider.dart';
 
 class CreateGroupController extends RecoveryGroupController {
-  int _groupSize = 3;
-  int _groupThreshold = 2;
-  String _groupName = '';
+  var _groupSize = 3;
+  var _groupThreshold = 2;
+  var _groupName = '';
 
   CreateGroupController({
     required super.diContainer,
