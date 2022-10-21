@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:wakelock/wakelock.dart';
 
 import '/src/core/theme/theme.dart';
@@ -20,25 +19,13 @@ class _LoadingPageState extends State<LoadingPage> {
   void initState() {
     super.initState();
     Wakelock.enable();
-    final controller = context.read<AddGuardianController>();
-    if (controller.qrCode == null ||
-        controller.qrCode!.timestamp
-            .subtract(controller.globals.qrCodeExpires)
-            .isAfter(DateTime.now())) {
-      Future.microtask(_showErrorFailed);
-      return;
-    }
-    if (controller.qrCode!.version != MessageModel.currentVersion) {
-      Future.microtask(() => _showErrorAppVersion(controller.qrCode!));
-      return;
-    }
-    if (controller.isDuplicate) {
-      Future.microtask(() => _showErrorDuplicate(controller.qrCode!));
-      return;
-    }
-    controller.startRequest(
-      onRejected: _showRejected,
-      onFailed: _showErrorFailed,
+    Future.microtask(
+      () => context.read<AddGuardianController>().startRequest(
+            onRejected: _showRejected,
+            onFailed: _showErrorFailed,
+            onDuplicate: _showErrorDuplicate,
+            onAppVersionError: _showErrorAppVersion,
+          ),
     );
   }
 
@@ -49,43 +36,46 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Provider.of<AddGuardianController>(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Header
-        const HeaderBar(
-          caption: 'Adding a Guardian',
-          closeButton: HeaderBarCloseButton(),
-        ),
-        // Body
-        const Padding(padding: paddingTop32),
-        Padding(
-          padding: paddingH20,
-          child: Card(
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header
+          const HeaderBar(
+            caption: 'Adding a Guardian',
+            closeButton: HeaderBarCloseButton(),
+          ),
+          // Body
+          const Padding(padding: paddingTop32),
+          Padding(
+            padding: paddingH20,
+            child: Card(
               child: Column(
-            children: [
-              Padding(
-                padding: paddingTop20,
-                child: Visibility(
-                  visible: controller.isWaiting,
-                  child: const CircularProgressIndicator.adaptive(),
-                ),
+                children: [
+                  Padding(
+                    padding: paddingTop20,
+                    child: Selector<AddGuardianController, bool>(
+                      selector: (_, controller) => controller.isWaiting,
+                      builder: (_, isWaiting, __) => Visibility(
+                        visible: isWaiting,
+                        child: const CircularProgressIndicator.adaptive(),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: paddingAll20,
+                    child: Text(
+                      'Awaiting '
+                      '${context.read<AddGuardianController>().qrCode!.peerId.name}'
+                      '’s response',
+                      style: textStyleSourceSansPro416,
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: paddingAll20,
-                child: Text(
-                  'Awaiting ${controller.qrCode!.peerId.name}’s response',
-                  style: textStyleSourceSansPro416,
-                ),
-              ),
-            ],
-          )),
-        ),
-      ],
-    );
-  }
+            ),
+          ),
+        ],
+      );
 
   void _showRejected([MessageModel? qrCode]) => showModalBottomSheet(
         context: context,

@@ -8,8 +8,8 @@ import '../recovery_group_controller.dart';
 export 'package:provider/provider.dart';
 
 class AddSecretController extends RecoveryGroupSecretController {
-  String secretName = '';
-  String secret = '';
+  var secretName = '';
+  var secret = '';
 
   AddSecretController({
     required super.diContainer,
