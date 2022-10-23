@@ -22,7 +22,7 @@ class ShardPage extends StatelessWidget {
             children: [
               // Header
               HeaderBar(
-                caption: groupId.name,
+                caption: groupId.nameEmoji,
                 backButton: const HeaderBarBackButton(),
               ),
               // Body
@@ -33,12 +33,15 @@ class ShardPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      recoveryGroup.ownerId.name,
+                      recoveryGroup.ownerId.nameEmoji,
                       style: textStyleSourceSansPro414Purple,
                     ),
                     Padding(
                       padding: paddingV6,
-                      child: Text(groupId.name, style: textStylePoppins616),
+                      child: Text(
+                        groupId.nameEmoji,
+                        style: textStylePoppins616,
+                      ),
                     ),
                     Text(
                       groupId.toHexShort(),
@@ -81,7 +84,7 @@ class ShardPage extends StatelessWidget {
                     for (final secretShard in recoveryGroup.secrets.keys)
                       Padding(
                         padding: paddingV6,
-                        child: ListTile(title: Text(secretShard.name)),
+                        child: ListTile(title: Text(secretShard.nameEmoji)),
                       )
                   ],
                 ),
@@ -102,7 +105,7 @@ class _ConfirmChangeOwnershipDialog extends StatelessWidget {
         icon: const IconOf.owner(isBig: true, bage: BageType.warning),
         titleString: 'Change Owner',
         textString: 'Are you sure you want to change owner'
-            ' for vault ${groupId.name}?'
+            ' for vault ${groupId.nameEmoji}?'
             ' This action cannot be undone.',
         footer: PrimaryButton(
           text: 'Confirm',

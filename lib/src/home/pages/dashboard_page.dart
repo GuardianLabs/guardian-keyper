@@ -1,5 +1,4 @@
 import '/src/core/di_container.dart';
-import '/src/core/model/core_model.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
@@ -13,22 +12,19 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final diContainer = context.read<DIContainer>();
+    final myPeerId = context.read<DIContainer>().myPeerId;
     return ListView(
       padding: paddingAll20,
       children: [
         // Device Name
-        ValueListenableBuilder<Box<SettingsModel>>(
-          valueListenable: diContainer.boxSettings.listenable(),
-          builder: (_, boxSettings, __) => Text(
-            boxSettings.deviceName,
-            style: textStylePoppins620,
-          ),
+        Text(
+          myPeerId.nameEmoji,
+          style: textStylePoppins620,
         ),
         // My Key
         Row(children: [
           Text(
-            diContainer.myPeerId.toHexShort(),
+            myPeerId.toHexShort(),
             style: textStyleSourceSansPro414Purple,
           ),
           Expanded(
@@ -39,9 +35,11 @@ class DashboardPage extends StatelessWidget {
           ),
           // Settings
           IconButton(
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => const ScaffoldWidget(child: SettingsPage()),
-            )),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const ScaffoldWidget(child: SettingsPage()),
+              ),
+            ),
             icon: const Icon(Icons.settings_outlined, color: clWhite),
           )
         ]),

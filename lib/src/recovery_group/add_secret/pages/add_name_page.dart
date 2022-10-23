@@ -30,25 +30,27 @@ class AddNamePage extends StatelessWidget {
         Padding(
           padding: paddingTop32 + paddingH20,
           child: TextFormField(
-            initialValue: controller.secretName,
-            onChanged: (value) => controller.secretName = value,
             keyboardType: TextInputType.name,
             maxLines: 1,
-            maxLength: controller.globals.maxSecretLength,
+            maxLength: controller.globals.maxNameLength,
             style: textStyleSourceSansPro416,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,
               labelText: ' Secret name ',
               counterStyle: textStyleSourceSansPro414Purple,
             ),
+            onChanged: (value) => controller.secretName = value,
           ),
         ),
         // Footer
         Padding(
           padding: paddingTop32 + paddingH20,
-          child: PrimaryButton(
-            text: 'Continue',
-            onPressed: controller.nextScreen,
+          child: Selector<AddSecretController, bool>(
+            selector: (_, controller) => controller.isNameTooShort,
+            builder: (_, isNameTooShort, __) => PrimaryButton(
+              text: 'Continue',
+              onPressed: isNameTooShort ? null : controller.nextScreen,
+            ),
           ),
         ),
       ],

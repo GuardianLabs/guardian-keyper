@@ -45,16 +45,16 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _subscription = context.read<DIContainer>().boxMessages.watch().listen(
-      (event) async {
+      (event) {
         if (_hasModal) return;
         if (event.deleted) return;
         final message = event.value as MessageModel;
         if (!message.isReceived) return;
         _hasModal = true;
-        await Future.microtask(
+        // Give QrCodePage time to pop itself
+        Future.microtask(
           () => MessageListTile.showActiveMessage(context, message),
-        ); // Give QrCodePage time to pop itself
-        _hasModal = false;
+        ).then((_) => _hasModal = false);
       },
     );
   }

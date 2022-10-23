@@ -4,7 +4,7 @@ import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 
-import 'set_device_name_page.dart';
+// import 'set_device_name_page.dart';
 import '../widgets/change_passcode_widget.dart';
 import '../widgets/hidden_settings_widget.dart';
 
@@ -27,24 +27,23 @@ class SettingsPage extends StatelessWidget {
             padding: paddingAll20,
             children: [
               // Change Device Name
-              Padding(
-                padding: paddingV6,
-                child: ListTile(
-                  leading: const IconOf.shardOwner(),
-                  title: const Text('Change Guardian name'),
-                  subtitle: ValueListenableBuilder<Box<SettingsModel>>(
-                    valueListenable: diContainer.boxSettings.listenable(),
-                    builder: (_, boxSettings, __) => Text(
-                      boxSettings.deviceName,
-                      style: textStyleSourceSansPro414Purple,
-                    ),
-                  ),
-                  trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) =>
-                          const ScaffoldWidget(child: SetDeviceNamePage()))),
-                ),
-              ),
+              // Padding(
+              //   padding: paddingV6,
+              //   child: ListTile(
+              //     leading: const IconOf.shardOwner(),
+              //     title: const Text('Change Guardian name'),
+              //     subtitle: Text(
+              //       diContainer.myPeerId.nameEmoji,
+              //       style: textStyleSourceSansPro414Purple,
+              //     ),
+              //     trailing: const Icon(Icons.arrow_forward_ios_rounded),
+              //     onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              //       builder: (_) => const ScaffoldWidget(
+              //         child: SetDeviceNamePage(),
+              //       ),
+              //     )),
+              //   ),
+              // ),
               // Change PassCode
               const Padding(padding: paddingV6, child: ChangePassCodeWidget()),
               // Use Biometrics

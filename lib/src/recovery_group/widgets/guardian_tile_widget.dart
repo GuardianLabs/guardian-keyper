@@ -64,15 +64,13 @@ class GuardianTileWidget extends StatelessWidget {
                       child: Text(
                         '   $tag   ',
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                         style: textStyleSourceSansPro412Purple,
                       ),
                     ),
                   // Title
                   Text(
-                    guardian.name,
+                    guardian.nameEmoji,
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                     style: textStyleSourceSansPro614.copyWith(
                       color: guardian.token.isEmpty
                           ? clRed
@@ -84,7 +82,6 @@ class GuardianTileWidget extends StatelessWidget {
                   Text(
                     guardian.toHexShort(),
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                     style: textStyleSourceSansPro414Purple,
                   ),
                 ],

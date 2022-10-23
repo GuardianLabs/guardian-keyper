@@ -20,12 +20,11 @@ class ShardsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final diContainer = context.read<DIContainer>();
-    final myPeerId = diContainer.myPeerId;
     return ValueListenableBuilder<Box<RecoveryGroupModel>>(
       valueListenable: diContainer.boxRecoveryGroups.listenable(),
       builder: (_, boxRecoveryGroups, __) {
-        final guardedGroups =
-            boxRecoveryGroups.values.where((e) => e.ownerId != myPeerId);
+        final guardedGroups = boxRecoveryGroups.values
+            .where((e) => e.ownerId != diContainer.myPeerId);
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,11 +54,11 @@ class ShardsPage extends StatelessWidget {
                         padding: paddingV6,
                         child: ListTile(
                           title: Text(
-                            group.id.name,
+                            group.id.nameEmoji,
                             style: textStyleSourceSansPro614,
                           ),
                           subtitle: Text(
-                            'Owner: ${group.ownerId.name}',
+                            'Owner: ${group.ownerId.nameEmoji}',
                             style: textStyleSourceSansPro414Purple,
                           ),
                           trailing: const Icon(Icons.arrow_forward_ios),

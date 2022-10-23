@@ -83,8 +83,8 @@ class _AddTagPageState extends State<AddTagPage> {
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
                         text: 'You have successfully added '
-                            '${controller.qrCode!.peerId.name} '
-                            'as a Guardian for ${controller.groupId.name}.',
+                            '${controller.qrCode!.peerId.nameEmoji} '
+                            'as a Guardian for ${controller.groupId.nameEmoji}.',
                       ));
                     }
                   },

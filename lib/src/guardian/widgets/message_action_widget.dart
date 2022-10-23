@@ -70,14 +70,14 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
         titleString: widget.title,
         textSpan: [
           TextSpan(
-            text: widget.message.peerId.name,
+            text: widget.message.peerId.nameEmoji,
             style: textStyleSourceSansPro616,
           ),
           TextSpan(
             text: _subtitles[widget.message.code]!,
           ),
           TextSpan(
-            text: widget.message.groupId.name,
+            text: widget.message.groupId.nameEmoji,
             style: textStyleSourceSansPro616,
           ),
         ],
@@ -91,8 +91,10 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Connection Error',
-                          style: textStyleSourceSansPro616),
+                      Text(
+                        'Connection Error',
+                        style: textStyleSourceSansPro616,
+                      ),
                       Padding(
                         padding: paddingV12,
                         child: Text(
@@ -115,12 +117,18 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
                           Padding(
                             padding: paddingTop12,
                             child: _isPeerOnline
-                                ? Text('Online',
+                                ? Text(
+                                    'Online',
                                     style: textStyleSourceSansPro612.copyWith(
-                                        color: clGreen))
-                                : Text('Offline',
+                                      color: clGreen,
+                                    ),
+                                  )
+                                : Text(
+                                    'Offline',
                                     style: textStyleSourceSansPro612.copyWith(
-                                        color: clRed)),
+                                      color: clRed,
+                                    ),
+                                  ),
                           ),
                         ],
                       ),
@@ -142,7 +150,7 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
                                 ),
                                 TextSpan(
                                   text: '. Ask '
-                                      '${widget.message.peerId.name}'
+                                      '${widget.message.peerId.nameEmoji}'
                                       ' to log in.',
                                 ),
                               ],
@@ -156,20 +164,22 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
         ),
         footer: Row(children: [
           Expanded(
-              child: ElevatedButton(
-            onPressed: _isPeerOnline && !_isRequestError && !_isRequestActive
-                ? () async => await _sendRespone(MessageStatus.rejected)
-                : null,
-            child: const Text('Reject'),
-          )),
+            child: ElevatedButton(
+              onPressed: _isPeerOnline && !_isRequestError && !_isRequestActive
+                  ? () => _sendRespone(MessageStatus.rejected)
+                  : null,
+              child: const Text('Reject'),
+            ),
+          ),
           const SizedBox(width: 10),
           Expanded(
-              child: PrimaryButton(
-            onPressed: _isPeerOnline && !_isRequestError && !_isRequestActive
-                ? () async => await _sendRespone(MessageStatus.accepted)
-                : null,
-            text: 'Approve',
-          )),
+            child: PrimaryButton(
+              onPressed: _isPeerOnline && !_isRequestError && !_isRequestActive
+                  ? () => _sendRespone(MessageStatus.accepted)
+                  : null,
+              text: 'Approve',
+            ),
+          ),
         ]),
       );
 

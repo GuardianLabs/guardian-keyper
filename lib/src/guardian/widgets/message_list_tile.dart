@@ -71,7 +71,7 @@ class MessageListTile extends StatelessWidget {
           ],
         ),
         subtitle: Text(
-          '${roundedAgo(message.timestamp)} · from ${message.peerId.name}',
+          '${roundedAgo(message.timestamp)} · from ${message.peerId.nameEmoji}',
           style: textStyleSourceSansPro414Purple,
         ),
         onTap: message.isReceived

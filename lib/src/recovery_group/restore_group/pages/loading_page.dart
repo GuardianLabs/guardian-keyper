@@ -34,44 +34,46 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Provider.of<RestoreGroupController>(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Header
-        const HeaderBar(
-          caption: 'Restore a Vault',
-          closeButton: HeaderBarCloseButton(),
-        ),
-        // Body
-        const Padding(padding: paddingTop32),
-        Padding(
-          padding: paddingH20,
-          child: Card(
-            child: Column(
-              children: [
-                Padding(
-                  padding: paddingTop20,
-                  child: Visibility(
-                    visible: controller.isWaiting,
-                    child: const CircularProgressIndicator.adaptive(),
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header
+          const HeaderBar(
+            caption: 'Restore a Vault',
+            closeButton: HeaderBarCloseButton(),
+          ),
+          // Body
+          const Padding(padding: paddingTop32),
+          Padding(
+            padding: paddingH20,
+            child: Card(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: paddingTop20,
+                    child: Selector<RestoreGroupController, bool>(
+                      selector: (_, controller) => controller.isWaiting,
+                      builder: (_, isWaiting, __) => Visibility(
+                        visible: isWaiting,
+                        child: const CircularProgressIndicator.adaptive(),
+                      ),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: paddingAll20,
-                  child: Text(
-                    'Awaiting ${controller.qrCode!.peerId.name}’s response',
-                    style: textStyleSourceSansPro416,
+                  Padding(
+                    padding: paddingAll20,
+                    child: Text(
+                      'Awaiting '
+                      '${context.read<RestoreGroupController>().qrCode!.peerId.nameEmoji}'
+                      '’s response',
+                      style: textStyleSourceSansPro416,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
   void _showSuccess(MessageModel message) {
     final count = message.recoveryGroup.maxSize - message.recoveryGroup.size;
@@ -86,7 +88,7 @@ class _LoadingPageState extends State<LoadingPage> {
               textSpan: [
                 const TextSpan(text: 'The ownership of the Vault '),
                 TextSpan(
-                  text: message.groupId.name,
+                  text: message.groupId.nameEmoji,
                   style: textStyleBold,
                 ),
                 const TextSpan(text: ' has been transferred to your device.'),
@@ -107,14 +109,14 @@ class _LoadingPageState extends State<LoadingPage> {
               titleString: 'Ownership Transfer Approved',
               textSpan: [
                 TextSpan(
-                  text: message.peerId.name,
+                  text: message.peerId.nameEmoji,
                   style: textStyleBold,
                 ),
                 const TextSpan(
                   text: ' approved the transfer of ownership for the Vault ',
                 ),
                 TextSpan(
-                  text: message.groupId.name,
+                  text: message.groupId.nameEmoji,
                   style: textStyleBold,
                 ),
               ],
@@ -153,14 +155,14 @@ class _LoadingPageState extends State<LoadingPage> {
           titleString: 'Ownership Transfer Rejected',
           textSpan: [
             TextSpan(
-              text: message.peerId.name,
+              text: message.peerId.nameEmoji,
               style: textStyleBold,
             ),
             const TextSpan(
               text: ' rejected the transfer of ownership for the Vault ',
             ),
             TextSpan(
-              text: message.groupId.name,
+              text: message.groupId.nameEmoji,
               style: textStyleBold,
             ),
           ],

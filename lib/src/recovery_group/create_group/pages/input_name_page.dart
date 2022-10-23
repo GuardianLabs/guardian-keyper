@@ -8,7 +8,7 @@ class InputNamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<CreateGroupController>(context);
+    final controller = context.read<CreateGroupController>();
     return Column(
       children: [
         // Header
@@ -26,24 +26,27 @@ class InputNamePage extends StatelessWidget {
               TextFormField(
                 autofocus: true,
                 keyboardType: TextInputType.text,
-                maxLength: controller.diContainer.globals.maxNameLength,
+                maxLength: controller.globals.maxNameLength,
                 decoration: const InputDecoration(labelText: ' Vault name '),
                 onChanged: (value) => controller.groupName = value,
               ),
               // Footer
               Padding(
                 padding: paddingV32,
-                child: PrimaryButton(
-                  text: 'Continue',
-                  onPressed: controller.groupName.isEmpty
-                      ? null
-                      : () => controller.createVault().then(
-                            (vault) => Navigator.popAndPushNamed(
-                              context,
-                              '/recovery_group/edit',
-                              arguments: vault.id,
+                child: Selector<CreateGroupController, bool>(
+                  selector: (_, controller) => controller.isGroupNameToolShort,
+                  builder: (_, isGroupNameToolShort, __) => PrimaryButton(
+                    text: 'Continue',
+                    onPressed: isGroupNameToolShort
+                        ? null
+                        : () => controller.createVault().then(
+                              (vault) => Navigator.popAndPushNamed(
+                                context,
+                                '/recovery_group/edit',
+                                arguments: vault.id,
+                              ),
                             ),
-                          ),
+                  ),
                 ),
               ),
             ],

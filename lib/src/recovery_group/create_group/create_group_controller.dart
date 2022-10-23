@@ -20,7 +20,7 @@ class CreateGroupController extends RecoveryGroupController {
 
   int get groupSize => _groupSize;
   int get groupThreshold => _groupThreshold;
-  String get groupName => _groupName;
+  bool get isGroupNameToolShort => _groupName.length < globals.minNameLength;
 
   set groupSize(int size) {
     _groupSize = size;

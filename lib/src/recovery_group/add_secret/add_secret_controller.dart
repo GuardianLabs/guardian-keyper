@@ -8,8 +8,15 @@ import '../recovery_group_controller.dart';
 export 'package:provider/provider.dart';
 
 class AddSecretController extends RecoveryGroupSecretController {
-  var secretName = '';
+  var _secretName = '';
   var secret = '';
+
+  bool get isNameTooShort => _secretName.length < globals.minNameLength;
+
+  set secretName(String value) {
+    _secretName = value;
+    notifyListeners();
+  }
 
   AddSecretController({
     required super.diContainer,
@@ -59,7 +66,7 @@ class AddSecretController extends RecoveryGroupSecretController {
     if (secret != restoreSecret(shares: shards.sublist(0, group.threshold))) {
       throw const FormatException('Can not restore the secret!');
     }
-    secretId = secretId.copyWith(name: secretName);
+    secretId = secretId.copyWith(name: _secretName);
     final shardsIterator = shards.iterator;
     for (final guardian in group.guardians.keys) {
       if (shardsIterator.moveNext()) {

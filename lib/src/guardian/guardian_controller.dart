@@ -47,9 +47,6 @@ class GuardianController {
         if (ticket == null) return; // qrCode was not generated
         if (message.isNotRequested) return; // qrCode was processed already
         if (message.code != ticket.code) return;
-        if (!diContainer.boxRecoveryGroups.containsKey(message.groupId.asKey)) {
-          return; // group does not exists
-        }
         message = message.copyWith(payload: ticket.payload);
         break;
 
