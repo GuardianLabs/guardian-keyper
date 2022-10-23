@@ -164,7 +164,7 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
           icon:
               const IconOf.secretRestoration(isBig: true, bage: BageType.error),
           titleString: 'Guardian rejected the recovery of your Secret',
-          textString: 'Secret Recovery process for ${message.groupId.name}'
+          textString: 'Secret Recovery process for ${message.groupId.nameEmoji}'
               ' has been terminated by your Guardians.',
           footer: Padding(
             padding: paddingV20,

@@ -146,6 +146,7 @@ final themeDark = ThemeData.dark().copyWith(
       color: clPurpleLight,
       fontSize: 10,
       fontWeight: FontWeight.w600,
+      overflow: TextOverflow.ellipsis,
     ),
     headline6: textStylePoppins620,
     subtitle1: textStyleSourceSansPro614,

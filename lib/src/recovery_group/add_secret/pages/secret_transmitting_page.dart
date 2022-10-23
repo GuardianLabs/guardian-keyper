@@ -37,7 +37,8 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<AddSecretController>(context);
+    // final controller = Provider.of<AddSecretController>(context);
+    final controller = context.read<AddSecretController>();
     return Column(
       children: [
         // Header
@@ -102,7 +103,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           textSpan: [
             const TextSpan(text: 'Now you can restore your '),
             TextSpan(
-              text: message.groupId.name,
+              text: message.groupId.nameEmoji,
               style: textStyleBold,
             ),
             const TextSpan(text: ' Secret with the help of Guardians.'),
@@ -128,7 +129,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           textSpan: [
             const TextSpan(text: 'Sharding process for '),
             TextSpan(
-              text: message.groupId.name,
+              text: message.groupId.nameEmoji,
               style: textStyleBold,
             ),
             const TextSpan(

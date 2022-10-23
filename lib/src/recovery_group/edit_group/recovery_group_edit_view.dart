@@ -23,61 +23,64 @@ class RecoveryGroupEditView extends StatelessWidget {
             context.read<DIContainer>().boxRecoveryGroups.listenable(),
         builder: (context, boxRecoveryGroup, __) {
           final group = boxRecoveryGroup.get(groupId.asKey);
-          // For correct animation on group delete
-          if (group == null) return const Scaffold();
           return ScaffoldWidget(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Header
-                HeaderBar(
-                  caption: group.id.name,
-                  backButton: const HeaderBarBackButton(),
-                  closeButton: HeaderBarMoreButton(
-                    onPressed: () => showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (_) => RemoveVaultBottomSheet(group: group),
-                    ),
-                  ),
-                ),
-                // Body
-                Expanded(
-                  child: ListView(
-                    padding: paddingAll20,
-                    primary: true,
-                    shrinkWrap: true,
-                    children: group.isRestoring
-                        ? [
-                            const PageTitle(
-                              title: 'Vault is not restored yet',
-                              subtitle:
-                                  'Please, restore membership of other Guardians',
+            child: group == null // For correct animation on group delete
+                ? Container()
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Header
+                      HeaderBar(
+                        caption: group.id.nameEmoji,
+                        backButton: const HeaderBarBackButton(),
+                        closeButton: HeaderBarMoreButton(
+                          onPressed: () => showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (_) => RemoveVaultBottomSheet(
+                              group: group,
                             ),
-                            PrimaryButton(
-                              text: 'Restore Vault',
-                              onPressed: () => Navigator.of(context).pushNamed(
-                                '/recovery_group/restore',
-                                arguments: false,
-                              ),
-                            ),
-                            const Padding(padding: paddingTop32),
-                            GuardiansExpansionTile(group: group),
-                          ]
-                        : [
-                            // Group is not complited, can add guardian to group
-                            if (group.isNotFull && group.isNotRestoring)
-                              AddGuardianWidget(group: group),
-                            // Group is complited, can add secret
-                            if (group.isFull)
-                              group.secrets.isEmpty
-                                  ? AddFirstSecretWidget(group: group)
-                                  : AddSecretWidget(group: group),
-                          ],
+                          ),
+                        ),
+                      ),
+                      // Body
+                      Expanded(
+                        child: ListView(
+                          padding: paddingAll20,
+                          primary: true,
+                          shrinkWrap: true,
+                          children: group.isRestoring
+                              ? [
+                                  const PageTitle(
+                                    title: 'Vault is not restored yet',
+                                    subtitle:
+                                        'Please, restore membership of other Guardians',
+                                  ),
+                                  PrimaryButton(
+                                    text: 'Restore Vault',
+                                    onPressed: () =>
+                                        Navigator.of(context).pushNamed(
+                                      '/recovery_group/restore',
+                                      arguments: false,
+                                    ),
+                                  ),
+                                  const Padding(padding: paddingTop32),
+                                  GuardiansExpansionTile(group: group),
+                                ]
+                              : [
+                                  // Group is not complited, can add guardian to group
+                                  if (group.isNotFull && group.isNotRestoring)
+                                    AddGuardianWidget(group: group),
+                                  // Group is complited, can add secret
+                                  if (group.isFull)
+                                    group.secrets.isEmpty
+                                        ? AddFirstSecretWidget(group: group)
+                                        : AddSecretWidget(group: group),
+                                ],
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
           );
         },
       );

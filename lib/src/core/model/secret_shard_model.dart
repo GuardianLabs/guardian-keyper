@@ -103,5 +103,5 @@ class SecretShardModel extends Serializable {
       );
 
   @override
-  String toString() => '${groupId.name} of ${ownerId.name}';
+  String toString() => '${groupId.nameEmoji} of ${ownerId.nameEmoji}';
 }

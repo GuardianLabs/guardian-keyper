@@ -65,7 +65,7 @@ class _LoadingPageState extends State<LoadingPage> {
                     padding: paddingAll20,
                     child: Text(
                       'Awaiting '
-                      '${context.read<AddGuardianController>().qrCode!.peerId.name}'
+                      '${context.read<AddGuardianController>().qrCode!.peerId.nameEmoji}'
                       '’s response',
                       style: textStyleSourceSansPro416,
                     ),
@@ -99,7 +99,8 @@ class _LoadingPageState extends State<LoadingPage> {
         isScrollControlled: true,
         builder: (BuildContext context) => BottomSheetWidget(
           titleString: 'You can’t add the same Guardian twice',
-          textString: 'Seems like you’ve already added ${qrCode.peerId.name} '
+          textString:
+              'Seems like you’ve already added ${qrCode.peerId.nameEmoji} '
               'to this Vault. Try adding a different Guardian.',
           icon: const IconOf.shield(isBig: true, bage: BageType.error),
           footer: PrimaryButton(

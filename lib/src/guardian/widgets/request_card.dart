@@ -23,7 +23,7 @@ class RequestCard extends StatelessWidget {
                 children: [
                   Text('FROM', style: textStyleSourceSansPro612Purple),
                   Text(
-                    message.peerId.name,
+                    message.peerId.nameEmoji,
                     style: textStyleSourceSansPro616,
                   ),
                 ],
@@ -50,7 +50,7 @@ class RequestCard extends StatelessWidget {
                   children: [
                     Text('VAULT', style: textStyleSourceSansPro612Purple),
                     Text(
-                      message.groupId.name,
+                      message.groupId.nameEmoji,
                       style: textStyleSourceSansPro616,
                     ),
                   ],
@@ -64,7 +64,7 @@ class RequestCard extends StatelessWidget {
                   children: [
                     Text('SHARD', style: textStyleSourceSansPro612Purple),
                     Text(
-                      message.secretShard.id.name,
+                      message.secretShard.id.nameEmoji,
                       style: textStyleSourceSansPro616,
                     ),
                   ],

@@ -40,7 +40,10 @@ class AddSecretWidget extends StatelessWidget {
                             padding: paddingH20 + paddingV12,
                             child: const IconOf.secret(),
                           ),
-                          Text(secretId.name, style: textStyleSourceSansPro614),
+                          Text(
+                            secretId.nameEmoji,
+                            style: textStyleSourceSansPro614,
+                          ),
                         ],
                       )),
                   body: Padding(

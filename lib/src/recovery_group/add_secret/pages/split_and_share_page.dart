@@ -24,13 +24,16 @@ class _SplitAndShareSecretPageState extends State<SplitAndShareSecretPage> {
   @override
   void initState() {
     super.initState();
-    Connectivity().checkConnectivity().then((result) => setState(() =>
-        _haveConnection = result == ConnectivityResult.wifi ||
-            result == ConnectivityResult.mobile));
+    Connectivity().checkConnectivity().then(
+          (result) => setState(() => _haveConnection =
+              result == ConnectivityResult.wifi ||
+                  result == ConnectivityResult.mobile),
+        );
     _subscription = Connectivity().onConnectivityChanged.listen(
-        (ConnectivityResult result) => setState(() => _haveConnection =
-            result == ConnectivityResult.wifi ||
-                result == ConnectivityResult.mobile));
+          (result) => setState(() => _haveConnection =
+              result == ConnectivityResult.wifi ||
+                  result == ConnectivityResult.mobile),
+        );
   }
 
   @override

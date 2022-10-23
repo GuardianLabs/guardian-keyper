@@ -21,36 +21,31 @@ class RemoveVaultBottomSheet extends StatelessWidget {
           onPressed: () => showModalBottomSheet<Object?>(
             context: context,
             isScrollControlled: true,
-            builder: (_) => _RemoveGroupConfirmBottomSheet(group: group),
-          ).then(Navigator.of(context).pop),
-        ),
-      );
-}
-
-class _RemoveGroupConfirmBottomSheet extends StatelessWidget {
-  final RecoveryGroupModel group;
-
-  const _RemoveGroupConfirmBottomSheet({required this.group});
-
-  @override
-  Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.removeGroup(isBig: true, bage: BageType.warning),
-        titleString: 'Do you want to remove this Vault?',
-        textString: 'All the Secrets from this Vault will be removed as well.',
-        footer: SizedBox(
-          width: double.infinity,
-          child: PrimaryButton(
-            text: 'Yes, remove the Vault',
-            onPressed: () => context
-                .read<DIContainer>()
-                .boxRecoveryGroups
-                .delete(group.aKey)
-                .then(
-                  (_) => Navigator.of(context).popUntil(
-                    ModalRoute.withName('/recovery_group/edit'),
-                  ),
+            builder: (_) => BottomSheetWidget(
+              icon: const IconOf.removeGroup(
+                isBig: true,
+                bage: BageType.warning,
+              ),
+              titleString: 'Do you want to remove this Vault?',
+              textString:
+                  'All the Secrets from this Vault will be removed as well.',
+              footer: SizedBox(
+                width: double.infinity,
+                child: PrimaryButton(
+                  text: 'Yes, remove the Vault',
+                  onPressed: () => context
+                      .read<DIContainer>()
+                      .boxRecoveryGroups
+                      .delete(group.aKey)
+                      .then(
+                        (_) => Navigator.of(context).popUntil(
+                          ModalRoute.withName('/recovery_group/edit'),
+                        ),
+                      ),
                 ),
-          ),
+              ),
+            ),
+          ).then(Navigator.of(context).pop),
         ),
       );
 }

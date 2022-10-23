@@ -30,18 +30,18 @@ class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
           ),
           // Body
           Expanded(
-              child: ListView(
-            padding: paddingAll20,
-            children: [
-              Padding(
-                padding: paddingAll20,
-                child: Text(
-                  'Create new Guardian name',
-                  textAlign: TextAlign.center,
-                  style: textStylePoppins620,
+            child: ListView(
+              padding: paddingAll20,
+              children: [
+                Padding(
+                  padding: paddingAll20,
+                  child: Text(
+                    'Create new Guardian name',
+                    textAlign: TextAlign.center,
+                    style: textStylePoppins620,
+                  ),
                 ),
-              ),
-              Padding(
+                Padding(
                   padding: paddingV20,
                   child: TextFormField(
                     autofocus: true,
@@ -53,26 +53,29 @@ class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
                       labelText: ' Guardian name ',
                       helperText: 'Minimum 3 characters',
                     ),
-                  )),
-              // Footer
-              Padding(
-                padding: paddingV20,
-                child: PrimaryButton(
-                  text: 'Proceed',
-                  onPressed: _name.length < diContainer.globals.minNameLength
-                      ? null
-                      : () {
-                          diContainer.boxSettings.deviceName = _name;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              buildSnackBar(
-                                  text:
-                                      'Device name was changed successfully.'));
-                          Navigator.of(context).pop();
-                        },
+                  ),
                 ),
-              ),
-            ],
-          )),
+                // Footer
+                Padding(
+                  padding: paddingV20,
+                  child: PrimaryButton(
+                    text: 'Proceed',
+                    onPressed: _name.length < diContainer.globals.minNameLength
+                        ? null
+                        : () {
+                            diContainer.boxSettings.deviceName = _name;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              buildSnackBar(
+                                text: 'Device name was changed successfully.',
+                              ),
+                            );
+                            Navigator.of(context).pop();
+                          },
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       );
 }

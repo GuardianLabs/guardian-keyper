@@ -10,12 +10,11 @@ class VaultsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final diContainer = context.read<DIContainer>();
-    final myPeerId = diContainer.myPeerId;
     return ValueListenableBuilder<Box<RecoveryGroupModel>>(
       valueListenable: diContainer.boxRecoveryGroups.listenable(),
       builder: (_, boxRecoveryGroups, __) {
-        final guardedGroups =
-            boxRecoveryGroups.values.where((e) => e.ownerId == myPeerId);
+        final guardedGroups = boxRecoveryGroups.values
+            .where((e) => e.ownerId == diContainer.myPeerId);
         return Column(
           children: [
             // Header
@@ -86,7 +85,7 @@ class _VaultListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
         leading: const IconOf.shield(color: clWhite),
-        title: Text(group.id.name, style: textStyleSourceSansPro614),
+        title: Text(group.id.nameEmoji, style: textStyleSourceSansPro614),
         subtitle: group.secrets.isNotEmpty
             ? Text(
                 '${group.size} Guardians',
