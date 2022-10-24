@@ -8,7 +8,7 @@ import '../recovery_group_controller.dart';
 class RecoverySecretController extends RecoveryGroupSecretController {
   RecoverySecretController({
     required super.diContainer,
-    required super.pagesCount,
+    required super.pages,
     required super.groupId,
     required super.secretId,
   }) {

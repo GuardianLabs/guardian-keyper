@@ -23,7 +23,7 @@ class CreateGroupView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => CreateGroupController(
         diContainer: diContainer,
-        pagesCount: _pages.length,
+        pages: _pages,
       ),
       child: ScaffoldWidget(
         child: Selector<CreateGroupController, int>(

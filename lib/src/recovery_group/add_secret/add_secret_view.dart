@@ -28,7 +28,7 @@ class RecoveryGroupAddSecretView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => AddSecretController(
         diContainer: diContainer,
-        pagesCount: _pages.length,
+        pages: _pages,
         groupId: groupId,
       ),
       child: ScaffoldWidget(

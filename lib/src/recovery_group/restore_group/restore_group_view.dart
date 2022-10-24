@@ -24,7 +24,7 @@ class RestoreGroupView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => RestoreGroupController(
         diContainer: diContainer,
-        pagesCount: _pages.length,
+        pages: _pages,
         currentPage: skipExplainer ? 1 : 0,
       ),
       lazy: false,

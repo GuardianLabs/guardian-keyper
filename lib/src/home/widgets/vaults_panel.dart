@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '/src/core/theme/theme.dart';
 
-import '../home_view.dart';
 import '../home_controller.dart';
 import '../pages/shards_page.dart';
 import '../pages/vaults_page.dart';
@@ -39,9 +38,8 @@ class VaultsPanel extends StatelessWidget {
             Padding(
               padding: paddingV6,
               child: GestureDetector(
-                onTap: () => context
-                    .read<HomeController>()
-                    .gotoScreen(HomeView.getPageNumber<VaultsPage>()),
+                onTap: () =>
+                    context.read<HomeController>().gotoScreen<VaultsPage>(),
                 child: const VaultsCountButton(),
               ),
             ),
@@ -49,9 +47,8 @@ class VaultsPanel extends StatelessWidget {
             Padding(
               padding: paddingV6,
               child: GestureDetector(
-                onTap: () => context
-                    .read<HomeController>()
-                    .gotoScreen(HomeView.getPageNumber<ShardsPage>()),
+                onTap: () =>
+                    context.read<HomeController>().gotoScreen<ShardsPage>(),
                 child: const ShardsCountButton(),
               ),
             ),
