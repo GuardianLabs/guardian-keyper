@@ -21,10 +21,11 @@ class _LoadingPageState extends State<LoadingPage> {
     Wakelock.enable();
     Future.microtask(
       () => context.read<AddGuardianController>().startRequest(
-            onRejected: _showRejected,
-            onFailed: _showErrorFailed,
-            onDuplicate: _showErrorDuplicate,
-            onAppVersionError: _showErrorAppVersion,
+            onSuccess: _onSuccess,
+            onRejected: _onRejected,
+            onFailed: _onFailed,
+            onDuplicate: _onDuplicate,
+            onAppVersion: _onAppVersion,
           ),
     );
   }
@@ -77,7 +78,18 @@ class _LoadingPageState extends State<LoadingPage> {
         ],
       );
 
-  void _showRejected([MessageModel? qrCode]) => showModalBottomSheet(
+  void _onSuccess(MessageModel message) {
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      buildSnackBar(
+        text: 'You have successfully added '
+            '${message.peerId.nameEmoji} '
+            'as a Guardian for ${message.groupId.nameEmoji}.',
+      ),
+    );
+  }
+
+  void _onRejected([MessageModel? qrCode]) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
@@ -93,7 +105,7 @@ class _LoadingPageState extends State<LoadingPage> {
         ),
       ).then(Navigator.of(context).pop);
 
-  void _showErrorDuplicate(MessageModel qrCode) => showModalBottomSheet(
+  void _onDuplicate(MessageModel qrCode) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
@@ -113,7 +125,7 @@ class _LoadingPageState extends State<LoadingPage> {
             .popAndPushNamed('/recovery_group/add_guardian'),
       );
 
-  void _showErrorFailed([MessageModel? qrCode]) => showModalBottomSheet(
+  void _onFailed([MessageModel? qrCode]) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
@@ -129,7 +141,7 @@ class _LoadingPageState extends State<LoadingPage> {
         ),
       ).then(Navigator.of(context).pop);
 
-  void _showErrorAppVersion(MessageModel qrCode) => showModalBottomSheet(
+  void _onAppVersion(MessageModel qrCode) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
