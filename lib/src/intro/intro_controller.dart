@@ -1,7 +1,7 @@
-import '/src/core/controller/page_controller.dart';
+import '/src/core/controller/page_controller_base.dart';
 
 export 'package:provider/provider.dart';
 
-class IntroController extends PageController {
-  IntroController({required super.diContainer, required super.pagesCount});
+class IntroController extends PageControllerBase {
+  IntroController({required super.diContainer, required super.pages});
 }

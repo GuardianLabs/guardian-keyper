@@ -16,7 +16,7 @@ import 'widgets/notification_icon.dart';
 
 class HomeView extends StatefulWidget {
   static const routeName = '/home';
-  static const pages = [
+  static const _pages = [
     DashboardPage(),
     VaultsPage(),
     ShardsPage(),
@@ -27,13 +27,6 @@ class HomeView extends StatefulWidget {
 
   @override
   State<HomeView> createState() => _HomeViewState();
-
-  static int getPageNumber<T>() {
-    for (var i = 0; i < pages.length; i++) {
-      if (pages[i] is T) return i;
-    }
-    return 0;
-  }
 }
 
 class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
@@ -79,13 +72,14 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (context) => HomeController(
-          pagesCount: HomeView.pages.length,
+          pages: HomeView._pages,
           diContainer: context.read<DIContainer>(),
         ),
-        child: Consumer<HomeController>(
-          builder: (_, controller, __) => ScaffoldWidget(
+        child: Selector<HomeController, int>(
+          selector: (_, controller) => controller.currentPage,
+          builder: (context, currentPage, __) => ScaffoldWidget(
             bottomNavigationBar: BottomNavigationBar(
-              currentIndex: controller.currentPage,
+              currentIndex: currentPage,
               items: const [
                 BottomNavigationBarItem(
                   icon: IconOf.navBarHome(),
@@ -108,9 +102,10 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
                   label: 'Messages',
                 ),
               ],
-              onTap: (value) => controller.gotoScreen(value),
+              onTap: (value) =>
+                  context.read<HomeController>().gotoScreen(value),
             ),
-            child: HomeView.pages[controller.currentPage],
+            child: HomeView._pages[currentPage],
           ),
         ),
       );

@@ -1,5 +1,5 @@
-import '/src/core/di_container.dart';
 import '/src/core/widgets/common.dart';
+import '/src/core/di_container.dart';
 
 import 'intro_controller.dart';
 import 'pages/intros_page.dart';
@@ -24,7 +24,7 @@ class IntroView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => IntroController(
         diContainer: diContainer,
-        pagesCount: _pages.length,
+        pages: _pages,
       ),
       child: ScaffoldWidget(
         child: Selector<IntroController, int>(

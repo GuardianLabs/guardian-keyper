@@ -23,7 +23,7 @@ class AddGuardianView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => AddGuardianController(
         diContainer: diContainer,
-        pagesCount: _pages.length,
+        pages: _pages,
         groupId: groupId,
       ),
       lazy: false,

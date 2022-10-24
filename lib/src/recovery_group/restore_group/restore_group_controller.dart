@@ -8,7 +8,7 @@ export 'package:provider/provider.dart';
 class RestoreGroupController extends RecoveryGroupGuardianController {
   RestoreGroupController({
     required super.diContainer,
-    required super.pagesCount,
+    required super.pages,
     super.currentPage,
   });
 

@@ -10,7 +10,7 @@ class AddGuardianController extends RecoveryGroupGuardianController {
 
   AddGuardianController({
     required super.diContainer,
-    required super.pagesCount,
+    required super.pages,
     required this.groupId,
   });
 

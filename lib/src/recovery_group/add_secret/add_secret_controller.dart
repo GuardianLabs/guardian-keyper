@@ -20,7 +20,7 @@ class AddSecretController extends RecoveryGroupSecretController {
 
   AddSecretController({
     required super.diContainer,
-    required super.pagesCount,
+    required super.pages,
     required super.groupId,
   }) : super(secretId: SecretId(name: ''));
 

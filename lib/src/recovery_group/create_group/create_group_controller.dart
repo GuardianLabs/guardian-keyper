@@ -13,7 +13,7 @@ class CreateGroupController extends RecoveryGroupController {
 
   CreateGroupController({
     required super.diContainer,
-    required super.pagesCount,
+    required super.pages,
   }) {
     diContainer.analyticsService.logEvent(eventStartCreateVault);
   }

@@ -1,17 +1,17 @@
 import 'dart:async';
 
 import '/src/core/model/core_model.dart';
-import '/src/core/controller/page_controller.dart';
+import '/src/core/controller/page_controller_base.dart';
 
 typedef Callback = void Function(MessageModel message);
 
-class RecoveryGroupController extends PageController {
+class RecoveryGroupController extends PageControllerBase {
   StreamSubscription<MessageModel>? networkSubscription;
   Timer? timer;
 
   RecoveryGroupController({
     required super.diContainer,
-    required super.pagesCount,
+    required super.pages,
     super.currentPage,
   });
 
@@ -85,7 +85,7 @@ class RecoveryGroupGuardianController extends RecoveryGroupController {
 
   RecoveryGroupGuardianController({
     required super.diContainer,
-    required super.pagesCount,
+    required super.pages,
     super.currentPage,
   });
 
@@ -114,7 +114,7 @@ class RecoveryGroupSecretController extends RecoveryGroupController {
 
   RecoveryGroupSecretController({
     required super.diContainer,
-    required super.pagesCount,
+    required super.pages,
     super.currentPage,
     required this.groupId,
     required this.secretId,
