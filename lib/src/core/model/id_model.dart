@@ -46,7 +46,7 @@ class PeerId extends IdBase {
   final String name;
 
   String get nameEmoji =>
-      '$name ${String.fromCharCode(emojiPeer[tokenByteHash])}';
+      '$name ${String.fromCharCode(emojiPeer[tokenByteHash])}';
 
   const PeerId._({required super.token, required this.name});
 
@@ -87,7 +87,7 @@ class GroupId extends IdBase {
   final String name;
 
   String get nameEmoji =>
-      '$name ${String.fromCharCode(emojiVault[tokenByteHash])}';
+      '$name ${String.fromCharCode(emojiVault[tokenByteHash])}';
 
   GroupId({Uint8List? token, this.name = ''})
       : super(token: token ?? getRandomBytes(size));
@@ -124,7 +124,7 @@ class SecretId extends IdBase {
   final String name;
 
   String get nameEmoji =>
-      '$name ${String.fromCharCode(emojiSecret[tokenByteHash])}';
+      '$name ${String.fromCharCode(emojiSecret[tokenByteHash])}';
 
   SecretId({Uint8List? token, required this.name})
       : super(token: token ?? getRandomBytes(size));
