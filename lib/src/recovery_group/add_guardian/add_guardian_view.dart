@@ -5,14 +5,12 @@ import '/src/core/widgets/common.dart';
 import 'add_guardian_controller.dart';
 import 'pages/scan_qrcode_page.dart';
 import 'pages/loading_page.dart';
-import 'pages/add_tag_page.dart';
 
 class AddGuardianView extends StatelessWidget {
   static const routeName = '/recovery_group/add_guardian';
   static const _pages = [
     ScanQRCodePage(),
     LoadingPage(),
-    AddTagPage(),
   ];
 
   final GroupId groupId;

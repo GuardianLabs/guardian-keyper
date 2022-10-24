@@ -32,11 +32,13 @@ class RecoveryGroupController extends PageController {
   void stopListenResponse() {
     timer?.cancel();
     networkSubscription?.pause();
+    notifyListeners();
   }
 
   void startNetworkRequest(void Function([Timer?]) callback) {
     timer = Timer.periodic(globals.retryNetworkTimeout, callback);
     callback();
+    notifyListeners();
   }
 
   void assignPeersAddresses(PeerId peerId, PeerAddressList list) {
@@ -67,12 +69,11 @@ class RecoveryGroupController extends PageController {
 
   Future<RecoveryGroupModel> addGuardian(
     GroupId groupId,
-    PeerId guardian, [
-    String tag = '',
-  ]) async {
+    PeerId guardian,
+  ) async {
     var group = diContainer.boxRecoveryGroups.get(groupId.asKey)!;
     group = group.copyWith(
-      guardians: {...group.guardians, guardian: tag},
+      guardians: {...group.guardians, guardian: ''},
     );
     await diContainer.boxRecoveryGroups.put(groupId.asKey, group);
     return group;

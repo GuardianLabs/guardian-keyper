@@ -15,10 +15,11 @@ class AddGuardianController extends RecoveryGroupGuardianController {
   });
 
   void startRequest({
+    required Callback onSuccess,
     required Callback onRejected,
     required Callback onFailed,
     required Callback onDuplicate,
-    required Callback onAppVersionError,
+    required Callback onAppVersion,
   }) {
     diContainer.analyticsService.logEvent(eventStartAddGuardian);
 
@@ -29,7 +30,7 @@ class AddGuardianController extends RecoveryGroupGuardianController {
       return onFailed(qrCode!);
     }
     if (qrCode!.version != MessageModel.currentVersion) {
-      return onAppVersionError(qrCode!);
+      return onAppVersion(qrCode!);
     }
     if (getGroupById(groupId)?.guardians.containsKey(qrCode?.peerId) ?? false) {
       return onDuplicate(qrCode!);
@@ -38,14 +39,17 @@ class AddGuardianController extends RecoveryGroupGuardianController {
     networkSubscription = networkStream.listen(
       (message) {
         if (!isWaiting) return;
+        if (qrCode == null) return;
         if (!message.hasResponse) return;
         if (message.code != MessageCode.createGroup) return;
-        if (qrCode == null || message.peerId != qrCode!.peerId) return;
+        if (message.peerId != qrCode!.peerId) return;
+        if (message.groupId != groupId) return;
         stopListenResponse();
         switch (message.status) {
           case MessageStatus.accepted:
             diContainer.analyticsService.logEvent(eventFinishAddGuardian);
-            nextScreen();
+            addGuardian(groupId, message.peerId);
+            onSuccess(message);
             break;
           case MessageStatus.rejected:
             onRejected(message);
