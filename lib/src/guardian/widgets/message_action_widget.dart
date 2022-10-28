@@ -69,17 +69,9 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
   Widget build(BuildContext context) => BottomSheetWidget(
         titleString: widget.title,
         textSpan: [
-          TextSpan(
-            text: widget.message.peerId.nameEmoji,
-            style: textStyleSourceSansPro616,
-          ),
-          TextSpan(
-            text: _subtitles[widget.message.code]!,
-          ),
-          TextSpan(
-            text: widget.message.groupId.nameEmoji,
-            style: textStyleSourceSansPro616,
-          ),
+          ...buildTextWithId(id: widget.message.peerId),
+          TextSpan(text: _subtitles[widget.message.code]!),
+          ...buildTextWithId(id: widget.message.groupId),
         ],
         body: Padding(
           padding: paddingV20,
@@ -148,10 +140,10 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
                                   text: 'at the same time',
                                   style: textStyleSourceSansPro616,
                                 ),
-                                TextSpan(
-                                  text: '. Ask '
-                                      '${widget.message.peerId.nameEmoji}'
-                                      ' to log in.',
+                                ...buildTextWithId(
+                                  leadingText: '. Ask ',
+                                  id: widget.message.peerId,
+                                  trailingText: ' to log in.',
                                 ),
                               ],
                             ),

@@ -70,9 +70,14 @@ class MessageListTile extends StatelessWidget {
               ),
           ],
         ),
-        subtitle: Text(
-          '${roundedAgo(message.timestamp)} · from ${message.peerId.nameEmoji}',
-          style: textStyleSourceSansPro414Purple,
+        subtitle: RichText(
+          text: TextSpan(
+            style: textStyleSourceSansPro414Purple,
+            children: buildTextWithId(
+              leadingText: '${roundedAgo(message.timestamp)} · from ',
+              id: message.peerId,
+            ),
+          ),
         ),
         onTap: message.isReceived
             ? () => showActiveMessage(context, message)

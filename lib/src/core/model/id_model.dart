@@ -39,16 +39,22 @@ abstract class IdBase extends Serializable {
   }
 }
 
-class PeerId extends IdBase {
+abstract class IdWithNameBase extends IdBase {
+  final String name;
+
+  const IdWithNameBase({required super.token, required this.name});
+
+  String get emoji;
+}
+
+class PeerId extends IdWithNameBase {
   static const currentVersion = 1;
   static const size = 64;
 
-  final String name;
+  @override
+  String get emoji => String.fromCharCode(emojiPeer[tokenByteHash]);
 
-  String get nameEmoji =>
-      '$name ${String.fromCharCode(emojiPeer[tokenByteHash])}';
-
-  const PeerId._({required super.token, required this.name});
+  const PeerId._({required super.token, required super.name});
 
   factory PeerId({Uint8List? token, String name = ''}) {
     if (token == null || token.isEmpty || token.length == 64) {
@@ -80,16 +86,14 @@ class PeerId extends IdBase {
       PeerId(token: token, name: name ?? this.name);
 }
 
-class GroupId extends IdBase {
+class GroupId extends IdWithNameBase {
   static const currentVersion = 1;
   static const size = 8;
 
-  final String name;
+  @override
+  String get emoji => String.fromCharCode(emojiVault[tokenByteHash]);
 
-  String get nameEmoji =>
-      '$name ${String.fromCharCode(emojiVault[tokenByteHash])}';
-
-  GroupId({Uint8List? token, this.name = ''})
+  GroupId({Uint8List? token, super.name = ''})
       : super(token: token ?? getRandomBytes(size));
 
   factory GroupId.fromBytes(List<int> token) {
@@ -117,16 +121,14 @@ class GroupId extends IdBase {
       );
 }
 
-class SecretId extends IdBase {
+class SecretId extends IdWithNameBase {
   static const currentVersion = 1;
   static const size = 8;
 
-  final String name;
+  @override
+  String get emoji => String.fromCharCode(emojiSecret[tokenByteHash]);
 
-  String get nameEmoji =>
-      '$name ${String.fromCharCode(emojiSecret[tokenByteHash])}';
-
-  SecretId({Uint8List? token, required this.name})
+  SecretId({Uint8List? token, required super.name})
       : super(token: token ?? getRandomBytes(size));
 
   factory SecretId.fromBytes(List<int> token) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '/src/core/model/core_model.dart';
 import '/src/core/theme/theme.dart';
 
 export 'package:flutter/material.dart';
@@ -32,12 +33,14 @@ class HeaderBar extends StatelessWidget {
   static const double sideSize = 68;
 
   final String? caption;
+  final List<TextSpan>? captionSpans;
   final Widget? backButton;
   final Widget? closeButton;
 
   const HeaderBar({
     super.key,
     this.caption,
+    this.captionSpans,
     this.backButton,
     this.closeButton,
   });
@@ -59,14 +62,15 @@ class HeaderBar extends StatelessWidget {
                 child: Container(
               height: sideSize,
               alignment: Alignment.center,
-              child: caption == null
-                  ? null
-                  : Text(
-                      caption!,
-                      style: textStylePoppins616,
-                      maxLines: 1,
-                      softWrap: false,
-                    ),
+              child: RichText(
+                maxLines: 1,
+                softWrap: false,
+                text: TextSpan(
+                  text: caption,
+                  children: captionSpans,
+                  style: textStylePoppins616,
+                ),
+              ),
             )),
             Container(
               height: sideSize,
@@ -134,13 +138,15 @@ class HeaderBarBackButton extends StatelessWidget {
 }
 
 class PageTitle extends StatelessWidget {
-  final String title;
+  final String? title;
   final String? subtitle;
+  final List<TextSpan>? titleSpans;
   final List<TextSpan>? subtitleSpans;
 
   const PageTitle({
     super.key,
-    required this.title,
+    this.title,
+    this.titleSpans,
     this.subtitle,
     this.subtitleSpans,
   });
@@ -149,13 +155,17 @@ class PageTitle extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: paddingH20,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: paddingTop32,
-              child: Text(
-                title,
-                style: textStylePoppins620,
+              child: RichText(
                 textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: title,
+                  children: titleSpans,
+                  style: textStylePoppins620,
+                ),
               ),
             ),
             if (subtitle != null || subtitleSpans != null)
@@ -165,9 +175,10 @@ class PageTitle extends StatelessWidget {
                   textAlign: TextAlign.center,
                   text: TextSpan(
                     text: subtitle,
-                    style:
-                        textStyleSourceSansPro414Purple.copyWith(height: 1.5),
                     children: subtitleSpans,
+                    style: textStyleSourceSansPro416Purple.copyWith(
+                      height: 1.5,
+                    ),
                   ),
                 ),
               ),
@@ -382,11 +393,30 @@ SnackBar buildSnackBar({
       behavior: isFloating ? SnackBarBehavior.floating : null,
       margin: paddingAll20,
       backgroundColor: isError ? clRed : clGreen,
-      content: text != null
-          ? Text(text, style: TextStyle(color: isError ? clWhite : clGreenDark))
-          : RichText(
-              text: TextSpan(
-              children: textSpans,
-              style: TextStyle(color: isError ? clWhite : clGreenDark),
-            )),
+      content: RichText(
+        text: TextSpan(
+          text: text,
+          children: textSpans,
+          style: TextStyle(color: isError ? clWhite : clGreenDark),
+        ),
+      ),
     );
+
+List<TextSpan> buildTextWithId({
+  required IdWithNameBase id,
+  bool isIdBold = false,
+  String? leadingText,
+  String? trailingText,
+  TextStyle? style,
+}) =>
+    [
+      if (leadingText != null) TextSpan(text: leadingText),
+      TextSpan(
+        text: '${id.name} ',
+        style: isIdBold
+            ? style?.copyWith(fontWeight: FontWeight.w600) ?? textStyleBold
+            : style,
+      ),
+      TextSpan(text: id.emoji),
+      if (trailingText != null) TextSpan(text: trailingText),
+    ];

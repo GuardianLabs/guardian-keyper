@@ -11,7 +11,8 @@ class AddNamePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.read<AddSecretController>();
-    return Column(
+    return ListView(
+      shrinkWrap: true,
       children: [
         // Header
         const HeaderBar(
@@ -19,13 +20,7 @@ class AddNamePage extends StatelessWidget {
           closeButton: AddSecretCloseButton(),
         ),
         // Body
-        Padding(
-          padding: paddingTop32,
-          child: Text(
-            'Add a name for your Secret',
-            style: textStylePoppins620,
-          ),
-        ),
+        const PageTitle(title: 'Add a name for your Secret'),
         // Input
         Padding(
           padding: paddingTop32 + paddingH20,

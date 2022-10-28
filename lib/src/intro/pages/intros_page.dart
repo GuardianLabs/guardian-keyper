@@ -32,74 +32,79 @@ class _IntrosPageState extends State<IntrosPage> {
   int _step = 0;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: paddingAll20,
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onHorizontalDragEnd: (details) {
-            if (details.velocity.pixelsPerSecond.dx < -5) {
-              if (_step == _titles.length - 1) {
-                context.read<IntroController>().nextScreen();
-              } else if (_step < _titles.length - 1) {
-                setState(() => _step++);
-              }
-            } else if (details.velocity.pixelsPerSecond.dx > 5 && _step > 0) {
-              setState(() => _step--);
+  Widget build(BuildContext context) => GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onHorizontalDragEnd: (details) {
+          if (details.velocity.pixelsPerSecond.dx < -5) {
+            if (_step == _titles.length - 1) {
+              context.read<IntroController>().nextScreen();
+            } else if (_step < _titles.length - 1) {
+              setState(() => _step++);
             }
-          },
-          child: Column(children: [
-            Expanded(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: paddingBottom32,
-                  child:
-                      SvgPicture.asset('assets/images/intro_${_step + 1}.svg'),
-                ),
-                Padding(
-                  padding: paddingBottom12,
-                  child: Text(
-                    _titles[_step],
-                    style: textStylePoppins620.copyWith(fontSize: 30),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Padding(
-                  padding: paddingBottom32,
-                  child: Text(
-                    _subtitles[_step],
-                    style: textStyleSourceSansPro416,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                DotBar(
-                  count: 4,
-                  active: _step,
-                  activeColor: clBlue,
-                  passiveColor: clIndigo600,
-                ),
-              ],
-            )),
-            Padding(
-              padding: paddingTop20,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          } else if (details.velocity.pixelsPerSecond.dx > 5 && _step > 0) {
+            setState(() => _step--);
+          }
+        },
+        child: Padding(
+          padding: paddingAll20,
+          child: Column(
+            children: [
+              ListView(
+                primary: true,
+                shrinkWrap: true,
                 children: [
-                  TextButton(
-                    onPressed: context.read<IntroController>().nextScreen,
-                    child: Text('Skip', style: textStylePoppins616),
+                  Padding(
+                    padding: paddingBottom32,
+                    child: SvgPicture.asset(
+                      'assets/images/intro_${_step + 1}.svg',
+                    ),
                   ),
-                  TextButton(
-                    onPressed: () => _step == (_titles.length - 1)
-                        ? context.read<IntroController>().nextScreen()
-                        : setState(() => _step++),
-                    child: Text('Next', style: textStylePoppins616),
+                  Padding(
+                    padding: paddingBottom12,
+                    child: Text(
+                      _titles[_step],
+                      style: textStylePoppins620.copyWith(fontSize: 30),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Padding(
+                    padding: paddingBottom20,
+                    child: Text(
+                      _subtitles[_step],
+                      style: textStyleSourceSansPro416,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),
-            ),
-          ]),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: context.read<IntroController>().nextScreen,
+                        child: Text('Skip', style: textStylePoppins616),
+                      ),
+                      DotBar(
+                        count: 4,
+                        active: _step,
+                        activeColor: clBlue,
+                        passiveColor: clIndigo600,
+                      ),
+                      TextButton(
+                        onPressed: () => _step == (_titles.length - 1)
+                            ? context.read<IntroController>().nextScreen()
+                            : setState(() => _step++),
+                        child: Text('Next', style: textStylePoppins616),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       );
 }

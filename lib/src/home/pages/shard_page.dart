@@ -22,7 +22,7 @@ class ShardPage extends StatelessWidget {
             children: [
               // Header
               HeaderBar(
-                caption: groupId.nameEmoji,
+                captionSpans: buildTextWithId(id: groupId),
                 backButton: const HeaderBarBackButton(),
               ),
               // Body
@@ -32,15 +32,19 @@ class ShardPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      recoveryGroup.ownerId.nameEmoji,
-                      style: textStyleSourceSansPro414Purple,
+                    RichText(
+                      text: TextSpan(
+                        style: textStyleSourceSansPro414Purple,
+                        children: buildTextWithId(id: recoveryGroup.ownerId),
+                      ),
                     ),
                     Padding(
                       padding: paddingV6,
-                      child: Text(
-                        groupId.nameEmoji,
-                        style: textStylePoppins616,
+                      child: RichText(
+                        text: TextSpan(
+                          style: textStylePoppins616,
+                          children: buildTextWithId(id: groupId),
+                        ),
                       ),
                     ),
                     Text(
@@ -84,7 +88,13 @@ class ShardPage extends StatelessWidget {
                     for (final secretShard in recoveryGroup.secrets.keys)
                       Padding(
                         padding: paddingV6,
-                        child: ListTile(title: Text(secretShard.nameEmoji)),
+                        child: ListTile(
+                          title: RichText(
+                            text: TextSpan(
+                              children: buildTextWithId(id: secretShard),
+                            ),
+                          ),
+                        ),
                       )
                   ],
                 ),
@@ -104,9 +114,11 @@ class _ConfirmChangeOwnershipDialog extends StatelessWidget {
   Widget build(BuildContext context) => BottomSheetWidget(
         icon: const IconOf.owner(isBig: true, bage: BageType.warning),
         titleString: 'Change Owner',
-        textString: 'Are you sure you want to change owner'
-            ' for vault ${groupId.nameEmoji}?'
-            ' This action cannot be undone.',
+        textSpan: buildTextWithId(
+          leadingText: 'Are you sure you want to change owner for vault ',
+          id: groupId,
+          trailingText: '? This action cannot be undone.',
+        ),
         footer: PrimaryButton(
           text: 'Confirm',
           onPressed: () => Navigator.of(context).pushReplacement(

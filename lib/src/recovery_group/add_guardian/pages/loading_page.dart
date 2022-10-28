@@ -37,54 +37,69 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Header
-          const HeaderBar(
-            caption: 'Adding a Guardian',
-            closeButton: HeaderBarCloseButton(),
-          ),
-          // Body
-          const Padding(padding: paddingTop32),
-          Padding(
-            padding: paddingH20,
-            child: Card(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: paddingTop20,
-                    child: Selector<AddGuardianController, bool>(
-                      selector: (_, controller) => controller.isWaiting,
-                      builder: (_, isWaiting, __) => Visibility(
-                        visible: isWaiting,
-                        child: const CircularProgressIndicator.adaptive(),
+  Widget build(BuildContext context) {
+    final peerId = context.read<AddGuardianController>().qrCode!.peerId;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Header
+        const HeaderBar(
+          caption: 'Adding a Guardian',
+          closeButton: HeaderBarCloseButton(),
+        ),
+        // Body
+        const Padding(padding: paddingTop32),
+        Padding(
+          padding: paddingH20,
+          child: Card(
+            child: Column(
+              children: [
+                Padding(
+                  padding: paddingTop20,
+                  child: Selector<AddGuardianController, bool>(
+                    selector: (_, controller) => controller.isWaiting,
+                    builder: (_, isWaiting, indicator) => Visibility(
+                      visible: isWaiting,
+                      child: indicator!,
+                    ),
+                    child: const CircularProgressIndicator.adaptive(),
+                  ),
+                ),
+                Padding(
+                  padding: paddingAll20,
+                  child: RichText(
+                    text: TextSpan(
+                      style: textStyleSourceSansPro616,
+                      children: buildTextWithId(
+                        leadingText: 'Awaiting ',
+                        id: peerId,
+                        trailingText: '’s response',
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: paddingAll20,
-                    child: Text(
-                      'Awaiting '
-                      '${context.read<AddGuardianController>().qrCode!.peerId.nameEmoji}'
-                      '’s response',
-                      style: textStyleSourceSansPro416,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
 
   void _onSuccess(MessageModel message) {
     Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
       buildSnackBar(
-        text: 'You have successfully added '
-            '${message.peerId.nameEmoji} '
-            'as a Guardian for ${message.groupId.nameEmoji}.',
+        textSpans: [
+          ...buildTextWithId(
+            id: message.peerId,
+            leadingText: 'You have successfully added ',
+          ),
+          ...buildTextWithId(
+            id: message.groupId,
+            leadingText: 'as a Guardian for ',
+          ),
+        ],
       ),
     );
   }
@@ -111,9 +126,13 @@ class _LoadingPageState extends State<LoadingPage> {
         isScrollControlled: true,
         builder: (BuildContext context) => BottomSheetWidget(
           titleString: 'You can’t add the same Guardian twice',
-          textString:
-              'Seems like you’ve already added ${qrCode.peerId.nameEmoji} '
-              'to this Vault. Try adding a different Guardian.',
+          textSpan: [
+            const TextSpan(text: 'Seems like you’ve already added '),
+            ...buildTextWithId(id: qrCode.peerId, style: textStyleBold),
+            const TextSpan(
+              text: ' to this Vault. Try adding a different Guardian.',
+            ),
+          ],
           icon: const IconOf.shield(isBig: true, bage: BageType.error),
           footer: PrimaryButton(
             text: 'Add another Guardian',

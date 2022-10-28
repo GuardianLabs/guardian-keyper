@@ -53,19 +53,25 @@ class _LoadingPageState extends State<LoadingPage> {
                     padding: paddingTop20,
                     child: Selector<RestoreGroupController, bool>(
                       selector: (_, controller) => controller.isWaiting,
-                      builder: (_, isWaiting, __) => Visibility(
-                        visible: isWaiting,
-                        child: const CircularProgressIndicator.adaptive(),
-                      ),
+                      builder: (_, isWaiting, indicator) =>
+                          Visibility(visible: isWaiting, child: indicator!),
+                      child: const CircularProgressIndicator.adaptive(),
                     ),
                   ),
                   Padding(
                     padding: paddingAll20,
-                    child: Text(
-                      'Awaiting '
-                      '${context.read<RestoreGroupController>().qrCode!.peerId.nameEmoji}'
-                      '’s response',
-                      style: textStyleSourceSansPro416,
+                    child: RichText(
+                      text: TextSpan(
+                        style: textStyleSourceSansPro416,
+                        children: buildTextWithId(
+                          leadingText: 'Awaiting ',
+                          id: context
+                              .read<RestoreGroupController>()
+                              .qrCode!
+                              .peerId,
+                          trailingText: '’s response',
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -85,14 +91,11 @@ class _LoadingPageState extends State<LoadingPage> {
             builder: (context) => BottomSheetWidget(
               icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
               titleString: 'Ownership Changed',
-              textSpan: [
-                const TextSpan(text: 'The ownership of the Vault '),
-                TextSpan(
-                  text: message.groupId.nameEmoji,
-                  style: textStyleBold,
-                ),
-                const TextSpan(text: ' has been transferred to your device.'),
-              ],
+              textSpan: buildTextWithId(
+                leadingText: 'The ownership of the Vault ',
+                id: message.groupId,
+                trailingText: ' has been transferred to your device.',
+              ),
               footer: PrimaryButton(
                 text: 'Done',
                 onPressed: Navigator.of(context).pop,
@@ -108,17 +111,12 @@ class _LoadingPageState extends State<LoadingPage> {
               icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
               titleString: 'Ownership Transfer Approved',
               textSpan: [
-                TextSpan(
-                  text: message.peerId.nameEmoji,
-                  style: textStyleBold,
+                ...buildTextWithId(
+                  id: message.peerId,
+                  trailingText:
+                      ' approved the transfer of ownership for the Vault ',
                 ),
-                const TextSpan(
-                  text: ' approved the transfer of ownership for the Vault ',
-                ),
-                TextSpan(
-                  text: message.groupId.nameEmoji,
-                  style: textStyleBold,
-                ),
+                ...buildTextWithId(id: message.groupId),
               ],
               body: Padding(
                 padding: paddingV20,
@@ -154,17 +152,12 @@ class _LoadingPageState extends State<LoadingPage> {
           icon: const IconOf.secrets(isBig: true, bage: BageType.error),
           titleString: 'Ownership Transfer Rejected',
           textSpan: [
-            TextSpan(
-              text: message.peerId.nameEmoji,
-              style: textStyleBold,
+            ...buildTextWithId(
+              id: message.peerId,
+              trailingText:
+                  ' rejected the transfer of ownership for the Vault ',
             ),
-            const TextSpan(
-              text: ' rejected the transfer of ownership for the Vault ',
-            ),
-            TextSpan(
-              text: message.groupId.nameEmoji,
-              style: textStyleBold,
-            ),
+            ...buildTextWithId(id: message.groupId),
           ],
           body: Padding(
             padding: paddingV20,

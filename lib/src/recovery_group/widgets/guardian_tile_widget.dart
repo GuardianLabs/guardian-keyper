@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-
+import '/src/core/widgets/common.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -33,14 +32,18 @@ class GuardianTileWidget extends StatelessWidget {
                 ),
               ])
             : _buildLeading(),
-        title: Text(
-          guardian.nameEmoji,
+        title: RichText(
           maxLines: 1,
-          style: textStyleSourceSansPro614.copyWith(
-            color: guardian.token.isEmpty
-                ? clRed
-                : Theme.of(context).colorScheme.primary,
-            height: 1.5,
+          text: TextSpan(
+            style: textStyleSourceSansPro614.copyWith(height: 1.5),
+            children: buildTextWithId(
+              id: guardian,
+              style: TextStyle(
+                color: guardian.token.isEmpty
+                    ? clRed
+                    : Theme.of(context).colorScheme.primary,
+              ),
+            ),
           ),
         ),
         subtitle: Text(
