@@ -37,7 +37,6 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final controller = Provider.of<AddSecretController>(context);
     final controller = context.read<AddSecretController>();
     return Column(
       children: [
@@ -102,10 +101,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           titleString: 'Your Secret has been split',
           textSpan: [
             const TextSpan(text: 'Now you can restore your '),
-            TextSpan(
-              text: message.groupId.nameEmoji,
-              style: textStyleBold,
-            ),
+            ...buildTextWithId(id: message.groupId, style: textStyleBold),
             const TextSpan(text: ' Secret with the help of Guardians.'),
           ],
           footer: Padding(
@@ -128,10 +124,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
               'Guardian rejected your Secret. The Secret will be removed.',
           textSpan: [
             const TextSpan(text: 'Sharding process for '),
-            TextSpan(
-              text: message.groupId.nameEmoji,
-              style: textStyleBold,
-            ),
+            ...buildTextWithId(id: message.groupId, style: textStyleBold),
             const TextSpan(
               text: ' has been terminated by one of your Guardians.',
             ),

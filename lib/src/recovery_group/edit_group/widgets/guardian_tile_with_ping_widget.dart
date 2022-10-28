@@ -37,16 +37,16 @@ class _GuardianTileWithPingWidgetState
             isError: !hasPong,
             textSpans: hasPong
                 ? [
-                    TextSpan(
-                      text: widget.guardian.nameEmoji,
+                    ...buildTextWithId(
+                      id: widget.guardian,
                       style: textStyleBold,
                     ),
                     TextSpan(text: ' is online.\nPing $msElapsed ms.'),
                   ]
                 : [
                     const TextSpan(text: 'Couldn’t reach out to '),
-                    TextSpan(
-                      text: widget.guardian.nameEmoji,
+                    ...buildTextWithId(
+                      id: widget.guardian,
                       style: textStyleBold,
                     ),
                     const TextSpan(text: '. Connection timeout.'),

@@ -25,9 +25,7 @@ class AddGuardianWidget extends StatelessWidget {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: 'Add '
-                      '${group.maxSize - group.size}'
-                      ' more Guardian',
+                  text: 'Add ${group.maxSize - group.size} more Guardian',
                   style: textStyleBold,
                 ),
                 TextSpan(

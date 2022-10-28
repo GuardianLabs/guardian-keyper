@@ -40,9 +40,11 @@ class AddSecretWidget extends StatelessWidget {
                             padding: paddingH20 + paddingV12,
                             child: const IconOf.secret(),
                           ),
-                          Text(
-                            secretId.nameEmoji,
-                            style: textStyleSourceSansPro614,
+                          RichText(
+                            text: TextSpan(
+                              style: textStyleSourceSansPro614,
+                              children: buildTextWithId(id: secretId),
+                            ),
                           ),
                         ],
                       )),
@@ -51,8 +53,9 @@ class AddSecretWidget extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          'In order to restore this Secret you have to get an approval '
-                          'from at least ${group.threshold} Guardians of the Vault.',
+                          'In order to restore this Secret you have to get '
+                          'an approval from at least ${group.threshold} '
+                          'Guardians of the Vault.',
                           style: textStyleSourceSansPro414Purple,
                         ),
                         const Padding(padding: paddingTop12),

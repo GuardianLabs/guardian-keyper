@@ -60,7 +60,12 @@ class _AddSecretPageState extends State<AddSecretPage> {
             padding: paddingH20,
             children: [
               PageTitle(
-                title: 'Add your Secret for ${controller.group.id.nameEmoji}',
+                titleSpans: [
+                  TextSpan(
+                    text: 'Add your Secret for ${controller.group.id.name} ',
+                  ),
+                  TextSpan(text: controller.group.id.emoji),
+                ],
                 subtitle: 'Make sure no one can see your screen.',
               ),
               // Open Settings Tile

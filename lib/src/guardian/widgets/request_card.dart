@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/misc.dart';
+import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 
 class RequestCard extends StatelessWidget {
@@ -22,9 +23,13 @@ class RequestCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('FROM', style: textStyleSourceSansPro612Purple),
-                  Text(
-                    message.peerId.nameEmoji,
-                    style: textStyleSourceSansPro616,
+                  RichText(
+                    text: TextSpan(
+                      children: buildTextWithId(
+                        id: message.peerId,
+                        style: textStyleSourceSansPro616,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -49,9 +54,13 @@ class RequestCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('VAULT', style: textStyleSourceSansPro612Purple),
-                    Text(
-                      message.groupId.nameEmoji,
-                      style: textStyleSourceSansPro616,
+                    RichText(
+                      text: TextSpan(
+                        children: buildTextWithId(
+                          id: message.groupId,
+                          style: textStyleSourceSansPro616,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -63,9 +72,13 @@ class RequestCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('SHARD', style: textStyleSourceSansPro612Purple),
-                    Text(
-                      message.secretShard.id.nameEmoji,
-                      style: textStyleSourceSansPro616,
+                    RichText(
+                      text: TextSpan(
+                        children: buildTextWithId(
+                          id: message.secretShard.id,
+                          style: textStyleSourceSansPro616,
+                        ),
+                      ),
                     ),
                   ],
                 ),

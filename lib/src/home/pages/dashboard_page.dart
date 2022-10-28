@@ -17,9 +17,11 @@ class DashboardPage extends StatelessWidget {
       padding: paddingAll20,
       children: [
         // Device Name
-        Text(
-          myPeerId.nameEmoji,
-          style: textStylePoppins620,
+        RichText(
+          text: TextSpan(
+            style: textStylePoppins620,
+            children: buildTextWithId(id: myPeerId),
+          ),
         ),
         // My Key
         Row(children: [
