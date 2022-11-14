@@ -14,10 +14,10 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_launcher_icons: ^0.10.0
-  flutter_native_splash: ^2.2.11
+  flutter_native_splash: ^2.2.14
   flutter_secure_storage: ^6.0.0
   flutter_screen_lock: ^7.0.4
-  flutter_svg: ^1.1.5
+  flutter_svg: ^1.1.6
   google_fonts: ^3.0.1
   hive_flutter: ^1.1.0
   hive: ^2.2.3
@@ -31,27 +31,27 @@ dependencies:
       url: "https://github.com/theyakka/qr.flutter"
 
   # Crypto
-  sodium_libs: ^1.2.5
+  sodium_libs: ^1.2.5+1
   sss256: ^1.0.0
 
   # Platform specific
   wakelock: ^0.6.2
-  bonsoir: ^2.0.0
   local_auth: ^2.1.2
   mobile_scanner: ^2.0.0
-  share_plus: ^6.0.0
-  connectivity_plus: ^3.0.0
+  share_plus: ^6.2.0
+  connectivity_plus: ^3.0.2
   package_info_plus: ^3.0.1
-  device_info_plus: ^7.0.0
-  airplane_mode_checker: ^1.0.2
+  device_info_plus: ^8.0.0
+  airplane_mode_checker: ^1.0.3
   app_settings: ^4.1.8
   vibration: ^1.7.6
 
   # Analytics
-  amplitude_flutter: ^3.2.1
-  sentry_flutter: ^6.13.0
+  amplitude_flutter: ^3.11.0
+  sentry_flutter: ^6.15.1
 
   # P2P networking
+  bonsoir: ^2.0.0
   p2plib:
     git:
       url: "https://github.com/GuardianLabs/p2plib-dart.git"
