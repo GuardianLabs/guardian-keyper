@@ -5,8 +5,8 @@ publish_to: 'none'
 version: 2.0.0+1
 
 environment:
-  sdk: ">=2.18.2 <3.0.0"
-  flutter: ^3.3.5
+  sdk: ">=2.18.4 <3.0.0"
+  flutter: ^3.3.8
 
 dependencies:
   flutter:
@@ -38,9 +38,9 @@ dependencies:
   wakelock: ^0.6.2
   local_auth: ^2.1.2
   mobile_scanner: ^2.0.0
-  share_plus: ^6.2.0
+  share_plus: ^6.3.0
   connectivity_plus: ^3.0.2
-  package_info_plus: ^3.0.1
+  package_info_plus: ^3.0.2
   device_info_plus: ^8.0.0
   airplane_mode_checker: ^1.0.3
   app_settings: ^4.1.8
