@@ -1,34 +1,42 @@
 import 'dart:io';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/widgets.dart' hide Router;
+import 'package:bonsoir/bonsoir.dart';
 import 'package:p2plib/p2plib.dart';
 
 import '../model/core_model.dart';
-import 'mdns_service.dart';
 
 class NetworkService extends TopicHandler with WidgetsBindingObserver {
+  static const _bonsoirType = '_dartshare._udp';
+  static const _bonsoirAttr = 'peer_id';
+  static const _bonsoirName = 'Guardian Keyper';
   static const _topicOfRecoveryGroup = 100;
   static const _topicOfGuardian = 101;
 
   final _guardianStreamController = StreamController<MessageModel>.broadcast();
-  final _recoveryGroupStreamController =
-      StreamController<MessageModel>.broadcast();
+  final _vaultStreamController = StreamController<MessageModel>.broadcast();
+  final BonsoirService _bonsoirService;
+  StreamSubscription<BonsoirDiscoveryEvent>? _mDNSsubscription;
+  BonsoirDiscovery? _mDNSdiscovery;
+  BonsoirBroadcast? _mDNSbroadcast;
+  bool mDNSenabled;
 
   NetworkService({
     required Router router,
-    bool useMdnsService = true,
-  }) : super(router) {
+    this.mDNSenabled = true,
+  })  : _bonsoirService = BonsoirService(
+          name: _bonsoirName,
+          type: _bonsoirType,
+          port: router.connection.ipv4Port,
+          attributes: {_bonsoirAttr: base64Encode(router.pubKey.data)},
+        ),
+        super(router) {
     WidgetsBinding.instance.addObserver(this);
-
-    if (useMdnsService) {
-      MdnsService(
-        router: router,
-        mdnsBroadcastDiscover: MdnsBroadcastDiscovery(router.pubKey),
-      );
-    }
-
-    Future.microtask(router.run);
+    Future.microtask(
+      () => didChangeAppLifecycleState(AppLifecycleState.resumed),
+    );
   }
 
   factory NetworkService.udp({
@@ -65,8 +73,7 @@ class NetworkService extends TopicHandler with WidgetsBindingObserver {
 
   Stream<MessageModel> get guardianStream => _guardianStreamController.stream;
 
-  Stream<MessageModel> get recoveryGroupStream =>
-      _recoveryGroupStreamController.stream;
+  Stream<MessageModel> get recoveryGroupStream => _vaultStreamController.stream;
 
   List<PeerAddress> get myAddresses => [
         for (final address in router.connection.addresses)
@@ -79,10 +86,27 @@ class NetworkService extends TopicHandler with WidgetsBindingObserver {
       ];
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async =>
-      state == AppLifecycleState.resumed
-          ? await router.run()
-          : await router.stop();
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      await router.run();
+      if (mDNSenabled) {
+        _mDNSbroadcast = BonsoirBroadcast(service: _bonsoirService);
+        await _mDNSbroadcast!.ready;
+        await _mDNSbroadcast!.start();
+        _mDNSdiscovery = BonsoirDiscovery(type: _bonsoirType);
+        await _mDNSdiscovery!.ready;
+        _mDNSsubscription = _mDNSdiscovery!.eventStream!.listen(onBonsoirEvent);
+        await _mDNSdiscovery!.start();
+      }
+    } else {
+      await router.stop();
+      _mDNSsubscription?.cancel();
+      await _mDNSbroadcast?.stop();
+      await _mDNSdiscovery?.stop();
+      _mDNSbroadcast = null;
+      _mDNSdiscovery = null;
+    }
+  }
 
   @override
   Uint64List topics() =>
@@ -102,8 +126,26 @@ class NetworkService extends TopicHandler with WidgetsBindingObserver {
         _guardianStreamController.add(message);
         break;
       case _topicOfRecoveryGroup:
-        _recoveryGroupStreamController.add(message);
+        _vaultStreamController.add(message);
         break;
+    }
+  }
+
+  void onBonsoirEvent(BonsoirDiscoveryEvent event) {
+    if (event.type == BonsoirDiscoveryEventType.discoveryServiceResolved) {
+      final eventMap = event.service?.toJson();
+      if (eventMap == null) return;
+      if (eventMap['service.type'] != _bonsoirType) return;
+      if (eventMap['service.name'] != _bonsoirName) return;
+      final peerId =
+          PubKey(base64Decode(eventMap['service.attributes']?[_bonsoirAttr]));
+      if (peerId == router.pubKey) return;
+      router.addPeer(
+        peerId,
+        Peer(InternetAddress(eventMap['service.ip']), event.service!.port),
+        enableSearch: false,
+      );
+      router.pingPeer(peerId);
     }
   }
 
