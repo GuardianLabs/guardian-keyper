@@ -133,10 +133,9 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
       context: context,
       correctString: passCode,
       canCancel: true,
-      digits: passCode.length,
       keyPadConfig: keyPadConfig,
       secretsConfig: secretsConfig,
-      screenLockConfig: screenLockConfig,
+      config: screenLockConfig,
       customizedButtonChild: BiometricLogonButton(callback: _pass),
       customizedButtonTap: () {}, // Fails if null
       title: Padding(
@@ -147,7 +146,7 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
           textAlign: TextAlign.center,
         ),
       ),
-      didUnlocked: _pass,
+      onUnlocked: _pass,
     );
   }
 

@@ -33,15 +33,13 @@ class _SetPasscodePageState extends State<SetPasscodePage> {
 
   void _createPincode() {
     final diContainer = context.read<DIContainer>();
-    screenLock(
+    screenLockCreate(
       context: context,
-      correctString: '',
       canCancel: false,
-      confirmation: true,
       digits: diContainer.globals.passCodeLength,
       keyPadConfig: keyPadConfig,
       secretsConfig: secretsConfig,
-      screenLockConfig: screenLockConfig,
+      config: screenLockConfig,
       inputController: _passcodeController,
       title: Padding(
           padding: paddingV32 + paddingH20,
@@ -63,7 +61,7 @@ class _SetPasscodePageState extends State<SetPasscodePage> {
         textAlign: TextAlign.center,
       ),
       customizedButtonTap: _passcodeController.unsetConfirmed,
-      didConfirmed: (value) {
+      onConfirmed: (value) {
         diContainer.boxSettings.passCode = value;
         if (diContainer.platformService.hasBiometrics) {
           context.read<IntroController>().nextScreen();
@@ -75,7 +73,7 @@ class _SetPasscodePageState extends State<SetPasscodePage> {
           );
         }
       },
-      didError: (_) async {
+      onError: (_) async {
         ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
           text: 'Wrong passcode!',
           duration: const Duration(seconds: 2),

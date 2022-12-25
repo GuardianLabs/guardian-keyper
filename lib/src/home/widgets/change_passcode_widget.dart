@@ -22,7 +22,6 @@ class ChangePassCodeWidget extends StatelessWidget {
             context: context,
             correctString: diContainer.boxSettings.passCode,
             canCancel: true,
-            digits: diContainer.boxSettings.passCode.length,
             secretsConfig: secretsConfig,
             keyPadConfig: keyPadConfig,
             title: Padding(
@@ -32,11 +31,11 @@ class ChangePassCodeWidget extends StatelessWidget {
                   style: textStylePoppins620,
                   textAlign: TextAlign.center,
                 )),
-            didUnlocked: () {
+            onUnlocked: () {
               Navigator.of(context).pop();
-              _enterNewPincode(context);
+              _createPincode(context);
             },
-            didError: (_) async {
+            onError: (_) async {
               ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
                 text: 'Wrong passcode!',
                 duration: const Duration(seconds: 2),
@@ -49,17 +48,15 @@ class ChangePassCodeWidget extends StatelessWidget {
         },
       );
 
-  void _enterNewPincode(BuildContext context) {
+  void _createPincode(BuildContext context) {
     final diContainer = context.read<DIContainer>();
-    screenLock(
+    screenLockCreate(
       context: context,
-      correctString: '',
       canCancel: true,
-      confirmation: true,
       digits: diContainer.globals.passCodeLength,
       keyPadConfig: keyPadConfig,
       secretsConfig: secretsConfig,
-      screenLockConfig: screenLockConfig,
+      config: screenLockConfig,
       title: Padding(
           padding: paddingV32 + paddingH20,
           child: Text(
@@ -74,7 +71,7 @@ class ChangePassCodeWidget extends StatelessWidget {
             style: textStylePoppins620,
             textAlign: TextAlign.center,
           )),
-      didConfirmed: (value) {
+      onConfirmed: (value) {
         diContainer.boxSettings.passCode = value;
         Navigator.of(context).pop();
         showModalBottomSheet(
@@ -91,7 +88,7 @@ class ChangePassCodeWidget extends StatelessWidget {
           ),
         );
       },
-      didError: (_) async {
+      onError: (_) async {
         ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
           text: 'Wrong passcode!',
           duration: const Duration(seconds: 2),
