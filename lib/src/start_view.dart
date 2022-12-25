@@ -22,10 +22,9 @@ class _StartViewState extends State<StartView> {
                 context: context,
                 correctString: diContainer.boxSettings.passCode,
                 canCancel: false,
-                digits: diContainer.boxSettings.passCode.length,
                 keyPadConfig: keyPadConfig,
                 secretsConfig: secretsConfig,
-                screenLockConfig: screenLockConfig,
+                config: screenLockConfig,
                 customizedButtonChild: BiometricLogonButton(
                   callback: () => Navigator.of(context).pushNamedAndRemoveUntil(
                     '/home',
@@ -40,12 +39,11 @@ class _StartViewState extends State<StartView> {
                       style: textStylePoppins620,
                       textAlign: TextAlign.center,
                     )),
-                didUnlocked: () =>
-                    Navigator.of(context).pushNamedAndRemoveUntil(
+                onUnlocked: () => Navigator.of(context).pushNamedAndRemoveUntil(
                   '/home',
                   (_) => false,
                 ),
-                didError: (_) async {
+                onError: (_) async {
                   ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
                     text: 'Wrong passcode!',
                     duration: const Duration(seconds: 2),

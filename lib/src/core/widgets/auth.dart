@@ -17,7 +17,7 @@ const secretsConfig = SecretsConfig(
   ),
 );
 final keyPadConfig = KeyPadConfig(
-  buttonConfig: StyledInputConfig(
+  buttonConfig: KeyPadButtonConfig(
     buttonStyle: ButtonStyle(
       backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
     ),
