@@ -11,6 +11,7 @@ part 'secret_shard_model.dart';
 part 'settings_model.dart';
 part 'message_model.dart';
 part 'peer_address.dart';
+part 'key_bunch.dart';
 part 'id_model.dart';
 
 abstract class Serializable extends Equatable {
@@ -51,22 +52,5 @@ class Globals {
     this.retryNetworkTimeout = const Duration(seconds: 3),
     this.snackBarDuration = const Duration(seconds: 4),
     this.qrCodeExpires = const Duration(days: 1),
-  });
-}
-
-@immutable
-class KeyBunch {
-  final Uint8List encryptionPublicKey;
-  final Uint8List encryptionPrivateKey;
-  final Uint8List singPublicKey;
-  final Uint8List singPrivateKey;
-  final Uint8List encryptionAesKey;
-
-  const KeyBunch({
-    required this.encryptionPublicKey,
-    required this.encryptionPrivateKey,
-    required this.singPublicKey,
-    required this.singPrivateKey,
-    required this.encryptionAesKey,
   });
 }
