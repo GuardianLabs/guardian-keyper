@@ -8,12 +8,16 @@ import '../service/platform_service.dart';
 import 'migrate_storage.dart';
 
 Future<DIContainer> initDependencies({
-  Globals globals = const Globals(),
-  PlatformService platformService = const PlatformService(),
-  AnalyticsService analyticsService = const AnalyticsService(),
+  final Globals globals = const Globals(),
+  final PlatformService platformService = const PlatformService(),
+  final AnalyticsService analyticsService = const AnalyticsService(),
+  NetworkService? networkService,
 }) async {
-  await initCrypto();
-  final keyBunch = await platformService.getKeyBunch(generateKeyBunch);
+  networkService ??= NetworkService();
+  final storedKeyBunch = await platformService.readKeyBunch();
+  final keyBunch = await networkService.init(storedKeyBunch);
+  if (keyBunch != storedKeyBunch) await platformService.writeKeyBunch(keyBunch);
+
   final cipher = HiveAesCipher(keyBunch.encryptionAesKey);
   await Hive.initFlutter(globals.storageName);
   Hive
@@ -42,23 +46,24 @@ Future<DIContainer> initDependencies({
     boxSettings.deviceName =
         await platformService.getDeviceName(keyBunch.encryptionPublicKey);
   }
-  final networkService = NetworkService.udp(
-    keyBunch: keyBunch,
-    bsAddressV4: boxSettings.isProxyEnabled ? globals.bsAddressV4 : '',
-    bsAddressV6: boxSettings.isProxyEnabled ? globals.bsAddressV6 : '',
-  );
-  final myPeerId = PeerId(
-    token: networkService.router.pubKey.data,
-    name: boxSettings.deviceName,
-  );
   await migrateStorage(
-    myPeerId: myPeerId,
+    myPeerId: PeerId(
+      token: networkService.router.selfId.value,
+      name: boxSettings.deviceName,
+    ),
     boxMessages: boxMessages,
     boxSecretShards: boxSecretShards,
     boxRecoveryGroups: boxRecoveryGroups,
   );
+  if (boxSettings.isProxyEnabled) {
+    networkService.setBootstrapServer(
+      globals.bsAddressV4,
+      globals.bsAddressV6,
+      globals.bsPort,
+      globals.bsPeerId,
+    );
+  }
   return DIContainer(
-    myPeerId: myPeerId,
     globals: globals,
     boxSettings: boxSettings,
     boxMessages: boxMessages,

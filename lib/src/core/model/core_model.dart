@@ -29,8 +29,10 @@ abstract class Serializable extends Equatable {
 @immutable
 class Globals {
   final String storageName;
+  final String bsPeerId;
   final String bsAddressV4;
   final String bsAddressV6;
+  final int bsPort;
   final int maxNameLength;
   final int minNameLength;
   final int passCodeLength;
@@ -42,8 +44,10 @@ class Globals {
 
   const Globals({
     this.storageName = 'data',
+    this.bsPeerId = '',
     this.bsAddressV4 = '',
     this.bsAddressV6 = '',
+    this.bsPort = 0,
     this.maxNameLength = 25,
     this.minNameLength = 3,
     this.passCodeLength = 6,

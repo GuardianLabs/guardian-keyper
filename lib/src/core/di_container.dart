@@ -9,7 +9,6 @@ import 'service/network_service.dart';
 import 'service/platform_service.dart';
 
 class DIContainer {
-  late PeerId myPeerId;
   final Globals globals;
   final AnalyticsService analyticsService;
   final PlatformService platformService;
@@ -18,19 +17,25 @@ class DIContainer {
   final Box<MessageModel> boxMessages;
   final Box<RecoveryGroupModel> boxRecoveryGroups;
 
+  late PeerId _myPeerId;
+
+  PeerId get myPeerId => _myPeerId;
+
   DIContainer({
-    required this.myPeerId,
-    this.globals = const Globals(),
-    this.platformService = const PlatformService(),
-    this.analyticsService = const AnalyticsService(),
+    required this.globals,
+    required this.platformService,
+    required this.analyticsService,
     required this.networkService,
     required this.boxSettings,
     required this.boxMessages,
     required this.boxRecoveryGroups,
-  }) {
+  }) : _myPeerId = PeerId(
+          token: networkService.router.selfId.value,
+          name: boxSettings.deviceName,
+        ) {
     boxSettings.watch().listen(
-          (event) => myPeerId = PeerId(
-            token: networkService.router.pubKey.data,
+          (event) => _myPeerId = PeerId(
+            token: networkService.router.selfId.value,
             name: (event.value as SettingsModel).deviceName,
           ),
         );
