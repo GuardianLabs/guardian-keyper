@@ -53,9 +53,10 @@ class _HiddenSettingsWidgetState extends State<HiddenSettingsWidget> {
                         isEnabled
                             ? _diContainer.networkService.setBootstrapServer(
                                 _diContainer.globals.bsAddressV4,
-                                _diContainer.globals.bsAddressV6)
-                            : _diContainer.networkService
-                                .setBootstrapServer(null, null);
+                                _diContainer.globals.bsAddressV6,
+                                _diContainer.globals.bsPort,
+                                _diContainer.globals.bsPeerId)
+                            : _diContainer.networkService.setBootstrapServer();
                       },
                     ),
                   ),

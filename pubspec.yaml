@@ -31,7 +31,7 @@ dependencies:
       url: "https://github.com/theyakka/qr.flutter"
 
   # Crypto
-  sodium_libs: ^1.2.5+1
+  sodium_libs: ^2.0.0
   sss256: ^1.0.0
 
   # Platform specific
@@ -54,10 +54,11 @@ dependencies:
 
   # P2P networking
   p2plib:
-    git:
+    path: "../p2plib-dart"
+    # git:
       # url: "https://github.com/alexandrim0/p2plib-dart.git"
-      url: "https://github.com/GuardianLabs/p2plib-dart.git"
-      ref: "v0.9.2"
+      # url: "https://github.com/GuardianLabs/p2plib-dart.git"
+      # ref: "v0.9.2"
 
 dev_dependencies:
   flutter_lints: ^2.0.1

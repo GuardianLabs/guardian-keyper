@@ -25,8 +25,12 @@ Future<void> main() async {
         globals: const Globals(
           bsAddressV4: String.fromEnvironment('BS_V4'),
           bsAddressV6: String.fromEnvironment('BS_V6'),
+          bsPeerId: String.fromEnvironment('BS_ID'),
+          bsPort: int.fromEnvironment('BS_PORT'),
         ),
-        platformService: await PlatformService.bootstrap(),
+        platformService: PlatformService(
+          hasBiometrics: await PlatformService.checkIfHasBiometrics(),
+        ),
         analyticsService: AnalyticsService(
           logEvent: (await _getAmplitude()).logEvent,
         ),
