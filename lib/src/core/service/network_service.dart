@@ -13,21 +13,21 @@ class NetworkService with WidgetsBindingObserver {
   static const _bonsoirAttr = 'peer_id';
   static const _bonsoirName = 'Guardian Keyper';
 
-  final _guardianStreamController = StreamController<MessageModel>.broadcast();
-  final _vaultStreamController = StreamController<MessageModel>.broadcast();
-  final _emptyPeerId = P2PPeerId(value: Uint8List(64));
+  // final _guardianStreamController = StreamController<MessageModel>();
+  // final _guardianStreamController = StreamController<MessageModel>.broadcast();
+  final _recoveryGroupStream = StreamController<MessageModel>.broadcast();
+  final _randomPeerId = P2PPeerId(value: getRandomBytes(P2PPeerId.length));
   final P2PRouter router;
   late final BonsoirService _bonsoirService;
-
-  StreamSubscription<BonsoirDiscoveryEvent>? _mDNSsubscription;
-  BonsoirDiscovery? _mDNSdiscovery;
-  BonsoirBroadcast? _mDNSbroadcast;
+  late final BonsoirDiscovery _mDNSdiscovery;
+  late final BonsoirBroadcast _mDNSbroadcast;
+  late StreamSubscription<BonsoirDiscoveryEvent> _mDNSsubscription;
 
   var mDNSenabled = true;
 
-  Stream<MessageModel> get guardianStream => _guardianStreamController.stream;
+  // Stream<MessageModel> get guardianStream => _guardianStreamController.stream;
 
-  Stream<MessageModel> get recoveryGroupStream => _vaultStreamController.stream;
+  Stream<MessageModel> get recoveryGroupStream => _recoveryGroupStream.stream;
 
   List<PeerAddress> get myAddresses => router.selfAddresses
       .map((e) => PeerAddress(address: e.address, port: e.port))
@@ -41,25 +41,22 @@ class NetworkService with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       await router.start();
       if (mDNSenabled) {
-        _mDNSbroadcast = BonsoirBroadcast(service: _bonsoirService);
-        await _mDNSbroadcast!.ready;
-        await _mDNSbroadcast!.start();
-        _mDNSdiscovery = BonsoirDiscovery(type: _bonsoirType);
-        await _mDNSdiscovery!.ready;
-        _mDNSsubscription = _mDNSdiscovery!.eventStream!.listen(onBonsoirEvent);
-        await _mDNSdiscovery!.start();
+        await _mDNSbroadcast.ready;
+        await _mDNSbroadcast.start();
+        await _mDNSdiscovery.ready;
+        _mDNSsubscription = _mDNSdiscovery.eventStream!.listen(onBonsoirEvent);
+        await _mDNSdiscovery.start();
       }
     } else {
       router.stop();
-      _mDNSsubscription?.cancel();
-      await _mDNSbroadcast?.stop();
-      await _mDNSdiscovery?.stop();
-      _mDNSbroadcast = null;
-      _mDNSdiscovery = null;
+      _mDNSsubscription.cancel();
+      await _mDNSbroadcast.stop();
+      await _mDNSdiscovery.stop();
     }
   }
 
   Future<KeyBunch> init(KeyBunch keyBunch) async {
+    router.messageStream.listen(onMessage);
     final cryptoKeys = await router.init(keyBunch.isEmpty
         ? null
         : P2PCryptoKeys(
@@ -76,6 +73,8 @@ class NetworkService with WidgetsBindingObserver {
       port: router.defaultPort,
       attributes: {_bonsoirAttr: base64Encode(router.selfId.value)},
     );
+    _mDNSbroadcast = BonsoirBroadcast(service: _bonsoirService);
+    _mDNSdiscovery = BonsoirDiscovery(type: _bonsoirType);
     WidgetsBinding.instance.addObserver(this);
     await didChangeAppLifecycleState(AppLifecycleState.resumed);
     return KeyBunch(
@@ -97,18 +96,10 @@ class NetworkService with WidgetsBindingObserver {
     if (message == null) return;
     if (message.version != MessageModel.currentVersion) return;
     if (message.peerId != PeerId(token: p2pMessage.srcPeerId.value)) return;
-
-    switch (message.payloadTypeId) {
-      case PeerAddressList.typeId:
-        // TBD: find if controllers works with that type
-        throw Exception('Need to choose stream!');
-      case SecretShardModel.typeId:
-        _guardianStreamController.add(message);
-        break;
-      case RecoveryGroupModel.typeId:
-        _vaultStreamController.add(message);
-        break;
-    }
+    _recoveryGroupStream.add(message);
+    // message.isRequested
+    //     ? _guardianStreamController.add(message)
+    //     : _recoveryGroupStream.add(message);
   }
 
   void onBonsoirEvent(BonsoirDiscoveryEvent event) {
@@ -138,13 +129,13 @@ class NetworkService with WidgetsBindingObserver {
     String ipV4 = '',
     String ipV6 = '',
     int port = 0,
-    String peerId = '', // TBD: parse from hex
+    String peerId = '', // TBD: parse from base64
   ]) {
     if (ipV4.isEmpty && ipV6.isEmpty) {
-      router.forgetPeerId(_emptyPeerId);
+      router.forgetPeerId(_randomPeerId);
     } else {
       router.addPeerAddress(
-        peerId: _emptyPeerId,
+        peerId: _randomPeerId,
         addresses: [
           if (ipV4.isNotEmpty)
             P2PFullAddress(
@@ -186,20 +177,7 @@ class NetworkService with WidgetsBindingObserver {
         peerId: P2PPeerId(value: peerId.token),
       );
 
-  Future<void> sendToRecoveryGroup({
-    required PeerId peerId,
-    required MessageModel message,
-    bool withAck = true,
-  }) =>
-      router
-          .sendMessage(
-            isConfirmable: withAck,
-            dstPeerId: P2PPeerId(value: peerId.token),
-            payload: message.toBytes(),
-          )
-          .catchError((_) {}, test: (e) => e is TimeoutException);
-
-  Future<void> sendToGuardian({
+  Future<void> sendTo({
     required PeerId peerId,
     required MessageModel message,
     bool withAck = true,

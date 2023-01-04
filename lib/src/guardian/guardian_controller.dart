@@ -7,7 +7,7 @@ class GuardianController {
   final DIContainer diContainer;
 
   GuardianController({required this.diContainer}) {
-    diContainer.networkService.guardianStream.listen(onMessage);
+    diContainer.networkService.recoveryGroupStream.listen(onMessage);
     Future.microtask(_cleanMessageBox);
   }
 
@@ -31,6 +31,7 @@ class GuardianController {
 
   void onMessage(MessageModel message) {
     if (message.isEmpty) return;
+    if (message.isNotRequested) return; // TBD: check all flows
     final ticket = diContainer.boxMessages.get(message.aKey);
 
     switch (message.code) {
@@ -156,7 +157,7 @@ class GuardianController {
   }
 
   Future<void> _sendResponse(MessageModel message) =>
-      diContainer.networkService.sendToRecoveryGroup(
+      diContainer.networkService.sendTo(
         peerId: message.peerId,
         message: message.copyWith(peerId: diContainer.myPeerId),
       );
