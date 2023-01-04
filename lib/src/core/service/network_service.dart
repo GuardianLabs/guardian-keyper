@@ -13,19 +13,16 @@ class NetworkService with WidgetsBindingObserver {
   static const _bonsoirAttr = 'peer_id';
   static const _bonsoirName = 'Guardian Keyper';
 
-  // final _guardianStreamController = StreamController<MessageModel>();
-  // final _guardianStreamController = StreamController<MessageModel>.broadcast();
-  final _recoveryGroupStream = StreamController<MessageModel>.broadcast();
-  final _randomPeerId = P2PPeerId(value: getRandomBytes(P2PPeerId.length));
   final P2PRouter router;
+  final _recoveryGroupStream = StreamController<MessageModel>.broadcast();
+  // TBD: get from env
+  final _bsPeerId = P2PPeerId(value: getRandomBytes(P2PPeerId.length));
   late final BonsoirService _bonsoirService;
   late final BonsoirDiscovery _mDNSdiscovery;
   late final BonsoirBroadcast _mDNSbroadcast;
   late StreamSubscription<BonsoirDiscoveryEvent> _mDNSsubscription;
 
   var mDNSenabled = true;
-
-  // Stream<MessageModel> get guardianStream => _guardianStreamController.stream;
 
   Stream<MessageModel> get recoveryGroupStream => _recoveryGroupStream.stream;
 
@@ -127,10 +124,10 @@ class NetworkService with WidgetsBindingObserver {
     String peerId = '', // TBD: parse from base64
   ]) {
     if (ipV4.isEmpty && ipV6.isEmpty) {
-      router.forgetPeerId(_randomPeerId);
+      router.forgetPeerId(_bsPeerId);
     } else {
       router.addPeerAddress(
-        peerId: _randomPeerId,
+        peerId: _bsPeerId,
         addresses: [
           if (ipV4.isNotEmpty)
             P2PFullAddress(
@@ -144,6 +141,7 @@ class NetworkService with WidgetsBindingObserver {
             ),
         ],
       );
+      router.sendMessage(dstPeerId: _bsPeerId);
     }
   }
 
