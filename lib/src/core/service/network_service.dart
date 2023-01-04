@@ -60,10 +60,10 @@ class NetworkService with WidgetsBindingObserver {
     final cryptoKeys = await router.init(keyBunch.isEmpty
         ? null
         : P2PCryptoKeys(
-            encSeed: keyBunch.encryptionSeed,
+            encSeed: emptyUint8List,
             encPublicKey: keyBunch.encryptionPublicKey,
             encPrivateKey: keyBunch.encryptionPrivateKey,
-            signSeed: keyBunch.signSeed,
+            signSeed: emptyUint8List,
             signPublicKey: keyBunch.signPublicKey,
             signPrivateKey: keyBunch.signPrivateKey,
           ));
@@ -78,10 +78,8 @@ class NetworkService with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     await didChangeAppLifecycleState(AppLifecycleState.resumed);
     return KeyBunch(
-      encryptionSeed: cryptoKeys.encSeed,
       encryptionPrivateKey: cryptoKeys.encPrivateKey,
       encryptionPublicKey: cryptoKeys.encPublicKey,
-      signSeed: cryptoKeys.signSeed,
       signPrivateKey: cryptoKeys.signPrivateKey,
       signPublicKey: cryptoKeys.signPublicKey,
       encryptionAesKey: keyBunch.encryptionAesKey.isEmpty
@@ -97,9 +95,6 @@ class NetworkService with WidgetsBindingObserver {
     if (message.version != MessageModel.currentVersion) return;
     if (message.peerId != PeerId(token: p2pMessage.srcPeerId.value)) return;
     _recoveryGroupStream.add(message);
-    // message.isRequested
-    //     ? _guardianStreamController.add(message)
-    //     : _recoveryGroupStream.add(message);
   }
 
   void onBonsoirEvent(BonsoirDiscoveryEvent event) {

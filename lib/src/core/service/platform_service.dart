@@ -9,10 +9,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '/src/core/model/core_model.dart';
 
 class PlatformService {
-  static const _encryptionSeed = 'encryptionAesKey';
   static const _encryptionPublicKey = 'encryptionPublicKey';
   static const _encryptionPrivateKey = 'encryptionPrivateKey';
-  static const _signSeed = 'signAesKey';
   static const _singPublicKey = 'singPublicKey';
   static const _singPrivateKey = 'singPrivateKey';
   static const _encryptionAesKey = 'encryptionAesKey';
@@ -68,10 +66,8 @@ class PlatformService {
   Future<KeyBunch> readKeyBunch() => _secureStorage.readAll().then(
         (s) => KeyBunch(
           encryptionAesKey: base64Decode(s[_encryptionAesKey] ?? ''),
-          encryptionSeed: base64Decode(s[_encryptionSeed] ?? ''),
           encryptionPublicKey: base64Decode(s[_encryptionPublicKey] ?? ''),
           encryptionPrivateKey: base64Decode(s[_encryptionPrivateKey] ?? ''),
-          signSeed: base64Decode(s[_signSeed] ?? ''),
           signPublicKey: base64Decode(s[_singPublicKey] ?? ''),
           signPrivateKey: base64Decode(s[_singPrivateKey] ?? ''),
         ),
@@ -82,14 +78,6 @@ class PlatformService {
     await _secureStorage.write(
       key: _encryptionAesKey,
       value: base64UrlEncode(keyBunch.encryptionAesKey),
-    );
-    await _secureStorage.write(
-      key: _encryptionSeed,
-      value: base64UrlEncode(keyBunch.encryptionSeed),
-    );
-    await _secureStorage.write(
-      key: _signSeed,
-      value: base64UrlEncode(keyBunch.signSeed),
     );
     await _secureStorage.write(
       key: _encryptionPublicKey,
