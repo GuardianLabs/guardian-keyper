@@ -123,9 +123,11 @@ class MessageModel extends Serializable {
   bool get hasNoResponse =>
       status == MessageStatus.requested || status == MessageStatus.received;
 
+  @override
   factory MessageModel.fromBase64(String value) =>
       MessageModel.fromBytes(base64Decode(value));
 
+  @override
   factory MessageModel.fromBytes(List<int> value) {
     final u = Unpacker(value is Uint8List ? value : Uint8List.fromList(value));
     final version = u.unpackInt()!;

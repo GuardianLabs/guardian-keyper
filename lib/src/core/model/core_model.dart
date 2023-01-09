@@ -14,12 +14,17 @@ part 'peer_address.dart';
 part 'key_bunch.dart';
 part 'id_model.dart';
 
+@immutable
 abstract class Serializable extends Equatable {
   const Serializable();
 
   bool get isEmpty;
 
   bool get isNotEmpty;
+
+  const Serializable.fromBytes(final Uint8List bytes);
+
+  const Serializable.fromBase64(final String str);
 
   Uint8List toBytes();
 

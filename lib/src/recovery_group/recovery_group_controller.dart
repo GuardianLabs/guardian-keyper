@@ -54,6 +54,7 @@ class RecoveryGroupController extends PageControllerBase {
 
   Future<void> sendToGuardian(MessageModel message) =>
       diContainer.networkService.sendTo(
+        withAck: false,
         peerId: message.peerId,
         message: message.copyWith(peerId: diContainer.myPeerId),
       );
