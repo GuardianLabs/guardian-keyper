@@ -15,35 +15,44 @@ class OnlineStatusWidget extends StatefulWidget {
 }
 
 class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
-  late final StreamSubscription<bool> _peerStatusSubscription;
-  bool? _peerStatus;
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    _peerStatusSubscription =
-        context.read<DIContainer>().networkService.onPeerStatusChanged(
-      (isOnline) {
-        if (isOnline != _peerStatus) setState(() => _peerStatus = isOnline);
-      },
-      widget.peerId,
+    final networkService = context.read<DIContainer>().networkService;
+    _timer = Timer.periodic(
+      networkService.router.requestTimeout,
+      (_) => networkService.pingPeer(widget.peerId),
     );
   }
 
   @override
   void dispose() {
-    _peerStatusSubscription.cancel();
+    _timer.cancel();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => _peerStatus == true
-      ? Text(
-          'Online',
-          style: textStyleSourceSansPro412.copyWith(color: clGreen),
-        )
-      : Text(
-          'Offline',
-          style: textStyleSourceSansPro412.copyWith(color: clRed),
-        );
+  Widget build(BuildContext context) => StreamBuilder<bool>(
+        initialData: context
+            .read<DIContainer>()
+            .networkService
+            .getPeerStatus(widget.peerId),
+        stream: context
+            .read<DIContainer>()
+            .networkService
+            .peerStatusChangeStream
+            .where((e) => e.key == widget.peerId)
+            .map((e) => e.value),
+        builder: (_, s) => s.data == true
+            ? Text(
+                'Online',
+                style: textStyleSourceSansPro412.copyWith(color: clGreen),
+              )
+            : Text(
+                'Offline',
+                style: textStyleSourceSansPro412.copyWith(color: clRed),
+              ),
+      );
 }

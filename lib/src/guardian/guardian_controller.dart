@@ -7,7 +7,7 @@ class GuardianController {
   final DIContainer diContainer;
 
   GuardianController({required this.diContainer}) {
-    diContainer.networkService.recoveryGroupStream.listen(onMessage);
+    diContainer.networkService.messageStream.listen(onMessage);
     Future.microtask(_cleanMessageBox);
   }
 
@@ -158,6 +158,7 @@ class GuardianController {
 
   Future<void> _sendResponse(MessageModel message) =>
       diContainer.networkService.sendTo(
+        withAck: true,
         peerId: message.peerId,
         message: message.copyWith(peerId: diContainer.myPeerId),
       );

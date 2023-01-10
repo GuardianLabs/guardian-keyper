@@ -127,28 +127,25 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
         ],
       );
 
-  void _askPasscode() {
-    final passCode = context.read<DIContainer>().boxSettings.passCode;
-    screenLock(
-      context: context,
-      correctString: passCode,
-      canCancel: true,
-      keyPadConfig: keyPadConfig,
-      secretsConfig: secretsConfig,
-      config: screenLockConfig,
-      customizedButtonChild: BiometricLogonButton(callback: _pass),
-      customizedButtonTap: () {}, // Fails if null
-      title: Padding(
-        padding: paddingV32 + paddingH20,
-        child: Text(
-          'Please enter your current passcode',
-          style: textStylePoppins620,
-          textAlign: TextAlign.center,
+  Future<void> _askPasscode() => screenLock(
+        context: context,
+        correctString: context.read<DIContainer>().boxSettings.passCode,
+        canCancel: true,
+        keyPadConfig: keyPadConfig,
+        secretsConfig: secretsConfig,
+        config: screenLockConfig,
+        customizedButtonChild: BiometricLogonButton(callback: _pass),
+        customizedButtonTap: () {}, // Fails if null
+        title: Padding(
+          padding: paddingV32 + paddingH20,
+          child: Text(
+            'Please enter your current passcode',
+            style: textStylePoppins620,
+            textAlign: TextAlign.center,
+          ),
         ),
-      ),
-      onUnlocked: _pass,
-    );
-  }
+        onUnlocked: _pass,
+      );
 
   void _pass() {
     Navigator.of(context).pop();
@@ -160,8 +157,10 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
         isDismissible: false,
         isScrollControlled: true,
         builder: (context) => BottomSheetWidget(
-          icon:
-              const IconOf.secretRestoration(isBig: true, bage: BageType.error),
+          icon: const IconOf.secretRestoration(
+            isBig: true,
+            bage: BageType.error,
+          ),
           titleString: 'Guardian rejected the recovery of your Secret',
           textSpan: buildTextWithId(
             leadingText: 'Secret Recovery process for ',

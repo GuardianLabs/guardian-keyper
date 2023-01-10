@@ -26,8 +26,8 @@ class _GuardianTileWithPingWidgetState
           final diContainer = context.read<DIContainer>();
           setState(() => _isWaiting = true);
           final startedAt = DateTime.now();
-          final hasPong = await diContainer.networkService
-              .pingPeer(peerId: widget.guardian);
+          final hasPong =
+              await diContainer.networkService.pingPeer(widget.guardian);
           if (!mounted) return;
           final msElapsed = DateTime.now().difference(startedAt).inMilliseconds;
           setState(() => _isWaiting = false);

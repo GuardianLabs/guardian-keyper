@@ -18,7 +18,7 @@ class RecoveryGroupController extends PageControllerBase {
   Globals get globals => diContainer.globals;
 
   Stream<MessageModel> get networkStream =>
-      diContainer.networkService.recoveryGroupStream;
+      diContainer.networkService.messageStream;
 
   bool get isWaiting =>
       networkSubscription != null && !networkSubscription!.isPaused;
