@@ -45,7 +45,7 @@ dependencies:
   package_info_plus: ^3.0.2
   device_info_plus: ^8.0.0
   airplane_mode_checker: ^1.0.3
-  app_settings: ^4.1.8
+  app_settings: 4.1.8
   vibration: ^1.7.6
 
   # Analytics

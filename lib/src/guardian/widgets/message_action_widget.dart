@@ -30,8 +30,8 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
     MessageCode.getShard: ' asks you to approve a recovery of Secret for ',
     MessageCode.takeGroup: ' asks you to approve a change of ownership for ',
   };
-  late StreamSubscription<bool> _peerStatusSubscription;
   late AnimationController _animationController;
+  late Timer _timer;
   bool _isPeerOnline = false;
   bool _isRequestError = false;
   bool _isRequestActive = false;
@@ -45,22 +45,25 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
     )..addListener(() => setState(() {}));
 
     final networkService = context.read<DIContainer>().networkService;
-
-    networkService.pingPeer(peerId: widget.message.peerId).then(
-      (isOnline) {
-        if (mounted) setState(() => _isPeerOnline = isOnline);
+    _isPeerOnline = networkService.getPeerStatus(widget.message.peerId);
+    _timer = Timer.periodic(
+      networkService.router.requestTimeout,
+      (_) {
+        networkService.pingPeer(widget.message.peerId).then(
+          (isOnline) {
+            if (mounted) {
+              _isPeerOnline = isOnline;
+              setState(() {});
+            }
+          },
+        );
       },
-    );
-
-    _peerStatusSubscription = networkService.onPeerStatusChanged(
-      (isOnline) => setState(() => _isPeerOnline = isOnline),
-      widget.message.peerId,
     );
   }
 
   @override
   void dispose() {
-    _peerStatusSubscription.cancel();
+    _timer.cancel();
     _animationController.dispose();
     super.dispose();
   }

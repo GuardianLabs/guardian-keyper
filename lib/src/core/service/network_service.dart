@@ -14,7 +14,7 @@ class NetworkService with WidgetsBindingObserver {
   static const _bonsoirName = 'Guardian Keyper';
 
   final P2PRouter router;
-  final _recoveryGroupStream = StreamController<MessageModel>.broadcast();
+  final _messagesController = StreamController<MessageModel>.broadcast();
   // TBD: get from env
   final _bsPeerId = P2PPeerId(value: getRandomBytes(P2PPeerId.length));
   late final BonsoirService _bonsoirService;
@@ -24,7 +24,13 @@ class NetworkService with WidgetsBindingObserver {
 
   var mDNSenabled = true;
 
-  Stream<MessageModel> get recoveryGroupStream => _recoveryGroupStream.stream;
+  Timer? _keepaliveTimer;
+
+  Stream<MessageModel> get messageStream => _messagesController.stream;
+
+  Stream<MapEntry<PeerId, bool>> get peerStatusChangeStream =>
+      router.lastSeenStream
+          .map((e) => MapEntry(PeerId(token: e.key.value), e.value));
 
   List<PeerAddress> get myAddresses => router.selfAddresses
       .map((e) => PeerAddress(address: e.address, port: e.port))
@@ -91,7 +97,7 @@ class NetworkService with WidgetsBindingObserver {
     if (message == null) return;
     if (message.version != MessageModel.currentVersion) return;
     if (message.peerId != PeerId(token: p2pMessage.srcPeerId.value)) return;
-    _recoveryGroupStream.add(message);
+    _messagesController.add(message);
   }
 
   void onBonsoirEvent(BonsoirDiscoveryEvent event) {
@@ -113,9 +119,37 @@ class NetworkService with WidgetsBindingObserver {
           ),
         ],
       );
-      router.pingPeer(peerId);
     }
   }
+
+  void addPeer(PeerId peerId, Uint8List address) => router.addPeerAddress(
+        peerId: P2PPeerId(value: peerId.token),
+        addresses: [
+          P2PFullAddress(
+            address: InternetAddress.fromRawAddress(address),
+            port: router.defaultPort,
+          )
+        ],
+      );
+
+  bool getPeerStatus(PeerId peerId) =>
+      router.getPeerStatus(P2PPeerId(value: peerId.token));
+
+  Future<bool> pingPeer(PeerId peerId) =>
+      router.pingPeer(P2PPeerId(value: peerId.token));
+
+  Future<void> sendTo({
+    required PeerId peerId,
+    required MessageModel message,
+    required bool withAck,
+  }) =>
+      router
+          .sendMessage(
+            isConfirmable: withAck,
+            dstPeerId: P2PPeerId(value: peerId.token),
+            payload: message.toBytes(),
+          )
+          .catchError((_) {}, test: (e) => e is TimeoutException);
 
   void setBootstrapServer([
     String ipV4 = '',
@@ -124,6 +158,7 @@ class NetworkService with WidgetsBindingObserver {
     String peerId = '', // TBD: parse from base64
   ]) {
     if (ipV4.isEmpty && ipV6.isEmpty) {
+      _keepaliveTimer?.cancel();
       router.forgetPeerId(_bsPeerId);
     } else {
       router.addPeerAddress(
@@ -142,44 +177,10 @@ class NetworkService with WidgetsBindingObserver {
         ],
       );
       router.sendMessage(dstPeerId: _bsPeerId);
+      _keepaliveTimer = Timer.periodic(
+        router.peerAddressTTL * 0.5,
+        (_) => router.sendMessage(dstPeerId: _bsPeerId),
+      );
     }
   }
-
-  void addPeer(PeerId peerId, Uint8List address) => router.addPeerAddress(
-        peerId: P2PPeerId(value: peerId.token),
-        addresses: [
-          P2PFullAddress(
-            address: InternetAddress.fromRawAddress(address),
-            port: router.defaultPort,
-          )
-        ],
-      );
-
-  bool getPeerStatus(PeerId peerId) =>
-      router.getPeerStatus(P2PPeerId(value: peerId.token));
-
-  Future<bool> pingPeer({required PeerId peerId}) =>
-      router.pingPeer(P2PPeerId(value: peerId.token));
-
-  StreamSubscription<bool> onPeerStatusChanged(
-    void Function(bool) callback,
-    PeerId peerId,
-  ) =>
-      router.trackPeer(
-        onChange: callback,
-        peerId: P2PPeerId(value: peerId.token),
-      );
-
-  Future<void> sendTo({
-    required PeerId peerId,
-    required MessageModel message,
-    bool withAck = true,
-  }) =>
-      router
-          .sendMessage(
-            isConfirmable: withAck,
-            dstPeerId: P2PPeerId(value: peerId.token),
-            payload: message.toBytes(),
-          )
-          .catchError((_) {}, test: (e) => e is TimeoutException);
 }
