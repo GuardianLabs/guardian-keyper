@@ -21,7 +21,7 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
   @override
   void initState() {
     super.initState();
-    _secret = context.read<RecoverySecretController>().secret;
+    _secret = context.read<RecoverySecretController>().getSecret();
   }
 
   @override

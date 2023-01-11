@@ -5,7 +5,7 @@ import '../recovery_group_controller.dart';
 
 export 'package:provider/provider.dart';
 
-class CreateGroupController extends RecoveryGroupController {
+class CreateGroupController extends RecoveryGroupControllerBase {
   var _groupSize = 3;
   var _groupThreshold = 2;
   var _groupName = '';

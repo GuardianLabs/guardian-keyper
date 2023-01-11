@@ -122,15 +122,15 @@ class NetworkService with WidgetsBindingObserver {
     }
   }
 
-  void addPeer(PeerId peerId, Uint8List address) => router.addPeerAddress(
-        peerId: P2PPeerId(value: peerId.token),
-        addresses: [
-          P2PFullAddress(
-            address: InternetAddress.fromRawAddress(address),
-            port: router.defaultPort,
-          )
-        ],
-      );
+  void addPeer(PeerId peerId, Uint8List address) {
+    final ip = InternetAddress.fromRawAddress(address);
+    if (ip == InternetAddress.loopbackIPv4 ||
+        ip == InternetAddress.loopbackIPv6) return;
+    router.addPeerAddress(
+      peerId: P2PPeerId(value: peerId.token),
+      addresses: [P2PFullAddress(address: ip, port: router.defaultPort)],
+    );
+  }
 
   bool getPeerStatus(PeerId peerId) =>
       router.getPeerStatus(P2PPeerId(value: peerId.token));

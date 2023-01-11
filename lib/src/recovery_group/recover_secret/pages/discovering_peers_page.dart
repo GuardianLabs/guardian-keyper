@@ -1,5 +1,3 @@
-import 'package:wakelock/wakelock.dart';
-
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/theme/theme.dart';
@@ -24,16 +22,9 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
   @override
   void initState() {
     super.initState();
-    Wakelock.enable();
     _controller = context.read<RecoverySecretController>();
     _group = _controller.group;
     _controller.startRequest(onRejected: _showTerminated);
-  }
-
-  @override
-  void dispose() {
-    Wakelock.disable();
-    super.dispose();
   }
 
   @override

@@ -30,7 +30,7 @@ class AddSecretController extends RecoveryGroupSecretController {
     required Callback onFailed,
   }) {
     diContainer.analyticsService.logEvent(eventStartAddSecret);
-    networkSubscription = networkStream.listen(
+    networkSubscription.onData(
       (message) {
         if (message.code != MessageCode.setShard) return;
         if (!message.hasResponse) return;

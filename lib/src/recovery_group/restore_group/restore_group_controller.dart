@@ -19,7 +19,7 @@ class RestoreGroupController extends RecoveryGroupGuardianController {
     required Callback onFail,
   }) {
     diContainer.analyticsService.logEvent(eventStartRestoreVault);
-    networkSubscription = networkStream.listen(
+    networkSubscription.onData(
       (message) {
         if (!isWaiting) return;
         if (!message.hasResponse) return;
@@ -54,8 +54,8 @@ class RestoreGroupController extends RecoveryGroupGuardianController {
         }
       },
     );
-    startNetworkRequest(
-      ([_]) => sendToGuardian(qrCode!.copyWith(payload: null)),
-    );
+    startNetworkRequest(([_]) {
+      sendToGuardian(qrCode!.copyWith(payload: null));
+    });
   }
 }
