@@ -33,6 +33,7 @@ class RecoverySecretController extends RecoveryGroupSecretController {
 
   String get secret {
     diContainer.analyticsService.logEvent(eventFinishRestoreSecret);
+    stopListenResponse();
     return restoreSecret(
       shares: messages.map((e) => e.secretShard.shard).toList(),
     );
