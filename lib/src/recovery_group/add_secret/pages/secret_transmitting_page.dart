@@ -1,5 +1,3 @@
-import 'package:wakelock/wakelock.dart';
-
 import '/src/core/di_container.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
@@ -21,18 +19,11 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
   @override
   void initState() {
     super.initState();
-    Wakelock.enable();
     context.read<AddSecretController>().startRequest(
           onSuccess: _showSuccess,
           onReject: _showRejected,
           onFailed: _showRejected, // TBD: specify
         );
-  }
-
-  @override
-  void dispose() {
-    Wakelock.disable();
-    super.dispose();
   }
 
   @override

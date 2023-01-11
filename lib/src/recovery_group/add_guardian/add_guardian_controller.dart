@@ -36,7 +36,7 @@ class AddGuardianController extends RecoveryGroupGuardianController {
       return onDuplicate(qrCode!);
     }
 
-    networkSubscription = networkStream.listen(
+    networkSubscription.onData(
       (message) {
         if (!isWaiting) return;
         if (qrCode == null) return;
@@ -62,8 +62,8 @@ class AddGuardianController extends RecoveryGroupGuardianController {
       },
     );
 
-    startNetworkRequest(
-      ([_]) => sendToGuardian(qrCode!.copyWith(payload: getGroupById(groupId))),
-    );
+    startNetworkRequest(([_]) {
+      sendToGuardian(qrCode!.copyWith(payload: getGroupById(groupId)));
+    });
   }
 }

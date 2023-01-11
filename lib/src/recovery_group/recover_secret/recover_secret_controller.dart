@@ -31,7 +31,7 @@ class RecoverySecretController extends RecoveryGroupSecretController {
 
   bool get hasMinimal => messagesWithSuccess.length >= group.threshold;
 
-  String get secret {
+  String getSecret() {
     diContainer.analyticsService.logEvent(eventFinishRestoreSecret);
     stopListenResponse();
     return restoreSecret(
@@ -41,7 +41,7 @@ class RecoverySecretController extends RecoveryGroupSecretController {
 
   void startRequest({required Callback onRejected}) {
     diContainer.analyticsService.logEvent(eventStartRestoreSecret);
-    networkSubscription = networkStream.listen(
+    networkSubscription.onData(
       (message) {
         if (message.code != MessageCode.getShard) return;
         if (!message.hasResponse) return;

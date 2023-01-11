@@ -1,5 +1,3 @@
-import 'package:wakelock/wakelock.dart';
-
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
@@ -18,19 +16,12 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
-    Wakelock.enable();
     context.read<RestoreGroupController>().startRequest(
           onSuccess: _showSuccess,
           onReject: _showRejected,
           onDuplicate: _showDuplicated,
           onFail: _showError,
         );
-  }
-
-  @override
-  void dispose() {
-    Wakelock.disable();
-    super.dispose();
   }
 
   @override

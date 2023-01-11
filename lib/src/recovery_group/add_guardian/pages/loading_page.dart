@@ -1,5 +1,3 @@
-import 'package:wakelock/wakelock.dart';
-
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
@@ -18,22 +16,13 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
-    Wakelock.enable();
-    Future.microtask(
-      () => context.read<AddGuardianController>().startRequest(
-            onSuccess: _onSuccess,
-            onRejected: _onRejected,
-            onFailed: _onFailed,
-            onDuplicate: _onDuplicate,
-            onAppVersion: _onAppVersion,
-          ),
-    );
-  }
-
-  @override
-  void dispose() {
-    Wakelock.disable();
-    super.dispose();
+    context.read<AddGuardianController>().startRequest(
+          onSuccess: _onSuccess,
+          onRejected: _onRejected,
+          onFailed: _onFailed,
+          onDuplicate: _onDuplicate,
+          onAppVersion: _onAppVersion,
+        );
   }
 
   @override

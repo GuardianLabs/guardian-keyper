@@ -1,27 +1,27 @@
 import 'dart:async';
+import 'package:wakelock/wakelock.dart';
 
 import '/src/core/model/core_model.dart';
 import '/src/core/controller/page_controller_base.dart';
 
 typedef Callback = void Function(MessageModel message);
 
-class RecoveryGroupController extends PageControllerBase {
-  StreamSubscription<MessageModel>? networkSubscription;
+abstract class RecoveryGroupControllerBase extends PageControllerBase {
+  late StreamSubscription<MessageModel> networkSubscription;
   Timer? timer;
 
-  RecoveryGroupController({
+  RecoveryGroupControllerBase({
     required super.diContainer,
     required super.pages,
     super.currentPage,
-  });
+  }) {
+    networkSubscription = diContainer.networkService.messageStream.listen(null)
+      ..pause();
+  }
 
   Globals get globals => diContainer.globals;
 
-  Stream<MessageModel> get networkStream =>
-      diContainer.networkService.messageStream;
-
-  bool get isWaiting =>
-      networkSubscription != null && !networkSubscription!.isPaused;
+  bool get isWaiting => !networkSubscription.isPaused;
 
   @override
   void dispose() {
@@ -31,12 +31,18 @@ class RecoveryGroupController extends PageControllerBase {
 
   void stopListenResponse() {
     timer?.cancel();
-    networkSubscription?.pause();
+    networkSubscription.pause();
+    Wakelock.disable();
     notifyListeners();
   }
 
   void startNetworkRequest(void Function([Timer?]) callback) {
-    timer = Timer.periodic(globals.retryNetworkTimeout, callback);
+    Wakelock.enable();
+    networkSubscription.resume();
+    timer = Timer.periodic(
+      diContainer.networkService.router.requestTimeout,
+      callback,
+    );
     callback();
     notifyListeners();
   }
@@ -81,7 +87,7 @@ class RecoveryGroupController extends PageControllerBase {
   }
 }
 
-class RecoveryGroupGuardianController extends RecoveryGroupController {
+class RecoveryGroupGuardianController extends RecoveryGroupControllerBase {
   MessageModel? _qrCode;
 
   RecoveryGroupGuardianController({
@@ -106,7 +112,7 @@ class RecoveryGroupGuardianController extends RecoveryGroupController {
   }
 }
 
-class RecoveryGroupSecretController extends RecoveryGroupController {
+class RecoveryGroupSecretController extends RecoveryGroupControllerBase {
   SecretId secretId;
   final GroupId groupId;
   late final RecoveryGroupModel group;
@@ -150,13 +156,13 @@ class RecoveryGroupSecretController extends RecoveryGroupController {
     notifyListeners();
   }
 
-  Future<void> requestShards([_]) async {
+  void requestShards([_]) {
     if (messagesWithResponse.length == group.maxSize) {
       stopListenResponse();
     } else {
-      await Future.wait(
-        [for (final message in messagesHasNoResponse) sendToGuardian(message)],
-      );
+      for (final message in messagesHasNoResponse) {
+        sendToGuardian(message);
+      }
     }
   }
 }
