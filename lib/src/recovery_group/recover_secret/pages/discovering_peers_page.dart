@@ -16,15 +16,19 @@ class DiscoveryPeersPage extends StatefulWidget {
 }
 
 class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
-  late final RecoveryGroupModel _group;
   late final RecoverySecretController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller = context.read<RecoverySecretController>();
-    _group = _controller.group;
     _controller.startRequest(onRejected: _showTerminated);
+  }
+
+  @override
+  void dispose() {
+    _controller.stopListenResponse();
+    super.dispose();
   }
 
   @override
@@ -86,7 +90,7 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                       Padding(
                         padding: paddingTop20,
                         child: Text(
-                          'You need to get at least ${_group.threshold}'
+                          'You need to get at least ${_controller.group.threshold}'
                           ' approvals from Guardians to recover your Secret.',
                           style: textStyleSourceSansPro414Purple,
                           textAlign: TextAlign.center,
@@ -96,14 +100,12 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                   ),
                 ),
                 // Guardians
-                for (final guardian in _group.guardians.keys)
+                for (final guardian in _controller.group.guardians.keys)
                   Padding(
                     padding: paddingV6,
                     child: StreamBuilder<MessageModel>(
-                      initialData: null,
-                      stream: _controller.messagesStream.where(
-                        (message) => message.peerId == guardian,
-                      ),
+                      stream: _controller.messagesStream
+                          .where((message) => message.peerId == guardian),
                       builder: (_, snapshot) => GuardianTileWidget(
                         guardian: guardian,
                         isSuccess: snapshot.data?.isAccepted,

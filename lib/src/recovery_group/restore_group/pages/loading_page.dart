@@ -13,15 +13,24 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
+  late final RestoreGroupController _controller;
+
   @override
   void initState() {
     super.initState();
-    context.read<RestoreGroupController>().startRequest(
-          onSuccess: _showSuccess,
-          onReject: _showRejected,
-          onDuplicate: _showDuplicated,
-          onFail: _showError,
-        );
+    _controller = context.read<RestoreGroupController>();
+    _controller.startRequest(
+      onSuccess: _showSuccess,
+      onReject: _showRejected,
+      onDuplicate: _showDuplicated,
+      onFail: _showError,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.stopListenResponse();
+    super.dispose();
   }
 
   @override
@@ -44,8 +53,10 @@ class _LoadingPageState extends State<LoadingPage> {
                     padding: paddingTop20,
                     child: Selector<RestoreGroupController, bool>(
                       selector: (_, controller) => controller.isWaiting,
-                      builder: (_, isWaiting, indicator) =>
-                          Visibility(visible: isWaiting, child: indicator!),
+                      builder: (_, isWaiting, indicator) => Visibility(
+                        visible: isWaiting,
+                        child: indicator!,
+                      ),
                       child: const CircularProgressIndicator.adaptive(),
                     ),
                   ),

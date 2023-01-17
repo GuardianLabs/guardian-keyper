@@ -12,12 +12,9 @@ import '../model/core_model.dart';
 part 'network_service_handler.dart';
 
 abstract class NetworkServiceBase {
-  final P2PRouter router;
+  final router = P2PRouter(logger: kDebugMode ? print : null);
 
   final _messagesController = StreamController<MessageModel>.broadcast();
-
-  NetworkServiceBase({P2PRouter? router})
-      : router = router ?? P2PRouter(logger: kDebugMode ? print : null);
 
   Stream<MessageModel> get messageStream => _messagesController.stream;
 
@@ -64,10 +61,6 @@ class NetworkService extends NetworkServiceBase
     with WidgetsBindingObserver, ConnectivityHandler, MdnsHandler {
   Timer? _keepaliveTimer;
 
-  NetworkService({super.router}) {
-    WidgetsBinding.instance.addObserver(this);
-  }
-
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
@@ -86,6 +79,7 @@ class NetworkService extends NetworkServiceBase
   }
 
   Future<KeyBunch> init(KeyBunch keyBunch) async {
+    WidgetsBinding.instance.addObserver(this);
     final cryptoKeys = await router.init(keyBunch.isEmpty
         ? null
         : P2PCryptoKeys(

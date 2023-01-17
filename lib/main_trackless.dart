@@ -6,7 +6,9 @@ import 'src/app.dart';
 import 'src/core/theme/theme.dart';
 import 'src/core/model/core_model.dart';
 import 'src/core/utils/init_dependencies.dart';
+import '/src/core/service/network_service.dart';
 import 'src/core/service/platform_service.dart';
+import 'src/core/service/analytics_service.dart';
 
 Future<void> main() async {
   FlutterNativeSplash.preserve(
@@ -20,9 +22,11 @@ Future<void> main() async {
         bsPeerId: String.fromEnvironment('BS_ID'),
         bsPort: int.fromEnvironment('BS_PORT'),
       ),
+      networkService: NetworkService(),
       platformService: PlatformService(
         hasBiometrics: await PlatformService.checkIfHasBiometrics(),
       ),
+      analyticsService: const AnalyticsService(),
     ),
   ));
   FlutterNativeSplash.remove();
