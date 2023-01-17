@@ -1,4 +1,3 @@
-import '/src/core/di_container.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
@@ -13,7 +12,6 @@ class SplitAndShareSecretPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.read<AddSecretController>();
-    final networkService = context.read<DIContainer>().networkService;
     return Column(
       children: [
         // Header
@@ -54,19 +52,7 @@ class SplitAndShareSecretPage extends StatelessWidget {
                   )
               ]),
               // Open Settings Tile
-              StreamBuilder<bool>(
-                initialData: networkService.hasConnectivity,
-                stream: networkService.connectivityStream,
-                builder: (_, snapshot) => AnimatedContainer(
-                  duration: const Duration(seconds: 1),
-                  child: snapshot.data == true
-                      ? const Padding(
-                          padding: paddingTop20,
-                          child: ConnectionWidget(),
-                        )
-                      : null,
-                ),
-              ),
+              const ConnectionWidget(),
               // Footer
               Padding(
                 padding: paddingV32,
