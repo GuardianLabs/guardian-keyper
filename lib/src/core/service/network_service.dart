@@ -1,30 +1,23 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:bonsoir/bonsoir.dart';
 import 'package:p2plib/p2plib.dart';
 
 import '../model/core_model.dart';
 
-class NetworkService with WidgetsBindingObserver {
-  static const _bonsoirType = '_dartshare._udp';
-  static const _bonsoirAttr = 'peer_id';
-  static const _bonsoirName = 'Guardian Keyper';
+part 'network_service_handler.dart';
 
+abstract class NetworkServiceBase {
   final P2PRouter router;
+
   final _messagesController = StreamController<MessageModel>.broadcast();
-  // TBD: get from env
-  final _bsPeerId = P2PPeerId(value: getRandomBytes(P2PPeerId.length));
-  late final BonsoirService _bonsoirService;
-  late final BonsoirDiscovery _mDNSdiscovery;
-  late final BonsoirBroadcast _mDNSbroadcast;
-  late StreamSubscription<BonsoirDiscoveryEvent> _mDNSsubscription;
 
-  var mDNSenabled = true;
-
-  Timer? _keepaliveTimer;
+  NetworkServiceBase({P2PRouter? router})
+      : router = router ?? P2PRouter(logger: kDebugMode ? print : null);
 
   Stream<MessageModel> get messageStream => _messagesController.stream;
 
@@ -36,30 +29,63 @@ class NetworkService with WidgetsBindingObserver {
       .map((e) => PeerAddress(address: e.address, port: e.port))
       .toList();
 
-  NetworkService({P2PRouter? router, this.mDNSenabled = true})
-      : router = router ?? P2PRouter(logger: kDebugMode ? print : null);
+  void addPeer(PeerId peerId, Uint8List address) {
+    final ip = InternetAddress.fromRawAddress(address);
+    if (ip == InternetAddress.loopbackIPv4 ||
+        ip == InternetAddress.loopbackIPv6) return;
+    router.addPeerAddress(
+      peerId: P2PPeerId(value: peerId.token),
+      addresses: [P2PFullAddress(address: ip, port: router.defaultPort)],
+    );
+  }
+
+  bool getPeerStatus(PeerId peerId) =>
+      router.getPeerStatus(P2PPeerId(value: peerId.token));
+
+  Future<bool> pingPeer(PeerId peerId) => router
+      .pingPeer(P2PPeerId(value: peerId.token))
+      .timeout(const Duration(seconds: 3));
+
+  Future<void> sendTo({
+    required PeerId peerId,
+    required MessageModel message,
+    required bool withAck,
+  }) =>
+      router
+          .sendMessage(
+            isConfirmable: withAck,
+            dstPeerId: P2PPeerId(value: peerId.token),
+            payload: message.toBytes(),
+          )
+          .catchError((_) {}, test: (e) => e is TimeoutException);
+}
+
+class NetworkService extends NetworkServiceBase
+    with WidgetsBindingObserver, ConnectivityHandler, MdnsHandler {
+  Timer? _keepaliveTimer;
+
+  NetworkService({super.router}) {
+    WidgetsBinding.instance.addObserver(this);
+  }
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
+      _connectivityType = await _connectivity.checkConnectivity();
+      if (_connectivityType == ConnectivityResult.none) return;
       await router.start();
-      if (mDNSenabled) {
-        await _mDNSbroadcast.ready;
-        await _mDNSbroadcast.start();
-        await _mDNSdiscovery.ready;
-        _mDNSsubscription = _mDNSdiscovery.eventStream!.listen(onBonsoirEvent);
-        await _mDNSdiscovery.start();
+      if (_connectivityType == ConnectivityResult.wifi) {
+        await startMdnsBroadcast();
+        await startMdnsDiscovery();
       }
     } else {
       router.stop();
-      _mDNSsubscription.cancel();
-      await _mDNSbroadcast.stop();
-      await _mDNSdiscovery.stop();
+      await stopMdnsBroadcast();
+      await stopMdnsDiscovery();
     }
   }
 
   Future<KeyBunch> init(KeyBunch keyBunch) async {
-    router.messageStream.listen(onMessage);
     final cryptoKeys = await router.init(keyBunch.isEmpty
         ? null
         : P2PCryptoKeys(
@@ -70,15 +96,9 @@ class NetworkService with WidgetsBindingObserver {
             signPublicKey: keyBunch.signPublicKey,
             signPrivateKey: keyBunch.signPrivateKey,
           ));
-    _bonsoirService = BonsoirService(
-      name: _bonsoirName,
-      type: _bonsoirType,
-      port: router.defaultPort,
-      attributes: {_bonsoirAttr: base64Encode(router.selfId.value)},
-    );
-    _mDNSbroadcast = BonsoirBroadcast(service: _bonsoirService);
-    _mDNSdiscovery = BonsoirDiscovery(type: _bonsoirType);
-    WidgetsBinding.instance.addObserver(this);
+    router.messageStream.listen(onMessage);
+    _mdnsInit(router.defaultPort, base64Encode(router.selfId.value));
+    await _connectivityInit();
     await didChangeAppLifecycleState(AppLifecycleState.resumed);
     return KeyBunch(
       encryptionPrivateKey: cryptoKeys.encPrivateKey,
@@ -100,69 +120,23 @@ class NetworkService with WidgetsBindingObserver {
     _messagesController.add(message);
   }
 
-  void onBonsoirEvent(BonsoirDiscoveryEvent event) {
-    if (event.type == BonsoirDiscoveryEventType.discoveryServiceResolved) {
-      final eventMap = event.service?.toJson();
-      if (eventMap == null) return;
-      if (eventMap['service.type'] != _bonsoirType) return;
-      if (eventMap['service.name'] != _bonsoirName) return;
-      final peerId = P2PPeerId(
-        value: base64Decode(eventMap['service.attributes']?[_bonsoirAttr]),
-      );
-      if (peerId == router.selfId) return;
-      router.addPeerAddress(
-        peerId: peerId,
-        addresses: [
-          P2PFullAddress(
-            address: InternetAddress(eventMap['service.ip']),
-            port: event.service!.port,
-          ),
-        ],
-      );
-    }
-  }
-
-  void addPeer(PeerId peerId, Uint8List address) {
-    final ip = InternetAddress.fromRawAddress(address);
-    if (ip == InternetAddress.loopbackIPv4 ||
-        ip == InternetAddress.loopbackIPv6) return;
-    router.addPeerAddress(
-      peerId: P2PPeerId(value: peerId.token),
-      addresses: [P2PFullAddress(address: ip, port: router.defaultPort)],
-    );
-  }
-
-  bool getPeerStatus(PeerId peerId) =>
-      router.getPeerStatus(P2PPeerId(value: peerId.token));
-
-  Future<bool> pingPeer(PeerId peerId) =>
-      router.pingPeer(P2PPeerId(value: peerId.token));
-
-  Future<void> sendTo({
-    required PeerId peerId,
-    required MessageModel message,
-    required bool withAck,
-  }) =>
-      router
-          .sendMessage(
-            isConfirmable: withAck,
-            dstPeerId: P2PPeerId(value: peerId.token),
-            payload: message.toBytes(),
-          )
-          .catchError((_) {}, test: (e) => e is TimeoutException);
-
   void setBootstrapServer([
     String ipV4 = '',
     String ipV6 = '',
     int port = 0,
-    String peerId = '', // TBD: parse from base64
+    String peerId = '', // TBD: get from env (Globals)
   ]) {
+    final bsPeerId = P2PPeerId(
+      value: peerId.isEmpty
+          ? getRandomBytes(P2PPeerId.length)
+          : base64Decode(peerId),
+    );
     if (ipV4.isEmpty && ipV6.isEmpty) {
       _keepaliveTimer?.cancel();
-      router.forgetPeerId(_bsPeerId);
+      router.forgetPeerId(bsPeerId);
     } else {
       router.addPeerAddress(
-        peerId: _bsPeerId,
+        peerId: bsPeerId,
         addresses: [
           if (ipV4.isNotEmpty)
             P2PFullAddress(
@@ -176,10 +150,10 @@ class NetworkService with WidgetsBindingObserver {
             ),
         ],
       );
-      router.sendMessage(dstPeerId: _bsPeerId);
+      router.sendMessage(dstPeerId: bsPeerId);
       _keepaliveTimer = Timer.periodic(
         router.peerAddressTTL * 0.5,
-        (_) => router.sendMessage(dstPeerId: _bsPeerId),
+        (_) => router.sendMessage(dstPeerId: bsPeerId),
       );
     }
   }

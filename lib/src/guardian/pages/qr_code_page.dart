@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:async';
-import 'package:wakelock/wakelock.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -24,19 +23,22 @@ class QRCodePage extends StatefulWidget {
 class _QRCodePageState extends State<QRCodePage> {
   static const _qrSize = 360.0;
 
-  late StreamSubscription<BoxEvent> _boxMessagesEventsSubscription;
+  late final StreamSubscription<BoxEvent> _boxMessagesEventsSubscription;
+  late final DIContainer _diContainer;
+  late final String _qrCode;
   var _logoSize = 72.0;
-  late String _qrCode;
 
   @override
   void initState() {
     super.initState();
-    Wakelock.enable();
+    _diContainer = context.read<DIContainer>();
+    _diContainer.networkService.startMdnsBroadcast();
+    _diContainer.platformService.wakelockEnable();
     final qrCode =
         context.read<GuardianController>().generateQrCode(widget.groupId);
     _qrCode = qrCode.toBase64url();
     _boxMessagesEventsSubscription =
-        context.read<DIContainer>().boxMessages.watch(key: qrCode.aKey).listen(
+        _diContainer.boxMessages.watch(key: qrCode.aKey).listen(
       (event) {
         if (mounted && (event.value as MessageModel).isNotRequested) {
           Navigator.of(context).pop();
@@ -53,8 +55,8 @@ class _QRCodePageState extends State<QRCodePage> {
 
   @override
   void dispose() {
+    _diContainer.platformService.wakelockDisable();
     _boxMessagesEventsSubscription.cancel();
-    Wakelock.disable();
     super.dispose();
   }
 

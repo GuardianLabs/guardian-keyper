@@ -35,7 +35,6 @@ dependencies:
   sss256: ^1.0.0
 
   # Platform specific
-  nsd: ^2.3.0
   bonsoir: ^2.0.0
   wakelock: ^0.6.2
   local_auth: ^2.1.3
