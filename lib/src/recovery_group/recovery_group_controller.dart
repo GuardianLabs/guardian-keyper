@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:wakelock/wakelock.dart';
 
 import '/src/core/model/core_model.dart';
 import '/src/core/controller/page_controller_base.dart';
@@ -32,12 +31,13 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
   void stopListenResponse() {
     timer?.cancel();
     networkSubscription.pause();
-    Wakelock.disable();
+    diContainer.platformService.wakelockDisable();
     notifyListeners();
   }
 
-  void startNetworkRequest(void Function([Timer?]) callback) {
-    Wakelock.enable();
+  void startNetworkRequest(void Function([Timer?]) callback) async {
+    await diContainer.networkService.startMdnsDiscovery();
+    await diContainer.platformService.wakelockEnable();
     networkSubscription.resume();
     timer = Timer.periodic(
       diContainer.networkService.router.requestTimeout,

@@ -1,8 +1,11 @@
 import 'dart:io';
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:wakelock/wakelock.dart';
 import 'package:vibration/vibration.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -25,6 +28,12 @@ class PlatformService {
   final bool hasBiometrics;
 
   const PlatformService({this.hasBiometrics = false});
+
+  void openWirelessSettings() => AppSettings.openWirelessSettings();
+
+  Future<void> wakelockEnable() => Wakelock.enable();
+
+  void wakelockDisable() => Wakelock.disable();
 
   Future<void> vibrate([int duration = 500]) async =>
       (await Vibration.hasVibrator() ?? false)
