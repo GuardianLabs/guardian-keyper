@@ -8,12 +8,11 @@ import '../service/platform_service.dart';
 import 'migrate_storage.dart';
 
 Future<DIContainer> initDependencies({
-  final Globals globals = const Globals(),
-  final PlatformService platformService = const PlatformService(),
-  final AnalyticsService analyticsService = const AnalyticsService(),
-  NetworkService? networkService,
+  required final Globals globals,
+  required final NetworkService networkService,
+  required final PlatformService platformService,
+  required final AnalyticsService analyticsService,
 }) async {
-  networkService ??= NetworkService();
   final storedKeyBunch = await platformService.readKeyBunch();
   final keyBunch = await networkService.init(storedKeyBunch);
   if (keyBunch != storedKeyBunch) await platformService.writeKeyBunch(keyBunch);

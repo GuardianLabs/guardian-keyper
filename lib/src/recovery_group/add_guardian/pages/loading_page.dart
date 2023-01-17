@@ -13,67 +13,73 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
+  late final AddGuardianController _controller;
+
   @override
   void initState() {
     super.initState();
-    context.read<AddGuardianController>().startRequest(
-          onSuccess: _onSuccess,
-          onRejected: _onRejected,
-          onFailed: _onFailed,
-          onDuplicate: _onDuplicate,
-          onAppVersion: _onAppVersion,
-        );
+    _controller = context.read<AddGuardianController>();
+    _controller.startRequest(
+      onSuccess: _onSuccess,
+      onRejected: _onRejected,
+      onFailed: _onFailed,
+      onDuplicate: _onDuplicate,
+      onAppVersion: _onAppVersion,
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
-    final peerId = context.read<AddGuardianController>().qrCode!.peerId;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Header
-        const HeaderBar(
-          caption: 'Adding a Guardian',
-          closeButton: HeaderBarCloseButton(),
-        ),
-        // Body
-        const Padding(padding: paddingTop32),
-        Padding(
-          padding: paddingH20,
-          child: Card(
-            child: Column(
-              children: [
-                Padding(
-                  padding: paddingTop20,
-                  child: Selector<AddGuardianController, bool>(
-                    selector: (_, controller) => controller.isWaiting,
-                    builder: (_, isWaiting, indicator) => Visibility(
-                      visible: isWaiting,
-                      child: indicator!,
+  void dispose() {
+    _controller.stopListenResponse();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header
+          const HeaderBar(
+            caption: 'Adding a Guardian',
+            closeButton: HeaderBarCloseButton(),
+          ),
+          // Body
+          const Padding(padding: paddingTop32),
+          Padding(
+            padding: paddingH20,
+            child: Card(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: paddingTop20,
+                    child: Selector<AddGuardianController, bool>(
+                      selector: (_, controller) => controller.isWaiting,
+                      builder: (_, isWaiting, indicator) => Visibility(
+                        visible: isWaiting,
+                        child: indicator!,
+                      ),
+                      child: const CircularProgressIndicator.adaptive(),
                     ),
-                    child: const CircularProgressIndicator.adaptive(),
                   ),
-                ),
-                Padding(
-                  padding: paddingAll20,
-                  child: RichText(
-                    text: TextSpan(
-                      style: textStyleSourceSansPro616,
-                      children: buildTextWithId(
-                        leadingText: 'Awaiting ',
-                        id: peerId,
-                        trailingText: '’s response',
+                  Padding(
+                    padding: paddingAll20,
+                    child: RichText(
+                      text: TextSpan(
+                        style: textStyleSourceSansPro616,
+                        children: buildTextWithId(
+                          leadingText: 'Awaiting ',
+                          id: _controller.qrCode!.peerId,
+                          trailingText: '’s response',
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
   void _onSuccess(MessageModel message) {
     Navigator.of(context).pop();

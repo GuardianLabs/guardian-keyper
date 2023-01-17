@@ -16,72 +16,77 @@ class SecretTransmittingPage extends StatefulWidget {
 }
 
 class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
+  late final AddSecretController _controller;
+
   @override
   void initState() {
     super.initState();
-    context.read<AddSecretController>().startRequest(
-          onSuccess: _showSuccess,
-          onReject: _showRejected,
-          onFailed: _showRejected, // TBD: specify
-        );
+    _controller = context.read<AddSecretController>();
+    _controller.startRequest(
+      onSuccess: _showSuccess,
+      onReject: _showRejected,
+      onFailed: _showRejected, // TBD: specify
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
-    final controller = context.read<AddSecretController>();
-    return Column(
-      children: [
-        // Header
-        const HeaderBar(
-          caption: 'Split Secret',
-          closeButton: AddSecretCloseButton(),
-        ),
-        // Body
-        Expanded(
-          child: ListView(
-            padding: paddingH20,
-            children: [
-              const PageTitle(
-                title: 'Waiting for Guardians',
-                subtitleSpans: [
-                  TextSpan(
-                    text: 'Ask each Guardian to log into the app '
-                        'to receive a Secret Shard. Once Shard is received '
-                        'Guardian icon will go ',
-                  ),
-                  TextSpan(
-                    text: 'green.',
-                    style: TextStyle(color: clGreen),
-                  ),
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (final guardian in controller.group.guardians.keys)
-                    Padding(
-                      padding: paddingV6,
-                      child: StreamBuilder<MessageModel>(
-                        initialData: null,
-                        stream: controller.messagesStream.where(
-                          (message) => message.peerId == guardian,
-                        ),
-                        builder: (context, snapshot) => GuardianTileWidget(
-                          guardian: guardian,
-                          isSuccess: snapshot.data?.isAccepted,
-                          isWaiting: snapshot.data == null,
-                          checkStatus: true,
-                        ),
-                      ),
-                    )
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+  void dispose() {
+    _controller.stopListenResponse();
+    super.dispose();
   }
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          // Header
+          const HeaderBar(
+            caption: 'Split Secret',
+            closeButton: AddSecretCloseButton(),
+          ),
+          // Body
+          Expanded(
+            child: ListView(
+              padding: paddingH20,
+              children: [
+                const PageTitle(
+                  title: 'Waiting for Guardians',
+                  subtitleSpans: [
+                    TextSpan(
+                      text: 'Ask each Guardian to log into the app '
+                          'to receive a Secret Shard. Once Shard is received '
+                          'Guardian icon will go ',
+                    ),
+                    TextSpan(
+                      text: 'green.',
+                      style: TextStyle(color: clGreen),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (final guardian in _controller.group.guardians.keys)
+                      Padding(
+                        padding: paddingV6,
+                        child: StreamBuilder<MessageModel>(
+                          stream: _controller.messagesStream.where(
+                            (message) => message.peerId == guardian,
+                          ),
+                          builder: (context, snapshot) => GuardianTileWidget(
+                            guardian: guardian,
+                            isSuccess: snapshot.data?.isAccepted,
+                            isWaiting: snapshot.data == null,
+                            checkStatus: true,
+                          ),
+                        ),
+                      )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
 
   void _showSuccess(MessageModel message) => showModalBottomSheet(
         context: context,
