@@ -77,6 +77,7 @@ class _ActiveTabWidget extends StatelessWidget {
                   children: active
                       .map(
                         (msg) => Padding(
+                          key: ValueKey(msg.aKey),
                           padding: paddingV6,
                           child: Dismissible(
                             key: Key(msg.aKey),
@@ -122,7 +123,9 @@ class _ActiveTabWidget extends StatelessWidget {
                             ),
                             onDismissed: (_) => context
                                 .read<GuardianController>()
-                                .archivateMessage(msg),
+                                .archivateMessage(msg.copyWith(
+                                  status: MessageStatus.rejected,
+                                )),
                             child: MessageListTile(message: msg),
                           ),
                         ),
