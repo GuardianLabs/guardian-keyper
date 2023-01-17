@@ -59,7 +59,7 @@ class Globals {
     this.maxSecretLength = 256,
     this.pageChangeDuration = const Duration(milliseconds: 250),
     this.retryNetworkTimeout = const Duration(seconds: 3),
-    this.snackBarDuration = const Duration(seconds: 4),
+    this.snackBarDuration = const Duration(seconds: 3),
     this.qrCodeExpires = const Duration(days: 1),
   });
 }

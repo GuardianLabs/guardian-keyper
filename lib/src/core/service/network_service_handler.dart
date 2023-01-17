@@ -4,11 +4,13 @@ mixin ConnectivityHandler on NetworkServiceBase {
   final _connectivity = Connectivity();
   final _connectivityController = StreamController<bool>.broadcast();
 
-  ConnectivityResult _connectivityType = ConnectivityResult.none;
+  late ConnectivityResult _connectivityType;
 
-  bool get hasConnectivity =>
-      _connectivityType == ConnectivityResult.wifi ||
-      _connectivityType == ConnectivityResult.mobile;
+  bool get hasConnectivity => _connectivityType != ConnectivityResult.none;
+
+  Future<bool> get checkConnectivity => _connectivity
+      .checkConnectivity()
+      .then((result) => result != ConnectivityResult.none);
 
   Stream<bool> get connectivityStream => _connectivityController.stream;
 
@@ -16,8 +18,7 @@ mixin ConnectivityHandler on NetworkServiceBase {
     _connectivityType = await _connectivity.checkConnectivity();
     _connectivity.onConnectivityChanged.listen((result) {
       _connectivityType = result;
-      _connectivityController.add(result == ConnectivityResult.wifi ||
-          result == ConnectivityResult.mobile);
+      _connectivityController.add(result != ConnectivityResult.none);
     });
   }
 }

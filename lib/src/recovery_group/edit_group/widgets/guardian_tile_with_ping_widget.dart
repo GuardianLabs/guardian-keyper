@@ -17,48 +17,50 @@ class GuardianTileWithPingWidget extends StatefulWidget {
 
 class _GuardianTileWithPingWidgetState
     extends State<GuardianTileWithPingWidget> {
-  bool? _isWaiting;
+  bool _isWaiting = false;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onLongPress: () async {
-          if (_isWaiting != null) return; // Not yet ready for new ping
-          final diContainer = context.read<DIContainer>();
-          setState(() => _isWaiting = true);
-          final startedAt = DateTime.now();
-          final hasPong =
-              await diContainer.networkService.pingPeer(widget.guardian);
-          if (!mounted) return;
-          final msElapsed = DateTime.now().difference(startedAt).inMilliseconds;
-          setState(() => _isWaiting = false);
-          ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
-            isError: !hasPong,
-            textSpans: hasPong
-                ? [
-                    ...buildTextWithId(
-                      id: widget.guardian,
-                      style: textStyleBold,
-                    ),
-                    TextSpan(text: ' is online.\nPing $msElapsed ms.'),
-                  ]
-                : [
-                    const TextSpan(text: 'Couldn’t reach out to '),
-                    ...buildTextWithId(
-                      id: widget.guardian,
-                      style: textStyleBold,
-                    ),
-                    const TextSpan(text: '. Connection timeout.'),
-                  ],
-            duration: diContainer.globals.snackBarDuration,
-          ));
-          Future.delayed(
-            diContainer.globals.snackBarDuration,
-            () => mounted ? setState(() => _isWaiting = null) : null,
-          );
-        },
+        onLongPress: _isWaiting
+            ? null
+            : () async {
+                final diContainer = context.read<DIContainer>();
+                setState(() => _isWaiting = true);
+                final startedAt = DateTime.now();
+                final hasPong =
+                    await diContainer.networkService.pingPeer(widget.guardian);
+                if (!mounted) return;
+                final msElapsed =
+                    DateTime.now().difference(startedAt).inMilliseconds;
+                setState(() => _isWaiting = false);
+                ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+                  isError: !hasPong,
+                  textSpans: hasPong
+                      ? [
+                          ...buildTextWithId(
+                            id: widget.guardian,
+                            style: textStyleBold,
+                          ),
+                          TextSpan(text: ' is online.\nPing $msElapsed ms.'),
+                        ]
+                      : [
+                          const TextSpan(text: 'Couldn’t reach out to '),
+                          ...buildTextWithId(
+                            id: widget.guardian,
+                            style: textStyleBold,
+                          ),
+                          const TextSpan(text: '. Connection timeout.'),
+                        ],
+                  duration: diContainer.globals.snackBarDuration,
+                ));
+                Future.delayed(
+                  diContainer.globals.snackBarDuration,
+                  () => mounted ? setState(() => _isWaiting = false) : null,
+                );
+              },
         child: GuardianTileWidget(
           guardian: widget.guardian,
-          isWaiting: _isWaiting ?? false,
+          isWaiting: _isWaiting,
         ),
       );
 }
