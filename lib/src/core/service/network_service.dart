@@ -91,8 +91,8 @@ class NetworkService extends NetworkServiceBase
             signPrivateKey: keyBunch.signPrivateKey,
           ));
     router.messageStream.listen(onMessage);
-    _mdnsInit(router.defaultPort, base64Encode(router.selfId.value));
     await _connectivityInit();
+    await _mdnsInit(router.defaultPort, base64Encode(router.selfId.value));
     await didChangeAppLifecycleState(AppLifecycleState.resumed);
     return KeyBunch(
       encryptionPrivateKey: cryptoKeys.encPrivateKey,

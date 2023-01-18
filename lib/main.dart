@@ -29,7 +29,8 @@ Future<void> main() async {
           bsPeerId: String.fromEnvironment('BS_ID'),
           bsPort: int.fromEnvironment('BS_PORT'),
         ),
-        networkService: NetworkService(),
+        networkService: NetworkService()
+          ..router.peerAddressTTL = const Duration(minutes: 5),
         platformService: PlatformService(
           hasBiometrics: await PlatformService.checkIfHasBiometrics(),
         ),
