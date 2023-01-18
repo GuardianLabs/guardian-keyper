@@ -29,47 +29,39 @@ mixin MdnsHandler on NetworkServiceBase {
   final _mdnsName = 'Guardian Keyper';
 
   late final BonsoirService _mdnsService;
-  BonsoirDiscovery? _mdnsDiscovery;
-  BonsoirBroadcast? _mdnsBroadcast;
-  StreamSubscription<BonsoirDiscoveryEvent>? _mdnsSubscription;
+  late final BonsoirDiscovery _mdnsDiscovery;
+  late final BonsoirBroadcast _mdnsBroadcast;
 
-  void _mdnsInit(int port, String peerId) {
+  Future<void> _mdnsInit(int port, String peerId) async {
     _mdnsService = BonsoirService(
       name: _mdnsName,
       type: _mdnsType,
       port: port,
       attributes: {_mdnsPeerId: peerId},
     );
+    _mdnsBroadcast = BonsoirBroadcast(service: _mdnsService);
+    _mdnsDiscovery = BonsoirDiscovery(type: _mdnsType);
+    await _mdnsDiscovery.ready;
+    _mdnsDiscovery.eventStream!.listen(_onMdnsEvent);
   }
 
   Future<void> startMdnsBroadcast() async {
-    if (_mdnsBroadcast == null || _mdnsBroadcast!.isStopped) {
-      _mdnsBroadcast = BonsoirBroadcast(service: _mdnsService);
+    if (_mdnsBroadcast.isStopped) {
+      await _mdnsBroadcast.ready;
+      await _mdnsBroadcast.start();
     }
-    await _mdnsBroadcast!.ready;
-    await _mdnsBroadcast!.start();
   }
 
-  Future<void> stopMdnsBroadcast() async {
-    await _mdnsBroadcast?.stop();
-    _mdnsBroadcast = null;
-  }
+  Future<void> stopMdnsBroadcast() => _mdnsBroadcast.stop();
 
   Future<void> startMdnsDiscovery() async {
-    if (_mdnsDiscovery == null || _mdnsDiscovery!.isStopped) {
-      _mdnsDiscovery = BonsoirDiscovery(type: _mdnsType);
+    if (_mdnsDiscovery.isStopped) {
+      await _mdnsDiscovery.ready;
+      await _mdnsDiscovery.start();
     }
-    await _mdnsDiscovery!.ready;
-    _mdnsSubscription = _mdnsDiscovery!.eventStream!.listen(_onMdnsEvent);
-    await _mdnsDiscovery!.start();
   }
 
-  Future<void> stopMdnsDiscovery() async {
-    await _mdnsSubscription?.cancel();
-    await _mdnsDiscovery?.stop();
-    _mdnsSubscription = null;
-    _mdnsDiscovery = null;
-  }
+  Future<void> stopMdnsDiscovery() => _mdnsDiscovery.stop();
 
   void _onMdnsEvent(BonsoirDiscoveryEvent event) {
     if (event.type == BonsoirDiscoveryEventType.discoveryServiceResolved) {
