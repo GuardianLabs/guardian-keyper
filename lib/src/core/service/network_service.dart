@@ -12,8 +12,9 @@ import '../model/core_model.dart';
 part 'network_service_handler.dart';
 
 abstract class NetworkServiceBase {
-  final router = P2PRouter(logger: kDebugMode ? print : null);
+  final router = P2PRouterL2(logger: kDebugMode ? print : null);
 
+  final _myAddresses = <PeerAddress>[];
   final _messagesController = StreamController<MessageModel>.broadcast();
 
   Stream<MessageModel> get messageStream => _messagesController.stream;
@@ -22,9 +23,7 @@ abstract class NetworkServiceBase {
       router.lastSeenStream
           .map((e) => MapEntry(PeerId(token: e.key.value), e.value));
 
-  List<PeerAddress> get myAddresses => router.selfAddresses
-      .map((e) => PeerAddress(address: e.address, port: e.port))
-      .toList();
+  List<PeerAddress> get myAddresses => _myAddresses;
 
   void addPeer(PeerId peerId, Uint8List address) {
     final ip = InternetAddress.fromRawAddress(address);
@@ -32,7 +31,11 @@ abstract class NetworkServiceBase {
         ip == InternetAddress.loopbackIPv6) return;
     router.addPeerAddress(
       peerId: P2PPeerId(value: peerId.token),
-      addresses: [P2PFullAddress(address: ip, port: router.defaultPort)],
+      address: P2PFullAddress(
+        address: ip,
+        port: router.port,
+        isLocal: true,
+      ),
     );
   }
 
@@ -63,6 +66,7 @@ class NetworkService extends NetworkServiceBase
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (kDebugMode) print(state);
     if (state == AppLifecycleState.resumed) {
       _connectivityType = await _connectivity.checkConnectivity();
       if (_connectivityType == ConnectivityResult.none) return;
@@ -79,6 +83,10 @@ class NetworkService extends NetworkServiceBase
   }
 
   Future<KeyBunch> init(KeyBunch keyBunch) async {
+    for (final i in await NetworkInterface.list()) {
+      _myAddresses.addAll(
+          i.addresses.map((a) => PeerAddress(address: a, port: router.port)));
+    }
     WidgetsBinding.instance.addObserver(this);
     final cryptoKeys = await router.init(keyBunch.isEmpty
         ? null
@@ -92,8 +100,11 @@ class NetworkService extends NetworkServiceBase
           ));
     router.messageStream.listen(onMessage);
     await _connectivityInit();
-    await _mdnsInit(router.defaultPort, base64Encode(router.selfId.value));
-    await didChangeAppLifecycleState(AppLifecycleState.resumed);
+    await _mdnsInit(router.port, base64Encode(router.selfId.value));
+    if (kDebugMode) {
+      print(_myAddresses);
+      print(router.selfId);
+    }
     return KeyBunch(
       encryptionPrivateKey: cryptoKeys.encPrivateKey,
       encryptionPublicKey: cryptoKeys.encPublicKey,
@@ -106,11 +117,9 @@ class NetworkService extends NetworkServiceBase
   }
 
   void onMessage(final P2PMessage p2pMessage) {
-    if (p2pMessage.isEmpty) return;
     final message = MessageModel.tryFromBytes(p2pMessage.payload);
     if (message == null) return;
     if (message.version != MessageModel.currentVersion) return;
-    if (message.peerId != PeerId(token: p2pMessage.srcPeerId.value)) return;
     _messagesController.add(message);
   }
 
@@ -129,24 +138,26 @@ class NetworkService extends NetworkServiceBase
       _keepaliveTimer?.cancel();
       router.forgetPeerId(bsPeerId);
     } else {
-      router.addPeerAddress(
+      router.addPeerAddresses(
         peerId: bsPeerId,
         addresses: [
           if (ipV4.isNotEmpty)
             P2PFullAddress(
               address: InternetAddress(ipV4),
-              port: port == 0 ? router.defaultPort : port,
+              port: port == 0 ? router.port : port,
+              isLocal: false,
             ),
           if (ipV6.isNotEmpty)
             P2PFullAddress(
               address: InternetAddress(ipV6),
-              port: port == 0 ? router.defaultPort : port,
+              port: port == 0 ? router.port : port,
+              isLocal: false,
             ),
         ],
       );
       router.sendMessage(dstPeerId: bsPeerId);
       _keepaliveTimer = Timer.periodic(
-        router.peerAddressTTL * 0.5,
+        const Duration(seconds: 15),
         (_) => router.sendMessage(dstPeerId: bsPeerId),
       );
     }

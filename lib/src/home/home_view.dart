@@ -37,7 +37,8 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _subscription = context.read<DIContainer>().boxMessages.watch().listen(
+    final diContainer = context.read<DIContainer>();
+    _subscription = diContainer.boxMessages.watch().listen(
       (event) {
         if (_hasModal) return;
         if (event.deleted) return;
@@ -50,6 +51,8 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
         ).then((_) => _hasModal = false);
       },
     );
+    diContainer.networkService
+        .didChangeAppLifecycleState(AppLifecycleState.resumed);
   }
 
   @override

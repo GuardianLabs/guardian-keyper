@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-import 'init_os.dart';
 import 'src/app.dart';
 import 'src/core/theme/theme.dart';
+import 'src/core/utils/init_os.dart';
 import 'src/core/model/core_model.dart';
 import 'src/core/utils/init_dependencies.dart';
 import '/src/core/service/network_service.dart';

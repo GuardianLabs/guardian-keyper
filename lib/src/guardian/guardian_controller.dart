@@ -31,7 +31,6 @@ class GuardianController {
 
   void onMessage(MessageModel message) {
     if (message.isEmpty) return;
-    if (message.isNotRequested) return; // TBD: check all flows
     final ticket = diContainer.boxMessages.get(message.aKey);
 
     switch (message.code) {
