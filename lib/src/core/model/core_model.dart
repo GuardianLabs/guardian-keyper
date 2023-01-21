@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:messagepack/messagepack.dart';
 
 import '../utils/random_utils.dart';
+import '../utils/emoji_codes.dart';
 
 part 'recovery_group_model.dart';
 part 'secret_shard_model.dart';

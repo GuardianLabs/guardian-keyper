@@ -14,8 +14,7 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
     required super.pages,
     super.currentPage,
   }) {
-    networkSubscription = diContainer.networkService.messageStream.listen(null)
-      ..pause();
+    networkSubscription = diContainer.networkService.messageStream.listen(null);
   }
 
   Globals get globals => diContainer.globals;
@@ -24,7 +23,9 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
 
   @override
   void dispose() {
-    stopListenResponse();
+    timer?.cancel();
+    networkSubscription.cancel();
+    diContainer.platformService.wakelockDisable();
     super.dispose();
   }
 

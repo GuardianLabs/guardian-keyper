@@ -3,9 +3,9 @@ import 'package:amplitude_flutter/amplitude.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-import 'init_os.dart';
 import 'src/app.dart';
 import 'src/core/theme/theme.dart';
+import 'src/core/utils/init_os.dart';
 import 'src/core/model/core_model.dart';
 import 'src/core/utils/init_dependencies.dart';
 import '/src/core/service/network_service.dart';

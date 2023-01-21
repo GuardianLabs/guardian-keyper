@@ -17,6 +17,7 @@ mixin ConnectivityHandler on NetworkServiceBase {
   Future<void> _connectivityInit() async {
     _connectivityType = await _connectivity.checkConnectivity();
     _connectivity.onConnectivityChanged.listen((result) {
+      if (kDebugMode) print(result);
       _connectivityType = result;
       _connectivityController.add(result != ConnectivityResult.none);
     });
@@ -75,12 +76,11 @@ mixin MdnsHandler on NetworkServiceBase {
       if (peerId == router.selfId) return;
       router.addPeerAddress(
         peerId: peerId,
-        addresses: [
-          P2PFullAddress(
-            address: InternetAddress(eventMap['service.ip']),
-            port: event.service!.port,
-          ),
-        ],
+        address: P2PFullAddress(
+          address: InternetAddress(eventMap['service.ip']),
+          port: event.service!.port,
+          isLocal: true,
+        ),
       );
     }
   }
