@@ -49,11 +49,12 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
   }
 
   void assignPeersAddresses(PeerId peerId, PeerAddressList list) {
-    for (final address in list.addresses) {
+    for (final e in list.addresses) {
       try {
         diContainer.networkService.addPeer(
           peerId,
-          address.address.rawAddress,
+          e.address.rawAddress,
+          e.port,
         );
       } catch (_) {}
     }

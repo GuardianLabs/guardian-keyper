@@ -25,17 +25,13 @@ abstract class NetworkServiceBase {
 
   List<PeerAddress> get myAddresses => _myAddresses;
 
-  void addPeer(PeerId peerId, Uint8List address) {
+  void addPeer(PeerId peerId, Uint8List address, int port) {
     final ip = InternetAddress.fromRawAddress(address);
     if (ip == InternetAddress.loopbackIPv4 ||
         ip == InternetAddress.loopbackIPv6) return;
     router.addPeerAddress(
       peerId: P2PPeerId(value: peerId.token),
-      address: P2PFullAddress(
-        address: ip,
-        port: router.port,
-        isLocal: true,
-      ),
+      address: P2PFullAddress(address: ip, port: port, isLocal: true),
     );
   }
 
@@ -62,6 +58,8 @@ abstract class NetworkServiceBase {
 
 class NetworkService extends NetworkServiceBase
     with WidgetsBindingObserver, ConnectivityHandler, MdnsHandler {
+  // final port = P2PRouterBase.defaultPort;
+
   Timer? _keepaliveTimer;
 
   @override
@@ -84,8 +82,9 @@ class NetworkService extends NetworkServiceBase
 
   Future<KeyBunch> init(KeyBunch keyBunch) async {
     for (final i in await NetworkInterface.list()) {
-      _myAddresses.addAll(
-          i.addresses.map((a) => PeerAddress(address: a, port: router.port)));
+      _myAddresses.addAll(i.addresses.map(
+        (a) => PeerAddress(address: a, port: P2PRouterBase.defaultPort),
+      ));
     }
     WidgetsBinding.instance.addObserver(this);
     final cryptoKeys = await router.init(keyBunch.isEmpty
@@ -100,7 +99,10 @@ class NetworkService extends NetworkServiceBase
           ));
     router.messageStream.listen(onMessage);
     await _connectivityInit();
-    await _mdnsInit(router.port, base64Encode(router.selfId.value));
+    await _mdnsInit(
+      P2PRouterBase.defaultPort,
+      base64Encode(router.selfId.value),
+    );
     if (kDebugMode) {
       print(_myAddresses);
       print(router.selfId);
@@ -126,7 +128,7 @@ class NetworkService extends NetworkServiceBase
   void setBootstrapServer([
     String ipV4 = '',
     String ipV6 = '',
-    int port = 0,
+    int port = P2PRouterBase.defaultPort,
     String peerId = '', // TBD: get from env (Globals)
   ]) {
     final bsPeerId = P2PPeerId(
@@ -144,13 +146,13 @@ class NetworkService extends NetworkServiceBase
           if (ipV4.isNotEmpty)
             P2PFullAddress(
               address: InternetAddress(ipV4),
-              port: port == 0 ? router.port : port,
+              port: port,
               isLocal: false,
             ),
           if (ipV6.isNotEmpty)
             P2PFullAddress(
               address: InternetAddress(ipV6),
-              port: port == 0 ? router.port : port,
+              port: port,
               isLocal: false,
             ),
         ],
