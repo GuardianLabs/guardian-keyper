@@ -9,9 +9,9 @@ import 'package:p2plib/p2plib.dart';
 
 import '../model/core_model.dart';
 
-part 'network_service_handler.dart';
+part 'p2p_network_service_handler.dart';
 
-abstract class NetworkServiceBase {
+abstract class P2PNetworkServiceBase {
   final router = P2PRouterL2(logger: kDebugMode ? print : null);
 
   final _myAddresses = <PeerAddress>[];
@@ -25,13 +25,18 @@ abstract class NetworkServiceBase {
 
   List<PeerAddress> get myAddresses => _myAddresses;
 
-  void addPeer(PeerId peerId, Uint8List address, int port) {
+  void addPeer(
+    PeerId peerId,
+    Uint8List address,
+    int port, [
+    bool isLocal = true,
+  ]) {
     final ip = InternetAddress.fromRawAddress(address);
     if (ip == InternetAddress.loopbackIPv4 ||
         ip == InternetAddress.loopbackIPv6) return;
     router.addPeerAddress(
       peerId: P2PPeerId(value: peerId.token),
-      address: P2PFullAddress(address: ip, port: port, isLocal: true),
+      address: P2PFullAddress(address: ip, port: port, isLocal: isLocal),
     );
   }
 
@@ -46,20 +51,21 @@ abstract class NetworkServiceBase {
     required PeerId peerId,
     required MessageModel message,
     required bool withAck,
-  }) =>
-      router
-          .sendMessage(
-            isConfirmable: withAck,
-            dstPeerId: P2PPeerId(value: peerId.token),
-            payload: message.toBytes(),
-          )
-          .catchError((_) {}, test: (e) => e is TimeoutException);
+  }) async {
+    try {
+      await router.sendMessage(
+        isConfirmable: withAck,
+        dstPeerId: P2PPeerId(value: peerId.token),
+        payload: message.toBytes(),
+      );
+    } on TimeoutException {
+      // No need to handle
+    }
+  }
 }
 
-class NetworkService extends NetworkServiceBase
-    with WidgetsBindingObserver, ConnectivityHandler, MdnsHandler {
-  // final port = P2PRouterBase.defaultPort;
-
+class P2PNetworkService extends P2PNetworkServiceBase
+    with WidgetsBindingObserver, P2PConnectivityHandler, P2PMdnsHandler {
   Timer? _keepaliveTimer;
 
   @override

@@ -5,14 +5,14 @@ export 'package:hive_flutter/hive_flutter.dart';
 
 import 'model/core_model.dart';
 import 'service/analytics_service.dart';
-import 'service/network_service.dart';
+import 'service/p2p_network_service.dart';
 import 'service/platform_service.dart';
 
 class DIContainer {
   final Globals globals;
   final AnalyticsService analyticsService;
   final PlatformService platformService;
-  final NetworkService networkService;
+  final P2PNetworkService networkService;
   final Box<SettingsModel> boxSettings;
   final Box<MessageModel> boxMessages;
   final Box<RecoveryGroupModel> boxRecoveryGroups;
