@@ -16,7 +16,6 @@ final themeDark = ThemeData.dark().copyWith(
     onSurface: clWhite,
   ),
   scaffoldBackgroundColor: clIndigo900,
-  backgroundColor: clIndigo900,
   canvasColor: clIndigo900,
   // AppBar
   appBarTheme: AppBarTheme(
@@ -142,15 +141,15 @@ final themeDark = ThemeData.dark().copyWith(
   ),
   // Text
   textTheme: TextTheme(
-    caption: const TextStyle(
+    bodySmall: const TextStyle(
       color: clPurpleLight,
       fontSize: 10,
       fontWeight: FontWeight.w600,
       overflow: TextOverflow.ellipsis,
     ),
-    headline6: textStylePoppins620,
-    subtitle1: textStyleSourceSansPro614,
-    bodyText2: textStyleSourceSansPro414,
+    titleLarge: textStylePoppins620,
+    titleMedium: textStyleSourceSansPro614,
+    bodyMedium: textStyleSourceSansPro414,
   ),
   // Text Button
   textButtonTheme: TextButtonThemeData(

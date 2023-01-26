@@ -6,7 +6,7 @@ import 'src/core/theme/theme.dart';
 import 'src/core/utils/init_os.dart';
 import 'src/core/model/core_model.dart';
 import 'src/core/utils/init_dependencies.dart';
-import '/src/core/service/network_service.dart';
+import 'src/core/service/p2p_network_service.dart';
 import 'src/core/service/platform_service.dart';
 import 'src/core/service/analytics_service.dart';
 
@@ -22,7 +22,7 @@ Future<void> main() async {
         bsPeerId: String.fromEnvironment('BS_ID'),
         bsPort: int.fromEnvironment('BS_PORT'),
       ),
-      networkService: NetworkService(),
+      networkService: P2PNetworkService(),
       platformService: PlatformService(
         hasBiometrics: await PlatformService.checkIfHasBiometrics(),
       ),

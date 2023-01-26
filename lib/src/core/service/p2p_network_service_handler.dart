@@ -1,6 +1,6 @@
-part of 'network_service.dart';
+part of 'p2p_network_service.dart';
 
-mixin ConnectivityHandler on NetworkServiceBase {
+mixin P2PConnectivityHandler on P2PNetworkServiceBase {
   final _connectivity = Connectivity();
   final _connectivityController = StreamController<bool>.broadcast();
 
@@ -24,7 +24,7 @@ mixin ConnectivityHandler on NetworkServiceBase {
   }
 }
 
-mixin MdnsHandler on NetworkServiceBase {
+mixin P2PMdnsHandler on P2PNetworkServiceBase {
   final _mdnsType = '_dartshare._udp';
   final _mdnsPeerId = 'peer_id';
   final _mdnsName = 'Guardian Keyper';

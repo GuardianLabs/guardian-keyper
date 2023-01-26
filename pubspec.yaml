@@ -6,7 +6,7 @@ version: 2.0.0+1
 
 environment:
   sdk: ">=2.18.6 <3.0.0"
-  flutter: ^3.3.10
+  flutter: ^3.7.0
 
 dependencies:
   flutter:
@@ -44,7 +44,7 @@ dependencies:
   package_info_plus: ^3.0.2
   device_info_plus: ^8.0.0
   airplane_mode_checker: ^1.0.3
-  app_settings: 4.1.8
+  app_settings: ^4.2.0
   vibration: ^1.7.6
 
   # Analytics

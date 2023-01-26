@@ -93,10 +93,10 @@ class _AddSecretPageState extends State<AddSecretPage> {
               // Input
               TextFormField(
                 enableInteractiveSelection: true,
-                toolbarOptions: const ToolbarOptions(
-                  cut: true,
-                  paste: true,
-                  selectAll: true,
+                contextMenuBuilder: (context, editableTextState) =>
+                    AdaptiveTextSelectionToolbar.buttonItems(
+                  anchors: editableTextState.contextMenuAnchors,
+                  buttonItems: editableTextState.contextMenuButtonItems,
                 ),
                 keyboardType: TextInputType.multiline,
                 obscureText: _isSecretObscure,

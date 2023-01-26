@@ -2,14 +2,14 @@ import '../di_container.dart';
 import '../model/core_model.dart';
 import '../adapter/hive_adapter.dart';
 import '../service/analytics_service.dart';
-import '../service/network_service.dart';
+import '../service/p2p_network_service.dart';
 import '../service/platform_service.dart';
 
 import 'migrate_storage.dart';
 
 Future<DIContainer> initDependencies({
   required final Globals globals,
-  required final NetworkService networkService,
+  required final P2PNetworkService networkService,
   required final PlatformService platformService,
   required final AnalyticsService analyticsService,
 }) async {
