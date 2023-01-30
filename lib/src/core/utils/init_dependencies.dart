@@ -56,10 +56,10 @@ Future<DIContainer> initDependencies({
   );
   if (boxSettings.isProxyEnabled) {
     networkService.setBootstrapServer(
-      globals.bsAddressV4,
-      globals.bsAddressV6,
-      globals.bsPort,
-      globals.bsPeerId,
+      peerId: globals.bsPeerId,
+      ipV4: globals.bsAddressV4,
+      ipV6: globals.bsAddressV6,
+      port: globals.bsPort,
     );
   }
   return DIContainer(

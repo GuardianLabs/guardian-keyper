@@ -52,11 +52,14 @@ class _HiddenSettingsWidgetState extends State<HiddenSettingsWidget> {
                         _diContainer.boxSettings.isProxyEnabled = isEnabled;
                         isEnabled
                             ? _diContainer.networkService.setBootstrapServer(
-                                _diContainer.globals.bsAddressV4,
-                                _diContainer.globals.bsAddressV6,
-                                _diContainer.globals.bsPort,
-                                _diContainer.globals.bsPeerId)
-                            : _diContainer.networkService.setBootstrapServer();
+                                peerId: _diContainer.globals.bsPeerId,
+                                ipV4: _diContainer.globals.bsAddressV4,
+                                ipV6: _diContainer.globals.bsAddressV6,
+                                port: _diContainer.globals.bsPort,
+                              )
+                            : _diContainer.networkService.setBootstrapServer(
+                                peerId: _diContainer.globals.bsPeerId,
+                              );
                       },
                     ),
                   ),
