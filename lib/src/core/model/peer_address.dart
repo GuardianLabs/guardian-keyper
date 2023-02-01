@@ -17,6 +17,12 @@ class PeerAddress extends Serializable {
   @override
   bool get isNotEmpty => address.address.isNotEmpty;
 
+  InternetAddressType get type => address.type;
+
+  bool get isIPv4 => address.type == InternetAddressType.IPv4;
+
+  bool get isIPv6 => address.type == InternetAddressType.IPv6;
+
   @override
   Uint8List toBytes() {
     final p = Packer()
