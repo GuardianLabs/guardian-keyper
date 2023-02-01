@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
@@ -108,7 +109,10 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
               onTap: (value) =>
                   context.read<HomeController>().gotoScreen(value),
             ),
-            child: HomeView._pages[currentPage],
+            child: DoubleBackToCloseApp(
+              snackBar: const SnackBar(content: Text('Tap back again to exit')),
+              child: HomeView._pages[currentPage],
+            ),
           ),
         ),
       );
