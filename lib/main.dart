@@ -30,7 +30,9 @@ Future<void> main() async {
           bsPort: int.fromEnvironment('BS_PORT'),
         ),
         networkService: P2PNetworkService()
-          ..router.peerAddressTTL = const Duration(minutes: 5),
+          ..router.maxForwardsCount = 3
+          ..router.peerAddressTTL = const Duration(minutes: 5)
+          ..router.keepalivePeriod = const Duration(seconds: 10),
         platformService: PlatformService(
           hasBiometrics: await PlatformService.checkIfHasBiometrics(),
         ),

@@ -43,9 +43,8 @@ abstract class P2PNetworkServiceBase {
   bool getPeerStatus(PeerId peerId) =>
       router.getPeerStatus(P2PPeerId(value: peerId.token));
 
-  Future<bool> pingPeer(PeerId peerId) => router
-      .pingPeer(P2PPeerId(value: peerId.token))
-      .timeout(const Duration(seconds: 3));
+  Future<bool> pingPeer(PeerId peerId) =>
+      router.pingPeer(P2PPeerId(value: peerId.token));
 
   Future<void> sendTo({
     required PeerId peerId,
@@ -66,13 +65,27 @@ abstract class P2PNetworkServiceBase {
 
 class P2PNetworkService extends P2PNetworkServiceBase
     with WidgetsBindingObserver, P2PConnectivityHandler, P2PMdnsHandler {
+  final bsDelta = const Duration(minutes: 5);
+
+  P2PRoute? _bsServer;
+
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (kDebugMode) print(state);
     if (state == AppLifecycleState.resumed) {
       _connectivityType = await _connectivity.checkConnectivity();
+      if (kDebugMode) print(_connectivityType);
       if (_connectivityType == ConnectivityResult.none) return;
       await router.start();
+      if (_bsServer != null) {
+        router.addPeerAddresses(
+          canForward: true,
+          peerId: _bsServer!.peerId,
+          addresses: _bsServer!.addresses.keys,
+          timestamp: DateTime.now().add(bsDelta).millisecondsSinceEpoch,
+        );
+        router.sendMessage(dstPeerId: _bsServer!.peerId);
+      }
       if (_connectivityType == ConnectivityResult.wifi) {
         await startMdnsBroadcast();
         await startMdnsDiscovery();
@@ -134,26 +147,38 @@ class P2PNetworkService extends P2PNetworkServiceBase
   }) {
     final bsPeerId = P2PPeerId(value: base64Decode(peerId));
     if (ipV4.isEmpty && ipV6.isEmpty) {
+      _bsServer = null;
       router.forgetPeerId(bsPeerId);
     } else {
-      router.addPeerAddresses(
-        canForward: true,
+      final timestamp = DateTime.now().add(bsDelta).millisecondsSinceEpoch;
+      final bsRoute = P2PRoute(
         peerId: bsPeerId,
-        addresses: [
-          if (ipV4.isNotEmpty)
+        canForward: true,
+        addresses: {
+          if (ipV4.isNotEmpty && myAddresses.any((e) => e.isIPv4))
             P2PFullAddress(
               address: InternetAddress(ipV4),
               port: port,
               isLocal: false,
-            ),
-          if (ipV6.isNotEmpty)
+            ): timestamp,
+          if (ipV6.isNotEmpty && myAddresses.any((e) => e.isIPv6))
             P2PFullAddress(
               address: InternetAddress(ipV6),
               port: port,
               isLocal: false,
-            ),
-        ],
+            ): timestamp,
+        },
       );
+      router.addPeerAddresses(
+        canForward: true,
+        peerId: bsPeerId,
+        addresses: bsRoute.addresses.keys,
+        timestamp: timestamp,
+      );
+      if (kDebugMode) {
+        print('See ${router.routes.length} existing routes');
+        print('Bootstrap addresses: ${router.routes[bsPeerId]?.addresses}');
+      }
       if (router.isRun) router.sendMessage(dstPeerId: bsPeerId);
     }
   }
