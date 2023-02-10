@@ -230,7 +230,11 @@ class IconOf extends StatelessWidget {
       ),
       height: actualSize,
       width: actualSize,
-      child: SvgPicture.asset(icon, color: color),
+      child: SvgPicture.asset(
+        icon,
+        colorFilter:
+            color == null ? null : ColorFilter.mode(color!, BlendMode.dst),
+      ),
     );
     if (bage == null) return iconWidget;
 
