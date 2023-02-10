@@ -36,6 +36,7 @@ class HeaderBar extends StatelessWidget {
   final List<TextSpan>? captionSpans;
   final Widget? backButton;
   final Widget? closeButton;
+  final bool isTransparent;
 
   const HeaderBar({
     super.key,
@@ -43,12 +44,15 @@ class HeaderBar extends StatelessWidget {
     this.captionSpans,
     this.backButton,
     this.closeButton,
+    this.isTransparent = false,
   });
 
   @override
   Widget build(BuildContext context) => Container(
         height: sideSize,
-        color: Theme.of(context).colorScheme.background,
+        color: isTransparent
+            ? Colors.transparent
+            : Theme.of(context).colorScheme.background,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
