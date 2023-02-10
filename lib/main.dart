@@ -31,8 +31,7 @@ Future<void> main() async {
         ),
         networkService: P2PNetworkService()
           ..router.maxForwardsCount = 3
-          ..router.peerAddressTTL = const Duration(minutes: 5)
-          ..router.keepalivePeriod = const Duration(seconds: 10),
+          ..router.maxStoredHeaders = 10,
         platformService: PlatformService(
           hasBiometrics: await PlatformService.checkIfHasBiometrics(),
         ),

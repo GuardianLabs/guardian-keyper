@@ -5,17 +5,25 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:bonsoir/bonsoir.dart';
-import 'package:p2plib/p2plib.dart';
+import 'package:p2plib/p2plib.dart' as p2p;
 
 import '../model/core_model.dart';
 
 part 'p2p_network_service_handler.dart';
 
 abstract class P2PNetworkServiceBase {
-  final router = P2PRouterL2(logger: kDebugMode ? print : null);
+  final p2p.RouterL2 router;
+  final bindPort = p2p.TransportUdp.defaultPort;
 
   final _myAddresses = <PeerAddress>[];
   final _messagesController = StreamController<MessageModel>.broadcast();
+
+  P2PNetworkServiceBase({
+    Duration keepalivePeriod = const Duration(seconds: 10),
+  }) : router = p2p.RouterL2(
+          logger: kDebugMode ? print : null,
+          keepalivePeriod: keepalivePeriod,
+        );
 
   Stream<MessageModel> get messageStream => _messagesController.stream;
 
@@ -35,16 +43,16 @@ abstract class P2PNetworkServiceBase {
     if (ip == InternetAddress.loopbackIPv4 ||
         ip == InternetAddress.loopbackIPv6) return;
     router.addPeerAddress(
-      peerId: P2PPeerId(value: peerId.token),
-      address: P2PFullAddress(address: ip, port: port, isLocal: isLocal),
+      peerId: p2p.PeerId(value: peerId.token),
+      address: p2p.FullAddress(address: ip, port: port, isLocal: isLocal),
     );
   }
 
   bool getPeerStatus(PeerId peerId) =>
-      router.getPeerStatus(P2PPeerId(value: peerId.token));
+      router.getPeerStatus(p2p.PeerId(value: peerId.token));
 
   Future<bool> pingPeer(PeerId peerId) =>
-      router.pingPeer(P2PPeerId(value: peerId.token));
+      router.pingPeer(p2p.PeerId(value: peerId.token));
 
   Future<void> sendTo({
     required PeerId peerId,
@@ -54,7 +62,7 @@ abstract class P2PNetworkServiceBase {
     try {
       await router.sendMessage(
         isConfirmable: withAck,
-        dstPeerId: P2PPeerId(value: peerId.token),
+        dstPeerId: p2p.PeerId(value: peerId.token),
         payload: message.toBytes(),
       );
     } on TimeoutException {
@@ -67,7 +75,9 @@ class P2PNetworkService extends P2PNetworkServiceBase
     with WidgetsBindingObserver, P2PConnectivityHandler, P2PMdnsHandler {
   final bsDelta = const Duration(minutes: 5);
 
-  P2PRoute? _bsServer;
+  p2p.Route? _bsServer;
+
+  P2PNetworkService({super.keepalivePeriod});
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -100,13 +110,13 @@ class P2PNetworkService extends P2PNetworkServiceBase
   Future<KeyBunch> init(KeyBunch keyBunch) async {
     for (final interface in await NetworkInterface.list()) {
       _myAddresses.addAll(interface.addresses.map(
-        (a) => PeerAddress(address: a, port: P2PRouterBase.defaultPort),
+        (a) => PeerAddress(address: a, port: bindPort),
       ));
     }
     WidgetsBinding.instance.addObserver(this);
     final cryptoKeys = await router.init(keyBunch.isEmpty
         ? null
-        : P2PCryptoKeys(
+        : p2p.CryptoKeys(
             encPublicKey: keyBunch.encryptionPublicKey,
             encPrivateKey: keyBunch.encryptionPrivateKey,
             signPublicKey: keyBunch.signPublicKey,
@@ -115,10 +125,7 @@ class P2PNetworkService extends P2PNetworkServiceBase
           ));
     router.messageStream.listen(onMessage);
     await _connectivityInit();
-    await _mdnsInit(
-      P2PRouterBase.defaultPort,
-      base64Encode(router.selfId.value),
-    );
+    await _mdnsInit(bindPort, base64Encode(router.selfId.value));
     if (kDebugMode) {
       print(_myAddresses);
       print(router.selfId);
@@ -132,7 +139,7 @@ class P2PNetworkService extends P2PNetworkServiceBase
     );
   }
 
-  void onMessage(final P2PMessage p2pMessage) {
+  void onMessage(final p2p.Message p2pMessage) {
     final message = MessageModel.tryFromBytes(p2pMessage.payload);
     if (message == null) return;
     if (message.version != MessageModel.currentVersion) return;
@@ -143,29 +150,31 @@ class P2PNetworkService extends P2PNetworkServiceBase
     required String peerId,
     String ipV4 = '',
     String ipV6 = '',
-    int port = P2PRouterBase.defaultPort,
+    int? port,
   }) {
-    final bsPeerId = P2PPeerId(value: base64Decode(peerId));
+    final bsPeerId = p2p.PeerId(value: base64Decode(peerId));
     if (ipV4.isEmpty && ipV6.isEmpty) {
       _bsServer = null;
-      router.forgetPeerId(bsPeerId);
+      router.routes.remove(bsPeerId);
     } else {
       final timestamp = DateTime.now().add(bsDelta).millisecondsSinceEpoch;
-      final bsRoute = P2PRoute(
+      final bsRoute = p2p.Route(
         peerId: bsPeerId,
         canForward: true,
         addresses: {
           if (ipV4.isNotEmpty && myAddresses.any((e) => e.isIPv4))
-            P2PFullAddress(
+            p2p.FullAddress(
               address: InternetAddress(ipV4),
-              port: port,
+              port: port ?? bindPort,
               isLocal: false,
+              isStatic: true,
             ): timestamp,
           if (ipV6.isNotEmpty && myAddresses.any((e) => e.isIPv6))
-            P2PFullAddress(
+            p2p.FullAddress(
               address: InternetAddress(ipV6),
-              port: port,
+              port: port ?? bindPort,
               isLocal: false,
+              isStatic: true,
             ): timestamp,
         },
       );
