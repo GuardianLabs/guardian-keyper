@@ -60,7 +60,12 @@ class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
           Center(
             child: SizedBox.square(
               dimension: _scanAreaSize,
-              child: MobileScanner(onDetect: _onDetectCode),
+              child: MobileScanner(
+                onDetect: (BarcodeCapture captured) {
+                  if (captured.barcodes.isEmpty) return;
+                  _processCode(captured.barcodes.first.rawValue!);
+                },
+              ),
             ),
           ),
           Container(
@@ -76,10 +81,6 @@ class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
           ),
         ],
       );
-
-  void _onDetectCode(Barcode barcode, MobileScannerArguments? args) {
-    if (barcode.rawValue != null) _processCode(barcode.rawValue!);
-  }
 
   Future<void> _onPasteCode() async {
     var code = (await Clipboard.getData(Clipboard.kTextPlain))?.text;
