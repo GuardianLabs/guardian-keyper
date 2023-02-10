@@ -70,15 +70,16 @@ mixin P2PMdnsHandler on P2PNetworkServiceBase {
       if (eventMap == null) return;
       if (eventMap['service.type'] != _mdnsType) return;
       if (eventMap['service.name'] != _mdnsName) return;
-      final peerId = P2PPeerId(
+      final peerId = p2p.PeerId(
         value: base64Decode(eventMap['service.attributes']?[_mdnsPeerId]),
       );
       if (peerId == router.selfId) return;
       router.addPeerAddress(
         peerId: peerId,
-        address: P2PFullAddress(
+        address: p2p.FullAddress(
           address: InternetAddress(eventMap['service.ip']),
           port: event.service!.port,
+          isStatic: true,
           isLocal: true,
         ),
       );

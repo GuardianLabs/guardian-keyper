@@ -36,7 +36,8 @@ class MessageModel extends Serializable {
     }
   }
 
-  static MessageModel? tryFromBytes(Uint8List value) {
+  static MessageModel? tryFromBytes(Uint8List? value) {
+    if (value == null) return null;
     try {
       return MessageModel.fromBytes(value);
     } catch (_) {
