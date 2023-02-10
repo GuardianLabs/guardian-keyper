@@ -19,7 +19,7 @@ class GetQRCodeWidget extends StatefulWidget {
 class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
   late Duration _snackBarDuration;
   late PeerId _myPeerId;
-  var _scanAreaSize = 0.0;
+  late Rect _scanWindow;
   var _canPaste = false;
   Timer? _snackBarTimer;
 
@@ -29,16 +29,23 @@ class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
     final diContainer = context.read<DIContainer>();
     _snackBarDuration = diContainer.globals.snackBarDuration;
     _myPeerId = diContainer.myPeerId;
-
-    Future.microtask(() async {
-      if (await Clipboard.hasStrings()) setState(() => _canPaste = true);
-    });
+    Clipboard.hasStrings().then(
+      (hasStrings) {
+        if (_canPaste != hasStrings) setState(() => _canPaste = hasStrings);
+      },
+    );
   }
 
   @override
   void didChangeDependencies() {
-    _scanAreaSize = MediaQuery.of(context).size.width * 0.66;
     super.didChangeDependencies();
+    final size = MediaQuery.of(context).size;
+    final scanAreaSize = size.width * 0.66;
+    _scanWindow = Rect.fromCenter(
+      center: size.center(Offset.zero),
+      width: scanAreaSize,
+      height: scanAreaSize,
+    );
   }
 
   @override
@@ -48,50 +55,55 @@ class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget build(BuildContext context) => Stack(
+        fit: StackFit.expand,
         children: [
-          // Header
-          const HeaderBar(
-            caption: 'Scan the QR Code',
-            closeButton: HeaderBarCloseButton(),
+          MobileScanner(
+            fit: BoxFit.cover,
+            scanWindow: _scanWindow,
+            onDetect: (BarcodeCapture captured) {
+              if (captured.barcodes.isEmpty) return;
+              _processCode(captured.barcodes.first.rawValue!);
+            },
           ),
-          // Body
-          Center(
-            child: SizedBox.square(
-              dimension: _scanAreaSize,
-              child: MobileScanner(
-                onDetect: (BarcodeCapture captured) {
-                  if (captured.barcodes.isEmpty) return;
-                  _processCode(captured.barcodes.first.rawValue!);
-                },
+          CustomPaint(painter: _ScannerOverlay(scanWindow: _scanWindow)),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Header
+              const HeaderBar(
+                caption: 'Scan the QR Code',
+                closeButton: HeaderBarCloseButton(),
+                isTransparent: true,
               ),
-            ),
-          ),
-          Container(
-            padding: paddingAll20,
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _canPaste ? _onPasteCode : null,
-              child: Text(
-                'Paste from Clipboard',
-                style: textStylePoppins616,
-              ),
-            ),
+              // Body
+              if (_canPaste)
+                Padding(
+                  padding: paddingBottom32,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      var code =
+                          (await Clipboard.getData(Clipboard.kTextPlain))?.text;
+
+                      if (code != null) {
+                        code = code.trim();
+                        final whiteSpace = code.lastIndexOf('\n');
+                        code = whiteSpace == -1
+                            ? code
+                            : code.substring(whiteSpace).trim();
+                        _processCode(code);
+                      }
+                    },
+                    child: Text(
+                      'Paste from Clipboard',
+                      style: textStylePoppins616,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ],
       );
-
-  Future<void> _onPasteCode() async {
-    var code = (await Clipboard.getData(Clipboard.kTextPlain))?.text;
-
-    if (code != null) {
-      code = code.trim();
-      final whiteSpace = code.lastIndexOf('\n');
-      code = whiteSpace == -1 ? code : code.substring(whiteSpace).trim();
-      _processCode(code);
-    }
-  }
 
   void _processCode(String code) {
     SnackBar? errorSnackBar;
@@ -121,4 +133,26 @@ class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
     }
   }
+}
+
+class _ScannerOverlay extends CustomPainter {
+  final Rect scanWindow;
+
+  const _ScannerOverlay({required this.scanWindow});
+
+  @override
+  bool shouldRepaint(covariant CustomPainter _) => false;
+
+  @override
+  void paint(Canvas canvas, Size size) => canvas.drawPath(
+        Path.combine(
+          PathOperation.difference,
+          Path()..addRect(Rect.largest),
+          Path()..addRect(scanWindow),
+        ),
+        Paint()
+          ..color = clIndigo900.withOpacity(0.5)
+          ..style = PaintingStyle.fill
+          ..blendMode = BlendMode.dstOut,
+      );
 }
