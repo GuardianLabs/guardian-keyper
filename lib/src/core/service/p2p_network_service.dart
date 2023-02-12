@@ -7,105 +7,25 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:bonsoir/bonsoir.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
 
-import '../model/core_model.dart';
+import '/src/core/model/core_model.dart';
 
-part 'p2p_network_service_handler.dart';
-
-abstract class P2PNetworkServiceBase {
-  final p2p.RouterL2 router;
-  final bindPort = p2p.TransportUdp.defaultPort;
-
-  final _myAddresses = <PeerAddress>[];
-  final _messagesController = StreamController<MessageModel>.broadcast();
-
-  P2PNetworkServiceBase({
-    Duration keepalivePeriod = const Duration(seconds: 10),
-  }) : router = p2p.RouterL2(
-          logger: kDebugMode ? print : null,
-          keepalivePeriod: keepalivePeriod,
-        );
-
-  Stream<MessageModel> get messageStream => _messagesController.stream;
-
-  Stream<MapEntry<PeerId, bool>> get peerStatusChangeStream =>
-      router.lastSeenStream
-          .map((e) => MapEntry(PeerId(token: e.key.value), e.value));
-
-  List<PeerAddress> get myAddresses => _myAddresses;
-
-  void addPeer(
-    PeerId peerId,
-    Uint8List address,
-    int port, [
-    bool isLocal = true,
-  ]) {
-    final ip = InternetAddress.fromRawAddress(address);
-    if (ip == InternetAddress.loopbackIPv4 ||
-        ip == InternetAddress.loopbackIPv6) return;
-    router.addPeerAddress(
-      peerId: p2p.PeerId(value: peerId.token),
-      address: p2p.FullAddress(address: ip, port: port, isLocal: isLocal),
-    );
-  }
-
-  bool getPeerStatus(PeerId peerId) =>
-      router.getPeerStatus(p2p.PeerId(value: peerId.token));
-
-  Future<bool> pingPeer(PeerId peerId) =>
-      router.pingPeer(p2p.PeerId(value: peerId.token));
-
-  Future<void> sendTo({
-    required PeerId peerId,
-    required MessageModel message,
-    required bool withAck,
-  }) async {
-    try {
-      await router.sendMessage(
-        isConfirmable: withAck,
-        dstPeerId: p2p.PeerId(value: peerId.token),
-        payload: message.toBytes(),
-      );
-    } on TimeoutException {
-      // No need to handle
-    }
-  }
-}
+part 'p2p_network_service/p2p_network_service_base.dart';
+part 'p2p_network_service/p2p_network_service_mdns_handler.dart';
+part 'p2p_network_service/p2p_network_service_connectivity_handler.dart';
 
 class P2PNetworkService extends P2PNetworkServiceBase
     with WidgetsBindingObserver, P2PConnectivityHandler, P2PMdnsHandler {
-  final bsDelta = const Duration(minutes: 5);
+  final _messagesController = StreamController<MessageModel>.broadcast();
 
   p2p.Route? _bsServer;
 
   P2PNetworkService({super.keepalivePeriod});
 
+  Stream<MessageModel> get messageStream => _messagesController.stream;
+
   @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (kDebugMode) print(state);
-    if (state == AppLifecycleState.resumed) {
-      _connectivityType = await _connectivity.checkConnectivity();
-      if (kDebugMode) print(_connectivityType);
-      if (_connectivityType == ConnectivityResult.none) return;
-      await router.start();
-      if (_bsServer != null) {
-        router.addPeerAddresses(
-          canForward: true,
-          peerId: _bsServer!.peerId,
-          addresses: _bsServer!.addresses.keys,
-          timestamp: DateTime.now().add(bsDelta).millisecondsSinceEpoch,
-        );
-        router.sendMessage(dstPeerId: _bsServer!.peerId);
-      }
-      if (_connectivityType == ConnectivityResult.wifi) {
-        await startMdnsBroadcast();
-        await startMdnsDiscovery();
-      }
-    } else {
-      router.stop();
-      await stopMdnsBroadcast();
-      await stopMdnsDiscovery();
-    }
-  }
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) =>
+      state == AppLifecycleState.resumed ? start() : stop();
 
   Future<KeyBunch> init(KeyBunch keyBunch) async {
     for (final interface in await NetworkInterface.list()) {
@@ -139,6 +59,20 @@ class P2PNetworkService extends P2PNetworkServiceBase
     );
   }
 
+  Future<void> start() async {
+    _connectivityType = await _connectivity.checkConnectivity();
+    if (kDebugMode) print(_connectivityType);
+    if (_connectivityType == ConnectivityResult.none) return;
+    await router.start();
+    if (_bsServer != null) router.sendMessage(dstPeerId: _bsServer!.peerId);
+    if (_connectivityType == ConnectivityResult.wifi) await _startMdns();
+  }
+
+  Future<void> stop() async {
+    router.stop();
+    await _stopMdns();
+  }
+
   void onMessage(final p2p.Message p2pMessage) {
     final message = MessageModel.tryFromBytes(p2pMessage.payload);
     if (message == null) return;
@@ -157,8 +91,8 @@ class P2PNetworkService extends P2PNetworkServiceBase
       _bsServer = null;
       router.routes.remove(bsPeerId);
     } else {
-      final timestamp = DateTime.now().add(bsDelta).millisecondsSinceEpoch;
-      final bsRoute = p2p.Route(
+      final now = DateTime.now().millisecondsSinceEpoch;
+      _bsServer = p2p.Route(
         peerId: bsPeerId,
         canForward: true,
         addresses: {
@@ -168,22 +102,17 @@ class P2PNetworkService extends P2PNetworkServiceBase
               port: port ?? bindPort,
               isLocal: false,
               isStatic: true,
-            ): timestamp,
+            ): now,
           if (ipV6.isNotEmpty && myAddresses.any((e) => e.isIPv6))
             p2p.FullAddress(
               address: InternetAddress(ipV6),
               port: port ?? bindPort,
               isLocal: false,
               isStatic: true,
-            ): timestamp,
+            ): now,
         },
       );
-      router.addPeerAddresses(
-        canForward: true,
-        peerId: bsPeerId,
-        addresses: bsRoute.addresses.keys,
-        timestamp: timestamp,
-      );
+      router.routes[bsPeerId] = _bsServer!;
       if (kDebugMode) {
         print('See ${router.routes.length} existing routes');
         print('Bootstrap addresses: ${router.routes[bsPeerId]?.addresses}');
