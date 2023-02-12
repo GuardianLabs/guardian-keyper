@@ -165,7 +165,7 @@ class GuardianController {
 
   Future<void> _sendResponse(MessageModel message) =>
       diContainer.networkService.sendTo(
-        withAck: true,
+        isConfirmable: true,
         peerId: message.peerId,
         message: message.copyWith(peerId: diContainer.myPeerId),
       );

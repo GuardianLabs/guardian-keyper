@@ -37,8 +37,8 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
   }
 
   void startNetworkRequest(void Function([Timer?]) callback) async {
-    await diContainer.networkService.startMdnsDiscovery();
     await diContainer.platformService.wakelockEnable();
+    await diContainer.networkService.start();
     networkSubscription.resume();
     timer = Timer.periodic(
       diContainer.networkService.router.requestTimeout,
@@ -62,7 +62,7 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
 
   Future<void> sendToGuardian(MessageModel message) =>
       diContainer.networkService.sendTo(
-        withAck: false,
+        isConfirmable: false,
         peerId: message.peerId,
         message: message.copyWith(peerId: diContainer.myPeerId),
       );

@@ -32,8 +32,8 @@ class _QRCodePageState extends State<QRCodePage> {
   void initState() {
     super.initState();
     _diContainer = context.read<DIContainer>();
-    _diContainer.networkService.startMdnsBroadcast();
     _diContainer.platformService.wakelockEnable();
+    _diContainer.networkService.start();
     final qrCode =
         context.read<GuardianController>().generateQrCode(widget.groupId);
     _qrCode = qrCode.toBase64url();
