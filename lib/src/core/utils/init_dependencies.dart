@@ -1,6 +1,5 @@
 import '../di_container.dart';
 import '../model/core_model.dart';
-import '../adapter/hive_adapter.dart';
 import '../service/analytics_service.dart';
 import '../service/p2p_network_service.dart';
 import '../service/platform_service.dart';

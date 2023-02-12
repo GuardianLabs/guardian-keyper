@@ -8,7 +8,7 @@ class GuardianController {
 
   GuardianController({required this.diContainer}) {
     diContainer.networkService.messageStream.listen(onMessage);
-    Future.microtask(_cleanMessageBox);
+    _cleanMessageBox();
   }
 
   /// Create ticket to create\take group
@@ -155,13 +155,6 @@ class GuardianController {
     await archivateMessage(request);
   }
 
-  Future<void> _sendResponse(MessageModel message) =>
-      diContainer.networkService.sendTo(
-        withAck: true,
-        peerId: message.peerId,
-        message: message.copyWith(peerId: diContainer.myPeerId),
-      );
-
   Future<void> archivateMessage(MessageModel message) async {
     await diContainer.boxMessages.delete(message.aKey);
     await diContainer.boxMessages.put(
@@ -169,6 +162,13 @@ class GuardianController {
       message,
     );
   }
+
+  Future<void> _sendResponse(MessageModel message) =>
+      diContainer.networkService.sendTo(
+        withAck: true,
+        peerId: message.peerId,
+        message: message.copyWith(peerId: diContainer.myPeerId),
+      );
 
   Future<void> _cleanMessageBox() async {
     if (diContainer.boxMessages.isEmpty) return;
@@ -180,7 +180,6 @@ class GuardianController {
             e.timestamp
                 .isBefore(DateTime.now().subtract(const Duration(days: 1))))
         .toList(growable: false);
-    if (expired.isEmpty) return;
     await diContainer.boxMessages.deleteAll(expired.map((e) => e.aKey));
     await diContainer.boxMessages.compact();
   }
