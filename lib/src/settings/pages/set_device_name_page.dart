@@ -36,7 +36,7 @@ class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
                 Padding(
                   padding: paddingAll20,
                   child: Text(
-                    'Create new Guardian name',
+                    'Create new Device name',
                     textAlign: TextAlign.center,
                     style: textStylePoppins620,
                   ),
@@ -50,7 +50,7 @@ class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
                     maxLength: diContainer.globals.maxNameLength,
                     onChanged: (value) => setState(() => _name = value),
                     decoration: const InputDecoration(
-                      labelText: ' Guardian name ',
+                      labelText: ' Device name ',
                       helperText: 'Minimum 3 characters',
                     ),
                   ),

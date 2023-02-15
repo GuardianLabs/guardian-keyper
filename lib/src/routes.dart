@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'core/model/core_model.dart';
-
-import 'start_view.dart';
-import 'intro/intro_view.dart';
+import 'core/di_container.dart';
 import 'home/home_view.dart';
+import 'intro/intro_view.dart';
+import 'settings/settings_view.dart';
 import 'recovery_group/add_secret/add_secret_view.dart';
 import 'recovery_group/create_group/create_group_view.dart';
 import 'recovery_group/add_guardian/add_guardian_view.dart';
@@ -16,13 +16,10 @@ Route<dynamic>? onGenerateRoute(RouteSettings routeSettings) =>
     MaterialPageRoute<void>(
       settings: routeSettings,
       builder: (BuildContext context) {
+        if (context.read<DIContainer>().boxSettings.passCode.isEmpty) {
+          return const IntroView();
+        }
         switch (routeSettings.name) {
-          case IntroView.routeName:
-            return const IntroView();
-
-          case HomeView.routeName:
-            return const HomeView();
-
           case CreateGroupView.routeName:
             return const CreateGroupView();
 
@@ -52,8 +49,9 @@ Route<dynamic>? onGenerateRoute(RouteSettings routeSettings) =>
               skipExplainer: routeSettings.arguments as bool,
             );
 
-          default:
-            return const StartView();
+          case SettingsView.routeName:
+            return const SettingsView();
         }
+        return const HomeView();
       },
     );

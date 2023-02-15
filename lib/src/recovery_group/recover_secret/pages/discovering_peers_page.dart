@@ -3,7 +3,6 @@ import '/src/core/model/core_model.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/widgets/auth.dart';
 
 import '../recover_secret_controller.dart';
 import '../../widgets/guardian_tile_widget.dart';
@@ -83,7 +82,19 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                           selector: (_, controller) => controller.hasMinimal,
                           builder: (_, hasMinimal, __) => PrimaryButton(
                             text: 'Access Secret',
-                            onPressed: hasMinimal ? _askPasscode : null,
+                            onPressed: hasMinimal
+                                ? () => context
+                                    .read<DIContainer>()
+                                    .authService
+                                    .checkPassCode(
+                                      context: context,
+                                      onUnlock: () {
+                                        Navigator.of(context).pop();
+                                        _controller.nextScreen();
+                                      },
+                                      canCancel: true,
+                                    )
+                                : null,
                           ),
                         ),
                       ),
@@ -119,31 +130,6 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
           ),
         ],
       );
-
-  Future<void> _askPasscode() => screenLock(
-        context: context,
-        correctString: context.read<DIContainer>().boxSettings.passCode,
-        canCancel: true,
-        keyPadConfig: keyPadConfig,
-        secretsConfig: secretsConfig,
-        config: screenLockConfig,
-        customizedButtonChild: BiometricLogonButton(callback: _pass),
-        customizedButtonTap: () {}, // Fails if null
-        title: Padding(
-          padding: paddingV32 + paddingH20,
-          child: Text(
-            'Please enter your current passcode',
-            style: textStylePoppins620,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        onUnlocked: _pass,
-      );
-
-  void _pass() {
-    Navigator.of(context).pop();
-    _controller.nextScreen();
-  }
 
   void _showTerminated(MessageModel message) => showModalBottomSheet(
         context: context,

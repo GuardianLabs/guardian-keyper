@@ -1,15 +1,29 @@
-class AnalyticsService {
-  static Future<void> _logEvent(
-    eventType, {
-    eventProperties,
-    outOfSession,
-  }) async {}
+import 'package:amplitude_flutter/amplitude.dart';
 
-  final Future<void> Function(
+typedef EventLogger = Future<void> Function(
+  String eventType, {
+  Map<String, dynamic>? eventProperties,
+  bool? outOfSession,
+});
+
+class AnalyticsService {
+  static Future<AnalyticsService> init(final String apiKey) async {
+    final amplitude = Amplitude.getInstance();
+    await amplitude.init(apiKey);
+    await amplitude.trackingSessionEvents(true);
+    // Enable COPPA privacy guard.
+    // This is useful when you choose not to report sensitive user information.
+    await amplitude.enableCoppaControl();
+    return AnalyticsService(logEvent: amplitude.logEvent);
+  }
+
+  static Future<void> _logEvent(
     String eventType, {
     Map<String, dynamic>? eventProperties,
     bool? outOfSession,
-  }) logEvent;
+  }) async {}
+
+  final EventLogger logEvent;
 
   const AnalyticsService({this.logEvent = _logEvent});
 }

@@ -26,7 +26,7 @@ class _QRCodePageState extends State<QRCodePage> {
   late final StreamSubscription<BoxEvent> _boxMessagesEventsSubscription;
   late final DIContainer _diContainer;
   late final String _qrCode;
-  var _logoSize = 72.0;
+  double _logoSize = 0;
 
   @override
   void initState() {
@@ -49,8 +49,8 @@ class _QRCodePageState extends State<QRCodePage> {
 
   @override
   void didChangeDependencies() {
-    _logoSize = min(_qrSize, MediaQuery.of(context).size.width) / 5;
     super.didChangeDependencies();
+    _logoSize = min(_qrSize, MediaQuery.of(context).size.width) / 5;
   }
 
   @override
