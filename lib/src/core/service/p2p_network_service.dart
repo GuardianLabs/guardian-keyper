@@ -59,7 +59,7 @@ class P2PNetworkService extends P2PNetworkServiceBase
     );
   }
 
-  Future<void> start() async {
+  Future<void> start([void _]) async {
     _connectivityType = await _connectivity.checkConnectivity();
     if (kDebugMode) print(_connectivityType);
     if (_connectivityType == ConnectivityResult.none) return;
@@ -68,7 +68,7 @@ class P2PNetworkService extends P2PNetworkServiceBase
     if (_connectivityType == ConnectivityResult.wifi) await _startMdns();
   }
 
-  Future<void> stop() async {
+  Future<void> stop([void _]) async {
     router.stop();
     await _stopMdns();
   }
@@ -80,7 +80,7 @@ class P2PNetworkService extends P2PNetworkServiceBase
     _messagesController.add(message);
   }
 
-  void setBootstrapServer({
+  void addBootstrapServer({
     required String peerId,
     String ipV4 = '',
     String ipV6 = '',

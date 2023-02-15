@@ -39,6 +39,16 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     final diContainer = context.read<DIContainer>();
+    Future.microtask(
+      () => diContainer.authService.checkPassCode(
+        context: context,
+        onUnlock: () {
+          Navigator.of(context).pop();
+          diContainer.networkService.start();
+        },
+        canCancel: false,
+      ),
+    );
     _subscription = diContainer.boxMessages.watch().listen(
       (event) {
         if (_hasModal) return;
@@ -48,12 +58,13 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
         _hasModal = true;
         // Give QrCodePage time to pop itself
         Future.microtask(
-          () => MessageListTile.showActiveMessage(context, message),
-        ).then((_) => _hasModal = false);
+          () async {
+            _hasModal = false;
+            await MessageListTile.showActiveMessage(context, message);
+          },
+        );
       },
     );
-    diContainer.networkService
-        .didChangeAppLifecycleState(AppLifecycleState.resumed);
   }
 
   @override

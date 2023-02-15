@@ -5,7 +5,6 @@ import '/src/core/widgets/common.dart';
 import '../widgets/copy_my_key_to_clipboard_widget.dart';
 import '../widgets/vaults_panel.dart';
 import '../widgets/qr_code_panel.dart';
-import 'settings_page.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -37,11 +36,7 @@ class DashboardPage extends StatelessWidget {
           ),
           // Settings
           IconButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const ScaffoldWidget(child: SettingsPage()),
-              ),
-            ),
+            onPressed: () => Navigator.of(context).pushNamed('/settings'),
             icon: const Icon(Icons.settings_outlined, color: clWhite),
           )
         ]),

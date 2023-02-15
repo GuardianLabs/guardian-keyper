@@ -3,8 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:wakelock/wakelock.dart';
-import 'package:vibration/vibration.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -20,35 +18,14 @@ class PlatformService {
   static const _secureStorage = FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
   );
-  static final _localAuth = LocalAuthentication();
 
-  static Future<bool> checkIfHasBiometrics() =>
-      _localAuth.getAvailableBiometrics().then((value) => value.isNotEmpty);
-
-  final bool hasBiometrics;
-
-  const PlatformService({this.hasBiometrics = false});
+  const PlatformService();
 
   void openWirelessSettings() => AppSettings.openWirelessSettings();
 
   Future<void> wakelockEnable() => Wakelock.enable();
 
   void wakelockDisable() => Wakelock.disable();
-
-  Future<void> vibrate([int duration = 500]) async =>
-      (await Vibration.hasVibrator() ?? false)
-          ? await Vibration.vibrate(duration: duration)
-          : null;
-
-  Future<bool> authenticate({required String localizedReason}) async {
-    try {
-      return await _localAuth.authenticate(
-        localizedReason: localizedReason,
-        options: const AuthenticationOptions(biometricOnly: true),
-      );
-    } catch (_) {}
-    return false;
-  }
 
   Future<String> getDeviceName([Uint8List? appendix]) async {
     final append = appendix == null
