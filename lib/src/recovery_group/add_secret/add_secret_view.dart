@@ -1,3 +1,4 @@
+import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
@@ -9,8 +10,9 @@ import 'pages/add_secret_page.dart';
 import 'pages/split_and_share_page.dart';
 import 'pages/secret_transmitting_page.dart';
 
-class RecoveryGroupAddSecretView extends StatelessWidget {
-  static const routeName = '/recovery_group/add_secret';
+class AddSecretView extends StatelessWidget {
+  static const routeName = routeGroupAddSecret;
+
   static const _pages = [
     AddNamePage(),
     AddSecretPage(),
@@ -20,7 +22,7 @@ class RecoveryGroupAddSecretView extends StatelessWidget {
 
   final GroupId groupId;
 
-  const RecoveryGroupAddSecretView({super.key, required this.groupId});
+  const AddSecretView({super.key, required this.groupId});
 
   @override
   Widget build(BuildContext context) {

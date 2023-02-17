@@ -1,3 +1,4 @@
+import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/widgets/common.dart';
@@ -7,7 +8,8 @@ import 'pages/scan_qrcode_page.dart';
 import 'pages/loading_page.dart';
 
 class AddGuardianView extends StatelessWidget {
-  static const routeName = '/recovery_group/add_guardian';
+  static const routeName = routeGroupAddGuardian;
+
   static const _pages = [
     ScanQRCodePage(),
     LoadingPage(),

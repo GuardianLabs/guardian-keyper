@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-import 'core/model/core_model.dart';
-import 'core/di_container.dart';
-import 'home/home_view.dart';
-import 'intro/intro_view.dart';
-import 'settings/settings_view.dart';
-import 'recovery_group/add_secret/add_secret_view.dart';
-import 'recovery_group/create_group/create_group_view.dart';
-import 'recovery_group/add_guardian/add_guardian_view.dart';
-import 'recovery_group/restore_group/restore_group_view.dart';
-import 'recovery_group/edit_group/recovery_group_edit_view.dart';
-import 'recovery_group/recover_secret/recover_secret_view.dart';
+import 'di_container.dart';
+import 'model/core_model.dart';
+import '/src/home/home_view.dart';
+import '/src/intro/intro_view.dart';
+import '/src/settings/settings_view.dart';
+import '/src/recovery_group/add_secret/add_secret_view.dart';
+import '/src/recovery_group/create_group/create_group_view.dart';
+import '/src/recovery_group/add_guardian/add_guardian_view.dart';
+import '/src/recovery_group/restore_group/restore_group_view.dart';
+import '/src/recovery_group/edit_group/edit_group_view.dart';
+import '/src/recovery_group/recover_secret/recover_secret_view.dart';
 
 Route<dynamic>? onGenerateRoute(RouteSettings routeSettings) =>
     MaterialPageRoute<void>(
@@ -23,8 +23,8 @@ Route<dynamic>? onGenerateRoute(RouteSettings routeSettings) =>
           case CreateGroupView.routeName:
             return const CreateGroupView();
 
-          case RecoveryGroupEditView.routeName:
-            return RecoveryGroupEditView(
+          case EditGroupView.routeName:
+            return EditGroupView(
               groupId: routeSettings.arguments as GroupId,
             );
 
@@ -33,13 +33,13 @@ Route<dynamic>? onGenerateRoute(RouteSettings routeSettings) =>
               groupId: routeSettings.arguments as GroupId,
             );
 
-          case RecoveryGroupAddSecretView.routeName:
-            return RecoveryGroupAddSecretView(
+          case AddSecretView.routeName:
+            return AddSecretView(
               groupId: routeSettings.arguments as GroupId,
             );
 
-          case RecoveryGroupRecoverSecretView.routeName:
-            return RecoveryGroupRecoverSecretView(
+          case RecoverSecretView.routeName:
+            return RecoverSecretView(
               groupIdWithSecretId:
                   routeSettings.arguments as MapEntry<GroupId, SecretId>,
             );

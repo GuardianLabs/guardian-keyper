@@ -1,3 +1,4 @@
+import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
 import '/src/core/widgets/common.dart';
 
@@ -7,7 +8,7 @@ import 'pages/choose_type_page.dart';
 import 'pages/input_name_page.dart';
 
 class CreateGroupView extends StatelessWidget {
-  static const routeName = '/recovery_group/create';
+  static const routeName = routeGroupCreate;
 
   static const _pages = [
     ChooseTypePage(),

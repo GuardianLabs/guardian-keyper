@@ -3,9 +3,9 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'core/theme/theme.dart';
-import 'core/di_container.dart';
-import 'guardian/guardian_controller.dart';
+import 'theme/theme.dart';
+import 'di_container.dart';
+import '/src/guardian/guardian_controller.dart';
 
 import 'routes.dart';
 

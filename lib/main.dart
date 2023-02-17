@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-import 'src/app.dart';
+import 'src/core/app.dart';
 import 'src/core/di_container.dart';
 import 'src/core/theme/theme.dart';
 import 'src/core/utils/init_os.dart';

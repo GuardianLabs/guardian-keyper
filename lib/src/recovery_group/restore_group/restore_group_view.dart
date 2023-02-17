@@ -1,3 +1,4 @@
+import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
 import '/src/core/widgets/common.dart';
 
@@ -7,7 +8,8 @@ import 'pages/scan_qr_code_page.dart';
 import 'pages/loading_page.dart';
 
 class RestoreGroupView extends StatelessWidget {
-  static const routeName = '/recovery_group/restore';
+  static const routeName = routegroupRestoreGroup;
+
   static const _pages = [
     ExplainerPage(),
     ScanQRCodePage(),
