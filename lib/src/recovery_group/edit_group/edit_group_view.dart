@@ -1,3 +1,4 @@
+import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
@@ -9,12 +10,12 @@ import 'widgets/add_secret_widget.dart';
 import 'widgets/guardians_expansion_tile.dart';
 import 'widgets/remove_vault_bottom_sheet.dart';
 
-class RecoveryGroupEditView extends StatelessWidget {
-  static const routeName = '/recovery_group/edit';
+class EditGroupView extends StatelessWidget {
+  static const routeName = routeGroupEdit;
 
   final GroupId groupId;
 
-  const RecoveryGroupEditView({super.key, required this.groupId});
+  const EditGroupView({super.key, required this.groupId});
 
   @override
   Widget build(BuildContext context) =>

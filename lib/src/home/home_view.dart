@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
+import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/widgets/common.dart';
@@ -16,7 +17,8 @@ import 'pages/vaults_page.dart';
 import 'widgets/notification_icon.dart';
 
 class HomeView extends StatefulWidget {
-  static const routeName = '/home';
+  static const routeName = routeHome;
+
   static const _pages = [
     DashboardPage(),
     VaultsPage(),

@@ -1,3 +1,4 @@
+import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
@@ -6,8 +7,9 @@ import 'recover_secret_controller.dart';
 import 'pages/discovering_peers_page.dart';
 import 'pages/show_secret_page.dart';
 
-class RecoveryGroupRecoverSecretView extends StatelessWidget {
-  static const routeName = '/recovery_group/recover_secret';
+class RecoverSecretView extends StatelessWidget {
+  static const routeName = routeGroupRecoverSecret;
+
   static const _pages = [
     DiscoveryPeersPage(),
     ShowSecretPage(),
@@ -15,7 +17,7 @@ class RecoveryGroupRecoverSecretView extends StatelessWidget {
 
   final MapEntry<GroupId, SecretId> groupIdWithSecretId;
 
-  const RecoveryGroupRecoverSecretView({
+  const RecoverSecretView({
     super.key,
     required this.groupIdWithSecretId,
   });
