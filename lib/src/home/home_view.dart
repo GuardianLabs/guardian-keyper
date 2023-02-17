@@ -32,14 +32,13 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
+class _HomeViewState extends State<HomeView> {
   late final StreamSubscription<BoxEvent> _subscription;
   bool _hasModal = false;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     final diContainer = context.read<DIContainer>();
     Future.microtask(
       () => diContainer.authService.checkPassCode(
@@ -70,19 +69,8 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state != AppLifecycleState.resumed) {
-      final diContainer = context.read<DIContainer>();
-      await diContainer.boxSettings.flush();
-      await diContainer.boxRecoveryGroups.flush();
-      await diContainer.boxMessages.flush();
-    }
-  }
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    WidgetsBinding.instance.removeObserver(this);
+  void dispose() async {
+    await _subscription.cancel();
     super.dispose();
   }
 
