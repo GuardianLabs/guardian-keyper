@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sss256/sss256.dart';
 
 import '/src/core/model/core_model.dart';
@@ -31,11 +32,15 @@ class RecoverySecretController extends RecoveryGroupSecretController {
 
   bool get hasMinimal => messagesWithSuccess.length >= group.threshold;
 
-  String getSecret() {
+  Future<String> getSecret() {
     diContainer.analyticsService.logEvent(eventFinishRestoreSecret);
     stopListenResponse();
-    return restoreSecret(
-      shares: messages.map((e) => e.secretShard.shard).toList(),
+    return compute<List<String>, String>(
+      (List<String> shares) => restoreSecret(shares: shares),
+      messages
+          .where((e) => e.secretShard.shard.isNotEmpty)
+          .map((e) => e.secretShard.shard)
+          .toList(),
     );
   }
 

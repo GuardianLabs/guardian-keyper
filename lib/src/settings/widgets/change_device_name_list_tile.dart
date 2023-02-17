@@ -13,7 +13,7 @@ class ChangeDeviceNameListTile extends StatelessWidget {
         leading: const IconOf.shardOwner(),
         title: const Text('Change Guardian name'),
         subtitle: Text(
-          context.read<DIContainer>().myPeerId.emoji,
+          context.read<DIContainer>().myPeerId.name,
           style: textStyleSourceSansPro414Purple,
         ),
         trailing: const Icon(Icons.arrow_forward_ios_rounded),
