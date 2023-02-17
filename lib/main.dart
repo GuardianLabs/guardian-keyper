@@ -21,7 +21,7 @@ Future<void> main() async {
       );
       runApp(
         App(
-          diContainer: await DIContainer.init(
+          diContainer: await initDIC(
             globals: const Globals(
               bsAddressV4: String.fromEnvironment('BS_V4'),
               bsAddressV6: String.fromEnvironment('BS_V6'),
