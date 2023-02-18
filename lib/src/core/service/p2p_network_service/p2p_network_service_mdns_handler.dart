@@ -1,62 +1,44 @@
 part of '../p2p_network_service.dart';
 
 mixin P2PMdnsHandler on P2PNetworkServiceBase {
+  static const _utf8Encoder = Utf8Encoder();
+  static const _utf8Decoder = Utf8Decoder();
+
   final _mdnsType = '_dartshare._udp';
   final _mdnsPeerId = 'peer_id';
-  final _mdnsName = 'Guardian Keyper';
+  late final _service = Service(
+    name: 'Guardian Keyper',
+    type: _mdnsType,
+    port: bindPort,
+    txt: {_mdnsPeerId: _utf8Encoder.convert(base64Encode(router.selfId.value))},
+  );
 
-  late final BonsoirService _mdnsService;
-  late final BonsoirDiscovery _mdnsDiscovery;
-  late final BonsoirBroadcast _mdnsBroadcast;
-
-  Future<void> _mdnsInit(int port, String peerId) async {
-    _mdnsService = BonsoirService(
-      name: _mdnsName,
-      type: _mdnsType,
-      port: port,
-      attributes: {_mdnsPeerId: peerId},
+  Future<void> _initMdns() async {
+    await register(_service);
+    final discovery = await startDiscovery(
+      _mdnsType,
+      ipLookupType: IpLookupType.any,
     );
-    _mdnsBroadcast = BonsoirBroadcast(service: _mdnsService);
-    _mdnsDiscovery = BonsoirDiscovery(type: _mdnsType);
-    await _mdnsDiscovery.ready;
-    _mdnsDiscovery.eventStream!.listen(_onMdnsEvent);
+    discovery.addServiceListener(_onEvent);
   }
 
-  Future<void> _startMdns() async {
-    if (_mdnsBroadcast.isStopped) {
-      await _mdnsBroadcast.ready;
-      await _mdnsBroadcast.start();
-    }
-    if (_mdnsDiscovery.isStopped) {
-      await _mdnsDiscovery.ready;
-      await _mdnsDiscovery.start();
-    }
-  }
-
-  Future<void> _stopMdns() => Future.wait([
-        _mdnsBroadcast.stop(),
-        _mdnsDiscovery.stop(),
-      ]);
-
-  void _onMdnsEvent(BonsoirDiscoveryEvent event) {
-    if (event.type == BonsoirDiscoveryEventType.discoveryServiceResolved) {
-      final eventMap = event.service?.toJson();
-      if (eventMap == null) return;
-      if (eventMap['service.type'] != _mdnsType) return;
-      if (eventMap['service.name'] != _mdnsName) return;
-      final peerId = p2p.PeerId(
-        value: base64Decode(eventMap['service.attributes']?[_mdnsPeerId]),
-      );
-      if (peerId == router.selfId) return;
-      router.addPeerAddress(
-        peerId: peerId,
+  void _onEvent(Service service, ServiceStatus status) {
+    if (kDebugMode) print('mDNS $status: ${service.addresses}');
+    if (service.type != _mdnsType) return;
+    final peerIdBytes = service.txt?[_mdnsPeerId];
+    if (peerIdBytes == null) return;
+    if (status == ServiceStatus.found) {
+      router.addPeerAddresses(
         canForward: false,
-        address: p2p.FullAddress(
-          address: InternetAddress(eventMap['service.ip']),
-          port: event.service!.port,
-          isStatic: true,
-          isLocal: true,
+        peerId: p2p.PeerId(
+          value: base64Decode(_utf8Decoder.convert(peerIdBytes)),
         ),
+        addresses: service.addresses!.map((e) => p2p.FullAddress(
+              address: e,
+              port: service.port!,
+              isStatic: true,
+              isLocal: true,
+            )),
       );
     }
   }
