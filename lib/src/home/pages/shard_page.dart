@@ -3,7 +3,8 @@ import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
-import '/src/guardian/pages/qr_code_page.dart';
+
+import 'qr_code_page.dart';
 
 class ShardPage extends StatelessWidget {
   final GroupId groupId;
@@ -13,9 +14,11 @@ class ShardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
-        valueListenable:
-            context.read<DIContainer>().boxRecoveryGroups.listenable(),
-        builder: (_, boxRecoveryGroups, __) {
+        valueListenable: context
+            .read<DIContainer>()
+            .boxRecoveryGroups
+            .listenable(keys: [groupId.asKey]),
+        builder: (context, boxRecoveryGroups, __) {
           final recoveryGroup = boxRecoveryGroups.get(groupId.asKey)!;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,13 +58,7 @@ class ShardPage extends StatelessWidget {
                       padding: paddingTop12,
                       child: PrimaryButton(
                         text: 'Change Vault’s Owner',
-                        onPressed: () => showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (_) => _ConfirmChangeOwnershipDialog(
-                            groupId: groupId,
-                          ),
-                        ),
+                        onPressed: () => _showConfirmationDialog(context),
                       ),
                     ),
                     Padding(
@@ -103,30 +100,26 @@ class ShardPage extends StatelessWidget {
           );
         },
       );
-}
 
-class _ConfirmChangeOwnershipDialog extends StatelessWidget {
-  final GroupId groupId;
-
-  const _ConfirmChangeOwnershipDialog({required this.groupId});
-
-  @override
-  Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.owner(isBig: true, bage: BageType.warning),
-        titleString: 'Change Owner',
-        textSpan: buildTextWithId(
-          leadingText: 'Are you sure you want to change owner for vault ',
-          id: groupId,
-          trailingText: '? This action cannot be undone.',
-        ),
-        footer: PrimaryButton(
-          text: 'Confirm',
-          onPressed: () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              fullscreenDialog: true,
-              maintainState: false,
-              builder: (_) => ScaffoldWidget(
-                child: QRCodePage(groupId: groupId),
+  void _showConfirmationDialog(final BuildContext context) =>
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (final BuildContext context) => BottomSheetWidget(
+          icon: const IconOf.owner(isBig: true, bage: BageType.warning),
+          titleString: 'Change Owner',
+          textSpan: buildTextWithId(
+            leadingText: 'Are you sure you want to change owner for vault ',
+            id: groupId,
+            trailingText: '? This action cannot be undone.',
+          ),
+          footer: PrimaryButton(
+            text: 'Confirm',
+            onPressed: () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                fullscreenDialog: true,
+                maintainState: false,
+                builder: (_) => QRCodePage(groupId: groupId),
               ),
             ),
           ),

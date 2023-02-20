@@ -31,6 +31,9 @@ abstract class IdBase extends Serializable {
   @override
   Uint8List toBytes() => token;
 
+  @override
+  String toString() => asHex;
+
   String toHexShort([int count = 12]) {
     final s = asHex;
     return s.length > count * 2

@@ -1,6 +1,7 @@
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
-import '/src/guardian/pages/qr_code_page.dart';
+
+import '../pages/qr_code_page.dart';
 
 class QRCodePanel extends StatelessWidget {
   const QRCodePanel({super.key});
@@ -40,9 +41,9 @@ class QRCodePanel extends StatelessWidget {
                 child: const Text('Generate QR Code'),
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => const ScaffoldWidget(
-                      child: QRCodePage(),
-                    ),
+                    fullscreenDialog: true,
+                    maintainState: false,
+                    builder: (_) => const QRCodePage(),
                   ),
                 ),
               ),
