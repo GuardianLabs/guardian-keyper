@@ -33,9 +33,6 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  late final StreamSubscription<BoxEvent> _subscription;
-  bool _hasModal = false;
-
   @override
   void initState() {
     super.initState();
@@ -50,28 +47,15 @@ class _HomeViewState extends State<HomeView> {
         canCancel: false,
       ),
     );
-    _subscription = diContainer.boxMessages.watch().listen(
-      (event) {
-        if (_hasModal) return;
+    diContainer.boxMessages.watch().listen(
+      (event) async {
+        if (ModalRoute.of(context)?.isCurrent != true) return;
         if (event.deleted) return;
         final message = event.value as MessageModel;
         if (!message.isReceived) return;
-        _hasModal = true;
-        // Give QrCodePage time to pop itself
-        Future.microtask(
-          () async {
-            _hasModal = false;
-            await MessageListTile.showActiveMessage(context, message);
-          },
-        );
+        await MessageListTile.showActiveMessage(context, message);
       },
     );
-  }
-
-  @override
-  void dispose() async {
-    await _subscription.cancel();
-    super.dispose();
   }
 
   @override

@@ -23,10 +23,6 @@ abstract class Serializable extends Equatable {
 
   bool get isNotEmpty;
 
-  const Serializable.fromBytes(final Uint8List bytes);
-
-  const Serializable.fromBase64(final String str);
-
   Uint8List toBytes();
 
   String toBase64url() => base64UrlEncode(toBytes());

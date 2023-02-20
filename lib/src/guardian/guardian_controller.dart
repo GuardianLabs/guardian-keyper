@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
 
@@ -11,27 +13,10 @@ class GuardianController {
     _cleanMessageBox();
   }
 
-  /// Create ticket to create\take group
-  MessageModel generateQrCode([GroupId? groupId]) {
-    final message = groupId == null
-        ? MessageModel(code: MessageCode.createGroup)
-        : MessageModel(
-            code: MessageCode.takeGroup,
-            payload: RecoveryGroupModel(id: groupId),
-          );
-    // save groupId for transaction
-    diContainer.boxMessages.put(message.aKey, message);
-    return message.copyWith(
-      peerId: diContainer.myPeerId,
-      payload: PeerAddressList(
-        addresses: diContainer.networkService.myAddresses,
-      ),
-    );
-  }
-
   void onMessage(MessageModel message) {
     if (message.isEmpty) return;
     final ticket = diContainer.boxMessages.get(message.aKey);
+    if (kDebugMode) print('$message\n$ticket');
 
     switch (message.code) {
       case MessageCode.createGroup:

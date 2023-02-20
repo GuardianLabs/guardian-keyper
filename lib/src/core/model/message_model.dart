@@ -124,11 +124,9 @@ class MessageModel extends Serializable {
   bool get hasNoResponse =>
       status == MessageStatus.requested || status == MessageStatus.received;
 
-  @override
   factory MessageModel.fromBase64(String value) =>
       MessageModel.fromBytes(base64Decode(value));
 
-  @override
   factory MessageModel.fromBytes(List<int> value) {
     final u = Unpacker(value is Uint8List ? value : Uint8List.fromList(value));
     final version = u.unpackInt()!;
@@ -195,6 +193,9 @@ class MessageModel extends Serializable {
       ..packBinary(payload?.toBytes());
     return p.takeBytes();
   }
+
+  @override
+  String toString() => '$id: $code, $status, typeId: $payloadTypeId';
 
   MessageModel copyWith({
     PeerId? peerId,
