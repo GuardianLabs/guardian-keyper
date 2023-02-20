@@ -21,7 +21,7 @@ class QRCodePage extends StatefulWidget {
 }
 
 class _QRCodePageState extends State<QRCodePage> {
-  static const _qrSize = 360.0;
+  static const _qrSize = 300.0;
 
   late final StreamSubscription<BoxEvent> _boxMessagesEventsSubscription;
   late final DIContainer _diContainer;
