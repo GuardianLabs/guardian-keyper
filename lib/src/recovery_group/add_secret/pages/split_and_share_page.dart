@@ -4,7 +4,8 @@ import '/src/core/widgets/common.dart';
 import '../add_secret_controller.dart';
 import '../widgets/connection_widget.dart';
 import '../widgets/add_secret_close_button.dart';
-import '../../widgets/guardian_tile_widget.dart';
+import '../../widgets/guardian_self_list_tile.dart';
+import '../../widgets/guardian_list_tile.dart';
 
 class SplitAndShareSecretPage extends StatelessWidget {
   const SplitAndShareSecretPage({super.key});
@@ -48,7 +49,9 @@ class SplitAndShareSecretPage extends StatelessWidget {
                 for (final guardian in controller.group.guardians.keys)
                   Padding(
                     padding: paddingV6,
-                    child: GuardianTileWidget(guardian: guardian),
+                    child: guardian == controller.group.ownerId
+                        ? GuardianSelfListTile(guardian: guardian)
+                        : GuardianListTile(guardian: guardian),
                   )
               ]),
               // Open Settings Tile

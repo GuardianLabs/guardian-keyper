@@ -1,16 +1,15 @@
 part of 'recovery_group_controller.dart';
 
 abstract class RecoveryGroupControllerBase extends PageControllerBase {
-  late StreamSubscription<MessageModel> networkSubscription;
+  late final StreamSubscription<MessageModel> networkSubscription =
+      diContainer.networkService.messageStream.listen(null);
   Timer? timer;
 
   RecoveryGroupControllerBase({
     required super.diContainer,
     required super.pages,
     super.currentPage,
-  }) {
-    networkSubscription = diContainer.networkService.messageStream.listen(null);
-  }
+  });
 
   Globals get globals => diContainer.globals;
 
@@ -33,7 +32,6 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
 
   void startNetworkRequest(void Function([Timer?]) callback) async {
     await diContainer.platformService.wakelockEnable();
-    await diContainer.networkService.start();
     networkSubscription.resume();
     timer = Timer.periodic(
       diContainer.networkService.router.requestTimeout,
@@ -43,7 +41,7 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
     notifyListeners();
   }
 
-  void assignPeersAddresses(PeerId peerId, PeerAddressList list) {
+  void assignPeersAddresses(final PeerId peerId, final PeerAddressList list) {
     for (final e in list.addresses) {
       try {
         diContainer.networkService.addPeer(
@@ -55,25 +53,25 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
     }
   }
 
-  Future<void> sendToGuardian(MessageModel message) =>
+  Future<void> sendToGuardian(final MessageModel message) =>
       diContainer.networkService.sendTo(
         isConfirmable: false,
         peerId: message.peerId,
         message: message.copyWith(peerId: diContainer.myPeerId),
       );
 
-  RecoveryGroupModel? getGroupById(GroupId groupId) =>
+  RecoveryGroupModel? getGroupById(final GroupId groupId) =>
       diContainer.boxRecoveryGroups.get(groupId.asKey);
 
-  Future<RecoveryGroupModel> createGroup(RecoveryGroupModel group) async {
+  Future<RecoveryGroupModel> createGroup(final RecoveryGroupModel group) async {
     await diContainer.boxRecoveryGroups.put(group.aKey, group);
     notifyListeners();
     return group;
   }
 
   Future<RecoveryGroupModel> addGuardian(
-    GroupId groupId,
-    PeerId guardian,
+    final GroupId groupId,
+    final PeerId guardian,
   ) async {
     var group = diContainer.boxRecoveryGroups.get(groupId.asKey)!;
     group = group.copyWith(

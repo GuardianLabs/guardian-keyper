@@ -5,7 +5,8 @@ import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 
 import '../recover_secret_controller.dart';
-import '../../widgets/guardian_tile_widget.dart';
+import '../../widgets/guardian_list_tile.dart';
+import '../../widgets/guardian_self_list_tile.dart';
 
 class DiscoveryPeersPage extends StatefulWidget {
   const DiscoveryPeersPage({super.key});
@@ -15,14 +16,8 @@ class DiscoveryPeersPage extends StatefulWidget {
 }
 
 class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
-  late final RecoverySecretController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = context.read<RecoverySecretController>();
-    _controller.startRequest(onRejected: _showTerminated);
-  }
+  late final _controller = context.read<RecoverySecretController>()
+    ..startRequest(onRejected: _showTerminated);
 
   @override
   void dispose() {
@@ -78,30 +73,9 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                       ),
                       Padding(
                         padding: paddingTop20,
-                        child: Selector<RecoverySecretController, bool>(
-                          selector: (_, controller) => controller.hasMinimal,
-                          builder: (_, hasMinimal, __) => PrimaryButton(
-                            text: 'Access Secret',
-                            onPressed: hasMinimal
-                                ? () => context
-                                    .read<DIContainer>()
-                                    .authService
-                                    .checkPassCode(
-                                      context: context,
-                                      onUnlock: () {
-                                        Navigator.of(context).pop();
-                                        _controller.nextScreen();
-                                      },
-                                      canCancel: true,
-                                    )
-                                : null,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: paddingTop20,
                         child: Text(
-                          'You need to get at least ${_controller.group.threshold}'
+                          'You need to get at least '
+                          '${_controller.group.threshold - (_controller.group.isSelfGuarded ? 1 : 0)}'
                           ' approvals from Guardians to recover your Secret.',
                           style: textStyleSourceSansPro414Purple,
                           textAlign: TextAlign.center,
@@ -114,16 +88,18 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                 for (final guardian in _controller.group.guardians.keys)
                   Padding(
                     padding: paddingV6,
-                    child: StreamBuilder<MessageModel>(
-                      stream: _controller.messagesStream
-                          .where((message) => message.peerId == guardian),
-                      builder: (_, snapshot) => GuardianTileWidget(
-                        guardian: guardian,
-                        isSuccess: snapshot.data?.isAccepted,
-                        isWaiting: snapshot.data == null,
-                        checkStatus: true,
-                      ),
-                    ),
+                    child: guardian == _controller.group.ownerId
+                        ? GuardianSelfListTile(guardian: guardian)
+                        : StreamBuilder<MessageModel>(
+                            stream: _controller.messagesStream
+                                .where((message) => message.peerId == guardian),
+                            builder: (_, snapshot) => GuardianListTile(
+                              guardian: guardian,
+                              isSuccess: snapshot.data?.isAccepted,
+                              isWaiting: snapshot.data == null,
+                              checkStatus: true,
+                            ),
+                          ),
                   )
               ],
             ),

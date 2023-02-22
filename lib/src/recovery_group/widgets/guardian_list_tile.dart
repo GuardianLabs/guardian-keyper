@@ -4,13 +4,13 @@ import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
 import 'online_status_widget.dart';
 
-class GuardianTileWidget extends StatelessWidget {
+class GuardianListTile extends StatelessWidget {
   final PeerId guardian;
   final bool? isSuccess;
   final bool isWaiting;
   final bool checkStatus;
 
-  const GuardianTileWidget({
+  const GuardianListTile({
     super.key,
     required this.guardian,
     this.isSuccess,
