@@ -6,7 +6,8 @@ import '/src/core/model/core_model.dart';
 
 import '../add_secret_controller.dart';
 import '../widgets/add_secret_close_button.dart';
-import '../../widgets/guardian_tile_widget.dart';
+import '../../widgets/guardian_self_list_tile.dart';
+import '../../widgets/guardian_list_tile.dart';
 
 class SecretTransmittingPage extends StatefulWidget {
   const SecretTransmittingPage({super.key});
@@ -16,18 +17,12 @@ class SecretTransmittingPage extends StatefulWidget {
 }
 
 class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
-  late final AddSecretController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = context.read<AddSecretController>();
-    _controller.startRequest(
+  late final _controller = context.read<AddSecretController>()
+    ..startRequest(
       onSuccess: _showSuccess,
       onReject: _showRejected,
       onFailed: _showRejected, // TBD: specify
     );
-  }
 
   @override
   void dispose() {
@@ -65,20 +60,24 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    for (final guardian in _controller.group.guardians.keys)
+                    for (final guardian
+                        in _controller.messages.map((e) => e.peerId))
                       Padding(
                         padding: paddingV6,
-                        child: StreamBuilder<MessageModel>(
-                          stream: _controller.messagesStream.where(
-                            (message) => message.peerId == guardian,
-                          ),
-                          builder: (context, snapshot) => GuardianTileWidget(
-                            guardian: guardian,
-                            isSuccess: snapshot.data?.isAccepted,
-                            isWaiting: snapshot.data == null,
-                            checkStatus: true,
-                          ),
-                        ),
+                        child: guardian == _controller.diContainer.myPeerId
+                            ? GuardianSelfListTile(guardian: guardian)
+                            : StreamBuilder<MessageModel>(
+                                stream: _controller.messagesStream.where(
+                                  (message) => message.peerId == guardian,
+                                ),
+                                builder: (context, snapshot) =>
+                                    GuardianListTile(
+                                  guardian: guardian,
+                                  isSuccess: snapshot.data?.isAccepted,
+                                  isWaiting: snapshot.data == null,
+                                  checkStatus: true,
+                                ),
+                              ),
                       )
                   ],
                 ),

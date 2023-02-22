@@ -45,6 +45,8 @@ class RecoveryGroupModel extends Serializable {
   bool get isRestoring => isNotFull && secrets.isNotEmpty;
   bool get isNotRestoring => !isRestoring;
 
+  bool get isSelfGuarded => guardians.containsKey(ownerId);
+
   factory RecoveryGroupModel.fromBytes(List<int> value) {
     final u = Unpacker(value is Uint8List ? value : Uint8List.fromList(value));
     final version = u.unpackInt()!;

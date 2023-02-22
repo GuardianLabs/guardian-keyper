@@ -8,6 +8,7 @@ export 'package:provider/provider.dart';
 class CreateGroupController extends RecoveryGroupControllerBase {
   var _groupSize = 3;
   var _groupThreshold = 2;
+  var _isGroupMember = false;
   var _groupName = '';
 
   CreateGroupController({
@@ -18,7 +19,11 @@ class CreateGroupController extends RecoveryGroupControllerBase {
   }
 
   int get groupSize => _groupSize;
+
   int get groupThreshold => _groupThreshold;
+
+  bool get isGroupMember => _isGroupMember;
+
   bool get isGroupNameToolShort => _groupName.length < globals.minNameLength;
 
   set groupSize(int size) {
@@ -28,6 +33,11 @@ class CreateGroupController extends RecoveryGroupControllerBase {
 
   set groupThreshold(int size) {
     _groupThreshold = size;
+    notifyListeners();
+  }
+
+  set isGroupMember(bool value) {
+    _isGroupMember = value;
     notifyListeners();
   }
 
@@ -43,6 +53,9 @@ class CreateGroupController extends RecoveryGroupControllerBase {
       maxSize: _groupSize,
       threshold: _groupThreshold,
       ownerId: diContainer.myPeerId,
+      guardians: {
+        if (_isGroupMember) diContainer.myPeerId: '',
+      },
     ));
   }
 }

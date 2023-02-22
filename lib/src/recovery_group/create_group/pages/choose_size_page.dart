@@ -2,46 +2,20 @@ import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 import '../create_group_controller.dart';
+import '../widgets/group_size_info_panel.dart';
+import '../widgets/guardians_control_panel.dart';
 
-class ChooseSizePage extends StatefulWidget {
+class ChooseSizePage extends StatelessWidget {
   const ChooseSizePage({super.key});
 
   @override
-  State<ChooseSizePage> createState() => _ChooseSizePageState();
-}
-
-class _ChooseSizePageState extends State<ChooseSizePage>
-    with SingleTickerProviderStateMixin {
-  static final _boxDecorationSelected = BoxDecoration(
-    border: Border.all(color: clIndigo500),
-    borderRadius: borderRadius,
-    gradient: const RadialGradient(
-      center: Alignment.bottomCenter,
-      radius: 1.4,
-      colors: [Color(0xFF7E4CDE), Color(0xFF35088B)],
-    ),
-  );
-
-  late final AnimationController _animationController = AnimationController(
-    vsync: this,
-    duration: const Duration(seconds: 1),
-  )..forward();
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = Provider.of<CreateGroupController>(context);
-    return Column(
-      children: [
+  Widget build(BuildContext context) => Column(children: [
         // Header
         HeaderBar(
           caption: 'Vault Size',
-          backButton: HeaderBarBackButton(onPressed: controller.previousScreen),
+          backButton: HeaderBarBackButton(
+            onPressed: context.read<CreateGroupController>().previousScreen,
+          ),
           closeButton: const HeaderBarCloseButton(),
         ),
         // Body
@@ -52,7 +26,7 @@ class _ChooseSizePageState extends State<ChooseSizePage>
               Padding(
                 padding: paddingBottom20,
                 child: Text(
-                  'Choose how many Guardians will secure your Vault',
+                  'Select Guardians amount',
                   style: textStylePoppins620,
                   textAlign: TextAlign.center,
                 ),
@@ -60,103 +34,27 @@ class _ChooseSizePageState extends State<ChooseSizePage>
               Padding(
                 padding: paddingBottom32,
                 child: Text(
-                  'Guardians keep Secrets’ parts. '
-                  'You can join them to recover your Secrets at any time.',
+                  'Pick amount of Guardians which will be responsible '
+                  'for keeping the Shards (parts) of your Secrets.',
                   style: textStyleSourceSansPro416,
                   textAlign: TextAlign.center,
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: clIndigo500),
-                  borderRadius: borderRadius,
-                  color: clIndigo800,
-                ),
-                padding: paddingAll8,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          controller.groupSize = 3;
-                          controller.groupThreshold = 2;
-                          _animationController.forward(from: 0);
-                        },
-                        child: Container(
-                          decoration: controller.groupSize == 3
-                              ? _boxDecorationSelected
-                              : null,
-                          padding: paddingAll20,
-                          child: Column(
-                            children: [
-                              const Text('3 Guardians'),
-                              Radio<int>(
-                                value: 3,
-                                groupValue: controller.groupSize,
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    controller.groupSize = value;
-                                  }
-                                  _animationController.forward(from: 0);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          controller.groupSize = 5;
-                          controller.groupThreshold = 3;
-                          _animationController.forward(from: 0);
-                        },
-                        child: Container(
-                          decoration: controller.groupSize == 5
-                              ? _boxDecorationSelected
-                              : null,
-                          padding: paddingAll20,
-                          child: Column(
-                            children: [
-                              const Text('5 Guardians'),
-                              Radio<int>(
-                                value: 5,
-                                groupValue: controller.groupSize,
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    controller.groupSize = value;
-                                  }
-                                  _animationController.forward(from: 0);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Control
+              const GuardiansControlPanel(),
+              // Info
               Padding(
                 padding: paddingTop32,
-                child: InfoPanel.info(
-                  animationController: _animationController,
-                  textSpan: <TextSpan>[
-                    const TextSpan(
-                      text: 'Recovering Secrets from this Vault '
-                          'will require approval of at least ',
-                    ),
-                    TextSpan(
-                      text: controller.groupSize == 3
-                          ? '2 out of 3'
-                          : '3 out of 5',
-                      style: textStyleSourceSansPro616.copyWith(color: clWhite),
-                    ),
-                    const TextSpan(text: ' Guardians'),
-                  ],
+                child: Consumer<CreateGroupController>(
+                  builder: (_, controller, __) => GroupSizeInfoPanel(
+                    key: Key(DateTime.now().toIso8601String()),
+                    atLeast: controller.isGroupMember
+                        ? controller.groupSize - 1
+                        : controller.groupSize,
+                    ofAmount: controller.isGroupMember
+                        ? controller.groupThreshold - 1
+                        : controller.groupThreshold,
+                  ),
                 ),
               ),
               // Footer
@@ -164,13 +62,11 @@ class _ChooseSizePageState extends State<ChooseSizePage>
                 padding: paddingV32,
                 child: PrimaryButton(
                   text: 'Continue',
-                  onPressed: controller.nextScreen,
+                  onPressed: context.read<CreateGroupController>().nextScreen,
                 ),
               ),
             ],
           ),
         ),
-      ],
-    );
-  }
+      ]);
 }

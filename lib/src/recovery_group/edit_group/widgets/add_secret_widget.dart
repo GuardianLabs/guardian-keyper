@@ -5,6 +5,7 @@ import '/src/core/model/core_model.dart';
 
 import 'add_secret_button.dart';
 import 'guardians_expansion_tile.dart';
+import 'remove_secret_bottom_sheet.dart';
 
 class AddSecretWidget extends StatelessWidget {
   final RecoveryGroupModel group;
@@ -34,7 +35,7 @@ class AddSecretWidget extends StatelessWidget {
                   backgroundColor: clSurface,
                   canTapOnHeader: true,
                   value: secretId.asKey,
-                  headerBuilder: ((context, isExpanded) => Row(
+                  headerBuilder: ((_, isExpanded) => Row(
                         children: [
                           Padding(
                             padding: paddingH20 + paddingV12,
@@ -51,6 +52,7 @@ class AddSecretWidget extends StatelessWidget {
                   body: Padding(
                     padding: paddingH20 + paddingBottom20,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
                           'In order to restore this Secret you have to get '
@@ -58,15 +60,31 @@ class AddSecretWidget extends StatelessWidget {
                           'Guardians of the Vault.',
                           style: textStyleSourceSansPro414Purple,
                         ),
-                        const Padding(padding: paddingTop12),
-                        SizedBox(
-                          width: double.infinity,
+                        Padding(
+                          padding: paddingTop12,
                           child: ElevatedButton(
                             onPressed: () => Navigator.of(context).pushNamed(
                               '/recovery_group/recover_secret',
                               arguments: MapEntry(group.id, secretId),
                             ),
                             child: const Text('Recover my Secret'),
+                          ),
+                        ),
+                        Padding(
+                          padding: paddingTop12,
+                          child: ElevatedButton(
+                            onPressed: () => showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (_) => RemoveSecretBottomSheet(
+                                group: group,
+                                secretId: secretId,
+                              ),
+                            ),
+                            style: const ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(clRed),
+                            ),
+                            child: const Text('Remove'),
                           ),
                         ),
                       ],

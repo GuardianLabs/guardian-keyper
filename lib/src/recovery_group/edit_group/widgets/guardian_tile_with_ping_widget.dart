@@ -3,7 +3,7 @@ import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 
-import '../../widgets/guardian_tile_widget.dart';
+import '../../widgets/guardian_list_tile.dart';
 
 class GuardianTileWithPingWidget extends StatefulWidget {
   const GuardianTileWithPingWidget({super.key, required this.guardian});
@@ -58,7 +58,7 @@ class _GuardianTileWithPingWidgetState
                   () => mounted ? setState(() => _isWaiting = false) : null,
                 );
               },
-        child: GuardianTileWidget(
+        child: GuardianListTile(
           guardian: widget.guardian,
           isWaiting: _isWaiting,
         ),

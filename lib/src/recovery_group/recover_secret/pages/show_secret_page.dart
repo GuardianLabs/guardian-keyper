@@ -16,16 +16,6 @@ class ShowSecretPage extends StatefulWidget {
 
 class _ShowSecretPageState extends State<ShowSecretPage> {
   bool _isSecretObfuscated = true;
-  String _secret = '';
-
-  @override
-  void initState() {
-    super.initState();
-    context
-        .read<RecoverySecretController>()
-        .getSecret()
-        .then((value) => setState(() => _secret = value));
-  }
 
   @override
   Widget build(BuildContext context) => Column(
@@ -61,7 +51,9 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
                                   'assets/images/secret_mask.svg',
                                 )
                               : Text(
-                                  _secret,
+                                  context
+                                      .read<RecoverySecretController>()
+                                      .secret,
                                   style: textStyleSourceSansPro414Purple,
                                 ),
                         ),
@@ -80,13 +72,17 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
                               text: 'Copy',
                               onPressed: () async {
                                 await Clipboard.setData(
-                                    ClipboardData(text: _secret));
-                                if (!mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  buildSnackBar(
-                                    text: 'Secret is copied to your clipboard.',
-                                  ),
+                                  ClipboardData(
+                                      text: context
+                                          .read<RecoverySecretController>()
+                                          .secret),
                                 );
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(buildSnackBar(
+                                    text: 'Secret is copied to your clipboard.',
+                                  ));
+                                }
                               },
                             ),
                           ),

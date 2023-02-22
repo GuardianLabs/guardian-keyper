@@ -31,20 +31,29 @@ class AddSecretController extends RecoveryGroupSecretController {
   }) {
     diContainer.analyticsService.logEvent(eventStartAddSecret);
     networkSubscription.onData(
-      (message) {
+      (message) async {
         if (message.code != MessageCode.setShard) return;
         if (!message.hasResponse) return;
         if (!messages.contains(message)) return;
         updateMessage(message);
         if (message.isAccepted) {
           if (messagesWithSuccess.length == group.maxSize) {
-            diContainer.analyticsService.logEvent(eventFinishAddSecret);
-            diContainer.boxRecoveryGroups
-                .put(
-                  group.aKey,
-                  group.copyWith(secrets: {...group.secrets, secretId: ''}),
-                )
-                .then((_) => onSuccess(message));
+            stopListenResponse();
+            final shardValue = group.isSelfGuarded
+                ? messages
+                    .firstWhere((m) => m.ownerId == diContainer.myPeerId)
+                    .secretShard
+                    .shard
+                : '';
+            await diContainer.boxRecoveryGroups.put(
+              group.aKey,
+              group.copyWith(secrets: {
+                ...group.secrets,
+                secretId: shardValue,
+              }),
+            );
+            await diContainer.analyticsService.logEvent(eventFinishAddSecret);
+            onSuccess(message);
           }
         } else {
           stopListenResponse();
@@ -73,6 +82,9 @@ class AddSecretController extends RecoveryGroupSecretController {
         messages.add(MessageModel(
           peerId: guardian,
           code: MessageCode.setShard,
+          status: guardian == diContainer.myPeerId
+              ? MessageStatus.accepted
+              : MessageStatus.requested,
           payload: SecretShardModel(
             id: secretId,
             ownerId: diContainer.myPeerId,
