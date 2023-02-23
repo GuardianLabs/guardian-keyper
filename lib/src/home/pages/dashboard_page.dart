@@ -1,3 +1,4 @@
+import '/src/core/model/core_model.dart';
 import '/src/core/di_container.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
@@ -11,21 +12,26 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final myPeerId = context.read<DIContainer>().myPeerId;
+    final diContainer = context.read<DIContainer>();
     return ListView(
       padding: paddingAll20,
       children: [
         // Device Name
-        RichText(
-          text: TextSpan(
-            style: textStylePoppins620,
-            children: buildTextWithId(id: myPeerId),
+        ValueListenableBuilder<Box<SettingsModel>>(
+          valueListenable: diContainer.boxSettings.listenable(),
+          builder: (context, settings, __) => RichText(
+            text: TextSpan(
+              style: textStylePoppins620,
+              children: buildTextWithId(
+                id: context.read<DIContainer>().myPeerId,
+              ),
+            ),
           ),
         ),
         // My Key
         Row(children: [
           Text(
-            myPeerId.toHexShort(),
+            diContainer.myPeerId.toHexShort(),
             style: textStyleSourceSansPro414Purple,
           ),
           Expanded(
