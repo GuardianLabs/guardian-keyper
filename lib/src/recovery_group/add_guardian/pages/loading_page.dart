@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:url_launcher/url_launcher.dart';
+
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
@@ -13,20 +16,14 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  late final AddGuardianController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = context.read<AddGuardianController>();
-    _controller.startRequest(
+  late final _controller = context.read<AddGuardianController>()
+    ..startRequest(
       onSuccess: _onSuccess,
       onRejected: _onRejected,
       onFailed: _onFailed,
       onDuplicate: _onDuplicate,
       onAppVersion: _onAppVersion,
     );
-  }
 
   @override
   void dispose() {
@@ -159,20 +156,35 @@ class _LoadingPageState extends State<LoadingPage> {
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (BuildContext context) => BottomSheetWidget(
-          titleString: qrCode.version < MessageModel.currentVersion
-              ? 'Guardian’s app is outdated'
-              : 'Update the app',
-          textString: qrCode.version < MessageModel.currentVersion
-              ? 'Seems like your Guardian is using the older version'
-                  ' of the Guardian Keyper. Ask them to update the app.'
-              : 'Seems like your Guardian is using the latest version'
-                  ' of the Guardian Keyper. Please update the app.',
-          icon: const IconOf.shield(isBig: true, bage: BageType.error),
-          footer: PrimaryButton(
-            text: 'Got it',
-            onPressed: Navigator.of(context).pop,
-          ),
-        ),
+        builder: (final BuildContext context) => qrCode.version <
+                MessageModel.currentVersion
+            ? BottomSheetWidget(
+                icon: const IconOf.shield(isBig: true, bage: BageType.error),
+                titleString: 'Guardian’s app is outdated',
+                textString: 'Seems like your Guardian is using the older '
+                    'version of the Guardian Keyper. Ask them to update the app.',
+                footer: PrimaryButton(
+                  text: 'Close',
+                  onPressed: Navigator.of(context).pop,
+                ),
+              )
+            : BottomSheetWidget(
+                icon: const IconOf.shield(isBig: true, bage: BageType.error),
+                titleString: 'Update the app',
+                textString: 'Seems like your Guardian is using the latest '
+                    'version of the Guardian Keyper. Please update the app.',
+                body: OutlinedButton(
+                  onPressed: () async => await launchUrl(Uri.parse(
+                    Platform.isAndroid
+                        ? 'https://play.google.com/store/apps/details?id=com.guardianlabs.keyper'
+                        : 'https://apps.apple.com/ua/app/guardian-keyper/id1637977332',
+                  )),
+                  child: const Text('Update'),
+                ),
+                footer: PrimaryButton(
+                  text: 'Close',
+                  onPressed: Navigator.of(context).pop,
+                ),
+              ),
       ).then(Navigator.of(context).pop);
 }
