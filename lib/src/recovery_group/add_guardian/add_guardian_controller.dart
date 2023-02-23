@@ -40,7 +40,7 @@ class AddGuardianController extends RecoveryGroupGuardianController {
       (message) {
         if (!isWaiting) return;
         if (qrCode == null) return;
-        if (!message.hasResponse) return;
+        if (message.hasNoResponse) return;
         if (message.code != MessageCode.createGroup) return;
         if (message.peerId != qrCode!.peerId) return;
         if (message.groupId != groupId) return;
