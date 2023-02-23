@@ -9,9 +9,16 @@ export 'package:provider/provider.dart';
 
 class AddSecretController extends RecoveryGroupSecretController {
   var _secretName = '';
-  var secret = '';
+  var _secret = '';
+
+  String get secret => _secret;
 
   bool get isNameTooShort => _secretName.length < globals.minNameLength;
+
+  set secret(String value) {
+    _secret = value;
+    notifyListeners();
+  }
 
   set secretName(String value) {
     _secretName = value;
@@ -67,9 +74,9 @@ class AddSecretController extends RecoveryGroupSecretController {
     final shards = splitSecret(
       treshold: group.threshold,
       shares: group.maxSize,
-      secret: secret,
+      secret: _secret,
     );
-    if (secret != restoreSecret(shares: shards.sublist(0, group.threshold))) {
+    if (_secret != restoreSecret(shares: shards.sublist(0, group.threshold))) {
       throw const FormatException('Can not restore the secret!');
     }
     secretId = secretId.copyWith(name: _secretName);

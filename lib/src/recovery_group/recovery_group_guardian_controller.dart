@@ -12,15 +12,16 @@ class RecoveryGroupGuardianController extends RecoveryGroupControllerBase {
   MessageModel? get qrCode => _qrCode;
 
   set qrCode(MessageModel? qrCode) {
-    if (_qrCode != qrCode) {
-      _qrCode = qrCode;
-      if (qrCode != null) {
-        assignPeersAddresses(
-          qrCode.peerId,
-          qrCode.payload as PeerAddressList,
-        );
-        nextScreen();
-      }
+    if (_qrCode == qrCode) return;
+    _qrCode = qrCode;
+    if (qrCode == null) return;
+    for (final e in (qrCode.payload as PeerAddressList).addresses) {
+      diContainer.networkService.addPeer(
+        qrCode.peerId,
+        e.address.rawAddress,
+        e.port,
+      );
+      nextScreen();
     }
   }
 }

@@ -13,7 +13,7 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
 
   Globals get globals => diContainer.globals;
 
-  bool get isWaiting => !networkSubscription.isPaused;
+  bool get isWaiting => timer?.isActive == true;
 
   @override
   void dispose() {
@@ -25,32 +25,18 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
 
   void stopListenResponse() {
     timer?.cancel();
-    networkSubscription.pause();
     diContainer.platformService.wakelockDisable();
     notifyListeners();
   }
 
   void startNetworkRequest(void Function([Timer?]) callback) async {
     await diContainer.platformService.wakelockEnable();
-    networkSubscription.resume();
     timer = Timer.periodic(
       diContainer.networkService.router.requestTimeout,
       callback,
     );
     callback();
     notifyListeners();
-  }
-
-  void assignPeersAddresses(final PeerId peerId, final PeerAddressList list) {
-    for (final e in list.addresses) {
-      try {
-        diContainer.networkService.addPeer(
-          peerId,
-          e.address.rawAddress,
-          e.port,
-        );
-      } catch (_) {}
-    }
   }
 
   Future<void> sendToGuardian(final MessageModel message) =>
