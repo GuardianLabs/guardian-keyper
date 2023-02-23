@@ -9,7 +9,16 @@ import '/src/core/widgets/icon_of.dart';
 
 class AuthService {
   static const _reasonLogin = 'Please authenticate to log into the app';
-  static const _keyPadConfig = KeyPadConfig(clearOnLongPressed: true);
+  static const _cancelButton = Text(
+    'Cancel',
+    maxLines: 1,
+    softWrap: false,
+    textAlign: TextAlign.center,
+    overflow: TextOverflow.visible,
+  );
+  static const _keyPadConfig = KeyPadConfig(
+    clearOnLongPressed: true,
+  );
   static const _secretsConfig = SecretsConfig(
     secretConfig: SecretConfig(
       borderSize: 0,
@@ -61,8 +70,12 @@ class AuthService {
         padding: padding,
         child: const Text('Enter it once more'),
       ),
+      cancelButton: _cancelButton,
       customizedButtonChild: const Text(
         'Reset',
+        maxLines: 1,
+        softWrap: false,
+        textAlign: TextAlign.center,
         overflow: TextOverflow.visible,
       ),
       customizedButtonTap: _passcodeController.unsetConfirmed,
@@ -99,6 +112,7 @@ class AuthService {
         padding: padding,
         child: const Text('Please enter your current passcode'),
       ),
+      cancelButton: _cancelButton,
       onCancelled: onExit,
       onError: (_) {
         ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
@@ -137,6 +151,7 @@ class AuthService {
             ),
           );
         },
+        cancelButton: _cancelButton,
         onCancelled: onExit,
         onError: (_) {
           ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
@@ -161,6 +176,7 @@ class AuthService {
       context: context,
       correctString: settings.passCode,
       canCancel: canCancel,
+      cancelButton: _cancelButton,
       keyPadConfig: _keyPadConfig,
       secretsConfig: _secretsConfig,
       config: _screenLockConfig,
