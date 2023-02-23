@@ -20,12 +20,6 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
     ..startRequest(onRejected: _showTerminated);
 
   @override
-  void dispose() {
-    _controller.stopListenResponse();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) => Column(
         children: [
           // Header
@@ -90,15 +84,22 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                     padding: paddingV6,
                     child: guardian == _controller.group.ownerId
                         ? GuardianSelfListTile(guardian: guardian)
-                        : StreamBuilder<MessageModel>(
-                            stream: _controller.messagesStream
-                                .where((message) => message.peerId == guardian),
-                            builder: (_, snapshot) => GuardianListTile(
-                              guardian: guardian,
-                              isSuccess: snapshot.data?.isAccepted,
-                              isWaiting: snapshot.data == null,
-                              checkStatus: true,
-                            ),
+                        : Consumer<RecoverySecretController>(
+                            builder: (_, controller, __) {
+                              final message = controller.messages.firstWhere(
+                                (message) => message.peerId == guardian,
+                              );
+                              return GuardianListTile(
+                                guardian: guardian,
+                                isSuccess: message.isAccepted
+                                    ? true
+                                    : message.hasResponse
+                                        ? false
+                                        : null,
+                                isWaiting: message.hasNoResponse,
+                                checkStatus: true,
+                              );
+                            },
                           ),
                   )
               ],

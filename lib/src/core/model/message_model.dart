@@ -117,9 +117,7 @@ class MessageModel extends Serializable {
       status == MessageStatus.accepted || status == MessageStatus.rejected;
 
   bool get hasResponse =>
-      status == MessageStatus.accepted ||
-      status == MessageStatus.rejected ||
-      status == MessageStatus.failed;
+      status != MessageStatus.requested && status != MessageStatus.received;
 
   bool get hasNoResponse =>
       status == MessageStatus.requested || status == MessageStatus.received;

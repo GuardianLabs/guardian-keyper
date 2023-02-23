@@ -1,4 +1,4 @@
-import '/src/core/di_container.dart';
+import '/src/core/consts.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
@@ -21,14 +21,8 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
     ..startRequest(
       onSuccess: _showSuccess,
       onReject: _showRejected,
-      onFailed: _showRejected, // TBD: specify
+      onFailed: _showFailed,
     );
-
-  @override
-  void dispose() {
-    _controller.stopListenResponse();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) => Column(
@@ -66,17 +60,23 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                         padding: paddingV6,
                         child: guardian == _controller.diContainer.myPeerId
                             ? GuardianSelfListTile(guardian: guardian)
-                            : StreamBuilder<MessageModel>(
-                                stream: _controller.messagesStream.where(
-                                  (message) => message.peerId == guardian,
-                                ),
-                                builder: (context, snapshot) =>
-                                    GuardianListTile(
-                                  guardian: guardian,
-                                  isSuccess: snapshot.data?.isAccepted,
-                                  isWaiting: snapshot.data == null,
-                                  checkStatus: true,
-                                ),
+                            : Consumer<AddSecretController>(
+                                builder: (_, controller, __) {
+                                  final message =
+                                      controller.messages.firstWhere(
+                                    (message) => message.peerId == guardian,
+                                  );
+                                  return GuardianListTile(
+                                    guardian: guardian,
+                                    isSuccess: message.isAccepted
+                                        ? true
+                                        : message.hasResponse
+                                            ? false
+                                            : null,
+                                    isWaiting: message.hasNoResponse,
+                                    checkStatus: true,
+                                  );
+                                },
                               ),
                       )
                   ],
@@ -128,13 +128,31 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
             padding: paddingV20,
             child: PrimaryButton(
               text: 'Done',
-              onPressed: () => context
-                  .read<DIContainer>()
-                  .boxRecoveryGroups
-                  .delete(message.groupId.asKey)
-                  .then(
-                    (_) => Navigator.of(context).popUntil((r) => r.isFirst),
-                  ),
+              onPressed: () => Navigator.of(context)
+                  .popUntil(ModalRoute.withName(routeGroupEdit)),
+            ),
+          ),
+        ),
+      );
+
+  void _showFailed(MessageModel message) => showModalBottomSheet(
+        context: context,
+        isDismissible: false,
+        isScrollControlled: true,
+        builder: (context) => BottomSheetWidget(
+          icon: const IconOf.splitAndShare(isBig: true, bage: BageType.error),
+          titleString: 'Something went wrong!',
+          textSpan: [
+            const TextSpan(text: 'Sharding process for '),
+            ...buildTextWithId(id: message.groupId, style: textStyleBold),
+            const TextSpan(text: ' has been terminated.'),
+          ],
+          footer: Padding(
+            padding: paddingV20,
+            child: PrimaryButton(
+              text: 'Close',
+              onPressed: () => Navigator.of(context)
+                  .popUntil(ModalRoute.withName(routeGroupEdit)),
             ),
           ),
         ),
