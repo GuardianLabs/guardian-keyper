@@ -28,7 +28,6 @@ dependencies:
     # path: "../p2plib-dart"
 
   # Platform dependent
-  flutter_launcher_icons: ^0.11.0
   flutter_secure_storage: ^8.0.0
   flutter_native_splash: ^2.2.16
   airplane_mode_checker: ^1.0.3
@@ -45,6 +44,8 @@ dependencies:
   wakelock: ^0.6.2
   nsd: ^2.3.0
 
+  image: ^4.0.15
+
   # Analytics
   amplitude_flutter: ^3.13.0
   sentry_flutter: ^6.20.1
@@ -53,6 +54,7 @@ dev_dependencies:
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
+  icons_launcher: ^2.1.0
 
 flutter:
   uses-material-design: true
@@ -65,11 +67,14 @@ flutter:
     - assets/icons/
     - assets/fonts/
 
-flutter_icons:
-  android: true
-  image_path_android: "assets/images/logo512.png"
-  ios: true
-  image_path_ios: "assets/images/logo1024.png"
+icons_launcher:
+  platforms:
+    android:
+      enable: true
+      image_path: "assets/images/logo512.png"
+    ios:
+      enable: true
+      image_path: "assets/images/logo1024.png"
 
 flutter_native_splash:
   fullscreen: true
