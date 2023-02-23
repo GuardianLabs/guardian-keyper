@@ -101,9 +101,8 @@ class _LoadingPageState extends State<LoadingPage> {
         isDismissible: false,
         isScrollControlled: true,
         builder: (BuildContext context) => BottomSheetWidget(
-          titleString: 'Guardian rejected',
-          textString: 'Guardian has rejected the invitation to your Vault.'
-              ' You can try again or add another Guardian.',
+          titleString: 'Request has been rejected',
+          textString: 'Guardian rejected your request to join Vault.',
           icon: const IconOf.shield(isBig: true, bage: BageType.error),
           footer: PrimaryButton(
             text: 'Done',
