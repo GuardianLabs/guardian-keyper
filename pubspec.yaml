@@ -29,8 +29,8 @@ dependencies:
 
   # Platform dependent
   flutter_secure_storage: ^8.0.0
-  flutter_native_splash: ^2.2.16
-  airplane_mode_checker: ^1.0.3
+  flutter_native_splash: ^2.2.18
+  airplane_mode_checker: ^1.0.5
   flutter_screen_lock: ^9.0.1
   connectivity_plus: ^3.0.3
   device_info_plus: ^8.1.0
@@ -38,13 +38,11 @@ dependencies:
   hive_flutter: ^1.1.0
   app_settings: ^4.2.0
   sodium_libs: ^2.0.0
-  local_auth: ^2.1.4
+  local_auth: ^2.1.5
   share_plus: ^6.3.1
   vibration: ^1.7.6
   wakelock: ^0.6.2
   nsd: ^2.3.0
-
-  image: ^4.0.15
 
   # Analytics
   amplitude_flutter: ^3.13.0
