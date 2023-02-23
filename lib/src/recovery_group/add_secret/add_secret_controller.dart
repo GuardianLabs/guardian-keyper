@@ -37,7 +37,7 @@ class AddSecretController extends RecoveryGroupSecretController {
         if (!messages.contains(message)) return;
         updateMessage(message);
         if (message.isAccepted) {
-          if (messagesWithSuccess.length == group.maxSize) {
+          if (messages.where((m) => m.isAccepted).length == group.maxSize) {
             stopListenResponse();
             final shardValue = group.isSelfGuarded
                 ? messages
@@ -47,10 +47,7 @@ class AddSecretController extends RecoveryGroupSecretController {
                 : '';
             await diContainer.boxRecoveryGroups.put(
               group.aKey,
-              group.copyWith(secrets: {
-                ...group.secrets,
-                secretId: shardValue,
-              }),
+              group.copyWith(secrets: {...group.secrets, secretId: shardValue}),
             );
             await diContainer.analyticsService.logEvent(eventFinishAddSecret);
             onSuccess(message);

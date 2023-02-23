@@ -2,7 +2,7 @@ import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 import '../add_secret_controller.dart';
-import '../widgets/connection_widget.dart';
+// import '../widgets/connection_widget.dart';
 import '../widgets/add_secret_close_button.dart';
 import '../../widgets/guardian_self_list_tile.dart';
 import '../../widgets/guardian_list_tile.dart';
@@ -55,7 +55,7 @@ class SplitAndShareSecretPage extends StatelessWidget {
                   )
               ]),
               // Open Settings Tile
-              const ConnectionWidget(),
+              // const ConnectionWidget(),
               // Footer
               Padding(
                 padding: paddingV32,

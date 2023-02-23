@@ -38,14 +38,15 @@ class RecoverySecretController extends RecoveryGroupSecretController {
   void startRequest({required Callback onRejected}) {
     diContainer.analyticsService.logEvent(eventStartRestoreSecret);
     networkSubscription.onData(
-      (message) async {
+      (final message) async {
         if (message.code != MessageCode.getShard) return;
-        if (!message.hasResponse) return;
-        if (!messages.contains(message)) return;
+        if (message.hasNoResponse) return;
+        final stored = messages.lookup(message);
+        if (stored == null || stored.hasResponse) return;
         updateMessage(message);
-        if (messagesWithResponse.length >= group.threshold) {
+        if (messages.where((m) => m.isAccepted).length >= group.threshold) {
           stopListenResponse();
-          await diContainer.analyticsService.logEvent(eventFinishRestoreSecret);
+          diContainer.analyticsService.logEvent(eventFinishRestoreSecret);
           secret = await compute<List<String>, String>(
             (List<String> shares) => restoreSecret(shares: shares),
             messages
@@ -54,8 +55,12 @@ class RecoverySecretController extends RecoveryGroupSecretController {
                 .toList(),
           );
           nextScreen();
-        } else if (messagesNotSuccess.length > group.redudancy) {
+        } else if (messages.where((e) => e.isRejected).length >
+            group.redudancy) {
+          stopListenResponse();
           onRejected(message);
+        } else {
+          notifyListeners();
         }
       },
     );
