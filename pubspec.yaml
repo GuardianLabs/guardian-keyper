@@ -58,7 +58,7 @@ flutter:
   uses-material-design: true
 
   # Enable generation of localized Strings from arb files.
-  # generate: true
+  generate: true
 
   assets:
     - assets/images/
