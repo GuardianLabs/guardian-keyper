@@ -49,59 +49,48 @@ class _IntrosPageState extends State<IntrosPage> {
           padding: paddingAll20,
           child: Column(
             children: [
-              ListView(
-                primary: true,
-                shrinkWrap: true,
+              Expanded(flex: 1, child: Container()),
+              Padding(
+                padding: paddingBottom32,
+                child: SvgPicture.asset('assets/images/intro_${_step + 1}.svg'),
+              ),
+              Padding(
+                padding: paddingBottom12,
+                child: Text(
+                  _titles[_step],
+                  style: textStylePoppins620.copyWith(fontSize: 30),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Padding(
+                padding: paddingBottom20,
+                child: Text(
+                  _subtitles[_step],
+                  style: textStyleSourceSansPro416,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Expanded(flex: 2, child: Container()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: paddingBottom32,
-                    child: SvgPicture.asset(
-                      'assets/images/intro_${_step + 1}.svg',
-                    ),
+                  TextButton(
+                    onPressed: context.read<IntroController>().nextScreen,
+                    child: Text('Skip', style: textStylePoppins616),
                   ),
-                  Padding(
-                    padding: paddingBottom12,
-                    child: Text(
-                      _titles[_step],
-                      style: textStylePoppins620.copyWith(fontSize: 30),
-                      textAlign: TextAlign.center,
-                    ),
+                  DotBar(
+                    count: 4,
+                    active: _step,
+                    activeColor: clBlue,
+                    passiveColor: clIndigo600,
                   ),
-                  Padding(
-                    padding: paddingBottom20,
-                    child: Text(
-                      _subtitles[_step],
-                      style: textStyleSourceSansPro416,
-                      textAlign: TextAlign.center,
-                    ),
+                  TextButton(
+                    onPressed: () => _step == (_titles.length - 1)
+                        ? context.read<IntroController>().nextScreen()
+                        : setState(() => _step++),
+                    child: Text('Next', style: textStylePoppins616),
                   ),
                 ],
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        onPressed: context.read<IntroController>().nextScreen,
-                        child: Text('Skip', style: textStylePoppins616),
-                      ),
-                      DotBar(
-                        count: 4,
-                        active: _step,
-                        activeColor: clBlue,
-                        passiveColor: clIndigo600,
-                      ),
-                      TextButton(
-                        onPressed: () => _step == (_titles.length - 1)
-                            ? context.read<IntroController>().nextScreen()
-                            : setState(() => _step++),
-                        child: Text('Next', style: textStylePoppins616),
-                      ),
-                    ],
-                  ),
-                ),
               ),
             ],
           ),
