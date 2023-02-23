@@ -186,11 +186,12 @@ class _LoadingPageState extends State<LoadingPage> {
         isDismissible: false,
         isScrollControlled: true,
         builder: (context) => BottomSheetWidget(
-          icon: const IconOf.secrets(isBig: true, bage: BageType.error),
-          titleString: 'Ownership Transfer Failed',
-          textString: 'You are the owner of this Vault already!',
+          icon: const IconOf.owner(isBig: true),
+          titleString: 'The Vault is yours',
+          textString: 'Seems like you are the owner of the group already. '
+              'No recovery required here.',
           footer: PrimaryButton(
-            text: 'Close',
+            text: 'Done',
             onPressed: Navigator.of(context).pop,
           ),
         ),
