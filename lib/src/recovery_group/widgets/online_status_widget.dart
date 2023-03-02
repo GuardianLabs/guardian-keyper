@@ -22,7 +22,7 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
     super.initState();
     final networkService = context.read<DIContainer>().networkService;
     _timer = Timer.periodic(
-      networkService.router.requestTimeout,
+      networkService.router.messageTTL,
       (_) => networkService.pingPeer(widget.peerId),
     );
   }

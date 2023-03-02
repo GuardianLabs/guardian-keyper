@@ -52,7 +52,7 @@ class _HomeViewState extends State<HomeView> {
         if (ModalRoute.of(context)?.isCurrent != true) return;
         if (event.deleted) return;
         final message = event.value as MessageModel;
-        if (!message.isReceived) return;
+        if (message.isNotReceived) return;
         await MessageListTile.showActiveMessage(context, message);
       },
     );

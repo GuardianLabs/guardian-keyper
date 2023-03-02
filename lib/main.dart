@@ -29,7 +29,7 @@ Future<void> main() async {
               bsPort: int.fromEnvironment('BS_PORT'),
             ),
             networkService: P2PNetworkService()
-              ..router.maxForwardsCount = 3
+              ..router.maxForwardsLimit = 3
               ..router.maxStoredHeaders = 10,
             analyticsService: await AnalyticsService.init(
               const String.fromEnvironment('AMPLITUDE_KEY'),

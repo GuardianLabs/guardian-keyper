@@ -5,8 +5,8 @@ publish_to: 'none'
 version: 2.0.0+1
 
 environment:
-  sdk: ">=2.19.0 <3.0.0"
-  flutter: ^3.7.3
+  sdk: ">=2.19.2 <3.0.0"
+  flutter: ^3.7.5
 
 dependencies:
   flutter:
@@ -24,8 +24,9 @@ dependencies:
   qr_flutter: # ^4.0.0
     git:
       url: "https://github.com/theyakka/qr.flutter"
-  p2plib: ^1.1.0+0
-    # path: "../p2plib-dart"
+  # p2plib: ^1.1.1+0
+  p2plib:
+    path: "../p2plib-dart"
 
   # Platform dependent
   flutter_secure_storage: ^8.0.0
@@ -47,7 +48,7 @@ dependencies:
 
   # Analytics
   amplitude_flutter: ^3.13.0
-  sentry_flutter: ^6.20.1
+  sentry_flutter: ^6.21.0
 
 dev_dependencies:
   flutter_lints: ^2.0.1

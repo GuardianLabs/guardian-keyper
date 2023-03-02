@@ -54,8 +54,6 @@ class RestoreGroupController extends RecoveryGroupGuardianController {
         }
       },
     );
-    startNetworkRequest(([_]) {
-      sendToGuardian(qrCode!.copyWith(payload: null));
-    });
+    startNetworkRequest(([_]) => sendToGuardian(qrCode!));
   }
 }

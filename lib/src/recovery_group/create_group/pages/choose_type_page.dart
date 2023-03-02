@@ -1,22 +1,11 @@
 import '/src/core/theme/theme.dart';
-import '/src/core/widgets/misc.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 
 import '../create_group_controller.dart';
+import '../widgets/selectable_card.dart';
 
 class ChooseTypePage extends StatelessWidget {
-  static const _textYourDevices = '''
-Your devices and devices that belong to your
-Guardians, trusted people, friends and family
-who act on your behalf when required.
-''';
-
-  static const _textFiduciaries = '''
-Trusted appointed fiduciary third parties
-appointed to act as Guardians on your
-behalf on a professional basis.''';
-
   const ChooseTypePage({super.key});
 
   @override
@@ -51,7 +40,9 @@ behalf on a professional basis.''';
                           Padding(
                             padding: paddingTop12,
                             child: Text(
-                              _textYourDevices,
+                              'Your devices and devices that belong to your '
+                              'Guardians, trusted people, friends and family '
+                              'who act on your behalf when required.',
                               style: textStyleSourceSansPro414Purple,
                             ),
                           ),
@@ -86,7 +77,8 @@ behalf on a professional basis.''';
                     Padding(
                       padding: paddingTop12,
                       child: Text(
-                        _textFiduciaries,
+                        'Trusted appointed fiduciary third parties appointed to '
+                        'act as Guardians on your behalf on a professional basis.',
                         style: textStyleSourceSansPro414Purple,
                       ),
                     ),
