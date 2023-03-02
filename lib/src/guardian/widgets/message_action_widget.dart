@@ -47,7 +47,7 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
     final networkService = context.read<DIContainer>().networkService;
     _isPeerOnline = networkService.getPeerStatus(widget.message.peerId);
     _timer = Timer.periodic(
-      networkService.router.requestTimeout,
+      networkService.router.messageTTL,
       (_) {
         networkService.pingPeer(widget.message.peerId).then(
           (isOnline) {

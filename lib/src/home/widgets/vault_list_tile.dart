@@ -17,15 +17,20 @@ class VaultListTile extends StatelessWidget {
             children: buildTextWithId(id: group.id),
           ),
         ),
-        subtitle: group.isFull
+        subtitle: group.isRestoring
             ? Text(
-                '${group.size} Guardians',
-                style: textStyleSourceSansPro414,
-              )
-            : Text(
-                'This Vault is not complited',
+                'Complete the Vault recovery',
                 style: textStyleSourceSansPro414.copyWith(color: clRed),
-              ),
+              )
+            : group.isFull
+                ? Text(
+                    '${group.size} Guardians',
+                    style: textStyleSourceSansPro414,
+                  )
+                : Text(
+                    'This Vault is not complited',
+                    style: textStyleSourceSansPro414.copyWith(color: clRed),
+                  ),
         trailing: const Icon(Icons.arrow_forward_ios_rounded, color: clWhite),
         onTap: () => Navigator.pushNamed(
           context,

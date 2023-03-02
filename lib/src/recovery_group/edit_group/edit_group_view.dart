@@ -52,10 +52,21 @@ class EditGroupView extends StatelessWidget {
                     shrinkWrap: true,
                     children: group.isRestoring
                         ? [
-                            const PageTitle(
-                              title: 'Vault is not restored yet',
-                              subtitle:
-                                  'Please, restore membership of other Guardians',
+                            PageTitle(
+                              title: 'Vault recovery',
+                              subtitleSpans: [
+                                TextSpan(
+                                  text:
+                                      'Add ${group.maxSize - group.size} more Guardians ',
+                                  style: textStyleSourceSansPro616Purple
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                TextSpan(
+                                  text: 'which were previously added to '
+                                      'this Vault via QR Code to complete the recovery.',
+                                  style: textStyleSourceSansPro416Purple,
+                                ),
+                              ],
                             ),
                             PrimaryButton(
                               text: 'Restore Vault',

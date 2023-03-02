@@ -13,12 +13,11 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  late final RestoreGroupController _controller;
+  late final _controller = context.read<RestoreGroupController>();
 
   @override
   void initState() {
     super.initState();
-    _controller = context.read<RestoreGroupController>();
     _controller.startRequest(
       onSuccess: _showSuccess,
       onReject: _showRejected,

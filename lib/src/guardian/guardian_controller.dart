@@ -14,12 +14,12 @@ class GuardianController {
   }
 
   void onMessage(MessageModel message) {
-    if (message.isEmpty) return;
     final ticket = diContainer.boxMessages.get(message.aKey);
     if (kDebugMode) print('$message\n$ticket');
 
     switch (message.code) {
       case MessageCode.createGroup:
+        if (message.isEmpty) return;
         if (ticket == null) return; // qrCode was not generated
         if (message.isNotRequested) return; // qrCode was processed already
         if (message.code != ticket.code) return;
@@ -36,6 +36,7 @@ class GuardianController {
         break;
 
       case MessageCode.setShard:
+        if (message.isEmpty) return;
         if (ticket != null) return; // request already processed
         final recoveryGroup =
             diContainer.boxRecoveryGroups.get(message.groupId.asKey);
@@ -46,6 +47,7 @@ class GuardianController {
         break;
 
       case MessageCode.getShard:
+        if (message.isEmpty) return;
         if (ticket != null) return; // request already processed
         final recoveryGroup =
             diContainer.boxRecoveryGroups.get(message.groupId.asKey);
@@ -61,19 +63,22 @@ class GuardianController {
     );
   }
 
-  Future<void> sendCreateGroupResponse(MessageModel request) async {
-    if (request.isAccepted) {
-      final recoveryGroup = RecoveryGroupModel(
-        id: request.recoveryGroup.id,
-        ownerId: request.peerId,
-        maxSize: request.recoveryGroup.maxSize,
-        threshold: request.recoveryGroup.threshold,
-      );
-      await diContainer.boxRecoveryGroups
-          .put(recoveryGroup.aKey, recoveryGroup);
+  Future<bool> sendCreateGroupResponse(MessageModel request) async {
+    final isDelivered = await _sendResponse(request);
+    if (isDelivered) {
+      if (request.isAccepted) {
+        final recoveryGroup = RecoveryGroupModel(
+          id: request.recoveryGroup.id,
+          ownerId: request.peerId,
+          maxSize: request.recoveryGroup.maxSize,
+          threshold: request.recoveryGroup.threshold,
+        );
+        await diContainer.boxRecoveryGroups
+            .put(recoveryGroup.aKey, recoveryGroup);
+      }
+      await archivateMessage(request);
     }
-    await _sendResponse(request.copyWith(payload: null));
-    await archivateMessage(request);
+    return isDelivered;
   }
 
   Future<void> sendTakeGroupResponse(MessageModel request) async {
@@ -148,12 +153,18 @@ class GuardianController {
     );
   }
 
-  Future<void> _sendResponse(MessageModel message) =>
-      diContainer.networkService.sendTo(
+  Future<bool> _sendResponse(MessageModel message) async {
+    try {
+      await diContainer.networkService.sendTo(
         isConfirmable: true,
         peerId: message.peerId,
         message: message.copyWith(peerId: diContainer.myPeerId),
       );
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 
   Future<void> _cleanMessageBox() async {
     if (diContainer.boxMessages.isEmpty) return;

@@ -7,6 +7,7 @@ import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/di_container.dart';
+import '/src/guardian/widgets/message_list_tile.dart';
 
 class QRCodePage extends StatefulWidget {
   final GroupId? groupId;
@@ -19,22 +20,27 @@ class QRCodePage extends StatefulWidget {
 
 class _QRCodePageState extends State<QRCodePage> {
   late final StreamSubscription<BoxEvent> _boxMessagesEventsSubscription;
-  late final DIContainer _diContainer;
+  late final _diContainer = context.read<DIContainer>();
   late final String _qrCode;
 
   @override
   void initState() {
     super.initState();
-    _diContainer = context.read<DIContainer>();
     _diContainer.platformService.wakelockEnable();
     final qrCode = _generateQrCode();
     _qrCode = qrCode.toBase64url();
     _boxMessagesEventsSubscription =
-        _diContainer.boxMessages.watch(key: qrCode.aKey).listen((event) {
-      if (mounted && (event.value as MessageModel).isNotRequested) {
-        Navigator.of(context).pop();
-      }
-    });
+        _diContainer.boxMessages.watch(key: qrCode.aKey).listen(
+      (event) async {
+        if (!mounted) return;
+        final message = event.value as MessageModel;
+        if (message.isReceived) {
+          _boxMessagesEventsSubscription.cancel();
+          await MessageListTile.showActiveMessage(context, message);
+          if (mounted) Navigator.of(context).pop();
+        }
+      },
+    );
   }
 
   @override
@@ -119,19 +125,18 @@ class _QRCodePageState extends State<QRCodePage> {
 
   /// Create ticket to create\take group
   MessageModel _generateQrCode() {
-    final message = widget.groupId == null
-        ? MessageModel(code: MessageCode.createGroup)
-        : MessageModel(
-            code: MessageCode.takeGroup,
-            payload: RecoveryGroupModel(id: widget.groupId),
-          );
-    // save groupId for transaction
-    _diContainer.boxMessages.put(message.aKey, message);
-    return message.copyWith(
+    final isNew = widget.groupId == null;
+    final message = MessageModel(
+      code: isNew ? MessageCode.createGroup : MessageCode.takeGroup,
       peerId: _diContainer.myPeerId,
-      payload: PeerAddressList(
-        addresses: _diContainer.networkService.myAddresses,
-      ),
     );
+    _diContainer.boxMessages.put(
+      message.aKey,
+      isNew
+          ? message
+          // save groupId for transaction
+          : message.copyWith(payload: RecoveryGroupModel(id: widget.groupId)),
+    );
+    return message;
   }
 }

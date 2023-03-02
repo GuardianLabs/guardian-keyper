@@ -385,6 +385,27 @@ class InfoPanel extends StatelessWidget {
       );
 }
 
+class DotColored extends StatelessWidget {
+  final Widget? child;
+  final Color color;
+  final double size;
+
+  const DotColored({
+    super.key,
+    this.child,
+    this.color = clWhite,
+    this.size = 8,
+  });
+
+  @override
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        height: size,
+        width: size,
+        child: child,
+      );
+}
+
 SnackBar buildSnackBar({
   String? text,
   List<TextSpan>? textSpans,

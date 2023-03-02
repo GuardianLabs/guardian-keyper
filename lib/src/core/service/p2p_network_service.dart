@@ -87,9 +87,8 @@ class P2PNetworkService extends P2PNetworkServiceBase
     final bsPeerId = p2p.PeerId(value: base64Decode(peerId));
     if (ipV4.isEmpty && ipV6.isEmpty) {
       _bsServer = null;
-      router.routes.remove(bsPeerId);
+      router.removePeerAddress(bsPeerId);
     } else {
-      final now = DateTime.now().millisecondsSinceEpoch;
       _bsServer = p2p.Route(
         peerId: bsPeerId,
         canForward: true,
@@ -98,16 +97,12 @@ class P2PNetworkService extends P2PNetworkServiceBase
             p2p.FullAddress(
               address: InternetAddress(ipV4),
               port: port ?? bindPort,
-              isLocal: false,
-              isStatic: true,
-            ): now,
+            ): p2p.AddressProperties(isStatic: true),
           if (ipV6.isNotEmpty && myAddresses.any((e) => e.isIPv6))
             p2p.FullAddress(
               address: InternetAddress(ipV6),
               port: port ?? bindPort,
-              isLocal: false,
-              isStatic: true,
-            ): now,
+            ): p2p.AddressProperties(isStatic: true),
         },
       );
       router.routes[bsPeerId] = _bsServer!;

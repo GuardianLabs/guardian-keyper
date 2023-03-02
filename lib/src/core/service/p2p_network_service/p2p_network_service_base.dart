@@ -11,6 +11,7 @@ abstract class P2PNetworkServiceBase {
   }) : router = p2p.RouterL2(
           logger: kDebugMode ? print : null,
           keepalivePeriod: keepalivePeriod,
+          crypto: p2p.Crypto()..operationTimeout = const Duration(seconds: 3),
         );
 
   Stream<MapEntry<PeerId, bool>> get peerStatusChangeStream =>
@@ -19,39 +20,16 @@ abstract class P2PNetworkServiceBase {
 
   List<PeerAddress> get myAddresses => _myAddresses;
 
-  bool getPeerStatus(PeerId peerId) =>
+  bool getPeerStatus(final PeerId peerId) =>
       router.getPeerStatus(p2p.PeerId(value: peerId.token));
 
-  Future<bool> pingPeer(PeerId peerId) =>
+  Future<bool> pingPeer(final PeerId peerId) =>
       router.pingPeer(p2p.PeerId(value: peerId.token));
 
-  void addPeer(
-    PeerId peerId,
-    Uint8List address,
-    int port, [
-    bool isLocal = true,
-    bool isStatic = false,
-    bool canForward = false,
-  ]) {
-    final ip = InternetAddress.fromRawAddress(address);
-    if (ip == InternetAddress.loopbackIPv4 ||
-        ip == InternetAddress.loopbackIPv6) return;
-    router.addPeerAddress(
-      peerId: p2p.PeerId(value: peerId.token),
-      canForward: canForward,
-      address: p2p.FullAddress(
-        address: ip,
-        port: port,
-        isLocal: isLocal,
-        isStatic: isStatic,
-      ),
-    );
-  }
-
   Future<void> sendTo({
-    required PeerId peerId,
-    required MessageModel message,
-    required bool isConfirmable,
+    required final PeerId peerId,
+    required final MessageModel message,
+    required final bool isConfirmable,
   }) async {
     try {
       await router.sendMessage(
@@ -59,8 +37,8 @@ abstract class P2PNetworkServiceBase {
         dstPeerId: p2p.PeerId(value: peerId.token),
         payload: message.toBytes(),
       );
-    } on TimeoutException {
-      // No need to handle
+    } catch (_) {
+      if (isConfirmable) rethrow;
     }
   }
 }

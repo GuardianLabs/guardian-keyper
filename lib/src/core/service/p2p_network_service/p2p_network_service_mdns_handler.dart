@@ -28,18 +28,15 @@ mixin P2PMdnsHandler on P2PNetworkServiceBase {
     final peerIdBytes = service.txt?[_mdnsPeerId];
     if (peerIdBytes == null) return;
     if (status == ServiceStatus.found) {
-      router.addPeerAddresses(
-        canForward: false,
-        peerId: p2p.PeerId(
-          value: base64Decode(_utf8Decoder.convert(peerIdBytes)),
-        ),
-        addresses: service.addresses!.map((e) => p2p.FullAddress(
-              address: e,
-              port: service.port!,
-              isStatic: true,
-              isLocal: true,
-            )),
-      );
+      for (final address in service.addresses!) {
+        router.addPeerAddress(
+          peerId: p2p.PeerId(
+            value: base64Decode(_utf8Decoder.convert(peerIdBytes)),
+          ),
+          address: p2p.FullAddress(address: address, port: service.port!),
+          properties: p2p.AddressProperties(isStatic: true, isLocal: true),
+        );
+      }
     }
   }
 }

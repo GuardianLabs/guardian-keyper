@@ -32,7 +32,7 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
   void startNetworkRequest(void Function([Timer?]) callback) async {
     await diContainer.platformService.wakelockEnable();
     timer = Timer.periodic(
-      diContainer.networkService.router.requestTimeout,
+      diContainer.networkService.router.messageTTL,
       callback,
     );
     callback();
