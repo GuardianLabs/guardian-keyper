@@ -99,7 +99,8 @@ Future<DIContainer> initDIC({
   );
   if (boxSettings.deviceName.isEmpty) {
     boxSettings.deviceName =
-        await platformService.getDeviceName(keyBunch.encryptionPublicKey);
+        (await platformService.getDeviceName(keyBunch.encryptionPublicKey))
+            .substring(0, globals.maxNameLength);
   }
   await migrateStorage(
     myPeerId: PeerId(
