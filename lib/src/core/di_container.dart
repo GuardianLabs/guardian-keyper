@@ -98,9 +98,11 @@ Future<DIContainer> initDIC({
     encryptionCipher: cipher,
   );
   if (boxSettings.deviceName.isEmpty) {
-    boxSettings.deviceName =
-        (await platformService.getDeviceName(keyBunch.encryptionPublicKey))
-            .substring(0, globals.maxNameLength);
+    final deviceName =
+        await platformService.getDeviceName(keyBunch.encryptionPublicKey);
+    boxSettings.deviceName = deviceName.length > globals.maxNameLength
+        ? deviceName.substring(0, globals.maxNameLength)
+        : deviceName;
   }
   await migrateStorage(
     myPeerId: PeerId(

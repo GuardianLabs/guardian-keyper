@@ -14,7 +14,12 @@ mixin P2PMdnsHandler on P2PNetworkServiceBase {
   );
 
   Future<void> _initMdns() async {
-    await register(_service);
+    // TBD: unregister onDispose
+    try {
+      await register(_service);
+    } on NsdError catch (e) {
+      if (kDebugMode) print(e);
+    }
     final discovery = await startDiscovery(
       _mdnsType,
       ipLookupType: IpLookupType.any,
