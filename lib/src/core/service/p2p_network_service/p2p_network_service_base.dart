@@ -1,18 +1,19 @@
 part of '../p2p_network_service.dart';
 
 abstract class P2PNetworkServiceBase {
+  final Globals globals;
   final p2p.RouterL2 router;
   final bindPort = p2p.TransportUdp.defaultPort;
 
   final _myAddresses = <PeerAddress>[];
 
-  P2PNetworkServiceBase({
-    Duration keepalivePeriod = const Duration(seconds: 10),
-  }) : router = p2p.RouterL2(
+  P2PNetworkServiceBase({this.globals = const Globals()})
+      : router = p2p.RouterL2(
           logger: kDebugMode ? print : null,
-          keepalivePeriod: keepalivePeriod,
-          crypto: p2p.Crypto()..operationTimeout = const Duration(seconds: 3),
-        );
+          keepalivePeriod: globals.keepalivePeriod,
+        )
+          ..maxForwardsLimit = globals.maxForwardsLimit
+          ..maxStoredHeaders = globals.maxStoredHeaders;
 
   Stream<MapEntry<PeerId, bool>> get peerStatusChangeStream =>
       router.lastSeenStream
