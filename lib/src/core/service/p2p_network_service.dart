@@ -19,7 +19,7 @@ class P2PNetworkService extends P2PNetworkServiceBase
 
   p2p.Route? _bsServer;
 
-  P2PNetworkService({super.keepalivePeriod});
+  P2PNetworkService({super.globals});
 
   Stream<MessageModel> get messageStream => _messagesController.stream;
 

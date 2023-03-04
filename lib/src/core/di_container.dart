@@ -62,11 +62,12 @@ class DIContainer with WidgetsBindingObserver {
 Future<DIContainer> initDIC({
   final Globals globals = const Globals(),
   final AuthService? authService,
-  required final P2PNetworkService networkService,
+  P2PNetworkService? networkService,
   final PlatformService platformService = const PlatformService(),
   final AnalyticsService analyticsService = const AnalyticsService(),
 }) async {
   final storedKeyBunch = await platformService.readKeyBunch();
+  networkService ??= P2PNetworkService(globals: globals);
   final keyBunch = await networkService.init(storedKeyBunch);
   if (keyBunch != storedKeyBunch) {
     await platformService.writeKeyBunch(keyBunch);

@@ -24,9 +24,9 @@ dependencies:
   qr_flutter: # ^4.0.0
     git:
       url: "https://github.com/theyakka/qr.flutter"
-  # p2plib: ^1.1.1+0
-  p2plib:
-    path: "../p2plib-dart"
+  p2plib: ^1.1.2+0
+  # p2plib:
+    # path: "../p2plib-dart"
 
   # Platform dependent
   flutter_secure_storage: ^8.0.0
