@@ -1,5 +1,6 @@
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
@@ -34,28 +35,30 @@ class SetBiometricPage extends StatelessWidget {
               padding: paddingTop20,
               child: Row(children: [
                 Expanded(
-                    child: ElevatedButton(
-                  onPressed: () {
-                    context
-                        .read<DIContainer>()
-                        .boxSettings
-                        .isBiometricsEnabled = false;
-                    Navigator.of(context).pushReplacementNamed('/home');
-                  },
-                  child: const Text('No'),
-                )),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context
+                          .read<DIContainer>()
+                          .boxSettings
+                          .isBiometricsEnabled = false;
+                      Navigator.of(context).pushReplacementNamed(routeHome);
+                    },
+                    child: const Text('No'),
+                  ),
+                ),
                 const SizedBox(width: 10),
                 Expanded(
-                    child: PrimaryButton(
-                  onPressed: () {
-                    context
-                        .read<DIContainer>()
-                        .boxSettings
-                        .isBiometricsEnabled = true;
-                    Navigator.of(context).pushReplacementNamed('/home');
-                  },
-                  text: 'Yes',
-                )),
+                  child: PrimaryButton(
+                    onPressed: () {
+                      context
+                          .read<DIContainer>()
+                          .boxSettings
+                          .isBiometricsEnabled = true;
+                      Navigator.of(context).pushReplacementNamed(routeHome);
+                    },
+                    text: 'Yes',
+                  ),
+                ),
               ]),
             ),
           ],

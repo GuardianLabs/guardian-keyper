@@ -1,4 +1,4 @@
-import '/src/core/di_container.dart';
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
 import '../intro_controller.dart';
@@ -11,21 +11,22 @@ class SetPasscodePage extends StatefulWidget {
 }
 
 class _SetPasscodePageState extends State<SetPasscodePage> {
+  late final _controller = context.read<IntroController>();
+
   @override
   void initState() {
     super.initState();
-    final authService = context.read<DIContainer>().authService;
     Future.microtask(
-      () => authService.createPassCode(
+      () => _controller.diContainer.authService.createPassCode(
         context: context,
         onConfirmed: () async {
-          final hasBiometrics = await authService.hasBiometrics;
-          if (!mounted) return;
-          if (hasBiometrics) {
-            Navigator.of(context).pop();
-            context.read<IntroController>().nextScreen();
-          } else {
-            Navigator.of(context).pushReplacementNamed('/home');
+          if (await _controller.diContainer.authService.hasBiometrics) {
+            if (mounted) {
+              Navigator.of(context).pop();
+              _controller.nextScreen();
+            }
+          } else if (mounted) {
+            Navigator.of(context).pushReplacementNamed(routeHome);
           }
         },
       ),
