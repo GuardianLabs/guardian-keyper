@@ -76,20 +76,38 @@ class _QRCodePageState extends State<QRCodePage> {
                 child: Column(
                   children: [
                     // QR Code
-                    QrImageView(
-                      gapless: false,
-                      padding: paddingAll20,
-                      foregroundColor: Colors.white,
-                      embeddedImage: const AssetImage(
-                        'assets/images/logo_qr.png',
-                      ),
-                      dataModuleStyle: const QrDataModuleStyle(
-                        color: clPurpleLight,
-                        dataModuleShape: QrDataModuleShape.circle,
-                      ),
-                      eyeStyle: const QrEyeStyle(eyeShape: QrEyeShape.circle),
-                      errorCorrectionLevel: QrErrorCorrectLevel.M,
-                      data: _qrCode,
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        QrImageView(
+                          gapless: false,
+                          padding: paddingAll20,
+                          foregroundColor: Colors.white,
+                          dataModuleStyle: const QrDataModuleStyle(
+                            color: clPurpleLight,
+                            dataModuleShape: QrDataModuleShape.circle,
+                          ),
+                          eyeStyle: const QrEyeStyle(
+                            eyeShape: QrEyeShape.circle,
+                          ),
+                          errorCorrectionLevel: QrErrorCorrectLevel.M,
+                          data: _qrCode,
+                        ),
+                        Container(
+                          constraints: const BoxConstraints(
+                            minWidth: 90,
+                            maxWidth: 120,
+                            minHeight: 90,
+                            maxHeight: 120,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24),
+                            color: clSurface,
+                          ),
+                          padding: paddingAll8,
+                          child: const IconOf.app(),
+                        ),
+                      ],
                     ),
                     // Share Button
                     Container(
@@ -98,7 +116,9 @@ class _QRCodePageState extends State<QRCodePage> {
                       child: Builder(
                         builder: (BuildContext context) => ElevatedButton.icon(
                           icon: const IconOf.share(
-                              bgColor: clIndigo500, size: 20),
+                            bgColor: clIndigo500,
+                            size: 20,
+                          ),
                           label: const Text('Share Code'),
                           onPressed: () async {
                             final box =

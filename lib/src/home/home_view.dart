@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 import '/src/core/consts.dart';
@@ -33,21 +32,12 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  late final _diContainer = context.read<DIContainer>();
+
   @override
   void initState() {
     super.initState();
-    final diContainer = context.read<DIContainer>();
-    Future.microtask(
-      () => diContainer.authService.checkPassCode(
-        context: context,
-        onUnlock: () {
-          Navigator.of(context).pop();
-          diContainer.networkService.start();
-        },
-        canCancel: false,
-      ),
-    );
-    diContainer.boxMessages.watch().listen(
+    _diContainer.boxMessages.watch().listen(
       (event) async {
         if (ModalRoute.of(context)?.isCurrent != true) return;
         if (event.deleted) return;
@@ -62,7 +52,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (context) => HomeController(
           pages: HomeView._pages,
-          diContainer: context.read<DIContainer>(),
+          diContainer: _diContainer,
         ),
         child: Selector<HomeController, int>(
           selector: (_, controller) => controller.currentPage,

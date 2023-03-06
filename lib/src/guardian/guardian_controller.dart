@@ -10,7 +10,6 @@ class GuardianController {
 
   GuardianController({required this.diContainer}) {
     diContainer.networkService.messageStream.listen(onMessage);
-    _cleanMessageBox();
   }
 
   void onMessage(MessageModel message) {
@@ -166,7 +165,7 @@ class GuardianController {
     }
   }
 
-  Future<void> _cleanMessageBox() async {
+  Future<void> cleanMessageBox() async {
     if (diContainer.boxMessages.isEmpty) return;
     final expired = diContainer.boxMessages.values
         .where((e) =>

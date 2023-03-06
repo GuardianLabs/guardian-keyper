@@ -42,8 +42,10 @@ class AuthService {
     ),
   );
 
-  final _localAuth = LocalAuthentication();
-  final _passcodeController = InputController();
+  static final _localAuth = LocalAuthentication();
+  static final _passcodeController = InputController();
+
+  const AuthService();
 
   Future<bool> get hasBiometrics =>
       _localAuth.getAvailableBiometrics().then((value) => value.isNotEmpty);

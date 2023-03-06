@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:wakelock/wakelock.dart';
-// import 'package:app_settings/app_settings.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -16,12 +15,16 @@ class PlatformService {
   static const _singPrivateKey = 'singPrivateKey';
   static const _encryptionAesKey = 'encryptionAesKey';
   static const _secureStorage = FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    aOptions: AndroidOptions(
+      resetOnError: true,
+      encryptedSharedPreferences: true,
+      storageCipherAlgorithm: StorageCipherAlgorithm.AES_GCM_NoPadding,
+      keyCipherAlgorithm:
+          KeyCipherAlgorithm.RSA_ECB_OAEPwithSHA_256andMGF1Padding,
+    ),
   );
 
   const PlatformService();
-
-  // void openWirelessSettings() => AppSettings.openWirelessSettings();
 
   Future<void> wakelockEnable() => Wakelock.enable();
 

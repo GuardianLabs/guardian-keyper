@@ -18,7 +18,7 @@ class IconOf extends StatelessWidget {
     this.size,
     this.isBig,
     this.color,
-    this.bgColor,
+    this.bgColor = Colors.transparent,
     this.bage,
   }) : icon = 'assets/icons/logo.svg';
 

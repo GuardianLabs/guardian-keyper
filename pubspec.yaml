@@ -30,7 +30,6 @@ dependencies:
 
   # Platform dependent
   flutter_secure_storage: ^8.0.0
-  flutter_native_splash: ^2.2.18
   # airplane_mode_checker: ^1.0.5
   flutter_screen_lock: ^9.0.1
   connectivity_plus: ^3.0.3
@@ -55,6 +54,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   icons_launcher: ^2.1.0
+  flutter_native_splash: ^2.2.19
 
 flutter:
   uses-material-design: true
@@ -80,6 +80,6 @@ flutter_native_splash:
   fullscreen: true
   color: "#1A0244"
   color_dark: "#1A0244"
-  android_gravity: center
-  image: assets/images/4.0x/logo.png
-  image_dark: assets/images/4.0x/logo.png
+  android_gravity: "center"
+  image: "assets/images/logo1024.png"
+  image_dark: "assets/images/logo1024.png"
