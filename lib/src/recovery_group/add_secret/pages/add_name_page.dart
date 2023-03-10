@@ -1,5 +1,6 @@
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
+import '/src/settings/settings_model.dart';
 
 import '../add_secret_controller.dart';
 
@@ -27,7 +28,7 @@ class AddNamePage extends StatelessWidget {
           child: TextFormField(
             keyboardType: TextInputType.name,
             maxLines: 1,
-            maxLength: controller.globals.maxNameLength,
+            maxLength: SettingsModel.maxNameLength,
             style: textStyleSourceSansPro416,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,

@@ -1,3 +1,5 @@
+import 'package:guardian_keyper/src/settings/settings_cubit.dart';
+
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
@@ -9,7 +11,6 @@ class SetDeviceNamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.read<IntroController>();
     return ListView(
       padding: paddingAll20,
       children: [
@@ -26,10 +27,10 @@ class SetDeviceNamePage extends StatelessWidget {
             padding: paddingV20,
             child: TextFormField(
               autofocus: true,
-              initialValue: controller.deviceName,
-              onChanged: (value) => controller.deviceName = value,
+              initialValue: GetIt.I<SettingsCubit>().state.deviceName,
+              onChanged: (value) => GetIt.I<SettingsCubit>().deviceName = value,
               keyboardType: TextInputType.text,
-              maxLength: controller.globals.maxNameLength,
+              maxLength: SettingsModel.maxNameLength,
               decoration: const InputDecoration(
                 labelText: ' Guardian name ',
                 helperText: 'Minimum 3 characters',
@@ -37,11 +38,19 @@ class SetDeviceNamePage extends StatelessWidget {
             )),
         Padding(
           padding: paddingV20,
-          child: Selector<IntroController, String>(
-            selector: (_, c) => c.deviceName,
-            builder: (_, __, ___) => PrimaryButton(
+          child: BlocBuilder<SettingsCubit, SettingsModel>(
+            bloc: GetIt.I<SettingsCubit>(),
+            builder: (final context, final state) => PrimaryButton(
               text: 'Proceed',
-              onPressed: controller.onSaveDeviceName(),
+              onPressed: state.isNameTooShort
+                  ? null
+                  : () async {
+                      await GetIt.I<SettingsCubit>()
+                          .setDeviceName(state.deviceName);
+                      if (context.mounted) {
+                        context.read<IntroController>().nextScreen();
+                      }
+                    },
             ),
           ),
         ),

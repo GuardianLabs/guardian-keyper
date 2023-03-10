@@ -24,25 +24,24 @@ class P2PNetworkService extends P2PNetworkServiceBase
   Stream<MessageModel> get messageStream => _messagesController.stream;
 
   @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) =>
-      state == AppLifecycleState.resumed ? start() : stop();
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      await start();
+    } else {
+      await stop();
+    }
+  }
 
-  Future<KeyBunch> init(KeyBunch keyBunch) async {
+  Future<Uint8List> init(Uint8List seed) async {
+    WidgetsBinding.instance.addObserver(this);
+
     for (final interface in await NetworkInterface.list()) {
       _myAddresses.addAll(interface.addresses.map(
         (a) => PeerAddress(address: a, port: bindPort),
       ));
     }
-    WidgetsBinding.instance.addObserver(this);
-    final cryptoKeys = await router.init(keyBunch.isEmpty
-        ? null
-        : p2p.CryptoKeys(
-            encPublicKey: keyBunch.encryptionPublicKey,
-            encPrivateKey: keyBunch.encryptionPrivateKey,
-            signPublicKey: keyBunch.signPublicKey,
-            signPrivateKey: keyBunch.signPrivateKey,
-            seed: keyBunch.encryptionAesKey,
-          ));
+
+    final cryptoKeys = await router.init(p2p.CryptoKeys.empty()..seed = seed);
     router.messageStream.listen(onMessage);
     await _connectivityInit();
     await _initMdns();
@@ -50,13 +49,7 @@ class P2PNetworkService extends P2PNetworkServiceBase
       print(_myAddresses);
       print(router.selfId);
     }
-    return KeyBunch(
-      encryptionPrivateKey: cryptoKeys.encPrivateKey,
-      encryptionPublicKey: cryptoKeys.encPublicKey,
-      signPrivateKey: cryptoKeys.signPrivateKey,
-      signPublicKey: cryptoKeys.signPublicKey,
-      encryptionAesKey: cryptoKeys.seed,
-    );
+    return cryptoKeys.seed;
   }
 
   Future<void> start([void _]) async {

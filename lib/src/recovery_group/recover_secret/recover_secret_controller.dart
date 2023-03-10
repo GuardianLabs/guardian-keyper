@@ -36,7 +36,7 @@ class RecoverySecretController extends RecoveryGroupSecretController {
   }
 
   void startRequest({required Callback onRejected}) {
-    diContainer.analyticsService.logEvent(eventStartRestoreSecret);
+    GetIt.I<AnalyticsService>().logEvent(eventStartRestoreSecret);
     networkSubscription.onData(
       (final message) async {
         if (message.code != MessageCode.getShard) return;
@@ -46,7 +46,7 @@ class RecoverySecretController extends RecoveryGroupSecretController {
         updateMessage(message);
         if (messages.where((m) => m.isAccepted).length >= group.threshold) {
           stopListenResponse();
-          diContainer.analyticsService.logEvent(eventFinishRestoreSecret);
+          GetIt.I<AnalyticsService>().logEvent(eventFinishRestoreSecret);
           secret = await compute<List<String>, String>(
             (List<String> shares) => restoreSecret(shares: shares),
             messages

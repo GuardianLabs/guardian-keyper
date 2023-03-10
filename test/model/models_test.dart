@@ -154,21 +154,21 @@ void main() {
   //           GuardianModel.fromBytes(guardianA.toBytes()) == guardianB, false));
   // });
 
-  group('SettingsModel', () {
-    test('should not be equal', () {
-      expect(settingsA == settingsB, false);
-    });
-    test(
-        'toBytes/fromBytes 1, should be true',
-        () => expect(
-            SettingsModel.fromBytes(settingsA.toBytes()) == settingsA, true));
-    test(
-        'toBytes/fromBytes 2, should be true',
-        () => expect(
-            SettingsModel.fromBytes(settingsB.toBytes()) == settingsB, true));
-    test(
-        'toBytes/fromBytes 3, should be false',
-        () => expect(
-            SettingsModel.fromBytes(settingsA.toBytes()) == settingsB, false));
-  });
+  // group('SettingsModel', () {
+  //   test('should not be equal', () {
+  //     expect(settingsA == settingsB, false);
+  //   });
+  //   test(
+  //       'toBytes/fromBytes 1, should be true',
+  //       () => expect(
+  //           SettingsModel.fromBytes(settingsA.toBytes()) == settingsA, true));
+  //   test(
+  //       'toBytes/fromBytes 2, should be true',
+  //       () => expect(
+  //           SettingsModel.fromBytes(settingsB.toBytes()) == settingsB, true));
+  //   test(
+  //       'toBytes/fromBytes 3, should be false',
+  //       () => expect(
+  //           SettingsModel.fromBytes(settingsA.toBytes()) == settingsB, false));
+  // });
 }

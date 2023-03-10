@@ -1,18 +1,20 @@
+import '/src/core/consts.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
+import 'settings_cubit.dart';
 import 'widgets/change_device_name_list_tile.dart';
 import 'widgets/change_passcode_list_tile.dart';
 import 'widgets/toggle_biometrics_list_tile.dart';
 import 'widgets/toggle_bootstrap_list_tile.dart';
 
 class SettingsView extends StatelessWidget {
-  static const routeName = '/settings';
+  static const routeName = routeSettings;
 
   const SettingsView({super.key});
 
   @override
-  Widget build(BuildContext context) => ScaffoldWidget(
+  Widget build(final BuildContext context) => ScaffoldWidget(
         child: Column(
           children: [
             // Header
@@ -24,21 +26,25 @@ class SettingsView extends StatelessWidget {
             Expanded(
               child: ListView(
                 padding: paddingAll20,
-                children: const [
+                children: [
                   // Change Device Name
-                  Padding(
+                  const Padding(
                     padding: paddingV6,
                     child: ChangeDeviceNameListTile(),
                   ),
                   // Change PassCode
-                  Padding(
+                  const Padding(
                     padding: paddingV6,
                     child: ChangePassCodeListTile(),
                   ),
                   // Toggle Biometrics
-                  ToggleBiometricsListTile(),
+                  if (GetIt.I<SettingsCubit>().hasBiometrics)
+                    const Padding(
+                      padding: paddingV6,
+                      child: ToggleBiometricsListTile(),
+                    ),
                   // Toggle Bootstrap
-                  Padding(
+                  const Padding(
                     padding: paddingV6,
                     child: ToggleBootstrapListTile(),
                   ),

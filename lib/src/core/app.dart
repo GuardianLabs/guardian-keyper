@@ -6,27 +6,43 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'theme/theme.dart';
 import 'di_container.dart';
+import 'model/core_model.dart';
 import 'widgets/loader_widget.dart';
+import 'service/platform_service.dart';
+import 'service/analytics_service.dart';
+
+import '/src/auth/auth_controller.dart';
 import '/src/guardian/guardian_controller.dart';
+import '/src/settings/settings_repository.dart';
 
 import 'routes.dart';
 
 class App extends StatelessWidget {
-  static Future<void> init() async {
+  static late final DIContainer diContainer;
+
+  static Future<void> init([final DIContainer? diContainer]) async {
+    App.diContainer = diContainer ?? DIContainer();
+    WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setSystemUIOverlayStyle(systemStyleDark);
     await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp],
     );
+    GetIt.I.registerSingleton<Globals>(const Globals());
+    GetIt.I.registerSingleton<DIContainer>(App.diContainer);
+    GetIt.I.registerSingleton<PlatformService>(const PlatformService());
+    GetIt.I.registerSingleton<AnalyticsService>(
+      await AnalyticsService.init(App.diContainer.globals.amplitudeKey),
+    );
+    GetIt.I.registerSingleton<SettingsRepository>(const SettingsRepository());
   }
 
-  final DIContainer diContainer;
-
-  const App({super.key, required this.diContainer});
+  const App({super.key});
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
+  Widget build(final BuildContext context) => MultiProvider(
         providers: [
           Provider.value(value: diContainer),
+          Provider(create: (_) => const AuthController()),
           Provider(
             create: (_) => GuardianController(diContainer: diContainer),
           ),

@@ -1,27 +1,13 @@
-import '/src/core/di_container.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
-class SetDeviceNamePage extends StatefulWidget {
+import '../settings_cubit.dart';
+
+class SetDeviceNamePage extends StatelessWidget {
   const SetDeviceNamePage({super.key});
 
   @override
-  State<SetDeviceNamePage> createState() => _SetDeviceNamePageState();
-}
-
-class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
-  late final DIContainer diContainer;
-  String _name = '';
-
-  @override
-  void initState() {
-    super.initState();
-    diContainer = context.read<DIContainer>();
-    _name = diContainer.boxSettings.deviceName;
-  }
-
-  @override
-  Widget build(BuildContext context) => Column(
+  Widget build(final BuildContext context) => Column(
         children: [
           // Header
           const HeaderBar(
@@ -45,10 +31,12 @@ class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
                   padding: paddingV20,
                   child: TextFormField(
                     autofocus: true,
-                    initialValue: _name,
+                    initialValue: GetIt.I<SettingsCubit>().state.deviceName,
                     keyboardType: TextInputType.text,
-                    maxLength: diContainer.globals.maxNameLength,
-                    onChanged: (value) => setState(() => _name = value),
+                    maxLength: SettingsModel.maxNameLength,
+                    onChanged: (value) =>
+                        GetIt.I<SettingsCubit>().deviceName = value,
+                    // onChanged: GetIt.I<SettingsCubit>().setDeviceName,
                     decoration: const InputDecoration(
                       labelText: ' Device name ',
                       helperText: 'Minimum 3 characters',
@@ -58,19 +46,24 @@ class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
                 // Footer
                 Padding(
                   padding: paddingV20,
-                  child: PrimaryButton(
-                    text: 'Proceed',
-                    onPressed: _name.length < diContainer.globals.minNameLength
-                        ? null
-                        : () {
-                            diContainer.boxSettings.deviceName = _name;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              buildSnackBar(
-                                text: 'Device name was changed successfully.',
-                              ),
-                            );
-                            Navigator.of(context).pop();
-                          },
+                  child: BlocBuilder<SettingsCubit, SettingsModel>(
+                    bloc: GetIt.I<SettingsCubit>(),
+                    builder: (final context, final state) => PrimaryButton(
+                      text: 'Proceed',
+                      onPressed: state.isNameTooShort
+                          ? null
+                          : () async {
+                              await GetIt.I<SettingsCubit>()
+                                  .setDeviceName(state.deviceName);
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(buildSnackBar(
+                                  text: 'Device name was changed successfully.',
+                                ));
+                                Navigator.of(context).pop();
+                              }
+                            },
+                    ),
                   ),
                 ),
               ],

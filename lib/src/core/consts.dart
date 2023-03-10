@@ -1,5 +1,6 @@
 const routeIntro = '/intro';
 const routeHome = '/home';
+const routeSettings = '/settings';
 const routeGroupCreate = '/recovery_group/create';
 const routeGroupEdit = '/recovery_group/edit';
 const routeGroupAddGuardian = '/recovery_group/add_guardian';

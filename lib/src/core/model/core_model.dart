@@ -9,7 +9,6 @@ import '../utils/emoji_codes.dart';
 
 part 'recovery_group_model.dart';
 part 'secret_shard_model.dart';
-part 'settings_model.dart';
 part 'message_model.dart';
 part 'peer_address.dart';
 part 'key_bunch.dart';

@@ -19,18 +19,18 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
   void dispose() {
     timer?.cancel();
     networkSubscription.cancel();
-    diContainer.platformService.wakelockDisable();
+    GetIt.I<PlatformService>().wakelockDisable();
     super.dispose();
   }
 
   void stopListenResponse() {
     timer?.cancel();
-    diContainer.platformService.wakelockDisable();
+    GetIt.I<PlatformService>().wakelockDisable();
     notifyListeners();
   }
 
   void startNetworkRequest(void Function([Timer?]) callback) async {
-    await diContainer.platformService.wakelockEnable();
+    await GetIt.I<PlatformService>().wakelockEnable();
     timer = Timer.periodic(
       diContainer.networkService.router.messageTTL,
       callback,

@@ -12,6 +12,20 @@ class GuardianController {
     diContainer.networkService.messageStream.listen(onMessage);
   }
 
+  Future<void> init() async {
+    if (diContainer.boxMessages.isEmpty) return;
+    final expired = diContainer.boxMessages.values
+        .where((e) =>
+            e.isRequested &&
+            (e.code == MessageCode.createGroup ||
+                e.code == MessageCode.takeGroup) &&
+            e.timestamp
+                .isBefore(DateTime.now().subtract(const Duration(days: 1))))
+        .toList(growable: false);
+    await diContainer.boxMessages.deleteAll(expired.map((e) => e.aKey));
+    await diContainer.boxMessages.compact();
+  }
+
   void onMessage(MessageModel message) {
     final ticket = diContainer.boxMessages.get(message.aKey);
     if (kDebugMode) print('$message\n$ticket');
@@ -163,19 +177,5 @@ class GuardianController {
     } catch (_) {
       return false;
     }
-  }
-
-  Future<void> cleanMessageBox() async {
-    if (diContainer.boxMessages.isEmpty) return;
-    final expired = diContainer.boxMessages.values
-        .where((e) =>
-            e.isRequested &&
-            (e.code == MessageCode.createGroup ||
-                e.code == MessageCode.takeGroup) &&
-            e.timestamp
-                .isBefore(DateTime.now().subtract(const Duration(days: 1))))
-        .toList(growable: false);
-    await diContainer.boxMessages.deleteAll(expired.map((e) => e.aKey));
-    await diContainer.boxMessages.compact();
   }
 }

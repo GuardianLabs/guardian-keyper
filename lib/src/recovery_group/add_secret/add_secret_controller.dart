@@ -1,6 +1,7 @@
 import 'package:sss256/sss256.dart';
 
 import '/src/core/model/core_model.dart';
+import '/src/settings/settings_model.dart';
 import '/src/core/service/analytics_service.dart';
 
 import '../recovery_group_controller.dart';
@@ -13,7 +14,7 @@ class AddSecretController extends RecoveryGroupSecretController {
 
   String get secret => _secret;
 
-  bool get isNameTooShort => _secretName.length < globals.minNameLength;
+  bool get isNameTooShort => _secretName.length < SettingsModel.minNameLength;
 
   set secret(String value) {
     _secret = value;
@@ -36,7 +37,7 @@ class AddSecretController extends RecoveryGroupSecretController {
     required Callback onReject,
     required Callback onFailed,
   }) {
-    diContainer.analyticsService.logEvent(eventStartAddSecret);
+    GetIt.I<AnalyticsService>().logEvent(eventStartAddSecret);
     networkSubscription.onData(
       (message) async {
         if (message.code != MessageCode.setShard) return;
@@ -56,7 +57,7 @@ class AddSecretController extends RecoveryGroupSecretController {
               group.aKey,
               group.copyWith(secrets: {...group.secrets, secretId: shardValue}),
             );
-            await diContainer.analyticsService.logEvent(eventFinishAddSecret);
+            await GetIt.I<AnalyticsService>().logEvent(eventFinishAddSecret);
             onSuccess(message);
           }
         } else {

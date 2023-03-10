@@ -1,5 +1,6 @@
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
+import '/src/settings/settings_model.dart';
 
 import '../create_group_controller.dart';
 
@@ -26,7 +27,7 @@ class InputNamePage extends StatelessWidget {
               TextFormField(
                 autofocus: true,
                 keyboardType: TextInputType.text,
-                maxLength: controller.globals.maxNameLength,
+                maxLength: SettingsModel.maxNameLength,
                 decoration: const InputDecoration(labelText: ' Vault name '),
                 onChanged: (value) => controller.groupName = value,
               ),

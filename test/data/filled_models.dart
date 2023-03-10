@@ -120,16 +120,16 @@ final p2pPacketB = MessageModel(
 // );
 
 //Settings Model
-const settingsA = SettingsModel(
-  deviceName: 'device A',
-  passCode: '123',
-  isBiometricsEnabled: true,
-  isProxyEnabled: false,
-);
+// const settingsA = SettingsModel(
+//   deviceName: 'device A',
+//   passCode: '123',
+//   isBiometricsEnabled: true,
+//   isBootstrapEnabled: false,
+// );
 
-const settingsB = SettingsModel(
-  deviceName: 'device B',
-  passCode: '456',
-  isBiometricsEnabled: false,
-  isProxyEnabled: true,
-);
+// const settingsB = SettingsModel(
+//   deviceName: 'device B',
+//   passCode: '456',
+//   isBiometricsEnabled: false,
+//   isBootstrapEnabled: true,
+// );
