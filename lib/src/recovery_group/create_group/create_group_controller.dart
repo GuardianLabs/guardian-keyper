@@ -1,4 +1,5 @@
 import '/src/core/model/core_model.dart';
+import '/src/settings/settings_model.dart';
 import '/src/core/service/analytics_service.dart';
 
 import '../recovery_group_controller.dart';
@@ -15,7 +16,7 @@ class CreateGroupController extends RecoveryGroupControllerBase {
     required super.diContainer,
     required super.pages,
   }) {
-    diContainer.analyticsService.logEvent(eventStartCreateVault);
+    GetIt.I<AnalyticsService>().logEvent(eventStartCreateVault);
   }
 
   int get groupSize => _groupSize;
@@ -24,7 +25,8 @@ class CreateGroupController extends RecoveryGroupControllerBase {
 
   bool get isGroupMember => _isGroupMember;
 
-  bool get isGroupNameToolShort => _groupName.length < globals.minNameLength;
+  bool get isGroupNameToolShort =>
+      _groupName.length < SettingsModel.minNameLength;
 
   set groupSize(int size) {
     _groupSize = size;
@@ -47,7 +49,7 @@ class CreateGroupController extends RecoveryGroupControllerBase {
   }
 
   Future<RecoveryGroupModel> createVault() {
-    diContainer.analyticsService.logEvent(eventFinishCreateVault);
+    GetIt.I<AnalyticsService>().logEvent(eventFinishCreateVault);
     return createGroup(RecoveryGroupModel(
       id: GroupId(name: _groupName),
       maxSize: _groupSize,

@@ -62,6 +62,7 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
                             child: ElevatedButton(
                               child:
                                   Text(_isSecretObfuscated ? 'Show' : 'Hide'),
+                              // TBD: ask passCode before show
                               onPressed: () => setState(() =>
                                   _isSecretObfuscated = !_isSecretObfuscated),
                             ),
@@ -70,6 +71,7 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
                           Expanded(
                             child: PrimaryButton(
                               text: 'Copy',
+                              // TBD: ask passCode before copy
                               onPressed: () async {
                                 await Clipboard.setData(
                                   ClipboardData(

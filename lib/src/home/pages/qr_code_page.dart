@@ -2,11 +2,12 @@ import 'dart:async';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '/src/core/di_container.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
-import '/src/core/di_container.dart';
+import '/src/core/service/platform_service.dart';
 import '/src/guardian/widgets/message_list_tile.dart';
 
 class QRCodePage extends StatefulWidget {
@@ -26,7 +27,7 @@ class _QRCodePageState extends State<QRCodePage> {
   @override
   void initState() {
     super.initState();
-    _diContainer.platformService.wakelockEnable();
+    GetIt.I<PlatformService>().wakelockEnable();
     final qrCode = _generateQrCode();
     _qrCode = qrCode.toBase64url();
     _boxMessagesEventsSubscription =
@@ -45,7 +46,7 @@ class _QRCodePageState extends State<QRCodePage> {
 
   @override
   void dispose() {
-    _diContainer.platformService.wakelockDisable();
+    GetIt.I<PlatformService>().wakelockDisable();
     _boxMessagesEventsSubscription.cancel();
     super.dispose();
   }

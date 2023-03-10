@@ -1,21 +1,26 @@
-part of 'core_model.dart';
+import 'package:flutter/foundation.dart';
+import 'package:messagepack/messagepack.dart';
 
-class SettingsModel extends Equatable {
+import '/src/core/model/core_model.dart';
+
+@immutable
+class SettingsModel extends Serializable {
   static const currentVersion = 1;
-  static const boxName = 'settings';
-  static const typeId = 1;
+  static const minNameLength = 3;
+  static const maxNameLength = 25;
 
   final String passCode;
   final String deviceName;
   final bool isBiometricsEnabled;
-  final bool isProxyEnabled;
+  final bool isBootstrapEnabled;
 
   const SettingsModel({
     this.passCode = '',
     this.deviceName = '',
     this.isBiometricsEnabled = false,
-    this.isProxyEnabled = true,
+    this.isBootstrapEnabled = true,
   });
+
   factory SettingsModel.fromBytes(Uint8List bytes) {
     final u = Unpacker(bytes);
     if (u.unpackInt() != currentVersion) throw const FormatException();
@@ -23,7 +28,7 @@ class SettingsModel extends Equatable {
       passCode: u.unpackString()!,
       deviceName: u.unpackString()!,
       isBiometricsEnabled: u.unpackBool()!,
-      isProxyEnabled: u.unpackBool()!,
+      isBootstrapEnabled: u.unpackBool()!,
     );
   }
 
@@ -32,16 +37,25 @@ class SettingsModel extends Equatable {
         passCode,
         deviceName,
         isBiometricsEnabled,
-        isProxyEnabled,
+        isBootstrapEnabled,
       ];
 
+  @override
+  bool get isEmpty => passCode.isEmpty && deviceName.isEmpty;
+
+  @override
+  bool get isNotEmpty => !isEmpty;
+
+  bool get isNameTooShort => deviceName.length < minNameLength;
+
+  @override
   Uint8List toBytes() {
     final p = Packer()
       ..packInt(currentVersion)
       ..packString(passCode)
       ..packString(deviceName)
       ..packBool(isBiometricsEnabled)
-      ..packBool(isProxyEnabled);
+      ..packBool(isBootstrapEnabled);
     return p.takeBytes();
   }
 
@@ -49,12 +63,12 @@ class SettingsModel extends Equatable {
     String? passCode,
     String? deviceName,
     bool? isBiometricsEnabled,
-    bool? isProxyEnabled,
+    bool? isBootstrapEnabled,
   }) =>
       SettingsModel(
         passCode: passCode ?? this.passCode,
         deviceName: deviceName ?? this.deviceName,
         isBiometricsEnabled: isBiometricsEnabled ?? this.isBiometricsEnabled,
-        isProxyEnabled: isProxyEnabled ?? this.isProxyEnabled,
+        isBootstrapEnabled: isBootstrapEnabled ?? this.isBootstrapEnabled,
       );
 }

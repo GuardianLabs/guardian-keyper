@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'di_container.dart';
 import 'model/core_model.dart';
+import '../settings/settings_cubit.dart';
 import '/src/home/home_view.dart';
 import '/src/intro/intro_view.dart';
 import '/src/settings/settings_view.dart';
@@ -15,8 +15,8 @@ import '/src/recovery_group/recover_secret/recover_secret_view.dart';
 Route<dynamic>? onGenerateRoute(RouteSettings routeSettings) =>
     MaterialPageRoute<void>(
       settings: routeSettings,
-      builder: (BuildContext context) {
-        if (context.read<DIContainer>().boxSettings.passCode.isEmpty) {
+      builder: (final BuildContext context) {
+        if (GetIt.I<SettingsCubit>().state.passCode.isEmpty) {
           return const IntroView();
         }
         switch (routeSettings.name) {

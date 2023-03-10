@@ -1,5 +1,7 @@
 import 'package:amplitude_flutter/amplitude.dart';
 
+export 'package:get_it/get_it.dart';
+
 typedef EventLogger = Future<void> Function(
   String eventType, {
   Map<String, dynamic>? eventProperties,

@@ -15,6 +15,8 @@ abstract class P2PNetworkServiceBase {
           ..maxForwardsLimit = globals.maxForwardsLimit
           ..maxStoredHeaders = globals.maxStoredHeaders;
 
+  Uint8List get myId => router.selfId.value;
+
   Stream<MapEntry<PeerId, bool>> get peerStatusChangeStream =>
       router.lastSeenStream
           .map((e) => MapEntry(PeerId(token: e.key.value), e.value));

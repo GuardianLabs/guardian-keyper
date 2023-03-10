@@ -1,9 +1,9 @@
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '/src/core/consts.dart';
-import '/src/core/di_container.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
+import '../../settings/settings_cubit.dart';
 
 class SetBiometricPage extends StatelessWidget {
   const SetBiometricPage({super.key});
@@ -36,12 +36,12 @@ class SetBiometricPage extends StatelessWidget {
               child: Row(children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {
-                      context
-                          .read<DIContainer>()
-                          .boxSettings
-                          .isBiometricsEnabled = false;
-                      Navigator.of(context).pushReplacementNamed(routeHome);
+                    onPressed: () async {
+                      await GetIt.I<SettingsCubit>()
+                          .setIsBiometricsEnabled(false);
+                      if (context.mounted) {
+                        Navigator.of(context).pushReplacementNamed(routeHome);
+                      }
                     },
                     child: const Text('No'),
                   ),
@@ -49,12 +49,12 @@ class SetBiometricPage extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: PrimaryButton(
-                    onPressed: () {
-                      context
-                          .read<DIContainer>()
-                          .boxSettings
-                          .isBiometricsEnabled = true;
-                      Navigator.of(context).pushReplacementNamed(routeHome);
+                    onPressed: () async {
+                      await GetIt.I<SettingsCubit>()
+                          .setIsBiometricsEnabled(true);
+                      if (context.mounted) {
+                        Navigator.of(context).pushReplacementNamed(routeHome);
+                      }
                     },
                     text: 'Yes',
                   ),
