@@ -1,5 +1,3 @@
-import 'package:hive_flutter/hive_flutter.dart';
-
 import '/src/core/model/core_model.dart';
 
 class RecoveryGroupModelAdapter extends TypeAdapter<RecoveryGroupModel> {

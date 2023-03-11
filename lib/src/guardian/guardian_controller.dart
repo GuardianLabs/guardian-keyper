@@ -1,22 +1,24 @@
 import 'package:flutter/foundation.dart';
 
-import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
 import '/src/settings/settings_controller.dart';
+import '/src/core/service/p2p_network_service.dart';
 
 class GuardianController {
-  final diContainer = GetIt.I<DIContainer>();
+  final _boxMessages = GetIt.I<Box<MessageModel>>();
+  final _boxRecoveryGroups = GetIt.I<Box<RecoveryGroupModel>>();
+  final _networkService = GetIt.I<P2PNetworkService>();
 
   var _myPeerId = GetIt.I<SettingsController>().state.deviceId;
 
   GuardianController() {
-    diContainer.networkService.messageStream.listen(onMessage);
+    _networkService.messageStream.listen(onMessage);
     GetIt.I<SettingsController>().stream.listen((s) => _myPeerId = s.deviceId);
   }
 
   Future<void> pruneMessages() async {
-    if (diContainer.boxMessages.isEmpty) return;
-    final expired = diContainer.boxMessages.values
+    if (_boxMessages.isEmpty) return;
+    final expired = _boxMessages.values
         .where((e) =>
             e.isRequested &&
             (e.code == MessageCode.createGroup ||
@@ -24,12 +26,12 @@ class GuardianController {
             e.timestamp
                 .isBefore(DateTime.now().subtract(const Duration(days: 1))))
         .toList(growable: false);
-    await diContainer.boxMessages.deleteAll(expired.map((e) => e.aKey));
-    await diContainer.boxMessages.compact();
+    await _boxMessages.deleteAll(expired.map((e) => e.aKey));
+    await _boxMessages.compact();
   }
 
   void onMessage(MessageModel message) {
-    final ticket = diContainer.boxMessages.get(message.aKey);
+    final ticket = _boxMessages.get(message.aKey);
     if (kDebugMode) print('$message\n$ticket');
 
     switch (message.code) {
@@ -38,7 +40,7 @@ class GuardianController {
         if (ticket == null) return; // qrCode was not generated
         if (message.isNotRequested) return; // qrCode was processed already
         if (message.code != ticket.code) return;
-        if (diContainer.boxRecoveryGroups.containsKey(message.groupId.asKey)) {
+        if (_boxRecoveryGroups.containsKey(message.groupId.asKey)) {
           return; // group already exists
         }
         break;
@@ -53,8 +55,7 @@ class GuardianController {
       case MessageCode.setShard:
         if (message.isEmpty) return;
         if (ticket != null) return; // request already processed
-        final recoveryGroup =
-            diContainer.boxRecoveryGroups.get(message.groupId.asKey);
+        final recoveryGroup = _boxRecoveryGroups.get(message.groupId.asKey);
         if (recoveryGroup == null) return; // group does not exists
         if (recoveryGroup.ownerId != message.peerId) return; // not owner
         // already have this Secret
@@ -64,15 +65,14 @@ class GuardianController {
       case MessageCode.getShard:
         if (message.isEmpty) return;
         if (ticket != null) return; // request already processed
-        final recoveryGroup =
-            diContainer.boxRecoveryGroups.get(message.groupId.asKey);
+        final recoveryGroup = _boxRecoveryGroups.get(message.groupId.asKey);
         if (recoveryGroup == null) return; // group does not exists
         if (recoveryGroup.ownerId != message.peerId) return; // not owner
         // Have no such Secret
         if (!recoveryGroup.secrets.containsKey(message.secretShard.id)) return;
         break;
     }
-    diContainer.boxMessages.put(
+    _boxMessages.put(
       message.aKey,
       message.copyWith(status: MessageStatus.received),
     );
@@ -88,8 +88,7 @@ class GuardianController {
           maxSize: request.recoveryGroup.maxSize,
           threshold: request.recoveryGroup.threshold,
         );
-        await diContainer.boxRecoveryGroups
-            .put(recoveryGroup.aKey, recoveryGroup);
+        await _boxRecoveryGroups.put(recoveryGroup.aKey, recoveryGroup);
       }
       await archivateMessage(request);
     }
@@ -98,7 +97,7 @@ class GuardianController {
 
   Future<void> sendTakeGroupResponse(MessageModel request) async {
     if (request.isAccepted) {
-      final recoveryGroup = diContainer.boxRecoveryGroups
+      final recoveryGroup = _boxRecoveryGroups
           .get(request.recoveryGroup.aKey)!
           .copyWith(ownerId: request.peerId);
       await _sendResponse(
@@ -110,7 +109,7 @@ class GuardianController {
           ),
         ),
       );
-      await diContainer.boxRecoveryGroups.put(
+      await _boxRecoveryGroups.put(
         recoveryGroup.aKey,
         recoveryGroup,
       );
@@ -122,9 +121,8 @@ class GuardianController {
 
   Future<void> sendSetShardResponse(MessageModel request) async {
     if (request.isAccepted) {
-      final recoveryGroup =
-          diContainer.boxRecoveryGroups.get(request.groupId.asKey)!;
-      await diContainer.boxRecoveryGroups.put(
+      final recoveryGroup = _boxRecoveryGroups.get(request.groupId.asKey)!;
+      await _boxRecoveryGroups.put(
         request.groupId.asKey,
         recoveryGroup.copyWith(secrets: {
           ...recoveryGroup.secrets,
@@ -140,8 +138,7 @@ class GuardianController {
 
   Future<void> sendGetShardResponse(MessageModel request) async {
     if (request.isAccepted) {
-      final recoveryGroup =
-          diContainer.boxRecoveryGroups.get(request.groupId.asKey)!;
+      final recoveryGroup = _boxRecoveryGroups.get(request.groupId.asKey)!;
       await _sendResponse(
         request.copyWith(
           payload: SecretShardModel(
@@ -161,8 +158,8 @@ class GuardianController {
   }
 
   Future<void> archivateMessage(MessageModel message) async {
-    await diContainer.boxMessages.delete(message.aKey);
-    await diContainer.boxMessages.put(
+    await _boxMessages.delete(message.aKey);
+    await _boxMessages.put(
       message.timestamp.millisecondsSinceEpoch.toString(),
       message,
     );
@@ -170,7 +167,7 @@ class GuardianController {
 
   Future<bool> _sendResponse(MessageModel message) async {
     try {
-      await diContainer.networkService.sendTo(
+      await _networkService.sendTo(
         isConfirmable: true,
         peerId: message.peerId,
         message: message.copyWith(peerId: _myPeerId),

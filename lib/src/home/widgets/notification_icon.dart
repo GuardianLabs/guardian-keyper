@@ -1,7 +1,6 @@
-import '/src/core/di_container.dart';
-import '/src/core/model/core_model.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
+import '/src/core/model/core_model.dart';
 
 class MessagesIcon extends StatelessWidget {
   final bool isSelected;
@@ -13,7 +12,7 @@ class MessagesIcon extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<MessageModel>>(
-        valueListenable: GetIt.I<DIContainer>().boxMessages.listenable(),
+        valueListenable: GetIt.I<Box<MessageModel>>().listenable(),
         builder: (_, boxMessages, __) {
           final count = boxMessages.values.where((e) => e.isReceived).length;
           return Stack(

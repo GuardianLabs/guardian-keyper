@@ -1,7 +1,6 @@
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 import '/src/core/consts.dart';
-import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
@@ -35,7 +34,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    GetIt.I<DIContainer>().boxMessages.watch().listen(
+    GetIt.I<Box<MessageModel>>().watch().listen(
       (event) async {
         if (ModalRoute.of(context)?.isCurrent != true) return;
         if (event.deleted) return;

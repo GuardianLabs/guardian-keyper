@@ -1,5 +1,4 @@
 import '/src/core/consts.dart';
-import '/src/core/di_container.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 
@@ -19,7 +18,7 @@ class EditGroupView extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
-        valueListenable: GetIt.I<DIContainer>().boxRecoveryGroups.listenable(),
+        valueListenable: GetIt.I<Box<RecoveryGroupModel>>().listenable(),
         builder: (context, boxRecoveryGroup, __) {
           final group = boxRecoveryGroup.get(groupId.asKey);
           // For correct animation on group delete

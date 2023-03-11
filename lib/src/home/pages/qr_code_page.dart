@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '/src/core/di_container.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -30,7 +29,7 @@ class _QRCodePageState extends State<QRCodePage> {
     final qrCode = _generateQrCode();
     _qrCode = qrCode.toBase64url();
     _boxMessagesEventsSubscription =
-        GetIt.I<DIContainer>().boxMessages.watch(key: qrCode.aKey).listen(
+        GetIt.I<Box<MessageModel>>().watch(key: qrCode.aKey).listen(
       (event) async {
         if (!mounted) return;
         final message = event.value as MessageModel;
@@ -151,14 +150,13 @@ class _QRCodePageState extends State<QRCodePage> {
       code: isNew ? MessageCode.createGroup : MessageCode.takeGroup,
       peerId: GetIt.I<SettingsController>().state.deviceId,
     );
-    GetIt.I<DIContainer>().boxMessages.put(
-          message.aKey,
-          isNew
-              ? message
-              // save groupId for transaction
-              : message.copyWith(
-                  payload: RecoveryGroupModel(id: widget.groupId)),
-        );
+    GetIt.I<Box<MessageModel>>().put(
+      message.aKey,
+      isNew
+          ? message
+          // save groupId for transaction
+          : message.copyWith(payload: RecoveryGroupModel(id: widget.groupId)),
+    );
     return message;
   }
 }

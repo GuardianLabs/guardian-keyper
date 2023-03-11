@@ -3,6 +3,7 @@ import 'dart:async';
 import '/src/core/model/core_model.dart';
 import '/src/core/service/platform_service.dart';
 import '/src/core/service/analytics_service.dart';
+import '/src/core/service/p2p_network_service.dart';
 import '/src/core/controller/page_controller_base.dart';
 import '/src/settings/settings_controller.dart';
 

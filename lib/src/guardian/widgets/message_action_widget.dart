@@ -3,7 +3,7 @@ import 'dart:async';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
-import '/src/core/di_container.dart';
+import '/src/core/service/p2p_network_service.dart';
 
 import '../guardian_controller.dart';
 
@@ -30,7 +30,7 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
     MessageCode.takeGroup: ' asks you to approve a change of ownership for ',
   };
 
-  final networkService = GetIt.I<DIContainer>().networkService;
+  final _networkService = GetIt.I<P2PNetworkService>();
 
   late final _animationController = AnimationController(
     vsync: this,
@@ -38,9 +38,9 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
   )..addListener(() => setState(() {}));
 
   late final _timer = Timer.periodic(
-    networkService.router.messageTTL,
+    _networkService.router.messageTTL,
     (_) {
-      networkService.pingPeer(widget.message.peerId).then(
+      _networkService.pingPeer(widget.message.peerId).then(
         (isOnline) {
           if (mounted) setState(() => _isPeerOnline = isOnline);
         },
@@ -48,7 +48,8 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
     },
   );
 
-  late bool _isPeerOnline = networkService.getPeerStatus(widget.message.peerId);
+  late bool _isPeerOnline =
+      _networkService.getPeerStatus(widget.message.peerId);
 
   bool _isRequestError = false;
   bool _isRequestActive = false;
