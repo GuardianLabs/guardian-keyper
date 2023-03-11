@@ -12,29 +12,26 @@ class SetPasscodePage extends StatefulWidget {
 }
 
 class _SetPasscodePageState extends State<SetPasscodePage> {
+  late final _controller = context.read<IntroController>();
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(_init);
+    Future.microtask(() async => await GetIt.I<AuthController>().createPassCode(
+          context: context,
+          onConfirmed: () {
+            if (_controller.hasBiometrics) {
+              Navigator.of(context).pop();
+              // TBD: use PageControllerBase?
+              _controller.nextScreen();
+            } else {
+              Navigator.of(context).pushReplacementNamed(routeHome);
+            }
+          },
+        ));
   }
 
   @override
   Widget build(final BuildContext context) =>
       Container(color: Theme.of(context).colorScheme.background);
-
-  Future<void> _init() async {
-    final controller = context.read<IntroController>();
-    await context.read<AuthController>().createPassCode(
-          context: context,
-          onConfirmed: () {
-            if (controller.hasBiometrics) {
-              Navigator.of(context).pop();
-              // TBD: use PageControllerBase?
-              controller.nextScreen();
-            } else {
-              Navigator.of(context).pushReplacementNamed(routeHome);
-            }
-          },
-        );
-  }
 }

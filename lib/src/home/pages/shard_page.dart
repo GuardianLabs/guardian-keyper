@@ -13,8 +13,7 @@ class ShardPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
-        valueListenable: context
-            .read<DIContainer>()
+        valueListenable: GetIt.I<DIContainer>()
             .boxRecoveryGroups
             .listenable(keys: [groupId.asKey]),
         builder: (context, boxRecoveryGroups, __) {

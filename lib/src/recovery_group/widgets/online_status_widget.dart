@@ -20,7 +20,7 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
   @override
   void initState() {
     super.initState();
-    final networkService = context.read<DIContainer>().networkService;
+    final networkService = GetIt.I<DIContainer>().networkService;
     _timer = Timer.periodic(
       networkService.router.messageTTL,
       (_) => networkService.pingPeer(widget.peerId),
@@ -35,12 +35,9 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
 
   @override
   Widget build(final BuildContext context) => StreamBuilder<bool>(
-        initialData: context
-            .read<DIContainer>()
-            .networkService
-            .getPeerStatus(widget.peerId),
-        stream: context
-            .read<DIContainer>()
+        initialData:
+            GetIt.I<DIContainer>().networkService.getPeerStatus(widget.peerId),
+        stream: GetIt.I<DIContainer>()
             .networkService
             .peerStatusChangeStream
             .where((e) => e.key == widget.peerId)

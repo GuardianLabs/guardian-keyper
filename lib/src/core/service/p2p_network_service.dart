@@ -7,6 +7,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
 import 'package:nsd/nsd.dart';
 
+import '/src/core/consts.dart';
 import '/src/core/model/core_model.dart';
 
 part 'p2p_network_service/p2p_network_service_base.dart';
@@ -18,8 +19,6 @@ class P2PNetworkService extends P2PNetworkServiceBase
   final _messagesController = StreamController<MessageModel>.broadcast();
 
   p2p.Route? _bsServer;
-
-  P2PNetworkService({super.globals});
 
   Stream<MessageModel> get messageStream => _messagesController.stream;
 

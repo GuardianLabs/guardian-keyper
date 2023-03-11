@@ -15,10 +15,10 @@ class ChangePassCodeListTile extends StatelessWidget {
           style: textStyleSourceSansPro414Purple,
         ),
         trailing: const Icon(Icons.arrow_forward_ios_rounded),
-        onTap: () => context.read<AuthController>().changePassCode(
-              context: context,
-              onExit: () => Navigator.of(context)
-                  .popUntil(ModalRoute.withName(routeSettings)),
-            ),
+        onTap: () => GetIt.I<AuthController>().changePassCode(
+          context: context,
+          onExit: () => Navigator.of(context)
+              .popUntil(ModalRoute.withName(routeSettings)),
+        ),
       );
 }

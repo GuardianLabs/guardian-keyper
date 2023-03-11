@@ -8,7 +8,7 @@ import 'widgets/check_pass_code.dart';
 import 'widgets/create_pass_code.dart';
 import 'widgets/change_pass_code.dart';
 
-export 'package:provider/provider.dart';
+export 'package:get_it/get_it.dart';
 
 class AuthController {
   const AuthController();

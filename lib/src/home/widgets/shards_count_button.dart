@@ -11,8 +11,7 @@ class ShardsCountButton extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
-        valueListenable:
-            context.read<DIContainer>().boxRecoveryGroups.listenable(),
+        valueListenable: GetIt.I<DIContainer>().boxRecoveryGroups.listenable(),
         builder: (_, boxRecoveryGroups, __) {
           final myId = GetIt.I<SettingsController>().state.deviceId;
           final groupsCount =

@@ -19,8 +19,7 @@ class EditGroupView extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
-        valueListenable:
-            context.read<DIContainer>().boxRecoveryGroups.listenable(),
+        valueListenable: GetIt.I<DIContainer>().boxRecoveryGroups.listenable(),
         builder: (context, boxRecoveryGroup, __) {
           final group = boxRecoveryGroup.get(groupId.asKey);
           // For correct animation on group delete

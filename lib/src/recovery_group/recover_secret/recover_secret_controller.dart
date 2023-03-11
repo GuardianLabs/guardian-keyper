@@ -6,6 +6,8 @@ import '/src/core/service/analytics_service.dart';
 
 import '../recovery_group_controller.dart';
 
+export 'package:provider/provider.dart';
+
 class RecoverySecretController extends RecoveryGroupSecretController {
   String secret = '';
 

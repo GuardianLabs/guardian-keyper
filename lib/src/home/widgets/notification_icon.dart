@@ -13,7 +13,7 @@ class MessagesIcon extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<MessageModel>>(
-        valueListenable: context.read<DIContainer>().boxMessages.listenable(),
+        valueListenable: GetIt.I<DIContainer>().boxMessages.listenable(),
         builder: (_, boxMessages, __) {
           final count = boxMessages.values.where((e) => e.isReceived).length;
           return Stack(

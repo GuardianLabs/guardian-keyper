@@ -21,7 +21,6 @@ class QRCodePage extends StatefulWidget {
 
 class _QRCodePageState extends State<QRCodePage> {
   late final StreamSubscription<BoxEvent> _boxMessagesEventsSubscription;
-  late final _diContainer = context.read<DIContainer>();
   late final String _qrCode;
 
   @override
@@ -31,7 +30,7 @@ class _QRCodePageState extends State<QRCodePage> {
     final qrCode = _generateQrCode();
     _qrCode = qrCode.toBase64url();
     _boxMessagesEventsSubscription =
-        _diContainer.boxMessages.watch(key: qrCode.aKey).listen(
+        GetIt.I<DIContainer>().boxMessages.watch(key: qrCode.aKey).listen(
       (event) async {
         if (!mounted) return;
         final message = event.value as MessageModel;
@@ -152,13 +151,14 @@ class _QRCodePageState extends State<QRCodePage> {
       code: isNew ? MessageCode.createGroup : MessageCode.takeGroup,
       peerId: GetIt.I<SettingsController>().state.deviceId,
     );
-    _diContainer.boxMessages.put(
-      message.aKey,
-      isNew
-          ? message
-          // save groupId for transaction
-          : message.copyWith(payload: RecoveryGroupModel(id: widget.groupId)),
-    );
+    GetIt.I<DIContainer>().boxMessages.put(
+          message.aKey,
+          isNew
+              ? message
+              // save groupId for transaction
+              : message.copyWith(
+                  payload: RecoveryGroupModel(id: widget.groupId)),
+        );
     return message;
   }
 }

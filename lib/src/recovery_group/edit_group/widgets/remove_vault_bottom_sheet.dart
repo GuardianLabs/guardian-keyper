@@ -33,8 +33,7 @@ class RemoveVaultBottomSheet extends StatelessWidget {
                 width: double.infinity,
                 child: PrimaryButton(
                   text: 'Yes, remove the Vault',
-                  onPressed: () => context
-                      .read<DIContainer>()
+                  onPressed: () => GetIt.I<DIContainer>()
                       .boxRecoveryGroups
                       .delete(group.aKey)
                       .then(

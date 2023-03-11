@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/src/core/consts.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/service/platform_service.dart';
 import '/src/core/service/p2p_network_service.dart';
@@ -55,16 +56,15 @@ class SettingsController extends Cubit<SettingsModel> {
   }
 
   Future<void> setIsBootstrapEnabled(final bool isBootstrapEnabled) async {
-    final globals = GetIt.I<Globals>();
     final p2pNetworkService = GetIt.I<P2PNetworkService>();
     isBootstrapEnabled
         ? p2pNetworkService.addBootstrapServer(
-            peerId: globals.bsPeerId,
-            ipV4: globals.bsAddressV4,
-            ipV6: globals.bsAddressV6,
-            port: globals.bsPort,
+            peerId: Envs.bsPeerId,
+            ipV4: Envs.bsAddressV4,
+            ipV6: Envs.bsAddressV6,
+            port: Envs.bsPort,
           )
-        : p2pNetworkService.addBootstrapServer(peerId: globals.bsPeerId);
+        : p2pNetworkService.addBootstrapServer(peerId: Envs.bsPeerId);
     await _repository.setIsBootstrapEnabled(isBootstrapEnabled);
     emit(state.copyWith(isBootstrapEnabled: isBootstrapEnabled));
   }

@@ -24,11 +24,11 @@ class _GuardianTileWithPingWidgetState
         onLongPress: _isWaiting
             ? null
             : () async {
-                final diContainer = context.read<DIContainer>();
                 setState(() => _isWaiting = true);
                 final startedAt = DateTime.now();
-                final hasPong =
-                    await diContainer.networkService.pingPeer(widget.guardian);
+                final hasPong = await GetIt.I<DIContainer>()
+                    .networkService
+                    .pingPeer(widget.guardian);
                 if (!mounted) return;
                 final msElapsed =
                     DateTime.now().difference(startedAt).inMilliseconds;

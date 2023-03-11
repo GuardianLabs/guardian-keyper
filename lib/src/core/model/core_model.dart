@@ -13,7 +13,6 @@ part 'message_model.dart';
 part 'peer_address.dart';
 part 'key_bunch.dart';
 part 'id_model.dart';
-part 'globals.dart';
 
 @immutable
 abstract class Serializable extends Equatable {

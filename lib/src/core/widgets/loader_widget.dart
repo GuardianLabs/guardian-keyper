@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/model/core_model.dart';
 import '/src/auth/auth_controller.dart';
 import '/src/settings/settings_controller.dart';
 import '/src/guardian/guardian_controller.dart';
@@ -44,8 +43,7 @@ class _LoaderWidgetState extends State<LoaderWidget>
       );
 
   Future<void> _init() async {
-    final guardianController = context.read<GuardianController>();
-    final diContainer = await context.read<DIContainer>().init();
+    final diContainer = await GetIt.I<DIContainer>().init();
     GetIt.I.registerSingleton<P2PNetworkService>(diContainer.networkService);
     final settingsCubit = SettingsController();
     await settingsCubit.init();
@@ -54,23 +52,22 @@ class _LoaderWidgetState extends State<LoaderWidget>
     _controller.stop();
     _controller.dispose();
     if (mounted && settingsCubit.state.passCode.isNotEmpty) {
-      await context.read<AuthController>().checkPassCode(
-            context: context,
-            canCancel: false,
-            onUnlock: Navigator.of(context).pop,
-          );
-    }
-    if (settingsCubit.state.isBootstrapEnabled) {
-      final globals = GetIt.I<Globals>();
-      diContainer.networkService.addBootstrapServer(
-        peerId: globals.bsPeerId,
-        ipV4: globals.bsAddressV4,
-        ipV6: globals.bsAddressV6,
-        port: globals.bsPort,
+      await GetIt.I<AuthController>().checkPassCode(
+        context: context,
+        canCancel: false,
+        onUnlock: Navigator.of(context).pop,
       );
     }
+    if (settingsCubit.state.isBootstrapEnabled) {
+      diContainer.networkService.addBootstrapServer(
+        peerId: Envs.bsPeerId,
+        ipV4: Envs.bsAddressV4,
+        ipV6: Envs.bsAddressV6,
+        port: Envs.bsPort,
+      );
+    }
+    await GetIt.I<GuardianController>().pruneMessages();
     await diContainer.networkService.start();
-    await guardianController.pruneMessages(); // Initialize lazy controller
     if (mounted) Navigator.of(context).pushReplacementNamed(routeHome);
   }
 }
