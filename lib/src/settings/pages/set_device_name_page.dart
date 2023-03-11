@@ -1,7 +1,7 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
+import '/src/core/model/core_model.dart';
 
-import '../settings_cubit.dart';
+import '../settings_controller.dart';
 
 class SetDeviceNamePage extends StatelessWidget {
   const SetDeviceNamePage({super.key});
@@ -31,12 +31,11 @@ class SetDeviceNamePage extends StatelessWidget {
                   padding: paddingV20,
                   child: TextFormField(
                     autofocus: true,
-                    initialValue: GetIt.I<SettingsCubit>().state.deviceName,
+                    initialValue:
+                        GetIt.I<SettingsController>().state.deviceId.name,
                     keyboardType: TextInputType.text,
-                    maxLength: SettingsModel.maxNameLength,
-                    onChanged: (value) =>
-                        GetIt.I<SettingsCubit>().deviceName = value,
-                    // onChanged: GetIt.I<SettingsCubit>().setDeviceName,
+                    maxLength: IdWithNameBase.maxNameLength,
+                    onChanged: GetIt.I<SettingsController>().setDeviceName,
                     decoration: const InputDecoration(
                       labelText: ' Device name ',
                       helperText: 'Minimum 3 characters',
@@ -46,15 +45,15 @@ class SetDeviceNamePage extends StatelessWidget {
                 // Footer
                 Padding(
                   padding: paddingV20,
-                  child: BlocBuilder<SettingsCubit, SettingsModel>(
-                    bloc: GetIt.I<SettingsCubit>(),
+                  child: BlocBuilder<SettingsController, SettingsModel>(
+                    bloc: GetIt.I<SettingsController>(),
                     builder: (final context, final state) => PrimaryButton(
                       text: 'Proceed',
                       onPressed: state.isNameTooShort
                           ? null
                           : () async {
-                              await GetIt.I<SettingsCubit>()
-                                  .setDeviceName(state.deviceName);
+                              await GetIt.I<SettingsController>()
+                                  .saveDeviceName();
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(buildSnackBar(

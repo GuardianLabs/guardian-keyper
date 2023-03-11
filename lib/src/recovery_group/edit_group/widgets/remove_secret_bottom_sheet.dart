@@ -14,7 +14,7 @@ class RemoveSecretBottomSheet extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => BottomSheetWidget(
+  Widget build(final BuildContext context) => BottomSheetWidget(
         icon: const IconOf.removeGroup(
           isBig: true,
           bage: BageType.warning,

@@ -1,71 +1,71 @@
-import 'package:guardian_keyper/src/core/model/core_model.dart';
-import 'package:guardian_keyper/src/core/utils/random_utils.dart';
+// import 'package:guardian_keyper/src/core/model/core_model.dart';
+// import 'package:guardian_keyper/src/core/utils/random_utils.dart';
 
-final now = DateTime.now();
+// final now = DateTime.now();
 
 //Token model
-final peerIdA = PeerId(token: getRandomBytes(64), name: 'Alice');
-final peerIdB = PeerId(token: getRandomBytes(64), name: 'Bob');
-final peerIdAA = PeerId(token: peerIdA.token, name: peerIdA.name);
+// final peerIdA = PeerId(token: getRandomBytes(64), name: 'Alice');
+// final peerIdB = PeerId(token: getRandomBytes(64), name: 'Bob');
+// final peerIdAA = PeerId(token: peerIdA.token, name: peerIdA.name);
 
-final groupIdA = GroupId(name: 'GroupA');
-final groupIdB = GroupId(name: 'GroupB');
-final groupIdAA = GroupId(token: groupIdA.token, name: 'GroupAA');
+// final groupIdA = GroupId(name: 'GroupA');
+// final groupIdB = GroupId(name: 'GroupB');
+// final groupIdAA = GroupId(token: groupIdA.token, name: 'GroupAA');
 
-final requestIdA = MessageId();
-final requestIdB = MessageId();
-final requestIdAA = MessageId(token: requestIdA.token);
+// final requestIdA = MessageId();
+// final requestIdB = MessageId();
+// final requestIdAA = MessageId(token: requestIdA.token);
 
-final secretIdA = SecretId(name: 'SecretA');
-final secretIdB = SecretId(name: 'SecretB');
-final secretIdAA = SecretId(token: secretIdA.token, name: 'SecretAA');
+// final secretIdA = SecretId(name: 'SecretA');
+// final secretIdB = SecretId(name: 'SecretB');
+// final secretIdAA = SecretId(token: secretIdA.token, name: 'SecretAA');
 
 //QRCode model
-final qrCode1 = MessageModel(
-  peerId: peerIdA,
-  code: MessageCode.createGroup,
-);
-final qrCode2 = MessageModel(
-  peerId: peerIdB,
-  code: MessageCode.createGroup,
-);
+// final qrCode1 = MessageModel(
+//   peerId: peerIdA,
+//   code: MessageCode.createGroup,
+// );
+// final qrCode2 = MessageModel(
+//   peerId: peerIdB,
+//   code: MessageCode.createGroup,
+// );
 
 //Secret shard model
-final secretShardA = SecretShardModel(
-  id: secretIdA,
-  shard: 'TopSecret',
-  ownerId: peerIdA,
-  groupId: groupIdA,
-  groupSize: 3,
-  groupThreshold: 2,
-);
-final secretShardB = SecretShardModel(
-  id: secretIdB,
-  shard: 'TopSecret',
-  ownerId: peerIdB,
-  groupId: groupIdB,
-  groupSize: 3,
-  groupThreshold: 2,
-);
-final clearedSecretSecretShardA = secretShardA.copyWith(shard: '');
+// final secretShardA = SecretShardModel(
+//   id: secretIdA,
+//   shard: 'TopSecret',
+//   ownerId: peerIdA,
+//   groupId: groupIdA,
+//   groupSize: 3,
+//   groupThreshold: 2,
+// );
+// final secretShardB = SecretShardModel(
+//   id: secretIdB,
+//   shard: 'TopSecret',
+//   ownerId: peerIdB,
+//   groupId: groupIdB,
+//   groupSize: 3,
+//   groupThreshold: 2,
+// );
+// final clearedSecretSecretShardA = secretShardA.copyWith(shard: '');
 
 //Message model
-final p2pPacketA = MessageModel(
-  id: requestIdA,
-  peerId: peerIdA,
-  timestamp: now,
-  code: MessageCode.getShard,
-  status: MessageStatus.accepted,
-  payload: secretShardA,
-);
-final p2pPacketB = MessageModel(
-  id: requestIdB,
-  peerId: peerIdB,
-  timestamp: now,
-  code: MessageCode.createGroup,
-  status: MessageStatus.rejected,
-  payload: secretShardB,
-);
+// final p2pPacketA = MessageModel(
+//   id: requestIdA,
+//   peerId: peerIdA,
+//   timestamp: now,
+//   code: MessageCode.getShard,
+//   status: MessageStatus.accepted,
+//   payload: secretShardA,
+// );
+// final p2pPacketB = MessageModel(
+//   id: requestIdB,
+//   peerId: peerIdB,
+//   timestamp: now,
+//   code: MessageCode.createGroup,
+//   status: MessageStatus.rejected,
+//   payload: secretShardB,
+// );
 
 //Recovery Group model
 // final guardianA = GuardianModel(

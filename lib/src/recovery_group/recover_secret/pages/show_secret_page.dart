@@ -2,7 +2,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 import '../recover_secret_controller.dart';
@@ -18,7 +17,7 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
   bool _isSecretObfuscated = true;
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(final BuildContext context) => Column(
         children: [
           // Header
           const HeaderBar(

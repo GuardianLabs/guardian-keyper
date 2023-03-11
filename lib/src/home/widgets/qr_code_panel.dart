@@ -1,6 +1,5 @@
 import 'package:share_plus/share_plus.dart';
 
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 import '../pages/qr_code_page.dart';
@@ -9,7 +8,7 @@ class QRCodePanel extends StatelessWidget {
   const QRCodePanel({super.key});
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(final BuildContext context) => Container(
         decoration: boxDecoration,
         padding: paddingAll20,
         child: Column(

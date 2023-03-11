@@ -1,6 +1,5 @@
 import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 
@@ -18,7 +17,7 @@ class EditGroupView extends StatelessWidget {
   const EditGroupView({super.key, required this.groupId});
 
   @override
-  Widget build(BuildContext context) =>
+  Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
         valueListenable:
             context.read<DIContainer>().boxRecoveryGroups.listenable(),

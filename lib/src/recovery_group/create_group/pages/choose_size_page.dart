@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 import '../create_group_controller.dart';
@@ -9,7 +8,7 @@ class ChooseSizePage extends StatelessWidget {
   const ChooseSizePage({super.key});
 
   @override
-  Widget build(BuildContext context) => Column(children: [
+  Widget build(final BuildContext context) => Column(children: [
         // Header
         HeaderBar(
           caption: 'Vault Size',

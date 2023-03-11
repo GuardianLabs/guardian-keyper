@@ -1,6 +1,5 @@
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 
@@ -20,7 +19,7 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
     ..startRequest(onRejected: _showTerminated);
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(final BuildContext context) => Column(
         children: [
           // Header
           const HeaderBar(
@@ -108,11 +107,11 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
         ],
       );
 
-  void _showTerminated(MessageModel message) => showModalBottomSheet(
+  void _showTerminated(final MessageModel message) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (context) => BottomSheetWidget(
+        builder: (final BuildContext context) => BottomSheetWidget(
           icon: const IconOf.secretRestoration(
             isBig: true,
             bage: BageType.error,

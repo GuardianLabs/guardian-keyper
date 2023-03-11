@@ -7,7 +7,6 @@ class RecoveryGroupSecretController extends RecoveryGroupControllerBase {
   final Set<MessageModel> messages = {};
 
   RecoveryGroupSecretController({
-    required super.diContainer,
     required super.pages,
     super.currentPage,
     required this.groupId,

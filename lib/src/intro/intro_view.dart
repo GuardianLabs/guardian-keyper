@@ -1,6 +1,5 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
-import '/src/core/di_container.dart';
 
 import 'intro_controller.dart';
 import 'pages/intros_page.dart';
@@ -21,22 +20,16 @@ class IntroView extends StatelessWidget {
   const IntroView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final diContainer = context.read<DIContainer>();
-    return ChangeNotifierProvider(
-      create: (context) => IntroController(
-        diContainer: diContainer,
-        pages: _pages,
-      ),
-      child: ScaffoldWidget(
-        child: Selector<IntroController, int>(
-          selector: (_, controller) => controller.currentPage,
-          builder: (_, currentPage, __) => AnimatedSwitcher(
-            duration: diContainer.globals.pageChangeDuration,
-            child: _pages[currentPage],
+  Widget build(final BuildContext context) => ChangeNotifierProvider(
+        create: (final BuildContext context) => IntroController(pages: _pages),
+        child: ScaffoldWidget(
+          child: Selector<IntroController, int>(
+            selector: (_, controller) => controller.currentPage,
+            builder: (_, currentPage, __) => AnimatedSwitcher(
+              duration: pageChangeDuration,
+              child: _pages[currentPage],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

@@ -12,36 +12,37 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 export 'settings_model.dart';
 
-class SettingsCubit extends Cubit<SettingsModel> {
+class SettingsController extends Cubit<SettingsModel> {
   late final bool hasBiometrics;
+
   final _repository = GetIt.I<SettingsRepository>();
 
-  SettingsCubit() : super(const SettingsModel());
+  SettingsController()
+      : super(SettingsModel(
+          deviceId: PeerId(token: GetIt.I<P2PNetworkService>().myId),
+        ));
 
-  set deviceName(final String deviceName) =>
-      emit(state.copyWith(deviceName: deviceName));
-
-  Future<SettingsModel> init() async {
+  Future<void> init() async {
     hasBiometrics = await GetIt.I<PlatformService>().hasBiometrics;
     var deviceName = await _repository.getDeviceName();
     if (deviceName.isEmpty) {
       deviceName = await GetIt.I<PlatformService>()
-          .getDeviceName(maxNameLength: SettingsModel.maxNameLength);
+          .getDeviceName(maxNameLength: IdWithNameBase.maxNameLength);
     }
-    final settings = SettingsModel(
+    emit(SettingsModel(
+      deviceId: state.deviceId.copyWith(name: deviceName),
       passCode: await _repository.getPassCode(),
-      deviceName: deviceName,
       isBootstrapEnabled: await _repository.getIsBootstrapEnabled(),
       isBiometricsEnabled: await _repository.getIsBiometricsEnabled(),
-    );
-    emit(settings);
-    return settings;
+    ));
   }
 
-  Future<void> setDeviceName(final String deviceName) async {
-    await _repository.setDeviceName(deviceName);
-    emit(state.copyWith(deviceName: deviceName));
-  }
+  void setDeviceName(final String deviceName) => emit(state.copyWith(
+        deviceId: state.deviceId.copyWith(name: deviceName),
+      ));
+
+  Future<void> saveDeviceName() =>
+      _repository.setDeviceName(state.deviceId.name);
 
   Future<void> setPassCode(final String passCode) async {
     await _repository.setPassCode(passCode);
@@ -67,8 +68,4 @@ class SettingsCubit extends Cubit<SettingsModel> {
     await _repository.setIsBootstrapEnabled(isBootstrapEnabled);
     emit(state.copyWith(isBootstrapEnabled: isBootstrapEnabled));
   }
-
-  // Future<void> save() async {
-  //   await _repository.setDeviceName(state.deviceName);
-  // }
 }

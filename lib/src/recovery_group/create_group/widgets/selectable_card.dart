@@ -13,7 +13,7 @@ class SelectableCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(final BuildContext context) => Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           borderRadius: borderRadius,

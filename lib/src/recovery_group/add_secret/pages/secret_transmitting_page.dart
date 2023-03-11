@@ -1,5 +1,4 @@
 import '/src/core/consts.dart';
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -25,7 +24,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
     );
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(final BuildContext context) => Column(
         children: [
           // Header
           const HeaderBar(
@@ -58,7 +57,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                         in _controller.messages.map((e) => e.peerId))
                       Padding(
                         padding: paddingV6,
-                        child: guardian == _controller.diContainer.myPeerId
+                        child: guardian == _controller.myPeerId
                             ? GuardianSelfListTile(guardian: guardian)
                             : Consumer<AddSecretController>(
                                 builder: (_, controller, __) {
@@ -91,7 +90,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
         context: context,
         isDismissible: true,
         isScrollControlled: true,
-        builder: (context) => BottomSheetWidget(
+        builder: (final BuildContext context) => BottomSheetWidget(
           icon: const IconOf.splitAndShare(isBig: true, bage: BageType.ok),
           titleString: 'Your Secret has been split',
           textSpan: [
@@ -113,7 +112,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (context) => BottomSheetWidget(
+        builder: (final BuildContext context) => BottomSheetWidget(
           icon: const IconOf.splitAndShare(isBig: true, bage: BageType.error),
           titleString:
               'Guardian rejected your Secret. The Secret will be removed.',
@@ -139,7 +138,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (context) => BottomSheetWidget(
+        builder: (final BuildContext context) => BottomSheetWidget(
           icon: const IconOf.splitAndShare(isBig: true, bage: BageType.error),
           titleString: 'Something went wrong!',
           textSpan: [

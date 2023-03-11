@@ -1,15 +1,15 @@
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 
-import '../settings_cubit.dart';
+import '../settings_controller.dart';
 
 class ToggleBootstrapListTile extends StatelessWidget {
   const ToggleBootstrapListTile({super.key});
 
   @override
   Widget build(final BuildContext context) =>
-      BlocBuilder<SettingsCubit, SettingsModel>(
-        bloc: GetIt.I<SettingsCubit>(),
+      BlocBuilder<SettingsController, SettingsModel>(
+        bloc: GetIt.I<SettingsController>(),
         builder: (_, state) => SwitchListTile.adaptive(
           secondary: const IconOf.splitAndShare(),
           title: const Text('Proxy connection'),
@@ -17,7 +17,7 @@ class ToggleBootstrapListTile extends StatelessWidget {
             'Connect through Keyper-operated proxy server',
           ),
           value: state.isBootstrapEnabled,
-          onChanged: GetIt.I<SettingsCubit>().setIsBootstrapEnabled,
+          onChanged: GetIt.I<SettingsController>().setIsBootstrapEnabled,
         ),
       );
 }

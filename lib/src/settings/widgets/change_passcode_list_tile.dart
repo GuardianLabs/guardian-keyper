@@ -1,5 +1,4 @@
 import '/src/core/consts.dart';
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/auth/auth_controller.dart';
@@ -8,7 +7,7 @@ class ChangePassCodeListTile extends StatelessWidget {
   const ChangePassCodeListTile({super.key});
 
   @override
-  Widget build(BuildContext context) => ListTile(
+  Widget build(final BuildContext context) => ListTile(
         leading: const IconOf.passcode(),
         title: const Text('Passcode'),
         subtitle: Text(

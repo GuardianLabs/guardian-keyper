@@ -10,7 +10,6 @@ class RecoverySecretController extends RecoveryGroupSecretController {
   String secret = '';
 
   RecoverySecretController({
-    required super.diContainer,
     required super.pages,
     required super.groupId,
     required super.secretId,
@@ -25,7 +24,7 @@ class RecoverySecretController extends RecoveryGroupSecretController {
             : MessageStatus.requested,
         payload: SecretShardModel(
           id: secretId,
-          ownerId: diContainer.myPeerId,
+          ownerId: myPeerId,
           groupId: groupId,
           groupSize: group.maxSize,
           groupThreshold: group.threshold,
@@ -36,7 +35,7 @@ class RecoverySecretController extends RecoveryGroupSecretController {
   }
 
   void startRequest({required Callback onRejected}) {
-    GetIt.I<AnalyticsService>().logEvent(eventStartRestoreSecret);
+    analyticsService.logEvent(eventStartRestoreSecret);
     networkSubscription.onData(
       (final message) async {
         if (message.code != MessageCode.getShard) return;
@@ -46,7 +45,7 @@ class RecoverySecretController extends RecoveryGroupSecretController {
         updateMessage(message);
         if (messages.where((m) => m.isAccepted).length >= group.threshold) {
           stopListenResponse();
-          GetIt.I<AnalyticsService>().logEvent(eventFinishRestoreSecret);
+          analyticsService.logEvent(eventFinishRestoreSecret);
           secret = await compute<List<String>, String>(
             (List<String> shares) => restoreSecret(shares: shares),
             messages

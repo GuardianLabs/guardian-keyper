@@ -1,9 +1,4 @@
-// import 'dart:async';
-// import 'package:app_settings/app_settings.dart';
-// import 'package:airplane_mode_checker/airplane_mode_checker.dart';
-
-import '/src/core/theme/theme.dart';
-// import '/src/core/widgets/misc.dart';
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
 import '../add_secret_controller.dart';
@@ -18,31 +13,9 @@ class AddSecretPage extends StatefulWidget {
 
 class _AddSecretPageState extends State<AddSecretPage> {
   var _isSecretObscure = true;
-  // var _airplaneModeOn = true;
-  // Timer? _timer;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   Future.microtask(_showExplainer);
-  //   _timer = Timer.periodic(
-  //     const Duration(seconds: 1),
-  //     (_) => AirplaneModeChecker.checkAirplaneMode().then(
-  //       (status) => setState(
-  //         () => _airplaneModeOn = status == AirplaneModeStatus.on,
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // @override
-  // void dispose() {
-  //   _timer?.cancel();
-  //   super.dispose();
-  // }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final controller = context.read<AddSecretController>();
     return Column(
       children: [
@@ -68,28 +41,6 @@ class _AddSecretPageState extends State<AddSecretPage> {
                 ],
                 subtitle: 'Make sure no one can see your screen.',
               ),
-              // Open Settings Tile
-              // if (!_airplaneModeOn)
-              //   Padding(
-              //     padding: paddingBottom32,
-              //     child: ListTile(
-              //       leading: const Icon(
-              //         Icons.error_outline,
-              //         color: clYellow,
-              //         size: 40,
-              //       ),
-              //       title: Text(
-              //         'Turn on Airplane Mode',
-              //         style: textStyleSourceSansPro614,
-              //       ),
-              //       subtitle: Text(
-              //         'Make current step more secure',
-              //         style: textStyleSourceSansPro414Purple,
-              //       ),
-              //       trailing: const Icon(Icons.arrow_forward_ios),
-              //       onTap: AppSettings.openWirelessSettings,
-              //     ),
-              //   ),
               // Input
               TextFormField(
                 enableInteractiveSelection: true,
@@ -101,7 +52,7 @@ class _AddSecretPageState extends State<AddSecretPage> {
                 keyboardType: TextInputType.multiline,
                 obscureText: _isSecretObscure,
                 maxLines: _isSecretObscure ? 1 : null,
-                maxLength: controller.globals.maxSecretLength,
+                maxLength: maxSecretLength,
                 style: textStyleSourceSansPro416,
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -156,36 +107,4 @@ class _AddSecretPageState extends State<AddSecretPage> {
       ],
     );
   }
-
-  // void _showExplainer() => showModalBottomSheet(
-  //       context: context,
-  //       isDismissible: true,
-  //       isScrollControlled: true,
-  //       builder: (context) => BottomSheetWidget(
-  //         icon: CircleAvatar(
-  //           radius: 40,
-  //           backgroundColor: Theme.of(context).colorScheme.secondary,
-  //           child: const Icon(
-  //             Icons.warning_rounded,
-  //             size: 40,
-  //             color: clYellow,
-  //           ),
-  //         ),
-  //         titleString: 'Before you proceed',
-  //         body: Container(
-  //           decoration: boxDecoration,
-  //           margin: paddingV12,
-  //           padding: paddingAll20,
-  //           child: const NumberedListWidget(list: [
-  //             'Switch your phone to Аirplane mode',
-  //             'Make sure no one can see your screen',
-  //             'Copy and paste your secret to avoid typing',
-  //           ]),
-  //         ),
-  //         footer: PrimaryButton(
-  //           text: 'Got it',
-  //           onPressed: Navigator.of(context).pop,
-  //         ),
-  //       ),
-  //     );
 }

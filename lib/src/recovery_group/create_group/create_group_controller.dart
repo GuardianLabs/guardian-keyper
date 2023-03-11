@@ -1,5 +1,4 @@
 import '/src/core/model/core_model.dart';
-import '/src/settings/settings_model.dart';
 import '/src/core/service/analytics_service.dart';
 
 import '../recovery_group_controller.dart';
@@ -12,11 +11,8 @@ class CreateGroupController extends RecoveryGroupControllerBase {
   var _isGroupMember = false;
   var _groupName = '';
 
-  CreateGroupController({
-    required super.diContainer,
-    required super.pages,
-  }) {
-    GetIt.I<AnalyticsService>().logEvent(eventStartCreateVault);
+  CreateGroupController({required super.pages}) {
+    analyticsService.logEvent(eventStartCreateVault);
   }
 
   int get groupSize => _groupSize;
@@ -26,7 +22,7 @@ class CreateGroupController extends RecoveryGroupControllerBase {
   bool get isGroupMember => _isGroupMember;
 
   bool get isGroupNameToolShort =>
-      _groupName.length < SettingsModel.minNameLength;
+      _groupName.length < IdWithNameBase.minNameLength;
 
   set groupSize(int size) {
     _groupSize = size;
@@ -49,15 +45,13 @@ class CreateGroupController extends RecoveryGroupControllerBase {
   }
 
   Future<RecoveryGroupModel> createVault() {
-    GetIt.I<AnalyticsService>().logEvent(eventFinishCreateVault);
+    analyticsService.logEvent(eventFinishCreateVault);
     return createGroup(RecoveryGroupModel(
       id: GroupId(name: _groupName),
       maxSize: _groupSize,
       threshold: _groupThreshold,
-      ownerId: diContainer.myPeerId,
-      guardians: {
-        if (_isGroupMember) diContainer.myPeerId: '',
-      },
+      ownerId: myPeerId,
+      guardians: {if (_isGroupMember) myPeerId: ''},
     ));
   }
 }

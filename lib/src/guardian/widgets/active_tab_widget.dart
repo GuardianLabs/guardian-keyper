@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
@@ -10,7 +9,7 @@ class ActiveTabWidget extends StatelessWidget {
   const ActiveTabWidget({super.key});
 
   @override
-  Widget build(BuildContext context) =>
+  Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<MessageModel>>(
         valueListenable: context.read<DIContainer>().boxMessages.listenable(),
         builder: (context, boxMessages, __) {
@@ -60,10 +59,11 @@ class ActiveTabWidget extends StatelessWidget {
         },
       );
 
-  Future<bool?> _showConfirmation(BuildContext context) => showModalBottomSheet(
+  Future<bool?> _showConfirmation(final BuildContext context) =>
+      showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        builder: (context) => BottomSheetWidget(
+        builder: (final BuildContext context) => BottomSheetWidget(
           titleString: 'Are you sure?',
           textString: 'This Request will be moved to Resolved'
               ' and you will not able to Approve it!',

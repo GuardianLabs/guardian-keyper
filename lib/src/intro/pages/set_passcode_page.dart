@@ -19,7 +19,7 @@ class _SetPasscodePageState extends State<SetPasscodePage> {
   }
 
   @override
-  Widget build(BuildContext context) =>
+  Widget build(final BuildContext context) =>
       Container(color: Theme.of(context).colorScheme.background);
 
   Future<void> _init() async {

@@ -1,6 +1,5 @@
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 
@@ -12,7 +11,7 @@ class MessagesIcon extends StatelessWidget {
   const MessagesIcon.selected({super.key}) : isSelected = true;
 
   @override
-  Widget build(BuildContext context) =>
+  Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<MessageModel>>(
         valueListenable: context.read<DIContainer>().boxMessages.listenable(),
         builder: (_, boxMessages, __) {

@@ -9,7 +9,7 @@ class ScanQRCodePage extends StatelessWidget {
   const ScanQRCodePage({super.key});
 
   @override
-  Widget build(BuildContext context) => GetQRCodeWidget(
+  Widget build(final BuildContext context) => GetQRCodeWidget(
         resultCallback: (qrCode) {
           if (qrCode.code == MessageCode.takeGroup) {
             context.read<RestoreGroupController>().qrCode = qrCode;

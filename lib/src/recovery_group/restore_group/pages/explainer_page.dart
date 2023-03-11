@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 import '../restore_group_controller.dart';
@@ -7,7 +6,7 @@ class ExplainerPage extends StatelessWidget {
   const ExplainerPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(final BuildContext context) => Column(
         children: [
           // Header
           const HeaderBar(

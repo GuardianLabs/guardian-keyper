@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 import '../create_group_controller.dart';
@@ -8,7 +7,7 @@ class GuardiansControlPanel extends StatelessWidget {
   const GuardiansControlPanel({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final controller = Provider.of<CreateGroupController>(context);
     return Container(
       decoration: BoxDecoration(

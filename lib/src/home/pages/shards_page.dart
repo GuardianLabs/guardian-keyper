@@ -1,7 +1,7 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
+import '/src/settings/settings_controller.dart';
 
 import 'shard_page.dart';
 
@@ -17,13 +17,14 @@ class ShardsPage extends StatelessWidget {
   const ShardsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final diContainer = context.read<DIContainer>();
     return ValueListenableBuilder<Box<RecoveryGroupModel>>(
       valueListenable: diContainer.boxRecoveryGroups.listenable(),
       builder: (_, boxRecoveryGroups, __) {
-        final guardedGroups = boxRecoveryGroups.values
-            .where((e) => e.ownerId != diContainer.myPeerId);
+        final myId = GetIt.I<SettingsController>().state.deviceId;
+        final guardedGroups =
+            boxRecoveryGroups.values.where((e) => e.ownerId != myId);
         return ListView(
           primary: true,
           children: [

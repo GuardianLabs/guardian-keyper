@@ -1,15 +1,14 @@
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '/src/core/consts.dart';
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
-import '../../settings/settings_cubit.dart';
+import '../../settings/settings_controller.dart';
 
 class SetBiometricPage extends StatelessWidget {
   const SetBiometricPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(final BuildContext context) => Padding(
         padding: paddingAll20,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -37,7 +36,7 @@ class SetBiometricPage extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      await GetIt.I<SettingsCubit>()
+                      await GetIt.I<SettingsController>()
                           .setIsBiometricsEnabled(false);
                       if (context.mounted) {
                         Navigator.of(context).pushReplacementNamed(routeHome);
@@ -50,7 +49,7 @@ class SetBiometricPage extends StatelessWidget {
                 Expanded(
                   child: PrimaryButton(
                     onPressed: () async {
-                      await GetIt.I<SettingsCubit>()
+                      await GetIt.I<SettingsController>()
                           .setIsBiometricsEnabled(true);
                       if (context.mounted) {
                         Navigator.of(context).pushReplacementNamed(routeHome);

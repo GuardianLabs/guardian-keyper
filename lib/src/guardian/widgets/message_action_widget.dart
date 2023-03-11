@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -69,7 +68,7 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
   }
 
   @override
-  Widget build(BuildContext context) => BottomSheetWidget(
+  Widget build(final BuildContext context) => BottomSheetWidget(
         titleString: widget.title,
         textSpan: [
           ...buildTextWithId(id: widget.message.peerId),

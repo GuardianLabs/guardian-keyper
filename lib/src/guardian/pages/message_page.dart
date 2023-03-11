@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 import '../widgets/active_tab_widget.dart';
@@ -10,7 +9,7 @@ class MessagesPage extends StatelessWidget {
   const MessagesPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(final BuildContext context) => Padding(
         padding: paddingH20,
         child: DefaultTabController(
           length: _tabs.length,

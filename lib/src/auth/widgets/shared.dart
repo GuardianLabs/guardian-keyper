@@ -1,7 +1,6 @@
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:vibration/vibration.dart';
 
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 typedef OnConfirmed = Future<void> Function(String passCode);

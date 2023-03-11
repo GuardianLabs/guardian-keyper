@@ -34,7 +34,7 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => StreamBuilder<bool>(
+  Widget build(final BuildContext context) => StreamBuilder<bool>(
         initialData: context
             .read<DIContainer>()
             .networkService

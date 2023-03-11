@@ -11,14 +11,9 @@ export 'package:provider/provider.dart';
 export 'package:get_it/get_it.dart';
 
 class DIContainer {
-  final globals = const Globals();
-
-  late final PeerId myPeerId;
   late final Box<MessageModel> boxMessages;
   late final Box<RecoveryGroupModel> boxRecoveryGroups;
-  late final networkService = P2PNetworkService(globals: globals);
-
-  DIContainer();
+  late final networkService = P2PNetworkService();
 
   Future<DIContainer> init() async {
     final settingsRepository = GetIt.I<SettingsRepository>();
@@ -39,10 +34,6 @@ class DIContainer {
     boxRecoveryGroups = await Hive.openBox<RecoveryGroupModel>(
       RecoveryGroupModel.boxName,
       encryptionCipher: cipher,
-    );
-    myPeerId = PeerId(
-      token: networkService.myId,
-      name: await settingsRepository.getDeviceName(),
     );
     return this;
   }

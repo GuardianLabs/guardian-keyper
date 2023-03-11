@@ -1,25 +1,23 @@
+import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
-import '/src/core/model/core_model.dart';
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
+import '/src/core/model/core_model.dart';
+import '/src/settings/settings_controller.dart';
 
 import '../widgets/vault_list_tile.dart';
 
 class VaultsPage extends StatelessWidget {
-  static const _textSubtitle =
-      'The Vaults is a place where you can securely keep your '
-      'secrets such as seed phrases or passwords.';
-
   const VaultsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final diContainer = context.read<DIContainer>();
     return ValueListenableBuilder<Box<RecoveryGroupModel>>(
       valueListenable: diContainer.boxRecoveryGroups.listenable(),
       builder: (_, boxRecoveryGroups, __) {
-        final guardedGroups = boxRecoveryGroups.values
-            .where((e) => e.ownerId == diContainer.myPeerId);
+        final myId = GetIt.I<SettingsController>().state.deviceId;
+        final guardedGroups =
+            boxRecoveryGroups.values.where((e) => e.ownerId == myId);
         return Column(
           children: [
             // Header
@@ -28,17 +26,15 @@ class VaultsPage extends StatelessWidget {
             if (guardedGroups.isEmpty)
               const PageTitle(
                 title: 'You don’t have any Shards yet',
-                subtitle: _textSubtitle,
+                subtitle: 'The Vaults is a place where you can securely keep '
+                    'your secrets such as seed phrases or passwords.',
               ),
             Container(
               color: clIndigo900,
               padding: paddingAll20,
               child: PrimaryButton(
                 text: 'Add a new Vault',
-                onPressed: () => Navigator.pushNamed(
-                  context,
-                  '/recovery_group/create',
-                ),
+                onPressed: () => Navigator.pushNamed(context, routeGroupCreate),
               ),
             ),
             if (guardedGroups.isNotEmpty)
