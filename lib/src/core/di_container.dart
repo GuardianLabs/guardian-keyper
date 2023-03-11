@@ -7,7 +7,6 @@ import 'service/p2p_network_service.dart';
 import '/src/settings/settings_repository.dart';
 
 export 'package:hive_flutter/hive_flutter.dart';
-export 'package:provider/provider.dart';
 export 'package:get_it/get_it.dart';
 
 class DIContainer {

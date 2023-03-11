@@ -1,7 +1,6 @@
 part of 'recovery_group_controller.dart';
 
 abstract class RecoveryGroupControllerBase extends PageControllerBase {
-  final globals = GetIt.I<Globals>();
   final platformService = GetIt.I<PlatformService>();
   final analyticsService = GetIt.I<AnalyticsService>();
   final myPeerId = GetIt.I<SettingsController>().state.deviceId;

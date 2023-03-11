@@ -28,8 +28,7 @@ class RemoveSecretBottomSheet extends StatelessWidget {
             text: 'Yes, remove the Secret',
             onPressed: () async {
               group.secrets.remove(secretId);
-              await context
-                  .read<DIContainer>()
+              await GetIt.I<DIContainer>()
                   .boxRecoveryGroups
                   .put(group.aKey, group);
               if (context.mounted) Navigator.of(context).pop();

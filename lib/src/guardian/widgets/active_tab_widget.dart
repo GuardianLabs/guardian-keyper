@@ -11,8 +11,8 @@ class ActiveTabWidget extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<MessageModel>>(
-        valueListenable: context.read<DIContainer>().boxMessages.listenable(),
-        builder: (context, boxMessages, __) {
+        valueListenable: GetIt.I<DIContainer>().boxMessages.listenable(),
+        builder: (final BuildContext context, boxMessages, __) {
           final active = boxMessages.values
               .where((e) => e.isReceived)
               .toList(growable: false);
@@ -43,11 +43,10 @@ class ActiveTabWidget extends StatelessWidget {
                           ),
                           direction: DismissDirection.startToEnd,
                           confirmDismiss: (_) => _showConfirmation(context),
-                          onDismissed: (_) => context
-                              .read<GuardianController>()
+                          onDismissed: (_) => GetIt.I<GuardianController>()
                               .archivateMessage(msg.copyWith(
-                                status: MessageStatus.rejected,
-                              )),
+                            status: MessageStatus.rejected,
+                          )),
                           child: Padding(
                             padding: paddingV6,
                             child: MessageListTile(message: msg),

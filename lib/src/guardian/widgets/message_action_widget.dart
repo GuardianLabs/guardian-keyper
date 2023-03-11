@@ -29,35 +29,34 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
     MessageCode.getShard: ' asks you to approve a recovery of Secret for ',
     MessageCode.takeGroup: ' asks you to approve a change of ownership for ',
   };
-  late AnimationController _animationController;
-  late Timer _timer;
-  bool _isPeerOnline = false;
+
+  final networkService = GetIt.I<DIContainer>().networkService;
+
+  late final _animationController = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 3),
+  )..addListener(() => setState(() {}));
+
+  late final _timer = Timer.periodic(
+    networkService.router.messageTTL,
+    (_) {
+      networkService.pingPeer(widget.message.peerId).then(
+        (isOnline) {
+          if (mounted) setState(() => _isPeerOnline = isOnline);
+        },
+      );
+    },
+  );
+
+  late bool _isPeerOnline = networkService.getPeerStatus(widget.message.peerId);
+
   bool _isRequestError = false;
   bool _isRequestActive = false;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    )..addListener(() => setState(() {}));
-
-    final networkService = context.read<DIContainer>().networkService;
-    _isPeerOnline = networkService.getPeerStatus(widget.message.peerId);
-    _timer = Timer.periodic(
-      networkService.router.messageTTL,
-      (_) {
-        networkService.pingPeer(widget.message.peerId).then(
-          (isOnline) {
-            if (mounted) {
-              _isPeerOnline = isOnline;
-              setState(() {});
-            }
-          },
-        );
-      },
-    );
+    _timer.isActive;
   }
 
   @override
@@ -177,11 +176,11 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
         ]),
       );
 
-  Future<void> _sendRespone(MessageStatus status) async {
+  Future<void> _sendRespone(final MessageStatus status) async {
     final response = widget.message.copyWith(status: status);
     setState(() => _isRequestActive = true);
-    final controller = context.read<GuardianController>();
     try {
+      final controller = GetIt.I<GuardianController>();
       switch (response.code) {
         case MessageCode.createGroup:
           await controller.sendCreateGroupResponse(response);

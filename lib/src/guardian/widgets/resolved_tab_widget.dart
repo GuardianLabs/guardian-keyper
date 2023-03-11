@@ -10,8 +10,8 @@ class ResolvedTabWidget extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<MessageModel>>(
-        valueListenable: context.read<DIContainer>().boxMessages.listenable(),
-        builder: (context, boxMessages, __) {
+        valueListenable: GetIt.I<DIContainer>().boxMessages.listenable(),
+        builder: (_, boxMessages, __) {
           final resolved = boxMessages.values
               .where((e) => e.isResolved)
               .toList(growable: false);
