@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '/src/core/theme/theme.dart';
 import '/src/core/model/core_model.dart';
-import '/src/core/di_container.dart';
+import '/src/core/service/p2p_network_service.dart';
 
 class OnlineStatusWidget extends StatefulWidget {
   final PeerId peerId;
@@ -15,15 +15,15 @@ class OnlineStatusWidget extends StatefulWidget {
 }
 
 class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
+  final _networkService = GetIt.I<P2PNetworkService>();
   late Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    final networkService = GetIt.I<DIContainer>().networkService;
     _timer = Timer.periodic(
-      networkService.router.messageTTL,
-      (_) => networkService.pingPeer(widget.peerId),
+      _networkService.router.messageTTL,
+      (_) => _networkService.pingPeer(widget.peerId),
     );
   }
 
@@ -35,11 +35,8 @@ class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
 
   @override
   Widget build(final BuildContext context) => StreamBuilder<bool>(
-        initialData:
-            GetIt.I<DIContainer>().networkService.getPeerStatus(widget.peerId),
-        stream: GetIt.I<DIContainer>()
-            .networkService
-            .peerStatusChangeStream
+        initialData: _networkService.getPeerStatus(widget.peerId),
+        stream: _networkService.peerStatusChangeStream
             .where((e) => e.key == widget.peerId)
             .map((e) => e.value),
         builder: (_, s) => s.data == true

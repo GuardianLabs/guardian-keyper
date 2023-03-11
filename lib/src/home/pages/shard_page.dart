@@ -1,6 +1,5 @@
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
 
 import 'qr_code_page.dart';
@@ -13,8 +12,7 @@ class ShardPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
-        valueListenable: GetIt.I<DIContainer>()
-            .boxRecoveryGroups
+        valueListenable: GetIt.I<Box<RecoveryGroupModel>>()
             .listenable(keys: [groupId.asKey]),
         builder: (context, boxRecoveryGroups, __) {
           final recoveryGroup = boxRecoveryGroups.get(groupId.asKey)!;

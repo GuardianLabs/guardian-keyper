@@ -49,7 +49,7 @@ class AddSecretController extends RecoveryGroupSecretController {
                     .secretShard
                     .shard
                 : '';
-            await diContainer.boxRecoveryGroups.put(
+            await boxRecoveryGroups.put(
               group.aKey,
               group.copyWith(secrets: {...group.secrets, secretId: shardValue}),
             );

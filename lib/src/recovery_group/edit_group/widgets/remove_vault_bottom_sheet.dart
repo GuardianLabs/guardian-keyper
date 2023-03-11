@@ -1,4 +1,3 @@
-import '/src/core/di_container.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -33,8 +32,7 @@ class RemoveVaultBottomSheet extends StatelessWidget {
                 width: double.infinity,
                 child: PrimaryButton(
                   text: 'Yes, remove the Vault',
-                  onPressed: () => GetIt.I<DIContainer>()
-                      .boxRecoveryGroups
+                  onPressed: () => GetIt.I<Box<RecoveryGroupModel>>()
                       .delete(group.aKey)
                       .then(
                         (_) => Navigator.of(context).popUntil(

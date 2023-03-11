@@ -7,6 +7,9 @@ import 'package:messagepack/messagepack.dart';
 import '../utils/random_utils.dart';
 import '../utils/emoji_codes.dart';
 
+export 'package:get_it/get_it.dart';
+export 'package:hive_flutter/hive_flutter.dart';
+
 part 'recovery_group_model.dart';
 part 'secret_shard_model.dart';
 part 'message_model.dart';

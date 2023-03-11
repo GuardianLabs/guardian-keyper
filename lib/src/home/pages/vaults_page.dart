@@ -1,5 +1,4 @@
 import '/src/core/consts.dart';
-import '/src/core/di_container.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 import '/src/settings/settings_controller.dart';
@@ -12,7 +11,7 @@ class VaultsPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
-        valueListenable: GetIt.I<DIContainer>().boxRecoveryGroups.listenable(),
+        valueListenable: GetIt.I<Box<RecoveryGroupModel>>().listenable(),
         builder: (_, boxRecoveryGroups, __) {
           final myId = GetIt.I<SettingsController>().state.deviceId;
           final guardedGroups =

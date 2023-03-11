@@ -1,9 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '/src/core/di_container.dart';
-
 class PageControllerBase extends ChangeNotifier {
-  final diContainer = GetIt.I<DIContainer>();
   final List<Widget> pages;
 
   int currentPage;
