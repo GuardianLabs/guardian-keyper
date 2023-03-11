@@ -1,3 +1,4 @@
+import '/src/core/consts.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/service/analytics_service.dart';
 
@@ -8,11 +9,7 @@ export 'package:provider/provider.dart';
 class AddGuardianController extends RecoveryGroupGuardianController {
   final GroupId groupId;
 
-  AddGuardianController({
-    required super.diContainer,
-    required super.pages,
-    required this.groupId,
-  });
+  AddGuardianController({required super.pages, required this.groupId});
 
   void startRequest({
     required Callback onSuccess,
@@ -21,12 +18,10 @@ class AddGuardianController extends RecoveryGroupGuardianController {
     required Callback onDuplicate,
     required Callback onAppVersion,
   }) {
-    GetIt.I<AnalyticsService>().logEvent(eventStartAddGuardian);
+    analyticsService.logEvent(eventStartAddGuardian);
 
     if (qrCode == null ||
-        qrCode!.timestamp
-            .subtract(globals.qrCodeExpires)
-            .isAfter(DateTime.now())) {
+        qrCode!.timestamp.subtract(qrCodeExpires).isAfter(DateTime.now())) {
       return onFailed(qrCode!);
     }
     if (qrCode!.version != MessageModel.currentVersion) {
@@ -47,7 +42,7 @@ class AddGuardianController extends RecoveryGroupGuardianController {
         stopListenResponse();
         switch (message.status) {
           case MessageStatus.accepted:
-            GetIt.I<AnalyticsService>().logEvent(eventFinishAddGuardian);
+            analyticsService.logEvent(eventFinishAddGuardian);
             addGuardian(groupId, message.peerId);
             onSuccess(message);
             break;

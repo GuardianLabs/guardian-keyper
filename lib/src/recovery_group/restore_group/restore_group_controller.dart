@@ -6,11 +6,7 @@ import '../recovery_group_controller.dart';
 export 'package:provider/provider.dart';
 
 class RestoreGroupController extends RecoveryGroupGuardianController {
-  RestoreGroupController({
-    required super.diContainer,
-    required super.pages,
-    super.currentPage,
-  });
+  RestoreGroupController({required super.pages, super.currentPage});
 
   void startRequest({
     required Callback onSuccess,
@@ -18,7 +14,7 @@ class RestoreGroupController extends RecoveryGroupGuardianController {
     required Callback onDuplicate,
     required Callback onFail,
   }) {
-    GetIt.I<AnalyticsService>().logEvent(eventStartRestoreVault);
+    analyticsService.logEvent(eventStartRestoreVault);
     networkSubscription.onData(
       (message) {
         if (!isWaiting) return;
@@ -34,9 +30,9 @@ class RestoreGroupController extends RecoveryGroupGuardianController {
           final guardian = qrCode!.peerId;
           final existingGroup = getGroupById(message.groupId);
           if (existingGroup == null) {
-            GetIt.I<AnalyticsService>().logEvent(eventFinishRestoreVault);
+            analyticsService.logEvent(eventFinishRestoreVault);
             createGroup(message.recoveryGroup.copyWith(
-              ownerId: diContainer.myPeerId,
+              ownerId: myPeerId,
               guardians: {guardian: ''},
             )).then(
               (group) => onSuccess(message.copyWith(payload: group)),
@@ -46,7 +42,7 @@ class RestoreGroupController extends RecoveryGroupGuardianController {
           } else if (existingGroup.guardians.containsKey(guardian)) {
             onDuplicate(message);
           } else if (existingGroup.isNotFull) {
-            GetIt.I<AnalyticsService>().logEvent(eventFinishRestoreVault);
+            analyticsService.logEvent(eventFinishRestoreVault);
             addGuardian(message.groupId, guardian).then(
               (group) => onSuccess(message.copyWith(payload: group)),
             );

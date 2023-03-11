@@ -1,6 +1,5 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
-import '/src/settings/settings_model.dart';
+import '/src/core/model/core_model.dart';
 
 import '../add_secret_controller.dart';
 
@@ -10,7 +9,7 @@ class AddNamePage extends StatelessWidget {
   const AddNamePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final controller = context.read<AddSecretController>();
     return ListView(
       shrinkWrap: true,
@@ -28,7 +27,7 @@ class AddNamePage extends StatelessWidget {
           child: TextFormField(
             keyboardType: TextInputType.name,
             maxLines: 1,
-            maxLength: SettingsModel.maxNameLength,
+            maxLength: IdWithNameBase.maxNameLength,
             style: textStyleSourceSansPro416,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,

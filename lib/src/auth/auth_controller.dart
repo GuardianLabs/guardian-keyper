@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-import '/src/core/model/core_model.dart';
+import '/src/core/consts.dart';
 import '/src/core/service/platform_service.dart';
-import '/src/settings/settings_cubit.dart';
+import '/src/settings/settings_controller.dart';
 
 import 'widgets/check_pass_code.dart';
 import 'widgets/create_pass_code.dart';
@@ -19,10 +19,10 @@ class AuthController {
   }) =>
       showCreatePassCode(
         context: context,
-        passCodeLength: GetIt.I<Globals>().passCodeLength,
-        snackBarDuration: GetIt.I<Globals>().snackBarDuration,
+        passCodeLength: passCodeLength,
+        snackBarDuration: snackBarDuration,
         onConfirmed: (final String passCode) async {
-          await GetIt.I<SettingsCubit>().setPassCode(passCode);
+          await GetIt.I<SettingsController>().setPassCode(passCode);
           onConfirmed();
         },
       );
@@ -33,9 +33,9 @@ class AuthController {
   }) =>
       showChangePassCode(
         context: context,
-        currentPassCode: GetIt.I<SettingsCubit>().state.passCode,
-        snackBarDuration: GetIt.I<Globals>().snackBarDuration,
-        onConfirmed: GetIt.I<SettingsCubit>().setPassCode,
+        currentPassCode: GetIt.I<SettingsController>().state.passCode,
+        snackBarDuration: snackBarDuration,
+        onConfirmed: GetIt.I<SettingsController>().setPassCode,
         onExit: onExit,
       );
 
@@ -47,9 +47,9 @@ class AuthController {
       showCheckPassCode(
         context: context,
         canCancel: canCancel,
-        currentPassCode: GetIt.I<SettingsCubit>().state.passCode,
-        snackBarDuration: GetIt.I<Globals>().snackBarDuration,
-        checkBiometric: GetIt.I<SettingsCubit>().state.isBiometricsEnabled
+        currentPassCode: GetIt.I<SettingsController>().state.passCode,
+        snackBarDuration: snackBarDuration,
+        checkBiometric: GetIt.I<SettingsController>().state.isBiometricsEnabled
             ? () async {
                 if (await GetIt.I<PlatformService>().localAuthenticate()) {
                   onUnlock();

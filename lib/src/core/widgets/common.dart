@@ -5,6 +5,8 @@ import '/src/core/theme/theme.dart';
 
 export 'package:flutter/material.dart';
 
+export '../theme/theme.dart';
+
 class ScaffoldWidget extends StatelessWidget {
   final Widget child;
   final BottomNavigationBar? bottomNavigationBar;
@@ -18,7 +20,7 @@ class ScaffoldWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => WillPopScope(
+  Widget build(final BuildContext context) => WillPopScope(
         onWillPop: onWillPop,
         child: Scaffold(
           primary: true,
@@ -48,7 +50,7 @@ class HeaderBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(final BuildContext context) => Container(
         height: sideSize,
         color: isTransparent
             ? Colors.transparent
@@ -93,7 +95,7 @@ class HeaderBarCloseButton extends StatelessWidget {
   const HeaderBarCloseButton({super.key, this.onPressed});
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
+  Widget build(final BuildContext context) => GestureDetector(
         onTap: onPressed ?? Navigator.of(context).pop,
         behavior: HitTestBehavior.opaque,
         child: Center(
@@ -111,7 +113,7 @@ class HeaderBarMoreButton extends StatelessWidget {
   const HeaderBarMoreButton({super.key, this.onPressed});
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
+  Widget build(final BuildContext context) => GestureDetector(
         onTap: onPressed,
         behavior: HitTestBehavior.opaque,
         child: Center(
@@ -129,7 +131,7 @@ class HeaderBarBackButton extends StatelessWidget {
   const HeaderBarBackButton({super.key, this.onPressed});
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
+  Widget build(final BuildContext context) => GestureDetector(
         onTap: onPressed ?? Navigator.of(context).pop,
         behavior: HitTestBehavior.opaque,
         child: Center(
@@ -156,7 +158,7 @@ class PageTitle extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(final BuildContext context) => Padding(
         padding: paddingH20,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -203,7 +205,7 @@ class PrimaryButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Material(
+  Widget build(final BuildContext context) => Material(
         child: Ink(
           decoration: BoxDecoration(
             borderRadius: borderRadius,
@@ -258,7 +260,7 @@ class BottomSheetWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(final BuildContext context) => Padding(
         padding: paddingAll20,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -343,7 +345,7 @@ class InfoPanel extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => animationController == null
+  Widget build(final BuildContext context) => animationController == null
       ? buildBody()
       : DecoratedBoxTransition(
           decoration: DecorationTween(
@@ -398,7 +400,7 @@ class DotColored extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(final BuildContext context) => Container(
         decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         height: size,
         width: size,

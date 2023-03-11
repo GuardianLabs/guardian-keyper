@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 
@@ -11,7 +10,7 @@ class GuardiansExpansionTile extends StatelessWidget {
   final RecoveryGroupModel group;
 
   @override
-  Widget build(BuildContext context) => ExpansionTile(
+  Widget build(final BuildContext context) => ExpansionTile(
         title: Text(
           'Vault’s Guardians',
           style: textStyleSourceSansPro614,

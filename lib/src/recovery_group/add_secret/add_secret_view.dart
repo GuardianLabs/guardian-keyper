@@ -1,5 +1,4 @@
 import '/src/core/consts.dart';
-import '/src/core/di_container.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 
@@ -25,23 +24,19 @@ class AddSecretView extends StatelessWidget {
   const AddSecretView({super.key, required this.groupId});
 
   @override
-  Widget build(BuildContext context) {
-    final diContainer = context.read<DIContainer>();
-    return ChangeNotifierProvider(
-      create: (context) => AddSecretController(
-        diContainer: diContainer,
-        pages: _pages,
-        groupId: groupId,
-      ),
-      child: ScaffoldWidget(
-        child: Selector<AddSecretController, int>(
-          selector: (_, controller) => controller.currentPage,
-          builder: (_, currentPage, __) => AnimatedSwitcher(
-            duration: diContainer.globals.pageChangeDuration,
-            child: _pages[currentPage],
+  Widget build(final BuildContext context) => ChangeNotifierProvider(
+        create: (final BuildContext context) => AddSecretController(
+          pages: _pages,
+          groupId: groupId,
+        ),
+        child: ScaffoldWidget(
+          child: Selector<AddSecretController, int>(
+            selector: (_, controller) => controller.currentPage,
+            builder: (_, currentPage, __) => AnimatedSwitcher(
+              duration: pageChangeDuration,
+              child: _pages[currentPage],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

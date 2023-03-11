@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
 import '/src/core/widgets/icon_of.dart';
+import '/src/core/model/core_model.dart';
 import '/src/auth/auth_controller.dart';
-import '/src/settings/settings_cubit.dart';
+import '/src/settings/settings_controller.dart';
 import '/src/guardian/guardian_controller.dart';
 import '/src/core/service/p2p_network_service.dart';
 
@@ -46,9 +47,9 @@ class _LoaderWidgetState extends State<LoaderWidget>
     final guardianController = context.read<GuardianController>();
     final diContainer = await context.read<DIContainer>().init();
     GetIt.I.registerSingleton<P2PNetworkService>(diContainer.networkService);
-    final settingsCubit = SettingsCubit();
+    final settingsCubit = SettingsController();
     await settingsCubit.init();
-    GetIt.I.registerSingleton<SettingsCubit>(settingsCubit);
+    GetIt.I.registerSingleton<SettingsController>(settingsCubit);
 
     _controller.stop();
     _controller.dispose();
@@ -60,15 +61,16 @@ class _LoaderWidgetState extends State<LoaderWidget>
           );
     }
     if (settingsCubit.state.isBootstrapEnabled) {
+      final globals = GetIt.I<Globals>();
       diContainer.networkService.addBootstrapServer(
-        peerId: diContainer.globals.bsPeerId,
-        ipV4: diContainer.globals.bsAddressV4,
-        ipV6: diContainer.globals.bsAddressV6,
-        port: diContainer.globals.bsPort,
+        peerId: globals.bsPeerId,
+        ipV4: globals.bsAddressV4,
+        ipV6: globals.bsAddressV6,
+        port: globals.bsPort,
       );
     }
     await diContainer.networkService.start();
-    await guardianController.init(); // Initialize lazy controller
+    await guardianController.pruneMessages(); // Initialize lazy controller
     if (mounted) Navigator.of(context).pushReplacementNamed(routeHome);
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -32,7 +31,7 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(final BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Header
@@ -100,7 +99,7 @@ class _LoadingPageState extends State<LoadingPage> {
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (BuildContext context) => BottomSheetWidget(
+        builder: (final BuildContext context) => BottomSheetWidget(
           titleString: 'Request has been rejected',
           textString: 'Guardian rejected your request to join Vault.',
           icon: const IconOf.shield(isBig: true, bage: BageType.error),
@@ -115,7 +114,7 @@ class _LoadingPageState extends State<LoadingPage> {
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (BuildContext context) => BottomSheetWidget(
+        builder: (final BuildContext context) => BottomSheetWidget(
           titleString: 'You can’t add the same Guardian twice',
           textSpan: [
             const TextSpan(text: 'Seems like you’ve already added '),
@@ -139,7 +138,7 @@ class _LoadingPageState extends State<LoadingPage> {
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (BuildContext context) => BottomSheetWidget(
+        builder: (final BuildContext context) => BottomSheetWidget(
           titleString: 'Invalid QR Code',
           textString:
               'Please ask the Guardian to generate a new QR Code via dashboard.',

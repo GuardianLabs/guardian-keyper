@@ -32,12 +32,10 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  late final _diContainer = context.read<DIContainer>();
-
   @override
   void initState() {
     super.initState();
-    _diContainer.boxMessages.watch().listen(
+    GetIt.I<DIContainer>().boxMessages.watch().listen(
       (event) async {
         if (ModalRoute.of(context)?.isCurrent != true) return;
         if (event.deleted) return;
@@ -49,10 +47,9 @@ class _HomeViewState extends State<HomeView> {
   }
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (context) => HomeController(
+  Widget build(final BuildContext context) => ChangeNotifierProvider(
+        create: (final BuildContext context) => HomeController(
           pages: HomeView._pages,
-          diContainer: _diContainer,
         ),
         child: Selector<HomeController, int>(
           selector: (_, controller) => controller.currentPage,

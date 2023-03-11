@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/di_container.dart';
@@ -12,7 +11,7 @@ class ShardPage extends StatelessWidget {
   const ShardPage({super.key, required this.groupId});
 
   @override
-  Widget build(BuildContext context) =>
+  Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
         valueListenable: context
             .read<DIContainer>()

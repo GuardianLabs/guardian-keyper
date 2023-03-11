@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'model/core_model.dart';
-import '../settings/settings_cubit.dart';
+import '../settings/settings_controller.dart';
 import '/src/home/home_view.dart';
 import '/src/intro/intro_view.dart';
 import '/src/settings/settings_view.dart';
@@ -16,7 +16,7 @@ Route<dynamic>? onGenerateRoute(RouteSettings routeSettings) =>
     MaterialPageRoute<void>(
       settings: routeSettings,
       builder: (final BuildContext context) {
-        if (GetIt.I<SettingsCubit>().state.passCode.isEmpty) {
+        if (GetIt.I<SettingsController>().state.passCode.isEmpty) {
           return const IntroView();
         }
         switch (routeSettings.name) {

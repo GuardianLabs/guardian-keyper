@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 
@@ -6,12 +5,12 @@ class AddSecretCloseButton extends StatelessWidget {
   const AddSecretCloseButton({super.key});
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
+  Widget build(final BuildContext context) => GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => showModalBottomSheet<bool>(
           context: context,
           isScrollControlled: true,
-          builder: (context) => BottomSheetWidget(
+          builder: (final BuildContext context) => BottomSheetWidget(
             icon: const IconOf.splitAndShare(isBig: true, bage: BageType.error),
             titleString: 'Cancel adding a Secret?',
             textString: 'All progress will be lost, you’ll have to start '

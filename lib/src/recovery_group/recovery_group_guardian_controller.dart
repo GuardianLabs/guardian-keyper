@@ -3,11 +3,7 @@ part of 'recovery_group_controller.dart';
 class RecoveryGroupGuardianController extends RecoveryGroupControllerBase {
   MessageModel? _qrCode;
 
-  RecoveryGroupGuardianController({
-    required super.diContainer,
-    required super.pages,
-    super.currentPage,
-  });
+  RecoveryGroupGuardianController({required super.pages, super.currentPage});
 
   MessageModel? get qrCode => _qrCode;
 

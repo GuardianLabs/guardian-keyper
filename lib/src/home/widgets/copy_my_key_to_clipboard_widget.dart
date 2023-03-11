@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 
-import '/src/core/di_container.dart';
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
+import '/src/settings/settings_controller.dart';
 
 class CopyMyKeyToClipboardWidget extends StatefulWidget {
   const CopyMyKeyToClipboardWidget({super.key});
@@ -14,33 +15,29 @@ class CopyMyKeyToClipboardWidget extends StatefulWidget {
 
 class _CopyMyKeyToClipboardWidgetState
     extends State<CopyMyKeyToClipboardWidget> {
-  Timer? timer;
   var isDisabled = false;
 
   @override
-  Widget build(BuildContext context) {
-    final diContainer = context.read<DIContainer>();
-    return IconButton(
-      icon: const Icon(Icons.copy, size: 20),
-      onPressed: isDisabled
-          ? null
-          : () async {
-              await Clipboard.setData(ClipboardData(
-                text: diContainer.myPeerId.asHex,
-              ));
-              setState(() => isDisabled = true);
-              timer = Timer(
-                diContainer.globals.snackBarDuration,
-                () => setState(() => isDisabled = false),
-              );
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  buildSnackBar(
-                    text: 'Public Key has been copied to clipboard.',
-                  ),
+  Widget build(final BuildContext context) => IconButton(
+        icon: const Icon(Icons.copy, size: 20),
+        onPressed: isDisabled
+            ? null
+            : () async {
+                await Clipboard.setData(ClipboardData(
+                  text: GetIt.I<SettingsController>().state.deviceId.asHex,
+                ));
+                setState(() => isDisabled = true);
+                Timer(
+                  snackBarDuration,
+                  () => setState(() => isDisabled = false),
                 );
-              }
-            },
-    );
-  }
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    buildSnackBar(
+                      text: 'Public Key has been copied to clipboard.',
+                    ),
+                  );
+                }
+              },
+      );
 }

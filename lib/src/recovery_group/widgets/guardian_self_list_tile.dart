@@ -1,5 +1,4 @@
 import '/src/core/widgets/common.dart';
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
 
@@ -9,7 +8,7 @@ class GuardianSelfListTile extends StatelessWidget {
   const GuardianSelfListTile({super.key, required this.guardian});
 
   @override
-  Widget build(BuildContext context) => ListTile(
+  Widget build(final BuildContext context) => ListTile(
         leading: const IconOf.shield(color: clWhite, bgColor: clGreen),
         title: Text(
           'Secret Shard stored on my device',

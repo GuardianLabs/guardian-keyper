@@ -18,6 +18,8 @@ import '/src/settings/settings_repository.dart';
 import 'routes.dart';
 
 class App extends StatelessWidget {
+  static const globals = Globals();
+
   static late final DIContainer diContainer;
 
   static Future<void> init([final DIContainer? diContainer]) async {
@@ -27,11 +29,11 @@ class App extends StatelessWidget {
     await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp],
     );
-    GetIt.I.registerSingleton<Globals>(const Globals());
+    GetIt.I.registerSingleton<Globals>(globals);
     GetIt.I.registerSingleton<DIContainer>(App.diContainer);
     GetIt.I.registerSingleton<PlatformService>(const PlatformService());
     GetIt.I.registerSingleton<AnalyticsService>(
-      await AnalyticsService.init(App.diContainer.globals.amplitudeKey),
+      await AnalyticsService.init(globals.amplitudeKey),
     );
     GetIt.I.registerSingleton<SettingsRepository>(const SettingsRepository());
   }
@@ -43,9 +45,7 @@ class App extends StatelessWidget {
         providers: [
           Provider.value(value: diContainer),
           Provider(create: (_) => const AuthController()),
-          Provider(
-            create: (_) => GuardianController(diContainer: diContainer),
-          ),
+          Provider(create: (_) => GuardianController()),
         ],
         child: MaterialApp(
           title: 'Guardian Keyper',

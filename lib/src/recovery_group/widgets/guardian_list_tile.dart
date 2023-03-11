@@ -1,7 +1,7 @@
 import '/src/core/widgets/common.dart';
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
+
 import 'online_status_widget.dart';
 
 class GuardianListTile extends StatelessWidget {
@@ -19,7 +19,7 @@ class GuardianListTile extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => ListTile(
+  Widget build(final BuildContext context) => ListTile(
         visualDensity: checkStatus
             ? const VisualDensity(vertical: VisualDensity.maximumDensity)
             : null,

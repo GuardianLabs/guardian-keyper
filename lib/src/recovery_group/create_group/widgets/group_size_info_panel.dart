@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 class GroupSizeInfoPanel extends StatefulWidget {
@@ -28,7 +27,7 @@ class _GroupSizeInfoPanelState extends State<GroupSizeInfoPanel>
   }
 
   @override
-  Widget build(BuildContext context) => InfoPanel.info(
+  Widget build(final BuildContext context) => InfoPanel.info(
         animationController: _animationController,
         textSpan: <TextSpan>[
           const TextSpan(

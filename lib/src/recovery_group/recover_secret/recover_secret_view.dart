@@ -17,30 +17,23 @@ class RecoverSecretView extends StatelessWidget {
 
   final MapEntry<GroupId, SecretId> groupIdWithSecretId;
 
-  const RecoverSecretView({
-    super.key,
-    required this.groupIdWithSecretId,
-  });
+  const RecoverSecretView({super.key, required this.groupIdWithSecretId});
 
   @override
-  Widget build(BuildContext context) {
-    final diContainer = context.read<DIContainer>();
-    return ChangeNotifierProvider(
-      create: (context) => RecoverySecretController(
-        diContainer: diContainer,
-        pages: _pages,
-        groupId: groupIdWithSecretId.key,
-        secretId: groupIdWithSecretId.value,
-      ),
-      child: ScaffoldWidget(
-        child: Selector<RecoverySecretController, int>(
-          selector: (_, controller) => controller.currentPage,
-          builder: (_, currentPage, __) => AnimatedSwitcher(
-            duration: diContainer.globals.pageChangeDuration,
-            child: _pages[currentPage],
+  Widget build(final BuildContext context) => ChangeNotifierProvider(
+        create: (final BuildContext context) => RecoverySecretController(
+          pages: _pages,
+          groupId: groupIdWithSecretId.key,
+          secretId: groupIdWithSecretId.value,
+        ),
+        child: ScaffoldWidget(
+          child: Selector<RecoverySecretController, int>(
+            selector: (_, controller) => controller.currentPage,
+            builder: (_, currentPage, __) => AnimatedSwitcher(
+              duration: pageChangeDuration,
+              child: _pages[currentPage],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

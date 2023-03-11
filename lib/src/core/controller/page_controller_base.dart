@@ -3,15 +3,12 @@ import 'package:flutter/widgets.dart';
 import '/src/core/di_container.dart';
 
 class PageControllerBase extends ChangeNotifier {
-  final DIContainer diContainer;
+  final diContainer = GetIt.I<DIContainer>();
   final List<Widget> pages;
+
   int currentPage;
 
-  PageControllerBase({
-    required this.diContainer,
-    required this.pages,
-    this.currentPage = 0,
-  });
+  PageControllerBase({required this.pages, this.currentPage = 0});
 
   void gotoScreen<T extends Widget>([int? pageNumber]) {
     currentPage = pageNumber ?? pages.indexWhere((e) => e is T);

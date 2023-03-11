@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -13,7 +12,7 @@ class AddSecretWidget extends StatelessWidget {
   const AddSecretWidget({super.key, required this.group});
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(final BuildContext context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(

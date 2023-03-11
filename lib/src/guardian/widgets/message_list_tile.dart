@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -52,7 +51,7 @@ class MessageListTile extends StatelessWidget {
   const MessageListTile({super.key, required this.message});
 
   @override
-  Widget build(BuildContext context) => ListTile(
+  Widget build(final BuildContext context) => ListTile(
         minLeadingWidth: 20,
         leading: _icons[message.code],
         trailing: const Icon(Icons.arrow_forward_ios_rounded),

@@ -9,7 +9,7 @@ class RemoveVaultBottomSheet extends StatelessWidget {
   final RecoveryGroupModel group;
 
   @override
-  Widget build(BuildContext context) => BottomSheetWidget(
+  Widget build(final BuildContext context) => BottomSheetWidget(
         footer: ElevatedButton(
           child: const SizedBox(
             width: double.infinity,

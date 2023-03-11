@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 
@@ -10,7 +9,7 @@ class RequestCard extends StatelessWidget {
   const RequestCard({super.key, required this.message});
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(final BuildContext context) => Container(
         decoration: boxDecoration,
         padding: paddingAll20,
         child: Column(

@@ -1,7 +1,6 @@
 import 'package:sss256/sss256.dart';
 
 import '/src/core/model/core_model.dart';
-import '/src/settings/settings_model.dart';
 import '/src/core/service/analytics_service.dart';
 
 import '../recovery_group_controller.dart';
@@ -14,7 +13,7 @@ class AddSecretController extends RecoveryGroupSecretController {
 
   String get secret => _secret;
 
-  bool get isNameTooShort => _secretName.length < SettingsModel.minNameLength;
+  bool get isNameTooShort => _secretName.length < IdWithNameBase.minNameLength;
 
   set secret(String value) {
     _secret = value;
@@ -26,18 +25,15 @@ class AddSecretController extends RecoveryGroupSecretController {
     notifyListeners();
   }
 
-  AddSecretController({
-    required super.diContainer,
-    required super.pages,
-    required super.groupId,
-  }) : super(secretId: SecretId(name: ''));
+  AddSecretController({required super.pages, required super.groupId})
+      : super(secretId: SecretId(name: ''));
 
   void startRequest({
     required Callback onSuccess,
     required Callback onReject,
     required Callback onFailed,
   }) {
-    GetIt.I<AnalyticsService>().logEvent(eventStartAddSecret);
+    analyticsService.logEvent(eventStartAddSecret);
     networkSubscription.onData(
       (message) async {
         if (message.code != MessageCode.setShard) return;
@@ -49,7 +45,7 @@ class AddSecretController extends RecoveryGroupSecretController {
             stopListenResponse();
             final shardValue = group.isSelfGuarded
                 ? messages
-                    .firstWhere((m) => m.ownerId == diContainer.myPeerId)
+                    .firstWhere((m) => m.ownerId == myPeerId)
                     .secretShard
                     .shard
                 : '';
@@ -57,7 +53,7 @@ class AddSecretController extends RecoveryGroupSecretController {
               group.aKey,
               group.copyWith(secrets: {...group.secrets, secretId: shardValue}),
             );
-            await GetIt.I<AnalyticsService>().logEvent(eventFinishAddSecret);
+            await analyticsService.logEvent(eventFinishAddSecret);
             onSuccess(message);
           }
         } else {
@@ -87,12 +83,12 @@ class AddSecretController extends RecoveryGroupSecretController {
         messages.add(MessageModel(
           peerId: guardian,
           code: MessageCode.setShard,
-          status: guardian == diContainer.myPeerId
+          status: guardian == myPeerId
               ? MessageStatus.accepted
               : MessageStatus.requested,
           payload: SecretShardModel(
             id: secretId,
-            ownerId: diContainer.myPeerId,
+            ownerId: myPeerId,
             groupId: group.id,
             groupSize: group.size,
             groupThreshold: group.threshold,

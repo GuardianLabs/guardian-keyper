@@ -1,5 +1,4 @@
 import '/src/core/consts.dart';
-import '/src/core/di_container.dart';
 import '/src/core/widgets/common.dart';
 
 import 'create_group_controller.dart';
@@ -19,22 +18,18 @@ class CreateGroupView extends StatelessWidget {
   const CreateGroupView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final diContainer = context.read<DIContainer>();
-    return ChangeNotifierProvider(
-      create: (context) => CreateGroupController(
-        diContainer: diContainer,
-        pages: _pages,
-      ),
-      child: ScaffoldWidget(
-        child: Selector<CreateGroupController, int>(
-          selector: (context, controller) => controller.currentPage,
-          builder: (context, currentPage, __) => AnimatedSwitcher(
-            duration: diContainer.globals.pageChangeDuration,
-            child: _pages[currentPage],
+  Widget build(final BuildContext context) => ChangeNotifierProvider(
+        create: (final BuildContext context) => CreateGroupController(
+          pages: _pages,
+        ),
+        child: ScaffoldWidget(
+          child: Selector<CreateGroupController, int>(
+            selector: (context, controller) => controller.currentPage,
+            builder: (context, currentPage, __) => AnimatedSwitcher(
+              duration: pageChangeDuration,
+              child: _pages[currentPage],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

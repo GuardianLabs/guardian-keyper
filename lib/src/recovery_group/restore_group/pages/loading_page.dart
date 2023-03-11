@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -33,7 +32,7 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(final BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Header
@@ -82,14 +81,14 @@ class _LoadingPageState extends State<LoadingPage> {
         ],
       );
 
-  void _showSuccess(MessageModel message) {
+  void _showSuccess(final MessageModel message) {
     final count = message.recoveryGroup.maxSize - message.recoveryGroup.size;
     count == 0
         ? showModalBottomSheet(
             context: context,
             isDismissible: false,
             isScrollControlled: true,
-            builder: (context) => BottomSheetWidget(
+            builder: (final BuildContext context) => BottomSheetWidget(
               icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
               titleString: 'Ownership Changed',
               textSpan: buildTextWithId(
@@ -108,7 +107,7 @@ class _LoadingPageState extends State<LoadingPage> {
             isDismissible: false,
             isScrollControlled: true,
             useRootNavigator: true,
-            builder: (context) => BottomSheetWidget(
+            builder: (final BuildContext context) => BottomSheetWidget(
               icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
               titleString: 'Ownership Transfer Approved',
               textSpan: [
@@ -145,11 +144,11 @@ class _LoadingPageState extends State<LoadingPage> {
           );
   }
 
-  void _showRejected(MessageModel message) => showModalBottomSheet(
+  void _showRejected(final MessageModel message) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (context) => BottomSheetWidget(
+        builder: (final BuildContext context) => BottomSheetWidget(
           icon: const IconOf.secrets(isBig: true, bage: BageType.error),
           titleString: 'Ownership Transfer Rejected',
           textSpan: [
@@ -180,11 +179,11 @@ class _LoadingPageState extends State<LoadingPage> {
         ),
       ).then(Navigator.of(context).pop);
 
-  void _showDuplicated(MessageModel message) => showModalBottomSheet(
+  void _showDuplicated(final MessageModel message) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (context) => BottomSheetWidget(
+        builder: (final BuildContext context) => BottomSheetWidget(
           icon: const IconOf.owner(isBig: true),
           titleString: 'The Vault is yours',
           textString: 'Seems like you are the owner of the group already. '
@@ -196,11 +195,11 @@ class _LoadingPageState extends State<LoadingPage> {
         ),
       ).then(Navigator.of(context).pop);
 
-  void _showError(MessageModel message) => showModalBottomSheet(
+  void _showError(final MessageModel message) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (context) => BottomSheetWidget(
+        builder: (final BuildContext context) => BottomSheetWidget(
           icon: const IconOf.secrets(isBig: true, bage: BageType.error),
           titleString: 'Ownership Transfer Failed',
           textString:

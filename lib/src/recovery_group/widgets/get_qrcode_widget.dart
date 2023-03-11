@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import '/src/core/theme/theme.dart';
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
-import '/src/core/di_container.dart';
+import '/src/settings/settings_controller.dart';
 
 class GetQRCodeWidget extends StatefulWidget {
   final void Function(MessageModel qrCode) resultCallback;
@@ -17,8 +17,7 @@ class GetQRCodeWidget extends StatefulWidget {
 }
 
 class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
-  late Duration _snackBarDuration;
-  late PeerId _myPeerId;
+  final _myPeerId = GetIt.I<SettingsController>().state.deviceId;
   late Rect _scanWindow;
   var _canPaste = false;
   Timer? _snackBarTimer;
@@ -26,11 +25,8 @@ class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
   @override
   void initState() {
     super.initState();
-    final diContainer = context.read<DIContainer>();
-    _snackBarDuration = diContainer.globals.snackBarDuration;
-    _myPeerId = diContainer.myPeerId;
     Clipboard.hasStrings().then(
-      (hasStrings) {
+      (final bool hasStrings) {
         if (_canPaste != hasStrings) setState(() => _canPaste = hasStrings);
       },
     );
@@ -55,13 +51,13 @@ class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => Stack(
+  Widget build(final BuildContext context) => Stack(
         fit: StackFit.expand,
         children: [
           MobileScanner(
             fit: BoxFit.cover,
             scanWindow: _scanWindow,
-            onDetect: (BarcodeCapture captured) {
+            onDetect: (final BarcodeCapture captured) {
               if (captured.barcodes.isEmpty) return;
               _processCode(captured.barcodes.first.rawValue!);
             },
@@ -105,7 +101,7 @@ class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
         ],
       );
 
-  void _processCode(String code) {
+  void _processCode(final String code) {
     SnackBar? errorSnackBar;
     final qrCode = MessageModel.tryFromBase64(code);
 
@@ -129,7 +125,7 @@ class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
     } else {
       // Debounce
       if (_snackBarTimer?.isActive ?? false) return;
-      _snackBarTimer = Timer(_snackBarDuration, () {});
+      _snackBarTimer = Timer(snackBarDuration, () {});
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
     }
   }
@@ -141,10 +137,10 @@ class _ScannerOverlay extends CustomPainter {
   const _ScannerOverlay({required this.scanWindow});
 
   @override
-  bool shouldRepaint(covariant CustomPainter _) => false;
+  bool shouldRepaint(covariant final CustomPainter _) => false;
 
   @override
-  void paint(Canvas canvas, Size size) => canvas.drawPath(
+  void paint(final Canvas canvas, final Size size) => canvas.drawPath(
         Path.combine(
           PathOperation.difference,
           Path()..addRect(Rect.largest),

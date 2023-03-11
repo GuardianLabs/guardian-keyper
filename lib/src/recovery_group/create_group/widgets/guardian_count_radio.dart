@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 import '../create_group_controller.dart';
@@ -25,7 +24,7 @@ class GuardianCountRadio extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => InkWell(
+  Widget build(final BuildContext context) => InkWell(
         onTap: () {
           final controller = context.read<CreateGroupController>();
           controller.groupSize = groupSize;

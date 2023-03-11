@@ -1,5 +1,4 @@
 import '/src/core/model/core_model.dart';
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/widgets/common.dart';
 
@@ -9,7 +8,7 @@ class VaultListTile extends StatelessWidget {
   const VaultListTile({super.key, required this.group});
 
   @override
-  Widget build(BuildContext context) => ListTile(
+  Widget build(final BuildContext context) => ListTile(
         leading: const IconOf.shield(color: clWhite),
         title: RichText(
           text: TextSpan(

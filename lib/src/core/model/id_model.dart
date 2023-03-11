@@ -43,6 +43,9 @@ abstract class IdBase extends Serializable {
 }
 
 abstract class IdWithNameBase extends IdBase {
+  static const minNameLength = 3;
+  static const maxNameLength = 25;
+
   final String name;
 
   const IdWithNameBase({required super.token, required this.name});
@@ -57,10 +60,11 @@ class PeerId extends IdWithNameBase {
   @override
   String get emoji => String.fromCharCode(emojiPeer[tokenByteHash]);
 
+  // TBD: wtf?
   const PeerId._({required super.token, required super.name});
 
   factory PeerId({Uint8List? token, String name = ''}) {
-    if (token == null || token.isEmpty || token.length == 64) {
+    if (token == null || token.isEmpty || token.length == size) {
       return PeerId._(token: token ?? Uint8List(0), name: name);
     }
     throw const FormatException();

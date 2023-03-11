@@ -3,11 +3,11 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '/src/core/di_container.dart';
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/service/platform_service.dart';
+import '/src/settings/settings_controller.dart';
 import '/src/guardian/widgets/message_list_tile.dart';
 
 class QRCodePage extends StatefulWidget {
@@ -52,7 +52,7 @@ class _QRCodePageState extends State<QRCodePage> {
   }
 
   @override
-  Widget build(BuildContext context) => ScaffoldWidget(
+  Widget build(final BuildContext context) => ScaffoldWidget(
         child: Column(
           children: [
             // Header
@@ -115,7 +115,8 @@ class _QRCodePageState extends State<QRCodePage> {
                       padding: paddingAll20,
                       width: double.infinity,
                       child: Builder(
-                        builder: (BuildContext context) => ElevatedButton.icon(
+                        builder: (final BuildContext context) =>
+                            ElevatedButton.icon(
                           icon: const IconOf.share(
                             bgColor: clIndigo500,
                             size: 20,
@@ -149,7 +150,7 @@ class _QRCodePageState extends State<QRCodePage> {
     final isNew = widget.groupId == null;
     final message = MessageModel(
       code: isNew ? MessageCode.createGroup : MessageCode.takeGroup,
-      peerId: _diContainer.myPeerId,
+      peerId: GetIt.I<SettingsController>().state.deviceId,
     );
     _diContainer.boxMessages.put(
       message.aKey,

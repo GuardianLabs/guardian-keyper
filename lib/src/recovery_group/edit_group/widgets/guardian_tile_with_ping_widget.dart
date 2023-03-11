@@ -1,5 +1,5 @@
+import '/src/core/consts.dart';
 import '/src/core/di_container.dart';
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 
@@ -20,7 +20,7 @@ class _GuardianTileWithPingWidgetState
   bool _isWaiting = false;
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
+  Widget build(final BuildContext context) => GestureDetector(
         onLongPress: _isWaiting
             ? null
             : () async {
@@ -51,10 +51,10 @@ class _GuardianTileWithPingWidgetState
                           ),
                           const TextSpan(text: '. Connection timeout.'),
                         ],
-                  duration: diContainer.globals.snackBarDuration,
+                  duration: snackBarDuration,
                 ));
                 Future.delayed(
-                  diContainer.globals.snackBarDuration,
+                  snackBarDuration,
                   () => mounted ? setState(() => _isWaiting = false) : null,
                 );
               },

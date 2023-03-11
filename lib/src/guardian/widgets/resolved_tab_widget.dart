@@ -1,4 +1,3 @@
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
@@ -9,7 +8,7 @@ class ResolvedTabWidget extends StatelessWidget {
   const ResolvedTabWidget({super.key});
 
   @override
-  Widget build(BuildContext context) =>
+  Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<MessageModel>>(
         valueListenable: context.read<DIContainer>().boxMessages.listenable(),
         builder: (context, boxMessages, __) {

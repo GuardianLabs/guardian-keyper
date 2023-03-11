@@ -1,17 +1,17 @@
 part of 'recovery_group_controller.dart';
 
 abstract class RecoveryGroupControllerBase extends PageControllerBase {
+  final globals = GetIt.I<Globals>();
+  final platformService = GetIt.I<PlatformService>();
+  final analyticsService = GetIt.I<AnalyticsService>();
+  final myPeerId = GetIt.I<SettingsController>().state.deviceId;
+
   late final StreamSubscription<MessageModel> networkSubscription =
       diContainer.networkService.messageStream.listen(null);
+
   Timer? timer;
 
-  RecoveryGroupControllerBase({
-    required super.diContainer,
-    required super.pages,
-    super.currentPage,
-  });
-
-  Globals get globals => diContainer.globals;
+  RecoveryGroupControllerBase({required super.pages, super.currentPage});
 
   bool get isWaiting => timer?.isActive == true;
 
@@ -19,18 +19,18 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
   void dispose() {
     timer?.cancel();
     networkSubscription.cancel();
-    GetIt.I<PlatformService>().wakelockDisable();
+    platformService.wakelockDisable();
     super.dispose();
   }
 
   void stopListenResponse() {
     timer?.cancel();
-    GetIt.I<PlatformService>().wakelockDisable();
+    platformService.wakelockDisable();
     notifyListeners();
   }
 
   void startNetworkRequest(void Function([Timer?]) callback) async {
-    await GetIt.I<PlatformService>().wakelockEnable();
+    await platformService.wakelockEnable();
     timer = Timer.periodic(
       diContainer.networkService.router.messageTTL,
       callback,
@@ -43,7 +43,7 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
       diContainer.networkService.sendTo(
         isConfirmable: false,
         peerId: message.peerId,
-        message: message.copyWith(peerId: diContainer.myPeerId),
+        message: message.copyWith(peerId: myPeerId),
       );
 
   RecoveryGroupModel? getGroupById(final GroupId groupId) =>

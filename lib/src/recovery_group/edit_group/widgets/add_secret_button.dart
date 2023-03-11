@@ -7,7 +7,7 @@ class AddSecretButton extends StatelessWidget {
   final RecoveryGroupModel group;
 
   @override
-  Widget build(BuildContext context) => PrimaryButton(
+  Widget build(final BuildContext context) => PrimaryButton(
         text: 'Add a Secret',
         onPressed: () => Navigator.of(context).pushNamed(
           '/recovery_group/add_secret',

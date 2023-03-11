@@ -1,6 +1,5 @@
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '/src/core/theme/theme.dart';
 import '/src/core/widgets/common.dart';
 
 import '../intro_controller.dart';
@@ -33,7 +32,7 @@ class IntrosPage extends StatelessWidget {
   const IntrosPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final controller = context.watch<IntroController>();
     return GestureDetector(
       behavior: HitTestBehavior.translucent,

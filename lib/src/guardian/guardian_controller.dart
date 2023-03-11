@@ -2,17 +2,19 @@ import 'package:flutter/foundation.dart';
 
 import '/src/core/di_container.dart';
 import '/src/core/model/core_model.dart';
-
-export 'package:provider/provider.dart';
+import '/src/settings/settings_controller.dart';
 
 class GuardianController {
-  final DIContainer diContainer;
+  final diContainer = GetIt.I<DIContainer>();
 
-  GuardianController({required this.diContainer}) {
+  var _myPeerId = GetIt.I<SettingsController>().state.deviceId;
+
+  GuardianController() {
     diContainer.networkService.messageStream.listen(onMessage);
+    GetIt.I<SettingsController>().stream.listen((s) => _myPeerId = s.deviceId);
   }
 
-  Future<void> init() async {
+  Future<void> pruneMessages() async {
     if (diContainer.boxMessages.isEmpty) return;
     final expired = diContainer.boxMessages.values
         .where((e) =>
@@ -171,7 +173,7 @@ class GuardianController {
       await diContainer.networkService.sendTo(
         isConfirmable: true,
         peerId: message.peerId,
-        message: message.copyWith(peerId: diContainer.myPeerId),
+        message: message.copyWith(peerId: _myPeerId),
       );
       return true;
     } catch (_) {
