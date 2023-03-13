@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'model/core_model.dart';
-import '../settings/settings_controller.dart';
 import '/src/home/home_view.dart';
 import '/src/intro/intro_view.dart';
-import '/src/settings/settings_view.dart';
+import '/src/settings/settings_screen.dart';
+import '/src/settings/settings_controller.dart';
+import '/src/recovery_group/edit_group/edit_group_view.dart';
 import '/src/recovery_group/add_secret/add_secret_view.dart';
 import '/src/recovery_group/create_group/create_group_view.dart';
 import '/src/recovery_group/add_guardian/add_guardian_view.dart';
 import '/src/recovery_group/restore_group/restore_group_view.dart';
-import '/src/recovery_group/edit_group/edit_group_view.dart';
 import '/src/recovery_group/recover_secret/recover_secret_view.dart';
 
-Route<dynamic>? onGenerateRoute(RouteSettings routeSettings) =>
+Route<dynamic>? onGenerateRoute(final RouteSettings routeSettings) =>
     MaterialPageRoute<void>(
       settings: routeSettings,
       builder: (final BuildContext context) {
@@ -49,8 +49,8 @@ Route<dynamic>? onGenerateRoute(RouteSettings routeSettings) =>
               skipExplainer: routeSettings.arguments as bool,
             );
 
-          case SettingsView.routeName:
-            return const SettingsView();
+          case SettingsScreen.routeName:
+            return const SettingsScreen();
         }
         return const HomeView();
       },

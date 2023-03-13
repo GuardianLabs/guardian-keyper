@@ -1,9 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 
 import '/src/core/model/core_model.dart';
 
-@immutable
 class SettingsModel extends Equatable {
   final PeerId deviceId;
   final String passCode;
