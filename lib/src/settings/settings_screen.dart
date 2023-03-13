@@ -7,10 +7,10 @@ import 'widgets/change_passcode_list_tile.dart';
 import 'widgets/toggle_biometrics_list_tile.dart';
 import 'widgets/toggle_bootstrap_list_tile.dart';
 
-class SettingsView extends StatelessWidget {
+class SettingsScreen extends StatelessWidget {
   static const routeName = routeSettings;
 
-  const SettingsView({super.key});
+  const SettingsScreen({super.key});
 
   @override
   Widget build(final BuildContext context) => ScaffoldWidget(

@@ -1,46 +1,56 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import '/src/core/repository/repository_base.dart';
+import '/src/core/service/storage/flutter_secure_storage_service.dart';
 
-export 'package:get_it/get_it.dart';
-
-class SettingsRepository extends RepositoryBase {
+class SettingsRepository {
   static const _keySeed = 'seed';
   static const _keyPassCode = 'pass_code';
   static const _keyDeviceName = 'device_name';
   static const _keyIsBootstrapEnabled = 'is_bootstrap_enabled';
   static const _keyIsBiometricsEnabled = 'is_biometrics_enabled';
 
-  static final _storage = RepositoryBase.getStorage('settings');
+  SettingsRepository({StorageService? storageService})
+      : _storage = storageService ??
+            FlutterSecureStorageService(storageName: 'settings');
 
-  const SettingsRepository();
+  final StorageService _storage;
 
-  @override
-  KVStorage get storage => _storage;
+  Future<Uint8List> getSeedKey() =>
+      _storage.getOr<Uint8List>(_keySeed, Uint8List(0));
 
-  Future<Uint8List> getSeedKey() => get<Uint8List>(_keySeed);
+  Future<Uint8List> setSeedKey(final Uint8List value) async {
+    await _storage.set<Uint8List>(_keySeed, value);
+    return value;
+  }
 
-  Future<Uint8List> setSeedKey(final Uint8List value) =>
-      set<Uint8List>(_keySeed, value);
+  Future<String> getDeviceName() => _storage.getOr<String>(_keyDeviceName, '');
 
-  Future<String> getDeviceName() => get<String>(_keyDeviceName);
+  Future<String> setDeviceName(final String value) async {
+    await _storage.set<String>(_keyDeviceName, value);
+    return value;
+  }
 
-  Future<String> setDeviceName(final String value) =>
-      set<String>(_keyDeviceName, value);
+  Future<String> getPassCode() => _storage.getOr<String>(_keyPassCode, '');
 
-  Future<String> getPassCode() => get<String>(_keyPassCode);
+  Future<String> setPassCode(final String value) async {
+    await _storage.set<String>(_keyPassCode, value);
+    return value;
+  }
 
-  Future<String> setPassCode(final String value) =>
-      set<String>(_keyPassCode, value);
+  Future<bool> getIsBiometricsEnabled() =>
+      _storage.getOr<bool>(_keyIsBiometricsEnabled, true);
 
-  Future<bool> getIsBiometricsEnabled() => get<bool>(_keyIsBiometricsEnabled);
+  Future<bool> setIsBiometricsEnabled(final bool value) async {
+    await _storage.set<bool>(_keyIsBiometricsEnabled, value);
+    return value;
+  }
 
-  Future<bool> setIsBiometricsEnabled(final bool value) =>
-      set<bool>(_keyIsBiometricsEnabled, value);
+  Future<bool> getIsBootstrapEnabled() =>
+      _storage.getOr<bool>(_keyIsBootstrapEnabled, true);
 
-  Future<bool> getIsBootstrapEnabled() => get<bool>(_keyIsBootstrapEnabled);
-
-  Future<bool> setIsBootstrapEnabled(final bool value) =>
-      set<bool>(_keyIsBootstrapEnabled, value);
+  Future<bool> setIsBootstrapEnabled(final bool value) async {
+    await _storage.set<bool>(_keyIsBootstrapEnabled, value);
+    return value;
+  }
 }

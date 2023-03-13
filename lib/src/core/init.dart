@@ -12,7 +12,9 @@ import '/src/guardian/guardian_controller.dart';
 
 Future<void> init() async {
   final networkService = P2PNetworkService();
-  const settingsRepository = SettingsRepository();
+  GetIt.I.registerSingleton<P2PNetworkService>(networkService);
+
+  final settingsRepository = SettingsRepository();
 
   final seedSaved = await settingsRepository.getSeedKey();
   final seedInited = await networkService.init(seedSaved);
@@ -26,30 +28,33 @@ Future<void> init() async {
   final cipher = HiveAesCipher(seedInited);
 
   GetIt.I.registerSingleton<Box<MessageModel>>(await Hive.openBox<MessageModel>(
-      MessageModel.boxName,
-      encryptionCipher: cipher));
+    MessageModel.boxName,
+    encryptionCipher: cipher,
+  ));
   GetIt.I.registerSingleton<Box<RecoveryGroupModel>>(
-      await Hive.openBox<RecoveryGroupModel>(RecoveryGroupModel.boxName,
-          encryptionCipher: cipher));
+      await Hive.openBox<RecoveryGroupModel>(
+    RecoveryGroupModel.boxName,
+    encryptionCipher: cipher,
+  ));
 
   GetIt.I.registerSingleton<PlatformService>(const PlatformService());
   GetIt.I.registerSingleton<AnalyticsService>(
     await AnalyticsService.init(Envs.amplitudeKey),
   );
-  GetIt.I.registerSingleton<SettingsRepository>(settingsRepository);
-  GetIt.I.registerSingleton<P2PNetworkService>(networkService);
 
-  final settingsCubit = SettingsController();
-  await settingsCubit.init();
-  GetIt.I.registerSingleton<SettingsController>(settingsCubit);
-  const authController = AuthController();
-  GetIt.I.registerSingleton<AuthController>(authController);
+  // register controllers
+  final settingsController =
+      SettingsController(settingsRepository: settingsRepository);
+  await settingsController.init();
+  GetIt.I.registerSingleton<SettingsController>(settingsController);
+
+  GetIt.I.registerSingleton<AuthController>(const AuthController());
   GetIt.I.registerSingleton<GuardianController>(GuardianController());
 
   await GetIt.I<GuardianController>().pruneMessages();
   await networkService.start();
 
-  if (settingsCubit.state.isBootstrapEnabled) {
+  if (settingsController.state.isBootstrapEnabled) {
     networkService.addBootstrapServer(
       peerId: Envs.bsPeerId,
       ipV4: Envs.bsAddressV4,

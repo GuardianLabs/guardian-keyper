@@ -14,21 +14,25 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 export 'settings_model.dart';
 
 class SettingsController extends Cubit<SettingsModel> {
-  late final bool hasBiometrics;
-
-  final _repository = GetIt.I<SettingsRepository>();
-
-  SettingsController()
-      : super(SettingsModel(
+  SettingsController({
+    required final SettingsRepository settingsRepository,
+  })  : _repository = settingsRepository,
+        super(SettingsModel(
           deviceId: PeerId(token: GetIt.I<P2PNetworkService>().myId),
         ));
 
+  late final bool hasBiometrics;
+
+  final SettingsRepository _repository;
+
   Future<void> init() async {
-    hasBiometrics = await GetIt.I<PlatformService>().hasBiometrics;
+    final platformService = GetIt.I<PlatformService>();
+    hasBiometrics = await platformService.hasBiometrics;
     var deviceName = await _repository.getDeviceName();
     if (deviceName.isEmpty) {
-      deviceName = await GetIt.I<PlatformService>()
-          .getDeviceName(maxNameLength: IdWithNameBase.maxNameLength);
+      deviceName = await platformService.getDeviceName(
+        maxNameLength: IdWithNameBase.maxNameLength,
+      );
     }
     emit(SettingsModel(
       deviceId: state.deviceId.copyWith(name: deviceName),
