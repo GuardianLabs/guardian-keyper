@@ -16,30 +16,26 @@ dependencies:
   double_back_to_close_app: ^2.1.0
   google_fonts: ^4.0.3
   flutter_bloc: ^8.1.2
-  flutter_svg: ^2.0.2
+  flutter_svg: ^2.0.3
   messagepack: ^0.2.1
   equatable: ^2.0.5
   provider: ^6.0.5
   sss256: ^1.0.0
   get_it: ^7.2.0
   intl: ^0.17.0
-  qr_flutter: # ^4.0.0
+  qr_flutter:
     git:
       url: "https://github.com/theyakka/qr.flutter"
   p2plib: ^1.1.2+0
-  # p2plib:
-    # path: "../p2plib-dart"
 
   # Platform dependent
   flutter_secure_storage: ^8.0.0
-  # airplane_mode_checker: ^1.0.5
   flutter_screen_lock: ^9.0.1
   connectivity_plus: ^3.0.3
   device_info_plus: ^8.1.0
   mobile_scanner: ^3.0.0
   url_launcher: ^6.1.10
   hive_flutter: ^1.1.0
-  # app_settings: ^4.2.0
   sodium_libs: ^2.0.0
   local_auth: ^2.1.5
   share_plus: ^6.3.1
@@ -49,14 +45,13 @@ dependencies:
 
   # Analytics
   amplitude_flutter: ^3.13.0
-  sentry_flutter: ^6.21.0
+  sentry_flutter: ^6.22.0
 
 dev_dependencies:
-  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
+  flutter_lints: ^2.0.1
   icons_launcher: ^2.1.0
-  flutter_native_splash: ^2.2.19
 
 flutter:
   uses-material-design: true
@@ -77,11 +72,3 @@ icons_launcher:
     ios:
       enable: true
       image_path: "assets/images/logo1024.png"
-
-flutter_native_splash:
-  fullscreen: true
-  color: "#1A0244"
-  color_dark: "#1A0244"
-  android_gravity: "center"
-  image: "assets/images/logo1024.png"
-  image_dark: "assets/images/logo1024.png"
