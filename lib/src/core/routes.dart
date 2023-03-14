@@ -4,7 +4,7 @@ import 'model/core_model.dart';
 import '/src/home/home_view.dart';
 import '/src/intro/intro_view.dart';
 import '/src/settings/settings_screen.dart';
-import '/src/settings/settings_controller.dart';
+import '/src/settings/settings_repository.dart';
 import '/src/recovery_group/edit_group/edit_group_view.dart';
 import '/src/recovery_group/add_secret/add_secret_view.dart';
 import '/src/recovery_group/create_group/create_group_view.dart';
@@ -16,7 +16,7 @@ Route<dynamic>? onGenerateRoute(final RouteSettings routeSettings) =>
     MaterialPageRoute<void>(
       settings: routeSettings,
       builder: (final BuildContext context) {
-        if (GetIt.I<SettingsController>().state.passCode.isEmpty) {
+        if (GetIt.I<SettingsRepository>().state.passCode.isEmpty) {
           return const IntroView();
         }
         switch (routeSettings.name) {

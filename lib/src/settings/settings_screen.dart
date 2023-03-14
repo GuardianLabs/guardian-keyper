@@ -1,7 +1,7 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
-import 'settings_controller.dart';
+import 'settings_repository.dart';
 import 'widgets/change_device_name_list_tile.dart';
 import 'widgets/change_passcode_list_tile.dart';
 import 'widgets/toggle_biometrics_list_tile.dart';
@@ -37,7 +37,7 @@ class SettingsScreen extends StatelessWidget {
                     child: ChangePassCodeListTile(),
                   ),
                   // Toggle Biometrics
-                  if (GetIt.I<SettingsController>().hasBiometrics)
+                  if (GetIt.I<SettingsRepository>().state.hasBiometrics)
                     const Padding(
                       padding: paddingV6,
                       child: ToggleBiometricsListTile(),

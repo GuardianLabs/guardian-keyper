@@ -1,6 +1,5 @@
 import '/src/core/widgets/common.dart';
-import '/src/core/model/core_model.dart';
-import '/src/settings/settings_controller.dart';
+import '/src/guardian/guardian_controller.dart';
 
 import 'shard_page.dart';
 
@@ -20,7 +19,7 @@ class ShardsPage extends StatelessWidget {
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
         valueListenable: GetIt.I<Box<RecoveryGroupModel>>().listenable(),
         builder: (_, boxRecoveryGroups, __) {
-          final myId = GetIt.I<SettingsController>().state.deviceId;
+          final myId = GetIt.I<GuardianController>().state;
           final guardedGroups =
               boxRecoveryGroups.values.where((e) => e.ownerId != myId);
           return ListView(

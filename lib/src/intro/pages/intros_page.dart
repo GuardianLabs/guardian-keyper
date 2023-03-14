@@ -4,6 +4,7 @@ import '/src/core/widgets/common.dart';
 
 import '../intro_controller.dart';
 
+// TBD: use PageControllerBase?
 class IntrosPage extends StatelessWidget {
   static final _pictures = [
     SvgPicture.asset('assets/images/intro_1.svg'),

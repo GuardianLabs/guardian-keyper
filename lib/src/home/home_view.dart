@@ -7,6 +7,7 @@ import '/src/core/widgets/icon_of.dart';
 
 import '/src/guardian/pages/message_page.dart';
 import '/src/guardian/widgets/message_list_tile.dart';
+import '/src/core/service/p2p_network_service.dart';
 
 import 'home_controller.dart';
 import 'pages/dashboard_page.dart';
@@ -43,6 +44,7 @@ class _HomeViewState extends State<HomeView> {
         await MessageListTile.showActiveMessage(context, message);
       },
     );
+    GetIt.I<P2PNetworkService>().start();
   }
 
   @override

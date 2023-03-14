@@ -1,7 +1,6 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
-import '/src/core/model/core_model.dart';
-import '/src/settings/settings_controller.dart';
+import '/src/guardian/guardian_controller.dart';
 
 import '../widgets/vault_list_tile.dart';
 
@@ -13,7 +12,7 @@ class VaultsPage extends StatelessWidget {
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
         valueListenable: GetIt.I<Box<RecoveryGroupModel>>().listenable(),
         builder: (_, boxRecoveryGroups, __) {
-          final myId = GetIt.I<SettingsController>().state.deviceId;
+          final myId = GetIt.I<GuardianController>().state;
           final guardedGroups =
               boxRecoveryGroups.values.where((e) => e.ownerId == myId);
           return Column(

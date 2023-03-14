@@ -5,16 +5,17 @@ import '/src/core/consts.dart';
 import '/src/core/widgets/icon_of.dart';
 
 import '/src/auth/auth_controller.dart';
-import '/src/settings/settings_controller.dart';
+import '/src/settings/settings_repository.dart';
 
-class LoaderPage extends StatefulWidget {
-  const LoaderPage({super.key});
+class LoaderWidget extends StatefulWidget {
+  const LoaderWidget({super.key});
 
   @override
-  State<LoaderPage> createState() => _LoaderPageState();
+  State<LoaderWidget> createState() => _LoaderWidgetState();
 }
 
-class _LoaderPageState extends State<LoaderPage> with TickerProviderStateMixin {
+class _LoaderWidgetState extends State<LoaderWidget>
+    with TickerProviderStateMixin {
   late final _logoSize = MediaQuery.of(context).size.width / 3;
 
   late final _backgroundColor = Theme.of(context).scaffoldBackgroundColor;
@@ -31,7 +32,7 @@ class _LoaderPageState extends State<LoaderPage> with TickerProviderStateMixin {
       await init();
       _controller.stop();
       _controller.dispose();
-      if (mounted && GetIt.I<SettingsController>().state.passCode.isNotEmpty) {
+      if (mounted && GetIt.I<SettingsRepository>().state.passCode.isNotEmpty) {
         await GetIt.I<AuthController>().checkPassCode(
           context: context,
           canCancel: false,

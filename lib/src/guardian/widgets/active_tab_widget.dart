@@ -1,5 +1,4 @@
 import '/src/core/widgets/common.dart';
-import '/src/core/model/core_model.dart';
 
 import '../guardian_controller.dart';
 import 'message_list_tile.dart';
