@@ -2,7 +2,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
-import '../../settings/settings_controller.dart';
+
+import '../intro_controller.dart';
 
 class SetBiometricPage extends StatelessWidget {
   const SetBiometricPage({super.key});
@@ -36,7 +37,8 @@ class SetBiometricPage extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      await GetIt.I<SettingsController>()
+                      await context
+                          .read<IntroController>()
                           .setIsBiometricsEnabled(false);
                       if (context.mounted) {
                         Navigator.of(context).pushReplacementNamed(routeHome);
@@ -49,7 +51,8 @@ class SetBiometricPage extends StatelessWidget {
                 Expanded(
                   child: PrimaryButton(
                     onPressed: () async {
-                      await GetIt.I<SettingsController>()
+                      await context
+                          .read<IntroController>()
                           .setIsBiometricsEnabled(true);
                       if (context.mounted) {
                         Navigator.of(context).pushReplacementNamed(routeHome);

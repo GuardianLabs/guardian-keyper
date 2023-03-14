@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/src/core/theme/theme.dart';
-import '/src/core/model/core_model.dart';
-import '/src/settings/settings_controller.dart';
+import '/src/guardian/guardian_controller.dart';
 
 class VaultsCountButton extends StatelessWidget {
   const VaultsCountButton({super.key});
@@ -12,7 +11,7 @@ class VaultsCountButton extends StatelessWidget {
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
         valueListenable: GetIt.I<Box<RecoveryGroupModel>>().listenable(),
         builder: (_, boxRecoveryGroups, __) {
-          final myId = GetIt.I<SettingsController>().state.deviceId;
+          final myId = GetIt.I<GuardianController>().state;
           final groupsCount =
               boxRecoveryGroups.values.where((e) => e.ownerId == myId).length;
           return Container(

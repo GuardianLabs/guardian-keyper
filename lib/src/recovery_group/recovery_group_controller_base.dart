@@ -5,7 +5,7 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
   final networkService = GetIt.I<P2PNetworkService>();
   final analyticsService = GetIt.I<AnalyticsService>();
   final boxRecoveryGroups = GetIt.I<Box<RecoveryGroupModel>>();
-  final myPeerId = GetIt.I<SettingsController>().state.deviceId;
+  final myPeerId = GetIt.I<GuardianController>().state;
 
   late final networkSubscription = networkService.messageStream.listen(null);
 

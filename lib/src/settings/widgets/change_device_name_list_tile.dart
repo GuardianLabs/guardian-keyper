@@ -1,7 +1,7 @@
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 
-import '../settings_controller.dart';
+import '../settings_repository.dart';
 import '../pages/set_device_name_page.dart';
 
 class ChangeDeviceNameListTile extends StatelessWidget {
@@ -9,9 +9,9 @@ class ChangeDeviceNameListTile extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      BlocSelector<SettingsController, SettingsModel, String>(
-        selector: (state) => state.deviceId.name,
-        bloc: GetIt.I<SettingsController>(),
+      BlocSelector<SettingsRepository, SettingsModel, String>(
+        selector: (state) => state.deviceName,
+        bloc: GetIt.I<SettingsRepository>(),
         builder: (final BuildContext context, final deviceName) => ListTile(
           leading: const IconOf.shardOwner(),
           title: const Text('Change Guardian name'),

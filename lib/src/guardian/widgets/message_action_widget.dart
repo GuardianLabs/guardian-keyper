@@ -2,7 +2,6 @@ import 'dart:async';
 
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/model/core_model.dart';
 import '/src/core/service/p2p_network_service.dart';
 
 import '../guardian_controller.dart';

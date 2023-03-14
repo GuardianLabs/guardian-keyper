@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '/src/core/consts.dart';
 import '/src/core/service/platform_service.dart';
-import '/src/settings/settings_controller.dart';
+import '/src/settings/settings_repository.dart';
 
 import 'widgets/check_pass_code.dart';
 import 'widgets/create_pass_code.dart';
@@ -22,7 +22,7 @@ class AuthController {
         passCodeLength: passCodeLength,
         snackBarDuration: snackBarDuration,
         onConfirmed: (final String passCode) async {
-          await GetIt.I<SettingsController>().setPassCode(passCode);
+          await GetIt.I<SettingsRepository>().setPassCode(passCode);
           onConfirmed();
         },
       );
@@ -33,9 +33,9 @@ class AuthController {
   }) =>
       showChangePassCode(
         context: context,
-        currentPassCode: GetIt.I<SettingsController>().state.passCode,
+        currentPassCode: GetIt.I<SettingsRepository>().state.passCode,
         snackBarDuration: snackBarDuration,
-        onConfirmed: GetIt.I<SettingsController>().setPassCode,
+        onConfirmed: GetIt.I<SettingsRepository>().setPassCode,
         onExit: onExit,
       );
 
@@ -47,9 +47,9 @@ class AuthController {
       showCheckPassCode(
         context: context,
         canCancel: canCancel,
-        currentPassCode: GetIt.I<SettingsController>().state.passCode,
+        currentPassCode: GetIt.I<SettingsRepository>().state.passCode,
         snackBarDuration: snackBarDuration,
-        checkBiometric: GetIt.I<SettingsController>().state.isBiometricsEnabled
+        checkBiometric: GetIt.I<SettingsRepository>().state.isBiometricsEnabled
             ? () async {
                 if (await GetIt.I<PlatformService>().localAuthenticate()) {
                   onUnlock();

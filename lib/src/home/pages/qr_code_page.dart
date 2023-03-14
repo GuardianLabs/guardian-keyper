@@ -4,9 +4,9 @@ import 'package:share_plus/share_plus.dart';
 
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/model/core_model.dart';
 import '/src/core/service/platform_service.dart';
-import '/src/settings/settings_controller.dart';
+
+import '/src/guardian/guardian_controller.dart';
 import '/src/guardian/widgets/message_list_tile.dart';
 
 class QRCodePage extends StatefulWidget {
@@ -148,7 +148,7 @@ class _QRCodePageState extends State<QRCodePage> {
     final isNew = widget.groupId == null;
     final message = MessageModel(
       code: isNew ? MessageCode.createGroup : MessageCode.takeGroup,
-      peerId: GetIt.I<SettingsController>().state.deviceId,
+      peerId: GetIt.I<GuardianController>().state,
     );
     GetIt.I<Box<MessageModel>>().put(
       message.aKey,

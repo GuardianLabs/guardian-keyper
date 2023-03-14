@@ -1,10 +1,19 @@
 import '/src/core/widgets/common.dart';
-import '/src/core/model/core_model.dart';
 
-import '../settings_controller.dart';
+import '../settings_repository.dart';
 
-class SetDeviceNamePage extends StatelessWidget {
+// TBD: create SettingsController
+class SetDeviceNamePage extends StatefulWidget {
   const SetDeviceNamePage({super.key});
+
+  @override
+  State<SetDeviceNamePage> createState() => _SetDeviceNamePageState();
+}
+
+class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
+  final _settingsRepository = GetIt.I<SettingsRepository>();
+
+  late String _deviceName = _settingsRepository.state.deviceName;
 
   @override
   Widget build(final BuildContext context) => Column(
@@ -31,11 +40,10 @@ class SetDeviceNamePage extends StatelessWidget {
                   padding: paddingV20,
                   child: TextFormField(
                     autofocus: true,
-                    initialValue:
-                        GetIt.I<SettingsController>().state.deviceId.name,
                     keyboardType: TextInputType.text,
-                    maxLength: IdWithNameBase.maxNameLength,
-                    onChanged: GetIt.I<SettingsController>().setDeviceName,
+                    maxLength: SettingsModel.maxNameLength,
+                    initialValue: _deviceName,
+                    onChanged: (value) => setState(() => _deviceName = value),
                     decoration: const InputDecoration(
                       labelText: ' Device name ',
                       helperText: 'Minimum 3 characters',
@@ -45,15 +53,16 @@ class SetDeviceNamePage extends StatelessWidget {
                 // Footer
                 Padding(
                   padding: paddingV20,
-                  child: BlocBuilder<SettingsController, SettingsModel>(
-                    bloc: GetIt.I<SettingsController>(),
+                  child: BlocBuilder<SettingsRepository, SettingsModel>(
+                    bloc: _settingsRepository,
                     builder: (final context, final state) => PrimaryButton(
                       text: 'Proceed',
-                      onPressed: state.isNameTooShort
+                      onPressed: state.deviceName.length <
+                              SettingsModel.maxNameLength
                           ? null
                           : () async {
-                              await GetIt.I<SettingsController>()
-                                  .saveDeviceName();
+                              await _settingsRepository
+                                  .setDeviceName(_deviceName);
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(buildSnackBar(

@@ -4,8 +4,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
-import '/src/core/model/core_model.dart';
-import '/src/settings/settings_controller.dart';
+import '/src/guardian/guardian_controller.dart';
 
 class GetQRCodeWidget extends StatefulWidget {
   final void Function(MessageModel qrCode) resultCallback;
@@ -17,7 +16,7 @@ class GetQRCodeWidget extends StatefulWidget {
 }
 
 class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
-  final _myPeerId = GetIt.I<SettingsController>().state.deviceId;
+  final _myPeerId = GetIt.I<GuardianController>().state;
   late Rect _scanWindow;
   var _canPaste = false;
   Timer? _snackBarTimer;

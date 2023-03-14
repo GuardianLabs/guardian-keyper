@@ -1,19 +1,28 @@
 import 'package:flutter/foundation.dart';
 
 import '/src/core/model/core_model.dart';
-import '/src/settings/settings_controller.dart';
 import '/src/core/service/p2p_network_service.dart';
+import '/src/settings/settings_repository.dart';
 
-class GuardianController {
+export 'package:get_it/get_it.dart';
+export 'package:flutter_bloc/flutter_bloc.dart';
+
+export '/src/core/model/core_model.dart';
+
+class GuardianController extends Cubit<PeerId> {
   final _boxMessages = GetIt.I<Box<MessageModel>>();
   final _boxRecoveryGroups = GetIt.I<Box<RecoveryGroupModel>>();
   final _networkService = GetIt.I<P2PNetworkService>();
 
-  var _myPeerId = GetIt.I<SettingsController>().state.deviceId;
-
-  GuardianController() {
-    _networkService.messageStream.listen(onMessage);
-    GetIt.I<SettingsController>().stream.listen((s) => _myPeerId = s.deviceId);
+  GuardianController()
+      : super(PeerId(
+          token: GetIt.I<P2PNetworkService>().myId,
+          name: GetIt.I<SettingsRepository>().state.deviceName,
+        )) {
+    GetIt.I<P2PNetworkService>().messageStream.listen(onMessage);
+    GetIt.I<SettingsRepository>()
+        .stream
+        .listen((settings) => emit(state.copyWith(name: settings.deviceName)));
   }
 
   Future<void> pruneMessages() async {
@@ -170,7 +179,7 @@ class GuardianController {
       await _networkService.sendTo(
         isConfirmable: true,
         peerId: message.peerId,
-        message: message.copyWith(peerId: _myPeerId),
+        message: message.copyWith(peerId: state),
       );
       return true;
     } catch (_) {

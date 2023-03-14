@@ -16,7 +16,7 @@ class PlatformService {
 
   void wakelockDisable() => Wakelock.disable();
 
-  Future<bool> get hasBiometrics =>
+  Future<bool> getHasBiometrics() =>
       _localAuth.getAvailableBiometrics().then((value) => value.isNotEmpty);
 
   Future<bool> localAuthenticate({
