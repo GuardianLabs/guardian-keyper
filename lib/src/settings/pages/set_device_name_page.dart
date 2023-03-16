@@ -1,4 +1,5 @@
 import '/src/core/widgets/common.dart';
+import '/src/core/repository/repository_root.dart';
 
 import '../settings_repository.dart';
 
@@ -10,7 +11,8 @@ class SetDeviceNamePage extends StatefulWidget {
 }
 
 class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
-  late String _deviceName = GetIt.I<SettingsRepository>().state.deviceName;
+  late String _deviceName =
+      GetIt.I<RepositoryRoot>().settingsRepository.state.deviceName;
 
   @override
   Widget build(final BuildContext context) => ScaffoldWidget(
@@ -58,7 +60,8 @@ class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
                               SettingsModel.minNameLength
                           ? null
                           : () async {
-                              await GetIt.I<SettingsRepository>()
+                              await GetIt.I<RepositoryRoot>()
+                                  .settingsRepository
                                   .setDeviceName(_deviceName);
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context)

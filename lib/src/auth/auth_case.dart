@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 
-import '/src/core/repository/repository.dart';
-import '/src/core/service/platform_service.dart';
+import '/src/core/service/service_root.dart';
+import '/src/core/repository/repository_root.dart';
 
 import 'pages/auth.dart' as pages;
 
 class AuthCase {
-  final _platformService = GetIt.I<PlatformService>();
-  final _settingsRepository = GetIt.I<SettingsRepository>();
+  final _platformService = GetIt.I<ServiceRoot>().platformService;
+  final _settingsRepository = GetIt.I<RepositoryRoot>().settingsRepository;
 
   Future<void> createPassCode({
     required final BuildContext context,

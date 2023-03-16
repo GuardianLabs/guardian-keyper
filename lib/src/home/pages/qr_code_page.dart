@@ -4,8 +4,8 @@ import 'package:share_plus/share_plus.dart';
 
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/repository/repository.dart';
-import '/src/core/service/platform_service.dart';
+import '/src/core/service/service_root.dart';
+import '/src/core/repository/repository_root.dart';
 
 import '/src/guardian/guardian_controller.dart';
 import '/src/guardian/widgets/message_list_tile.dart';
@@ -26,11 +26,13 @@ class _QRCodePageState extends State<QRCodePage> {
   @override
   void initState() {
     super.initState();
-    GetIt.I<PlatformService>().wakelockEnable();
+    GetIt.I<ServiceRoot>().platformService.wakelockEnable();
     final qrCode = _generateQrCode();
     _qrCode = qrCode.toBase64url();
-    _boxMessagesEventsSubscription =
-        GetIt.I<Box<MessageModel>>().watch(key: qrCode.aKey).listen(
+    _boxMessagesEventsSubscription = GetIt.I<RepositoryRoot>()
+        .messageRepository
+        .watch(key: qrCode.aKey)
+        .listen(
       (event) async {
         if (!mounted) return;
         final message = event.value as MessageModel;
@@ -45,7 +47,7 @@ class _QRCodePageState extends State<QRCodePage> {
 
   @override
   void dispose() {
-    GetIt.I<PlatformService>().wakelockDisable();
+    GetIt.I<ServiceRoot>().platformService.wakelockDisable();
     _boxMessagesEventsSubscription.cancel();
     super.dispose();
   }
@@ -151,13 +153,14 @@ class _QRCodePageState extends State<QRCodePage> {
       code: isNew ? MessageCode.createGroup : MessageCode.takeGroup,
       peerId: GetIt.I<GuardianController>().state,
     );
-    GetIt.I<Box<MessageModel>>().put(
-      message.aKey,
-      isNew
-          ? message
-          // save groupId for transaction
-          : message.copyWith(payload: RecoveryGroupModel(id: widget.groupId)),
-    );
+    GetIt.I<RepositoryRoot>().messageRepository.put(
+          message.aKey,
+          isNew
+              ? message
+              // save groupId for transaction
+              : message.copyWith(
+                  payload: RecoveryGroupModel(id: widget.groupId)),
+        );
     return message;
   }
 }

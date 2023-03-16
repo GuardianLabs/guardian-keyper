@@ -1,5 +1,5 @@
 import '/src/core/widgets/common.dart';
-import '/src/core/repository/repository.dart';
+import '/src/core/repository/repository_root.dart';
 
 import '../guardian_controller.dart';
 import 'message_list_tile.dart';
@@ -10,7 +10,8 @@ class ActiveTabWidget extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<MessageModel>>(
-        valueListenable: GetIt.I<Box<MessageModel>>().listenable(),
+        valueListenable:
+            GetIt.I<RepositoryRoot>().messageRepository.listenable(),
         builder: (final BuildContext context, boxMessages, __) {
           final active = boxMessages.values
               .where((e) => e.isReceived)

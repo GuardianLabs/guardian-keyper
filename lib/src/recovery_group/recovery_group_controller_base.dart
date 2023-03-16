@@ -2,10 +2,10 @@ part of 'recovery_group_controller.dart';
 
 abstract class RecoveryGroupControllerBase extends PageControllerBase {
   final authCase = GetIt.I<AuthCase>();
-  final platformService = GetIt.I<PlatformService>();
-  final networkService = GetIt.I<NetworkService>();
-  final analyticsService = GetIt.I<AnalyticsService>();
-  final boxRecoveryGroups = GetIt.I<Box<RecoveryGroupModel>>();
+  final platformService = GetIt.I<ServiceRoot>().platformService;
+  final networkService = GetIt.I<ServiceRoot>().networkService;
+  final analyticsService = GetIt.I<ServiceRoot>().analyticsService;
+  final vaultRepository = GetIt.I<RepositoryRoot>().vaultRepository;
   final myPeerId = GetIt.I<GuardianController>().state;
 
   late final networkSubscription = networkService.messageStream.listen(null);
@@ -48,10 +48,10 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
       );
 
   RecoveryGroupModel? getGroupById(final GroupId groupId) =>
-      boxRecoveryGroups.get(groupId.asKey);
+      vaultRepository.get(groupId.asKey);
 
   Future<RecoveryGroupModel> createGroup(final RecoveryGroupModel group) async {
-    await boxRecoveryGroups.put(group.aKey, group);
+    await vaultRepository.put(group.aKey, group);
     notifyListeners();
     return group;
   }
@@ -60,11 +60,11 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
     final GroupId groupId,
     final PeerId guardian,
   ) async {
-    var group = boxRecoveryGroups.get(groupId.asKey)!;
+    var group = vaultRepository.get(groupId.asKey)!;
     group = group.copyWith(
       guardians: {...group.guardians, guardian: ''},
     );
-    await boxRecoveryGroups.put(groupId.asKey, group);
+    await vaultRepository.put(groupId.asKey, group);
     return group;
   }
 }

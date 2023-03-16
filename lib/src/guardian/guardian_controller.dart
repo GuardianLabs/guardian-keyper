@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
 import '/src/core/model/core_model.dart';
-import '/src/core/service/service.dart';
-import '/src/core/repository/repository.dart';
+import '/src/core/service/service_root.dart';
+import '/src/core/repository/repository_root.dart';
 
 export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,17 +10,18 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 export '/src/core/model/core_model.dart';
 
 class GuardianController extends Cubit<PeerId> {
-  final _boxMessages = GetIt.I<Box<MessageModel>>();
-  final _boxRecoveryGroups = GetIt.I<Box<RecoveryGroupModel>>();
-  final _networkService = GetIt.I<NetworkService>();
+  final _networkService = GetIt.I<ServiceRoot>().networkService;
+  final _boxMessages = GetIt.I<RepositoryRoot>().messageRepository;
+  final _vaultRepository = GetIt.I<RepositoryRoot>().vaultRepository;
 
   GuardianController()
       : super(PeerId(
-          token: GetIt.I<NetworkService>().myId,
-          name: GetIt.I<SettingsRepository>().state.deviceName,
+          token: GetIt.I<ServiceRoot>().networkService.myId,
+          name: GetIt.I<RepositoryRoot>().settingsRepository.state.deviceName,
         )) {
-    GetIt.I<NetworkService>().messageStream.listen(onMessage);
-    GetIt.I<SettingsRepository>()
+    GetIt.I<ServiceRoot>().networkService.messageStream.listen(onMessage);
+    GetIt.I<RepositoryRoot>()
+        .settingsRepository
         .stream
         .listen((settings) => emit(state.copyWith(name: settings.deviceName)));
   }
@@ -49,7 +50,7 @@ class GuardianController extends Cubit<PeerId> {
         if (ticket == null) return; // qrCode was not generated
         if (message.isNotRequested) return; // qrCode was processed already
         if (message.code != ticket.code) return;
-        if (_boxRecoveryGroups.containsKey(message.groupId.asKey)) {
+        if (_vaultRepository.containsKey(message.groupId.asKey)) {
           return; // group already exists
         }
         break;
@@ -64,7 +65,7 @@ class GuardianController extends Cubit<PeerId> {
       case MessageCode.setShard:
         if (message.isEmpty) return;
         if (ticket != null) return; // request already processed
-        final recoveryGroup = _boxRecoveryGroups.get(message.groupId.asKey);
+        final recoveryGroup = _vaultRepository.get(message.groupId.asKey);
         if (recoveryGroup == null) return; // group does not exists
         if (recoveryGroup.ownerId != message.peerId) return; // not owner
         // already have this Secret
@@ -74,7 +75,7 @@ class GuardianController extends Cubit<PeerId> {
       case MessageCode.getShard:
         if (message.isEmpty) return;
         if (ticket != null) return; // request already processed
-        final recoveryGroup = _boxRecoveryGroups.get(message.groupId.asKey);
+        final recoveryGroup = _vaultRepository.get(message.groupId.asKey);
         if (recoveryGroup == null) return; // group does not exists
         if (recoveryGroup.ownerId != message.peerId) return; // not owner
         // Have no such Secret
@@ -97,7 +98,7 @@ class GuardianController extends Cubit<PeerId> {
           maxSize: request.recoveryGroup.maxSize,
           threshold: request.recoveryGroup.threshold,
         );
-        await _boxRecoveryGroups.put(recoveryGroup.aKey, recoveryGroup);
+        await _vaultRepository.put(recoveryGroup.aKey, recoveryGroup);
       }
       await archivateMessage(request);
     }
@@ -106,7 +107,7 @@ class GuardianController extends Cubit<PeerId> {
 
   Future<void> sendTakeGroupResponse(MessageModel request) async {
     if (request.isAccepted) {
-      final recoveryGroup = _boxRecoveryGroups
+      final recoveryGroup = _vaultRepository
           .get(request.recoveryGroup.aKey)!
           .copyWith(ownerId: request.peerId);
       await _sendResponse(
@@ -118,7 +119,7 @@ class GuardianController extends Cubit<PeerId> {
           ),
         ),
       );
-      await _boxRecoveryGroups.put(
+      await _vaultRepository.put(
         recoveryGroup.aKey,
         recoveryGroup,
       );
@@ -130,8 +131,8 @@ class GuardianController extends Cubit<PeerId> {
 
   Future<void> sendSetShardResponse(MessageModel request) async {
     if (request.isAccepted) {
-      final recoveryGroup = _boxRecoveryGroups.get(request.groupId.asKey)!;
-      await _boxRecoveryGroups.put(
+      final recoveryGroup = _vaultRepository.get(request.groupId.asKey)!;
+      await _vaultRepository.put(
         request.groupId.asKey,
         recoveryGroup.copyWith(secrets: {
           ...recoveryGroup.secrets,
@@ -147,7 +148,7 @@ class GuardianController extends Cubit<PeerId> {
 
   Future<void> sendGetShardResponse(MessageModel request) async {
     if (request.isAccepted) {
-      final recoveryGroup = _boxRecoveryGroups.get(request.groupId.asKey)!;
+      final recoveryGroup = _vaultRepository.get(request.groupId.asKey)!;
       await _sendResponse(
         request.copyWith(
           payload: SecretShardModel(
