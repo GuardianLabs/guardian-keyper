@@ -1,5 +1,6 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
+import '/src/core/repository/repository.dart';
 import '/src/guardian/guardian_controller.dart';
 
 import '../widgets/vault_list_tile.dart';

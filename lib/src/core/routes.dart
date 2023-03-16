@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'model/core_model.dart';
-import '/src/home/home_view.dart';
+import '../home/home_screen.dart';
 import '/src/intro/intro_view.dart';
 import '/src/settings/settings_screen.dart';
 import '/src/settings/settings_repository.dart';
@@ -52,6 +52,6 @@ Route<dynamic>? onGenerateRoute(final RouteSettings routeSettings) =>
           case SettingsScreen.routeName:
             return const SettingsScreen();
         }
-        return const HomeView();
+        return const HomeScreen();
       },
     );

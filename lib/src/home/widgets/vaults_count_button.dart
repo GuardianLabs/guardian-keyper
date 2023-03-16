@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/src/core/theme/theme.dart';
+import '/src/core/repository/repository.dart';
 import '/src/guardian/guardian_controller.dart';
 
 class VaultsCountButton extends StatelessWidget {

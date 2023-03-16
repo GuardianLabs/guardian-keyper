@@ -32,16 +32,15 @@ class SetDeviceNamePage extends StatelessWidget {
               onChanged: controller.setDeviceName,
               keyboardType: TextInputType.text,
               maxLength: controller.maxNameLength,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: ' Guardian name ',
-                helperText: 'Minimum 3 characters',
+                helperText: 'Minimum ${controller.minNameLength} characters',
               ),
             )),
         Padding(
           padding: paddingV20,
-          child: Selector<IntroController, String>(
-            selector: (_, c) => c.deviceName,
-            builder: (_, __, ___) => PrimaryButton(
+          child: Consumer<IntroController>(
+            builder: (_, controller, ___) => PrimaryButton(
               text: 'Proceed',
               onPressed:
                   controller.canSaveName ? controller.saveDeviceName : null,

@@ -1,3 +1,4 @@
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 
@@ -10,7 +11,7 @@ class AddSecretButton extends StatelessWidget {
   Widget build(final BuildContext context) => PrimaryButton(
         text: 'Add a Secret',
         onPressed: () => Navigator.of(context).pushNamed(
-          '/recovery_group/add_secret',
+          routeGroupAddSecret,
           arguments: group.id,
         ),
       );

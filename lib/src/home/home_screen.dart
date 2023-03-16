@@ -1,13 +1,15 @@
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 import '/src/core/consts.dart';
-import '/src/core/model/core_model.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
+import '/src/core/model/core_model.dart';
+import '/src/core/repository/repository.dart';
+import '../core/service/network/network_service.dart';
 
+import '/src/auth/auth_case.dart';
 import '/src/guardian/pages/message_page.dart';
 import '/src/guardian/widgets/message_list_tile.dart';
-import '/src/core/service/p2p_network_service.dart';
 
 import 'home_controller.dart';
 import 'pages/dashboard_page.dart';
@@ -15,7 +17,7 @@ import 'pages/shards_page.dart';
 import 'pages/vaults_page.dart';
 import 'widgets/notification_icon.dart';
 
-class HomeView extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   static const routeName = routeHome;
 
   static const _pages = [
@@ -25,13 +27,27 @@ class HomeView extends StatefulWidget {
     MessagesPage(),
   ];
 
-  const HomeView({super.key});
+  const HomeScreen({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+  _HomeScreenState() {
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      GetIt.I<AuthCase>().logIn(context);
+    } else {
+      await GetIt.I<Box<MessageModel>>().flush();
+      await GetIt.I<Box<RecoveryGroupModel>>().flush();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -44,13 +60,13 @@ class _HomeViewState extends State<HomeView> {
         await MessageListTile.showActiveMessage(context, message);
       },
     );
-    GetIt.I<P2PNetworkService>().start();
+    GetIt.I<NetworkService>().start();
   }
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
         create: (final BuildContext context) => HomeController(
-          pages: HomeView._pages,
+          pages: HomeScreen._pages,
         ),
         child: Selector<HomeController, int>(
           selector: (_, controller) => controller.currentPage,
@@ -84,7 +100,7 @@ class _HomeViewState extends State<HomeView> {
             ),
             child: DoubleBackToCloseApp(
               snackBar: const SnackBar(content: Text('Tap back again to exit')),
-              child: HomeView._pages[currentPage],
+              child: HomeScreen._pages[currentPage],
             ),
           ),
         ),

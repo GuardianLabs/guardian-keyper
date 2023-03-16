@@ -21,7 +21,7 @@ class ChangeDeviceNameListTile extends StatelessWidget {
           ),
           trailing: const Icon(Icons.arrow_forward_ios_rounded),
           onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => const ScaffoldWidget(child: SetDeviceNamePage()),
+            builder: (_) => const SetDeviceNamePage(),
           )),
         ),
       );

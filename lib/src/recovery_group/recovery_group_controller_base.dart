@@ -1,8 +1,9 @@
 part of 'recovery_group_controller.dart';
 
 abstract class RecoveryGroupControllerBase extends PageControllerBase {
+  final authCase = GetIt.I<AuthCase>();
   final platformService = GetIt.I<PlatformService>();
-  final networkService = GetIt.I<P2PNetworkService>();
+  final networkService = GetIt.I<NetworkService>();
   final analyticsService = GetIt.I<AnalyticsService>();
   final boxRecoveryGroups = GetIt.I<Box<RecoveryGroupModel>>();
   final myPeerId = GetIt.I<GuardianController>().state;

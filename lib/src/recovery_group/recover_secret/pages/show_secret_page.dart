@@ -13,7 +13,13 @@ class ShowSecretPage extends StatefulWidget {
 }
 
 class _ShowSecretPageState extends State<ShowSecretPage> {
-  bool _isSecretObfuscated = true;
+  final _copiedSnackbar = buildSnackBar(
+    text: 'Secret is copied to your clipboard.',
+  );
+  late final _controller = context.read<RecoverySecretController>();
+
+  bool _isObfuscated = true;
+  bool _isAuthorized = false;
 
   @override
   Widget build(final BuildContext context) => Column(
@@ -44,46 +50,32 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
                         Container(
                           height: 160,
                           padding: paddingBottom20,
-                          child: _isSecretObfuscated
+                          child: _isObfuscated
                               ? SvgPicture.asset(
                                   'assets/images/secret_mask.svg',
                                 )
                               : Text(
-                                  context
-                                      .read<RecoverySecretController>()
-                                      .secret,
+                                  _controller.secret,
                                   style: textStyleSourceSansPro414Purple,
                                 ),
                         ),
                         Row(children: [
                           Expanded(
-                            child: ElevatedButton(
-                              child:
-                                  Text(_isSecretObfuscated ? 'Show' : 'Hide'),
-                              // TBD: ask passCode before show
-                              onPressed: () => setState(() =>
-                                  _isSecretObfuscated = !_isSecretObfuscated),
-                            ),
+                            child: _isObfuscated
+                                ? ElevatedButton(
+                                    onPressed: onPressedShow,
+                                    child: const Text('Show'),
+                                  )
+                                : ElevatedButton(
+                                    onPressed: onPressedHide,
+                                    child: const Text('Hide'),
+                                  ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: PrimaryButton(
                               text: 'Copy',
-                              // TBD: ask passCode before copy
-                              onPressed: () async {
-                                await Clipboard.setData(
-                                  ClipboardData(
-                                      text: context
-                                          .read<RecoverySecretController>()
-                                          .secret),
-                                );
-                                if (mounted) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(buildSnackBar(
-                                    text: 'Secret is copied to your clipboard.',
-                                  ));
-                                }
-                              },
+                              onPressed: _onPressedCopy,
                             ),
                           ),
                         ]),
@@ -96,4 +88,46 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
           ),
         ],
       );
+
+  void onPressedShow() {
+    _isAuthorized
+        ? setState(() {
+            _isObfuscated = false;
+          })
+        : _controller.checkPassCode(
+            context: context,
+            onUnlocked: () => setState(
+              () {
+                _isObfuscated = false;
+                _isAuthorized = true;
+              },
+            ),
+          );
+  }
+
+  void onPressedHide() => setState(() {
+        _isObfuscated = true;
+      });
+
+  void _onPressedCopy() async {
+    if (_isAuthorized) {
+      await Clipboard.setData(
+        ClipboardData(text: _controller.secret),
+      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(_copiedSnackbar);
+      }
+    } else {
+      _controller.checkPassCode(
+        context: context,
+        onUnlocked: () async {
+          _isAuthorized = true;
+          await Clipboard.setData(ClipboardData(text: _controller.secret));
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(_copiedSnackbar);
+          }
+        },
+      );
+    }
+  }
 }

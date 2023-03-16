@@ -2,7 +2,7 @@ import 'dart:async';
 
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/service/p2p_network_service.dart';
+import '/src/core/service/service.dart';
 
 import '../guardian_controller.dart';
 
@@ -29,7 +29,7 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
     MessageCode.takeGroup: ' asks you to approve a change of ownership for ',
   };
 
-  final _networkService = GetIt.I<P2PNetworkService>();
+  final _networkService = GetIt.I<NetworkService>();
 
   late final _animationController = AnimationController(
     vsync: this,

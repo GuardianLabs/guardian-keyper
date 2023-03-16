@@ -4,7 +4,7 @@ import '/src/core/init.dart';
 import '/src/core/consts.dart';
 import '/src/core/widgets/icon_of.dart';
 
-import '/src/auth/auth_controller.dart';
+import '/src/auth/auth_case.dart';
 import '/src/settings/settings_repository.dart';
 
 class LoaderWidget extends StatefulWidget {
@@ -31,16 +31,17 @@ class _LoaderWidgetState extends State<LoaderWidget>
     Future.microtask(() async {
       await init();
       _controller.stop();
-      _controller.dispose();
       if (mounted && GetIt.I<SettingsRepository>().state.passCode.isNotEmpty) {
-        await GetIt.I<AuthController>().checkPassCode(
-          context: context,
-          canCancel: false,
-          onUnlock: Navigator.of(context).pop,
-        );
+        await GetIt.I<AuthCase>().logIn(context);
       }
       if (mounted) Navigator.of(context).pushReplacementNamed(routeHome);
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override

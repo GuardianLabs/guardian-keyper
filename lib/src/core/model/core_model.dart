@@ -4,11 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:messagepack/messagepack.dart';
 
-import '../utils/random_utils.dart';
-import '../utils/emoji_codes.dart';
+import '/src/core/utils/emoji_codes.dart';
+import '/src/core/utils/random_utils.dart';
 
-export 'package:get_it/get_it.dart';
-export 'package:hive_flutter/hive_flutter.dart';
+export '/src/settings/settings_model.dart';
 
 part 'recovery_group_model.dart';
 part 'secret_shard_model.dart';

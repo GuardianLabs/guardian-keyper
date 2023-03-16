@@ -1,3 +1,4 @@
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -135,7 +136,7 @@ class _LoadingPageState extends State<LoadingPage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).pushReplacementNamed(
-                    '/recovery_group/restore',
+                    routeGroupRestoreGroup,
                     arguments: true,
                   );
                 },
@@ -209,7 +210,7 @@ class _LoadingPageState extends State<LoadingPage> {
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed(
-                '/recovery_group/restore',
+                routeGroupRestoreGroup,
                 arguments: true,
               );
             },

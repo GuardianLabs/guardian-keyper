@@ -1,7 +1,8 @@
-import '/src/core/consts.dart';
+import 'package:get_it/get_it.dart';
+
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/auth/auth_controller.dart';
+import '/src/auth/auth_case.dart';
 
 class ChangePassCodeListTile extends StatelessWidget {
   const ChangePassCodeListTile({super.key});
@@ -15,10 +16,6 @@ class ChangePassCodeListTile extends StatelessWidget {
           style: textStyleSourceSansPro414Purple,
         ),
         trailing: const Icon(Icons.arrow_forward_ios_rounded),
-        onTap: () => GetIt.I<AuthController>().changePassCode(
-          context: context,
-          onExit: () => Navigator.of(context)
-              .popUntil(ModalRoute.withName(routeSettings)),
-        ),
+        onTap: () => GetIt.I<AuthCase>().changePassCode(context: context),
       );
 }

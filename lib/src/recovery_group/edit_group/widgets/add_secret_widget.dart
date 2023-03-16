@@ -1,3 +1,4 @@
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -63,7 +64,7 @@ class AddSecretWidget extends StatelessWidget {
                           padding: paddingTop12,
                           child: ElevatedButton(
                             onPressed: () => Navigator.of(context).pushNamed(
-                              '/recovery_group/recover_secret',
+                              routeGroupRecoverSecret,
                               arguments: MapEntry(group.id, secretId),
                             ),
                             child: const Text('Recover my Secret'),

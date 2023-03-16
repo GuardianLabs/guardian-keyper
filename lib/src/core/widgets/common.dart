@@ -1,33 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '/src/core/model/core_model.dart';
 import '/src/core/theme/theme.dart';
+import '/src/core/model/core_model.dart';
 
 export 'package:flutter/material.dart';
 
-export '../theme/theme.dart';
+export '/src/core/theme/theme.dart';
 
 class ScaffoldWidget extends StatelessWidget {
   final Widget child;
   final BottomNavigationBar? bottomNavigationBar;
-  final Future<bool> Function()? onWillPop;
 
   const ScaffoldWidget({
     super.key,
     required this.child,
     this.bottomNavigationBar,
-    this.onWillPop,
   });
 
   @override
-  Widget build(final BuildContext context) => WillPopScope(
-        onWillPop: onWillPop,
-        child: Scaffold(
-          primary: true,
-          resizeToAvoidBottomInset: true,
-          bottomNavigationBar: bottomNavigationBar,
-          body: SafeArea(child: child),
-        ),
+  Widget build(final BuildContext context) => Scaffold(
+        primary: true,
+        resizeToAvoidBottomInset: true,
+        bottomNavigationBar: bottomNavigationBar,
+        body: SafeArea(child: child),
       );
 }
 

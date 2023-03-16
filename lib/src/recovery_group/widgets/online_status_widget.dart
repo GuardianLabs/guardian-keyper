@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '/src/core/theme/theme.dart';
+import '/src/core/service/service.dart';
 import '/src/core/model/core_model.dart';
-import '/src/core/service/p2p_network_service.dart';
 
 class OnlineStatusWidget extends StatefulWidget {
   final PeerId peerId;
@@ -15,7 +15,7 @@ class OnlineStatusWidget extends StatefulWidget {
 }
 
 class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
-  final _networkService = GetIt.I<P2PNetworkService>();
+  final _networkService = GetIt.I<NetworkService>();
   late Timer _timer;
 
   @override

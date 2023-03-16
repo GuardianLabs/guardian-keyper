@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
@@ -130,8 +131,7 @@ class _LoadingPageState extends State<LoadingPage> {
           ),
         ),
       ).then(
-        (_) => Navigator.of(context)
-            .popAndPushNamed('/recovery_group/add_guardian'),
+        (_) => Navigator.of(context).popAndPushNamed(routeGroupAddGuardian),
       );
 
   void _onFailed([MessageModel? qrCode]) => showModalBottomSheet(
