@@ -1,5 +1,6 @@
 import '/src/core/controller/page_controller_base.dart';
 import '/src/settings/settings_repository.dart';
+import '/src/auth/auth_case.dart';
 
 export 'package:provider/provider.dart';
 
@@ -8,6 +9,8 @@ class IntroController extends PageControllerBase {
       {required super.pages, SettingsRepository? settingsRepository})
       : _settingsRepository =
             settingsRepository ?? GetIt.I<SettingsRepository>();
+
+  final createPassCode = GetIt.I<AuthCase>().createPassCode;
 
   final SettingsRepository _settingsRepository;
 
@@ -20,6 +23,8 @@ class IntroController extends PageControllerBase {
   String get deviceName => _deviceName;
 
   int get maxNameLength => SettingsModel.maxNameLength;
+
+  int get minNameLength => SettingsModel.minNameLength;
 
   bool get canSaveName => _deviceName.length >= SettingsModel.minNameLength;
 

@@ -1,6 +1,6 @@
-part of '../p2p_network_service.dart';
+part of 'network_service.dart';
 
-mixin P2PConnectivityHandler on P2PNetworkServiceBase {
+mixin ConnectivityHandler on NetworkServiceBase {
   final _connectivity = Connectivity();
   final _connectivityController = StreamController<bool>.broadcast();
 

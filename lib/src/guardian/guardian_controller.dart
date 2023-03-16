@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
 import '/src/core/model/core_model.dart';
-import '/src/core/service/p2p_network_service.dart';
-import '/src/settings/settings_repository.dart';
+import '/src/core/service/service.dart';
+import '/src/core/repository/repository.dart';
 
 export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,14 +12,14 @@ export '/src/core/model/core_model.dart';
 class GuardianController extends Cubit<PeerId> {
   final _boxMessages = GetIt.I<Box<MessageModel>>();
   final _boxRecoveryGroups = GetIt.I<Box<RecoveryGroupModel>>();
-  final _networkService = GetIt.I<P2PNetworkService>();
+  final _networkService = GetIt.I<NetworkService>();
 
   GuardianController()
       : super(PeerId(
-          token: GetIt.I<P2PNetworkService>().myId,
+          token: GetIt.I<NetworkService>().myId,
           name: GetIt.I<SettingsRepository>().state.deviceName,
         )) {
-    GetIt.I<P2PNetworkService>().messageStream.listen(onMessage);
+    GetIt.I<NetworkService>().messageStream.listen(onMessage);
     GetIt.I<SettingsRepository>()
         .stream
         .listen((settings) => emit(state.copyWith(name: settings.deviceName)));

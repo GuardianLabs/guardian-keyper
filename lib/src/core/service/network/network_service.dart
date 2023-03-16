@@ -10,14 +10,12 @@ import 'package:nsd/nsd.dart';
 import '/src/core/consts.dart';
 import '/src/core/model/core_model.dart';
 
-export 'package:get_it/get_it.dart';
+part 'network_service_base.dart';
+part 'network_service_mdns_handler.dart';
+part 'network_service_connectivity_handler.dart';
 
-part 'p2p_network_service/p2p_network_service_base.dart';
-part 'p2p_network_service/p2p_network_service_mdns_handler.dart';
-part 'p2p_network_service/p2p_network_service_connectivity_handler.dart';
-
-class P2PNetworkService extends P2PNetworkServiceBase
-    with WidgetsBindingObserver, P2PConnectivityHandler, P2PMdnsHandler {
+class NetworkService extends NetworkServiceBase
+    with WidgetsBindingObserver, ConnectivityHandler, MdnsHandler {
   final _messagesController = StreamController<MessageModel>.broadcast();
 
   p2p.Route? _bsServer;

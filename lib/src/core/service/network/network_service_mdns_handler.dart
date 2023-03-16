@@ -1,6 +1,6 @@
-part of '../p2p_network_service.dart';
+part of 'network_service.dart';
 
-mixin P2PMdnsHandler on P2PNetworkServiceBase {
+mixin MdnsHandler on NetworkServiceBase {
   static const _utf8Encoder = Utf8Encoder();
   static const _utf8Decoder = Utf8Decoder();
 

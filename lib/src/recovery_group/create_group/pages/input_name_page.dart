@@ -1,3 +1,4 @@
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 
@@ -42,7 +43,7 @@ class InputNamePage extends StatelessWidget {
                         : () => controller.createVault().then(
                               (vault) => Navigator.popAndPushNamed(
                                 context,
-                                '/recovery_group/edit',
+                                routeGroupEdit,
                                 arguments: vault.id,
                               ),
                             ),

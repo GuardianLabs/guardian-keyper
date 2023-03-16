@@ -1,6 +1,8 @@
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
+import '/src/core/repository/repository.dart';
 
 class RemoveVaultBottomSheet extends StatelessWidget {
   const RemoveVaultBottomSheet({super.key, required this.group});
@@ -36,7 +38,7 @@ class RemoveVaultBottomSheet extends StatelessWidget {
                       .delete(group.aKey)
                       .then(
                         (_) => Navigator.of(context).popUntil(
-                          ModalRoute.withName('/recovery_group/edit'),
+                          ModalRoute.withName(routeGroupEdit),
                         ),
                       ),
                 ),

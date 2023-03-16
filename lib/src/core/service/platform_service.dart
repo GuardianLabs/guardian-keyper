@@ -2,10 +2,9 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:wakelock/wakelock.dart';
+import 'package:vibration/vibration.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-
-export 'package:get_it/get_it.dart';
 
 class PlatformService {
   static final _localAuth = LocalAuthentication();
@@ -58,5 +57,11 @@ class PlatformService {
       return result.substring(0, maxNameLength);
     }
     return result;
+  }
+
+  Future<bool> vibrate([int duration = 500]) async {
+    final hasVibrator = await Vibration.hasVibrator() ?? false;
+    if (hasVibrator) await Vibration.vibrate(duration: duration);
+    return hasVibrator;
   }
 }

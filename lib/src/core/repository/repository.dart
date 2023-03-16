@@ -1,4 +1,21 @@
+import 'package:hive_flutter/hive_flutter.dart';
+
 import '/src/core/model/core_model.dart';
+import '/src/settings/settings_repository.dart';
+
+export 'package:hive_flutter/hive_flutter.dart';
+
+export '/src/settings/settings_repository.dart';
+
+Future<void> registerRepositories() async {
+  GetIt.I.registerSingleton<SettingsRepository>(SettingsRepository());
+
+  // TBD: move Hive here
+  await Hive.initFlutter('data_v1');
+  Hive
+    ..registerAdapter<MessageModel>(MessageModelAdapter())
+    ..registerAdapter<RecoveryGroupModel>(RecoveryGroupModelAdapter());
+}
 
 class RecoveryGroupModelAdapter extends TypeAdapter<RecoveryGroupModel> {
   @override

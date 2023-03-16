@@ -9,6 +9,8 @@ import '../recovery_group_controller.dart';
 export 'package:provider/provider.dart';
 
 class RecoverySecretController extends RecoveryGroupSecretController {
+  late final checkPassCode = authCase.checkPassCode;
+
   String secret = '';
 
   RecoverySecretController({

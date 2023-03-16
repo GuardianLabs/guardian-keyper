@@ -1,6 +1,7 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
+import '/src/core/repository/repository.dart';
 
 import 'widgets/add_guardian_widget.dart';
 import 'widgets/add_first_secret_widget.dart';
@@ -68,7 +69,7 @@ class EditGroupView extends StatelessWidget {
                             PrimaryButton(
                               text: 'Restore Vault',
                               onPressed: () => Navigator.of(context).pushNamed(
-                                '/recovery_group/restore',
+                                routeGroupRestoreGroup,
                                 arguments: false,
                               ),
                             ),

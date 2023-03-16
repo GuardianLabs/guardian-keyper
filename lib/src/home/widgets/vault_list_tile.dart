@@ -1,6 +1,7 @@
-import '/src/core/model/core_model.dart';
-import '/src/core/widgets/icon_of.dart';
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
+import '/src/core/widgets/icon_of.dart';
+import '/src/core/model/core_model.dart';
 
 class VaultListTile extends StatelessWidget {
   final RecoveryGroupModel group;
@@ -33,7 +34,7 @@ class VaultListTile extends StatelessWidget {
         trailing: const Icon(Icons.arrow_forward_ios_rounded, color: clWhite),
         onTap: () => Navigator.pushNamed(
           context,
-          '/recovery_group/edit',
+          routeGroupEdit,
           arguments: group.id,
         ),
       );

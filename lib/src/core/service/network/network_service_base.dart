@@ -1,12 +1,12 @@
-part of '../p2p_network_service.dart';
+part of 'network_service.dart';
 
-abstract class P2PNetworkServiceBase {
+abstract class NetworkServiceBase {
   final p2p.RouterL2 router;
   final bindPort = p2p.TransportUdp.defaultPort;
 
   final _myAddresses = <PeerAddress>[];
 
-  P2PNetworkServiceBase()
+  NetworkServiceBase()
       : router = p2p.RouterL2(
           logger: kDebugMode ? print : null,
           keepalivePeriod: keepalivePeriod,

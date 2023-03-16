@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '/src/core/service/platform_service.dart';
-import '/src/core/service/storage/flutter_secure_storage_service.dart';
+import '/src/core/service/service.dart';
 
 import 'settings_model.dart';
 
@@ -26,12 +25,12 @@ class SettingsRepository extends Cubit<SettingsModel> {
 
   final StorageService _storage;
 
-  late final Uint8List _seed; // TBD: move out here
+  late final Uint8List _seed; // TBD: move seed out here
 
-  Uint8List get seed => _seed; // TBD: move out here
+  Uint8List get seed => _seed; // TBD: move seed out here
 
   Future<void> init() async {
-    // TBD: move out here
+    // TBD: move seed out here
     _seed = await _storage.getOr<Uint8List>(_keySeed, Uint8List(0));
     final platformService = GetIt.I<PlatformService>();
     var deviceName = await _storage.getOr<String>(_keyDeviceName, '');
