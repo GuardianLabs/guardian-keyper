@@ -1,4 +1,5 @@
 import '/src/core/controller/page_controller_base.dart';
+import '/src/core/repository/repository_root.dart';
 import '/src/settings/settings_repository.dart';
 import '/src/auth/auth_case.dart';
 
@@ -8,7 +9,7 @@ class IntroController extends PageControllerBase {
   IntroController(
       {required super.pages, SettingsRepository? settingsRepository})
       : _settingsRepository =
-            settingsRepository ?? GetIt.I<SettingsRepository>();
+            settingsRepository ?? GetIt.I<RepositoryRoot>().settingsRepository;
 
   final createPassCode = GetIt.I<AuthCase>().createPassCode;
 

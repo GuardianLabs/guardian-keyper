@@ -1,5 +1,5 @@
 import '/src/core/widgets/common.dart';
-import '/src/core/repository/repository.dart';
+import '/src/core/repository/repository_root.dart';
 import '/src/guardian/guardian_controller.dart';
 
 import 'shard_page.dart';
@@ -18,7 +18,7 @@ class ShardsPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
-        valueListenable: GetIt.I<Box<RecoveryGroupModel>>().listenable(),
+        valueListenable: GetIt.I<RepositoryRoot>().vaultRepository.listenable(),
         builder: (_, boxRecoveryGroups, __) {
           final myId = GetIt.I<GuardianController>().state;
           final guardedGroups =

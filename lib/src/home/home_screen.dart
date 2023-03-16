@@ -4,8 +4,8 @@ import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
-import '/src/core/repository/repository.dart';
-import '../core/service/network/network_service.dart';
+import '/src/core/service/service_root.dart';
+import '/src/core/repository/repository_root.dart';
 
 import '/src/auth/auth_case.dart';
 import '/src/guardian/pages/message_page.dart';
@@ -43,15 +43,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       GetIt.I<AuthCase>().logIn(context);
     } else {
-      await GetIt.I<Box<MessageModel>>().flush();
-      await GetIt.I<Box<RecoveryGroupModel>>().flush();
+      await GetIt.I<RepositoryRoot>().vaultRepository.flush();
+      await GetIt.I<RepositoryRoot>().messageRepository.flush();
     }
   }
 
   @override
   void initState() {
     super.initState();
-    GetIt.I<Box<MessageModel>>().watch().listen(
+    GetIt.I<RepositoryRoot>().messageRepository.watch().listen(
       (event) async {
         if (ModalRoute.of(context)?.isCurrent != true) return;
         if (event.deleted) return;
@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         await MessageListTile.showActiveMessage(context, message);
       },
     );
-    GetIt.I<NetworkService>().start();
+    GetIt.I<ServiceRoot>().networkService.start();
   }
 
   @override

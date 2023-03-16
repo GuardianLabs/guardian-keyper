@@ -1,5 +1,6 @@
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
+import '/src/core/repository/repository_root.dart';
 
 import '../settings_repository.dart';
 
@@ -8,7 +9,7 @@ class ToggleBiometricsListTile extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final settingsRepository = GetIt.I<SettingsRepository>();
+    final settingsRepository = GetIt.I<RepositoryRoot>().settingsRepository;
     return BlocBuilder<SettingsRepository, SettingsModel>(
       bloc: settingsRepository,
       builder: (_, final state) => SwitchListTile.adaptive(

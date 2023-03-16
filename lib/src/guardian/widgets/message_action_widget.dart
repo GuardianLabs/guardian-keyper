@@ -2,7 +2,7 @@ import 'dart:async';
 
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/service/service.dart';
+import '/src/core/service/service_root.dart';
 
 import '../guardian_controller.dart';
 
@@ -29,7 +29,7 @@ class _MessageActionWidgetState extends State<MessageActionWidget>
     MessageCode.takeGroup: ' asks you to approve a change of ownership for ',
   };
 
-  final _networkService = GetIt.I<NetworkService>();
+  final _networkService = GetIt.I<ServiceRoot>().networkService;
 
   late final _animationController = AnimationController(
     vsync: this,

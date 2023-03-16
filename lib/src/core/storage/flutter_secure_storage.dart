@@ -1,34 +1,35 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' as fss;
 
-import 'storage_service.dart';
+import 'secure_storage.dart';
 
-export 'storage_service.dart';
+export 'secure_storage.dart';
 
-class FlutterSecureStorageService implements StorageService {
-  static final Map<String, FlutterSecureStorageService> _cache = {};
+class FlutterSecureStorage implements SecureStorage {
+  static final Map<String, FlutterSecureStorage> _cache = {};
 
-  FlutterSecureStorageService._(this._storage);
+  FlutterSecureStorage._(this._storage);
 
-  factory FlutterSecureStorageService({required final String storageName}) =>
+  factory FlutterSecureStorage({required final String storageName}) =>
       _cache.putIfAbsent(
         storageName,
-        () => FlutterSecureStorageService._(FlutterSecureStorage(
-          aOptions: AndroidOptions(
+        () => FlutterSecureStorage._(fss.FlutterSecureStorage(
+          aOptions: fss.AndroidOptions(
             encryptedSharedPreferences: true,
             sharedPreferencesName: storageName,
             preferencesKeyPrefix: 'guardian_keyper',
-            storageCipherAlgorithm: StorageCipherAlgorithm.AES_GCM_NoPadding,
+            storageCipherAlgorithm:
+                fss.StorageCipherAlgorithm.AES_GCM_NoPadding,
             keyCipherAlgorithm:
-                KeyCipherAlgorithm.RSA_ECB_OAEPwithSHA_256andMGF1Padding,
+                fss.KeyCipherAlgorithm.RSA_ECB_OAEPwithSHA_256andMGF1Padding,
           ),
-          iOptions: IOSOptions(accountName: storageName),
+          iOptions: fss.IOSOptions(accountName: storageName),
         )),
       );
 
-  final FlutterSecureStorage _storage;
+  final fss.FlutterSecureStorage _storage;
 
   @override
   Future<T?> get<T extends Object>(final String key) async {

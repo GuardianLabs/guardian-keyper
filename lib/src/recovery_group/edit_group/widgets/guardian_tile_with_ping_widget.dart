@@ -1,7 +1,9 @@
+import 'package:get_it/get_it.dart';
+
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
-import '/src/core/service/service.dart';
 import '/src/core/model/core_model.dart';
+import '/src/core/service/service_root.dart';
 
 import '../../widgets/guardian_list_tile.dart';
 
@@ -26,8 +28,9 @@ class _GuardianTileWithPingWidgetState
             : () async {
                 setState(() => _isWaiting = true);
                 final startedAt = DateTime.now();
-                final hasPong =
-                    await GetIt.I<NetworkService>().pingPeer(widget.guardian);
+                final hasPong = await GetIt.I<ServiceRoot>()
+                    .networkService
+                    .pingPeer(widget.guardian);
                 if (!mounted) return;
                 final msElapsed =
                     DateTime.now().difference(startedAt).inMilliseconds;

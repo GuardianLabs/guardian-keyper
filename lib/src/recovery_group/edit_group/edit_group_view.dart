@@ -1,7 +1,7 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
-import '/src/core/repository/repository.dart';
+import '/src/core/repository/repository_root.dart';
 
 import 'widgets/add_guardian_widget.dart';
 import 'widgets/add_first_secret_widget.dart';
@@ -19,7 +19,7 @@ class EditGroupView extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
-        valueListenable: GetIt.I<Box<RecoveryGroupModel>>().listenable(),
+        valueListenable: GetIt.I<RepositoryRoot>().vaultRepository.listenable(),
         builder: (context, boxRecoveryGroup, __) {
           final group = boxRecoveryGroup.get(groupId.asKey);
           // For correct animation on group delete

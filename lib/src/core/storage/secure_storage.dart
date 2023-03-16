@@ -1,6 +1,6 @@
 import 'dart:async';
 
-abstract class StorageService {
+abstract class SecureStorage {
   Future<T?> get<T extends Object>(final String key);
 
   Future<T> getOr<T extends Object>(final String key, final T defaultValue);

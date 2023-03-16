@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '/src/core/init.dart';
 import '/src/core/consts.dart';
 import '/src/core/widgets/icon_of.dart';
+import '/src/core/repository/repository_root.dart';
 
 import '/src/auth/auth_case.dart';
-import '/src/settings/settings_repository.dart';
 
 class LoaderWidget extends StatefulWidget {
   const LoaderWidget({super.key});
@@ -31,7 +31,12 @@ class _LoaderWidgetState extends State<LoaderWidget>
     Future.microtask(() async {
       await init();
       _controller.stop();
-      if (mounted && GetIt.I<SettingsRepository>().state.passCode.isNotEmpty) {
+      if (mounted &&
+          GetIt.I<RepositoryRoot>()
+              .settingsRepository
+              .state
+              .passCode
+              .isNotEmpty) {
         await GetIt.I<AuthCase>().logIn(context);
       }
       if (mounted) Navigator.of(context).pushReplacementNamed(routeHome);

@@ -1,6 +1,6 @@
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
-import '/src/core/repository/repository.dart';
+import '/src/core/repository/repository_root.dart';
 
 import 'message_list_tile.dart';
 
@@ -10,7 +10,8 @@ class ResolvedTabWidget extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<MessageModel>>(
-        valueListenable: GetIt.I<Box<MessageModel>>().listenable(),
+        valueListenable:
+            GetIt.I<RepositoryRoot>().messageRepository.listenable(),
         builder: (_, boxMessages, __) {
           final resolved = boxMessages.values
               .where((e) => e.isResolved)

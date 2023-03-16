@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 import '/src/core/theme/theme.dart';
-import '/src/core/service/service.dart';
 import '/src/core/model/core_model.dart';
+import '/src/core/service/service_root.dart';
 
 class OnlineStatusWidget extends StatefulWidget {
   final PeerId peerId;
@@ -15,7 +16,7 @@ class OnlineStatusWidget extends StatefulWidget {
 }
 
 class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
-  final _networkService = GetIt.I<NetworkService>();
+  final _networkService = GetIt.I<ServiceRoot>().networkService;
   late Timer _timer;
 
   @override

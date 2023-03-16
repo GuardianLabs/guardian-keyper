@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/src/core/theme/theme.dart';
-import '/src/core/repository/repository.dart';
+import '/src/core/repository/repository_root.dart';
 import '/src/guardian/guardian_controller.dart';
 
 class ShardsCountButton extends StatelessWidget {
@@ -10,7 +10,7 @@ class ShardsCountButton extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
-        valueListenable: GetIt.I<Box<RecoveryGroupModel>>().listenable(),
+        valueListenable: GetIt.I<RepositoryRoot>().vaultRepository.listenable(),
         builder: (_, boxRecoveryGroups, __) {
           final myId = GetIt.I<GuardianController>().state;
           final groupsCount =
