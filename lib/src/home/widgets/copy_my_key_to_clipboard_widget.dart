@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
-import '/src/guardian/guardian_controller.dart';
+
+import '../home_presenter.dart';
 
 class CopyMyKeyToClipboardWidget extends StatefulWidget {
   const CopyMyKeyToClipboardWidget({super.key});
@@ -24,7 +25,7 @@ class _CopyMyKeyToClipboardWidgetState
             ? null
             : () async {
                 await Clipboard.setData(ClipboardData(
-                  text: GetIt.I<GuardianController>().state.asHex,
+                  text: context.read<HomePresenter>().myPeerId.asHex,
                 ));
                 setState(() => isDisabled = true);
                 Timer(

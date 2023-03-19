@@ -1,6 +1,6 @@
 part of 'auth.dart';
 
-Future<void> changePassCode({
+Future<void> showChangePassCode({
   required final BuildContext context,
   required final OnConfirmed onConfirmed,
   required final String currentPassCode,
@@ -58,7 +58,7 @@ Future<void> changePassCode({
               text: 'Your login passcode was changed successfully!',
               duration: snackBarDuration,
               isFloating: true,
-              isError: true,
+              isError: false,
             ));
             Navigator.of(context).pop();
           }

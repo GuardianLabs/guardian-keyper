@@ -1,6 +1,6 @@
 part of 'auth.dart';
 
-Future<void> createPassCode({
+Future<void> showCreatePassCode({
   required final BuildContext context,
   required final OnConfirmed onConfirmed,
   required final OnVibrate onVibrate,

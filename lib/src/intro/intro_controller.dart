@@ -1,19 +1,17 @@
+import 'package:flutter/widgets.dart';
+
 import '/src/core/controller/page_controller_base.dart';
 import '/src/core/repository/repository_root.dart';
-import '/src/settings/settings_repository.dart';
-import '/src/auth/auth_case.dart';
+import '/src/core/service/service_root.dart';
+import '../core/widgets/auth/auth.dart';
 
 export 'package:provider/provider.dart';
 
 class IntroController extends PageControllerBase {
-  IntroController(
-      {required super.pages, SettingsRepository? settingsRepository})
-      : _settingsRepository =
-            settingsRepository ?? GetIt.I<RepositoryRoot>().settingsRepository;
+  IntroController({required super.pages});
 
-  final createPassCode = GetIt.I<AuthCase>().createPassCode;
-
-  final SettingsRepository _settingsRepository;
+  final _serviceRoot = GetIt.I<ServiceRoot>();
+  final _settingsRepository = GetIt.I<RepositoryRoot>().settingsRepository;
 
   late String _deviceName = _settingsRepository.state.deviceName;
 
@@ -50,4 +48,18 @@ class IntroController extends PageControllerBase {
     await _settingsRepository.setIsBiometricsEnabled(value);
     notifyListeners();
   }
+
+  Future<void> createPassCode({required final BuildContext context}) =>
+      showCreatePassCode(
+        context: context,
+        onVibrate: _serviceRoot.platformService.vibrate,
+        onConfirmed: (final String passCode) async {
+          await _settingsRepository.setPassCode(passCode);
+          if (context.mounted) {
+            _settingsRepository.state.hasBiometrics
+                ? nextScreen()
+                : Navigator.of(context).pop();
+          }
+        },
+      );
 }

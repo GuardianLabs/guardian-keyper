@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:messagepack/messagepack.dart';
 
-import '/src/core/utils/emoji_codes.dart';
+import '/src/core/consts.dart';
 import '/src/core/utils/random_utils.dart';
 
 export '/src/settings/settings_model.dart';

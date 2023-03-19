@@ -1,13 +1,15 @@
 import 'dart:async';
 
+enum Storages { settings }
+
 abstract class SecureStorage {
-  Future<T?> get<T extends Object>(final String key);
+  Future<T?> get<T extends Object>(final Object key);
 
-  Future<T> getOr<T extends Object>(final String key, final T defaultValue);
+  Future<T> getOr<T extends Object>(final Object key, final T defaultValue);
 
-  Future<void> set<T extends Object>(final String key, final T? value);
+  Future<T?> set<T extends Object>(final Object key, final T? value);
 
-  Future<void> delete(final String key);
+  Future<Object> delete(final Object key);
 }
 
 class ValueFormatException extends FormatException {

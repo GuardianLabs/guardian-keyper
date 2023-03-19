@@ -1,8 +1,8 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/repository/repository_root.dart';
-import '/src/guardian/guardian_controller.dart';
 
+import '../home_presenter.dart';
 import '../widgets/vault_list_tile.dart';
 
 class VaultsPage extends StatelessWidget {
@@ -13,7 +13,7 @@ class VaultsPage extends StatelessWidget {
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
         valueListenable: GetIt.I<RepositoryRoot>().vaultRepository.listenable(),
         builder: (_, boxRecoveryGroups, __) {
-          final myId = GetIt.I<GuardianController>().state;
+          final myId = context.read<HomePresenter>().myPeerId;
           final guardedGroups =
               boxRecoveryGroups.values.where((e) => e.ownerId == myId);
           return Column(

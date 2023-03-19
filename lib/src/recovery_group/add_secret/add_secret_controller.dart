@@ -33,7 +33,7 @@ class AddSecretController extends RecoveryGroupSecretController {
     required Callback onReject,
     required Callback onFailed,
   }) {
-    analyticsService.logEvent(eventStartAddSecret);
+    serviceRoot.analyticsService.logEvent(eventStartAddSecret);
     networkSubscription.onData(
       (message) async {
         if (message.code != MessageCode.setShard) return;
@@ -49,11 +49,11 @@ class AddSecretController extends RecoveryGroupSecretController {
                     .secretShard
                     .shard
                 : '';
-            await vaultRepository.put(
+            await repositoryRoot.vaultRepository.put(
               group.aKey,
               group.copyWith(secrets: {...group.secrets, secretId: shardValue}),
             );
-            await analyticsService.logEvent(eventFinishAddSecret);
+            await serviceRoot.analyticsService.logEvent(eventFinishAddSecret);
             onSuccess(message);
           }
         } else {

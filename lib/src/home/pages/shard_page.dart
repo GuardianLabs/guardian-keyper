@@ -1,6 +1,5 @@
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/model/core_model.dart';
 import '/src/core/repository/repository_root.dart';
 
 import 'qr_code_page.dart';

@@ -18,7 +18,7 @@ class AddGuardianController extends RecoveryGroupGuardianController {
     required Callback onDuplicate,
     required Callback onAppVersion,
   }) {
-    analyticsService.logEvent(eventStartAddGuardian);
+    serviceRoot.analyticsService.logEvent(eventStartAddGuardian);
 
     if (qrCode == null ||
         qrCode!.timestamp.subtract(qrCodeExpires).isAfter(DateTime.now())) {
@@ -42,7 +42,7 @@ class AddGuardianController extends RecoveryGroupGuardianController {
         stopListenResponse();
         switch (message.status) {
           case MessageStatus.accepted:
-            analyticsService.logEvent(eventFinishAddGuardian);
+            serviceRoot.analyticsService.logEvent(eventFinishAddGuardian);
             addGuardian(groupId, message.peerId);
             onSuccess(message);
             break;
