@@ -1,14 +1,12 @@
 part of 'recovery_group_controller.dart';
 
 abstract class RecoveryGroupControllerBase extends PageControllerBase {
-  final authCase = GetIt.I<AuthCase>();
-  final platformService = GetIt.I<ServiceRoot>().platformService;
-  final networkService = GetIt.I<ServiceRoot>().networkService;
-  final analyticsService = GetIt.I<ServiceRoot>().analyticsService;
-  final vaultRepository = GetIt.I<RepositoryRoot>().vaultRepository;
+  final serviceRoot = GetIt.I<ServiceRoot>();
+  final repositoryRoot = GetIt.I<RepositoryRoot>();
   final myPeerId = GetIt.I<GuardianController>().state;
 
-  late final networkSubscription = networkService.messageStream.listen(null);
+  late final networkSubscription =
+      serviceRoot.networkService.messageStream.listen(null);
 
   Timer? timer;
 
@@ -20,20 +18,20 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
   void dispose() {
     timer?.cancel();
     networkSubscription.cancel();
-    platformService.wakelockDisable();
+    serviceRoot.platformService.wakelockDisable();
     super.dispose();
   }
 
   void stopListenResponse() {
     timer?.cancel();
-    platformService.wakelockDisable();
+    serviceRoot.platformService.wakelockDisable();
     notifyListeners();
   }
 
   void startNetworkRequest(void Function([Timer?]) callback) async {
-    await platformService.wakelockEnable();
+    await serviceRoot.platformService.wakelockEnable();
     timer = Timer.periodic(
-      networkService.router.messageTTL,
+      serviceRoot.networkService.router.messageTTL,
       callback,
     );
     callback();
@@ -41,17 +39,17 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
   }
 
   Future<void> sendToGuardian(final MessageModel message) =>
-      networkService.sendTo(
+      serviceRoot.networkService.sendTo(
         isConfirmable: false,
         peerId: message.peerId,
         message: message.copyWith(peerId: myPeerId),
       );
 
   RecoveryGroupModel? getGroupById(final GroupId groupId) =>
-      vaultRepository.get(groupId.asKey);
+      repositoryRoot.vaultRepository.get(groupId.asKey);
 
   Future<RecoveryGroupModel> createGroup(final RecoveryGroupModel group) async {
-    await vaultRepository.put(group.aKey, group);
+    await repositoryRoot.vaultRepository.put(group.aKey, group);
     notifyListeners();
     return group;
   }
@@ -60,11 +58,11 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
     final GroupId groupId,
     final PeerId guardian,
   ) async {
-    var group = vaultRepository.get(groupId.asKey)!;
+    var group = repositoryRoot.vaultRepository.get(groupId.asKey)!;
     group = group.copyWith(
       guardians: {...group.guardians, guardian: ''},
     );
-    await vaultRepository.put(groupId.asKey, group);
+    await repositoryRoot.vaultRepository.put(groupId.asKey, group);
     return group;
   }
 }

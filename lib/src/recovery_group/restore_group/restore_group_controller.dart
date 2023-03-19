@@ -14,7 +14,7 @@ class RestoreGroupController extends RecoveryGroupGuardianController {
     required Callback onDuplicate,
     required Callback onFail,
   }) {
-    analyticsService.logEvent(eventStartRestoreVault);
+    serviceRoot.analyticsService.logEvent(eventStartRestoreVault);
     networkSubscription.onData(
       (message) {
         if (!isWaiting) return;
@@ -30,7 +30,7 @@ class RestoreGroupController extends RecoveryGroupGuardianController {
           final guardian = qrCode!.peerId;
           final existingGroup = getGroupById(message.groupId);
           if (existingGroup == null) {
-            analyticsService.logEvent(eventFinishRestoreVault);
+            serviceRoot.analyticsService.logEvent(eventFinishRestoreVault);
             createGroup(message.recoveryGroup.copyWith(
               ownerId: myPeerId,
               guardians: {guardian: ''},
@@ -42,7 +42,7 @@ class RestoreGroupController extends RecoveryGroupGuardianController {
           } else if (existingGroup.guardians.containsKey(guardian)) {
             onDuplicate(message);
           } else if (existingGroup.isNotFull) {
-            analyticsService.logEvent(eventFinishRestoreVault);
+            serviceRoot.analyticsService.logEvent(eventFinishRestoreVault);
             addGuardian(message.groupId, guardian).then(
               (group) => onSuccess(message.copyWith(payload: group)),
             );

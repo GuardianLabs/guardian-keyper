@@ -12,7 +12,7 @@ class CreateGroupController extends RecoveryGroupControllerBase {
   var _groupName = '';
 
   CreateGroupController({required super.pages}) {
-    analyticsService.logEvent(eventStartCreateVault);
+    serviceRoot.analyticsService.logEvent(eventStartCreateVault);
   }
 
   int get groupSize => _groupSize;
@@ -45,7 +45,7 @@ class CreateGroupController extends RecoveryGroupControllerBase {
   }
 
   Future<RecoveryGroupModel> createVault() {
-    analyticsService.logEvent(eventFinishCreateVault);
+    serviceRoot.analyticsService.logEvent(eventFinishCreateVault);
     return createGroup(RecoveryGroupModel(
       id: GroupId(name: _groupName),
       maxSize: _groupSize,

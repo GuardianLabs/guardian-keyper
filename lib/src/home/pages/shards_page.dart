@@ -1,7 +1,7 @@
 import '/src/core/widgets/common.dart';
 import '/src/core/repository/repository_root.dart';
-import '/src/guardian/guardian_controller.dart';
 
+import '../home_presenter.dart';
 import 'shard_page.dart';
 
 class ShardsPage extends StatelessWidget {
@@ -20,7 +20,7 @@ class ShardsPage extends StatelessWidget {
       ValueListenableBuilder<Box<RecoveryGroupModel>>(
         valueListenable: GetIt.I<RepositoryRoot>().vaultRepository.listenable(),
         builder: (_, boxRecoveryGroups, __) {
-          final myId = GetIt.I<GuardianController>().state;
+          final myId = context.read<HomePresenter>().myPeerId;
           final guardedGroups =
               boxRecoveryGroups.values.where((e) => e.ownerId != myId);
           return ListView(

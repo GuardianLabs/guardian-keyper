@@ -1,10 +1,10 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
-import '/src/guardian/guardian_controller.dart';
 
-import '../widgets/copy_my_key_to_clipboard_widget.dart';
+import '../home_presenter.dart';
 import '../widgets/vaults_panel.dart';
 import '../widgets/qr_code_panel.dart';
+import '../widgets/copy_my_key_to_clipboard_widget.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -14,19 +14,18 @@ class DashboardPage extends StatelessWidget {
         padding: paddingAll20,
         children: [
           // Device Name
-          BlocBuilder<GuardianController, PeerId>(
-            bloc: GetIt.I<GuardianController>(),
-            builder: (final context, final state) => RichText(
+          Consumer<HomePresenter>(
+            builder: (_, final state, ___) => RichText(
               text: TextSpan(
                 style: textStylePoppins620,
-                children: buildTextWithId(id: state),
+                children: buildTextWithId(id: state.myPeerId),
               ),
             ),
           ),
           // My Key
           Row(children: [
             Text(
-              GetIt.I<GuardianController>().state.toHexShort(),
+              context.read<HomePresenter>().myPeerId.toHexShort(),
               style: textStyleSourceSansPro414Purple,
             ),
             Expanded(

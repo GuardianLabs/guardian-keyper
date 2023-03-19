@@ -1,4 +1,3 @@
-import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
 import '../intro_controller.dart';
@@ -11,14 +10,11 @@ class SetPasscodePage extends StatefulWidget {
 }
 
 class _SetPasscodePageState extends State<SetPasscodePage> {
-  late final _controller = context.read<IntroController>();
   @override
   void initState() {
     super.initState();
-    _controller.createPassCode(
-      context: context,
-      onConfirmed: () => Navigator.of(context).pushReplacementNamed(routeHome),
-      onConfirmedHasBiometrics: _controller.nextScreen,
+    Future.microtask(
+      () => context.read<IntroController>().createPassCode(context: context),
     );
   }
 

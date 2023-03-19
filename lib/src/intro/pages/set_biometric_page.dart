@@ -1,6 +1,6 @@
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '/src/core/consts.dart';
+// import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
 import '../intro_controller.dart';
@@ -41,7 +41,8 @@ class SetBiometricPage extends StatelessWidget {
                           .read<IntroController>()
                           .setIsBiometricsEnabled(false);
                       if (context.mounted) {
-                        Navigator.of(context).pushReplacementNamed(routeHome);
+                        Navigator.of(context).pop();
+                        // Navigator.of(context).pushReplacementNamed(routeHome);
                       }
                     },
                     child: const Text('No'),
@@ -55,7 +56,8 @@ class SetBiometricPage extends StatelessWidget {
                           .read<IntroController>()
                           .setIsBiometricsEnabled(true);
                       if (context.mounted) {
-                        Navigator.of(context).pushReplacementNamed(routeHome);
+                        Navigator.of(context).pop();
+                        // Navigator.of(context).pushReplacementNamed(routeHome);
                       }
                     },
                     text: 'Yes',

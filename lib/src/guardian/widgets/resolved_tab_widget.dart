@@ -1,5 +1,4 @@
 import '/src/core/widgets/common.dart';
-import '/src/core/model/core_model.dart';
 import '/src/core/repository/repository_root.dart';
 
 import 'message_list_tile.dart';

@@ -1,8 +1,6 @@
 import '/src/core/widgets/common.dart';
 import '/src/core/repository/repository_root.dart';
 
-import '../settings_repository.dart';
-
 class SetDeviceNamePage extends StatefulWidget {
   const SetDeviceNamePage({super.key});
 

@@ -31,7 +31,7 @@ class NetworkService extends NetworkServiceBase
     }
   }
 
-  Future<Uint8List> init(Uint8List seed) async {
+  Future<Uint8List> init(Uint8List? seed) async {
     WidgetsBinding.instance.addObserver(this);
 
     for (final interface in await NetworkInterface.list()) {
@@ -40,7 +40,8 @@ class NetworkService extends NetworkServiceBase
       ));
     }
 
-    final cryptoKeys = await router.init(p2p.CryptoKeys.empty()..seed = seed);
+    final cryptoKeys = await router
+        .init(seed == null ? null : (p2p.CryptoKeys.empty()..seed = seed));
     router.messageStream.listen(onMessage);
     await _connectivityInit();
     await _initMdns();

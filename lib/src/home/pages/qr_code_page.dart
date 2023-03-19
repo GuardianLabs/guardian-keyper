@@ -4,11 +4,11 @@ import 'package:share_plus/share_plus.dart';
 
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/service/service_root.dart';
 import '/src/core/repository/repository_root.dart';
 
-import '/src/guardian/guardian_controller.dart';
 import '/src/guardian/widgets/message_list_tile.dart';
+
+import '../home_presenter.dart';
 
 class QRCodePage extends StatefulWidget {
   final GroupId? groupId;
@@ -21,12 +21,13 @@ class QRCodePage extends StatefulWidget {
 
 class _QRCodePageState extends State<QRCodePage> {
   late final StreamSubscription<BoxEvent> _boxMessagesEventsSubscription;
+  late final _homePresenter = context.read<HomePresenter>();
   late final String _qrCode;
 
   @override
   void initState() {
     super.initState();
-    GetIt.I<ServiceRoot>().platformService.wakelockEnable();
+    _homePresenter.wakelockEnable();
     final qrCode = _generateQrCode();
     _qrCode = qrCode.toBase64url();
     _boxMessagesEventsSubscription = GetIt.I<RepositoryRoot>()
@@ -47,7 +48,7 @@ class _QRCodePageState extends State<QRCodePage> {
 
   @override
   void dispose() {
-    GetIt.I<ServiceRoot>().platformService.wakelockDisable();
+    _homePresenter.wakelockDisable();
     _boxMessagesEventsSubscription.cancel();
     super.dispose();
   }
@@ -151,15 +152,16 @@ class _QRCodePageState extends State<QRCodePage> {
     final isNew = widget.groupId == null;
     final message = MessageModel(
       code: isNew ? MessageCode.createGroup : MessageCode.takeGroup,
-      peerId: GetIt.I<GuardianController>().state,
+      peerId: _homePresenter.myPeerId,
     );
     GetIt.I<RepositoryRoot>().messageRepository.put(
           message.aKey,
           isNew
               ? message
-              // save groupId for transaction
               : message.copyWith(
-                  payload: RecoveryGroupModel(id: widget.groupId)),
+                  // save groupId for transaction
+                  payload: RecoveryGroupModel(id: widget.groupId),
+                ),
         );
     return message;
   }

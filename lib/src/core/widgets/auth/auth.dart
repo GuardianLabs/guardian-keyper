@@ -4,8 +4,8 @@ import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 
-part 'log_in.dart';
-part 'check_pass_code.dart';
+part 'ask_pass_code.dart';
+part 'demand_pass_code.dart';
 part 'create_pass_code.dart';
 part 'change_pass_code.dart';
 

@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-import '/src/core/model/core_model.dart';
 import '/src/core/service/service_root.dart';
 import '/src/core/repository/repository_root.dart';
 
@@ -26,20 +25,6 @@ class GuardianController extends Cubit<PeerId> {
         .listen((settings) => emit(state.copyWith(name: settings.deviceName)));
   }
 
-  Future<void> pruneMessages() async {
-    if (_boxMessages.isEmpty) return;
-    final expired = _boxMessages.values
-        .where((e) =>
-            e.isRequested &&
-            (e.code == MessageCode.createGroup ||
-                e.code == MessageCode.takeGroup) &&
-            e.timestamp
-                .isBefore(DateTime.now().subtract(const Duration(days: 1))))
-        .toList(growable: false);
-    await _boxMessages.deleteAll(expired.map((e) => e.aKey));
-    await _boxMessages.compact();
-  }
-
   void onMessage(MessageModel message) {
     final ticket = _boxMessages.get(message.aKey);
     if (kDebugMode) print('$message\n$ticket');
@@ -47,37 +32,46 @@ class GuardianController extends Cubit<PeerId> {
     switch (message.code) {
       case MessageCode.createGroup:
         if (message.isEmpty) return;
-        if (ticket == null) return; // qrCode was not generated
-        if (message.isNotRequested) return; // qrCode was processed already
+        // qrCode was not generated
+        if (ticket == null) return;
+        // qrCode was processed already
+        if (message.isNotRequested) return;
         if (message.code != ticket.code) return;
-        if (_vaultRepository.containsKey(message.groupId.asKey)) {
-          return; // group already exists
-        }
+        // group already exists
+        if (_vaultRepository.containsKey(message.groupId.asKey)) return;
         break;
 
       case MessageCode.takeGroup:
-        if (ticket == null) return; // qrCode was not generated
-        if (message.isNotRequested) return; // qrCode was processed already
+        // qrCode was not generated
+        if (ticket == null) return;
+        // qrCode was processed already
+        if (message.isNotRequested) return;
         if (message.code != ticket.code) return;
         message = message.copyWith(payload: ticket.payload);
         break;
 
       case MessageCode.setShard:
         if (message.isEmpty) return;
-        if (ticket != null) return; // request already processed
+        // request already processed
+        if (ticket != null) return;
         final recoveryGroup = _vaultRepository.get(message.groupId.asKey);
-        if (recoveryGroup == null) return; // group does not exists
-        if (recoveryGroup.ownerId != message.peerId) return; // not owner
+        // group does not exists
+        if (recoveryGroup == null) return;
+        // not owner
+        if (recoveryGroup.ownerId != message.peerId) return;
         // already have this Secret
         if (recoveryGroup.secrets.containsKey(message.secretShard.id)) return;
         break;
 
       case MessageCode.getShard:
         if (message.isEmpty) return;
-        if (ticket != null) return; // request already processed
+        // request already processed
+        if (ticket != null) return;
         final recoveryGroup = _vaultRepository.get(message.groupId.asKey);
-        if (recoveryGroup == null) return; // group does not exists
-        if (recoveryGroup.ownerId != message.peerId) return; // not owner
+        // group does not exists
+        if (recoveryGroup == null) return;
+        // not owner
+        if (recoveryGroup.ownerId != message.peerId) return;
         // Have no such Secret
         if (!recoveryGroup.secrets.containsKey(message.secretShard.id)) return;
         break;

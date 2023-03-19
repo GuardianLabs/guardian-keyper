@@ -1,7 +1,5 @@
 import 'package:amplitude_flutter/amplitude.dart';
 
-export 'package:get_it/get_it.dart';
-
 typedef EventLogger = Future<void> Function(
   String eventType, {
   Map<String, dynamic>? eventProperties,
@@ -9,7 +7,7 @@ typedef EventLogger = Future<void> Function(
 });
 
 class AnalyticsService {
-  static Future<AnalyticsService> init(final String apiKey) async {
+  static Future<AnalyticsService> bootstrap(final String apiKey) async {
     final amplitude = Amplitude.getInstance();
     if (apiKey.isEmpty) return const AnalyticsService();
     await amplitude.init(apiKey);

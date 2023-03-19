@@ -5,14 +5,10 @@ import 'analytics_service.dart';
 import 'network/network_service.dart';
 
 class ServiceRoot {
-  static Future<ServiceRoot> init() async {
-    final rootService = ServiceRoot()
-      ..analyticsService = await AnalyticsService.init(Envs.amplitudeKey)
-      ..platformService = const PlatformService()
-      ..networkService = NetworkService();
-    GetIt.I.registerSingleton<ServiceRoot>(rootService);
-    return rootService;
-  }
+  static Future<ServiceRoot> bootstrap() async => ServiceRoot()
+    ..analyticsService = await AnalyticsService.bootstrap(Envs.amplitudeKey)
+    ..platformService = const PlatformService()
+    ..networkService = NetworkService();
 
   late final AnalyticsService analyticsService;
   late final PlatformService platformService;
