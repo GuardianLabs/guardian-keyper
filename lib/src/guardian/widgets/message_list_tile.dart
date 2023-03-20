@@ -20,7 +20,7 @@ class MessageListTile extends StatelessWidget {
     MessageCode.takeGroup: 'Ownership Change Request',
   };
 
-  static String roundedAgo(DateTime value) {
+  static String roundedAgo(final DateTime value) {
     const hoursInMonth = 24 * 30;
     const hoursInYear = 24 * 30 * 365;
     final diff = DateTime.now().difference(value);
@@ -34,8 +34,8 @@ class MessageListTile extends StatelessWidget {
   }
 
   static Future<void> showActiveMessage(
-    BuildContext context,
-    MessageModel message,
+    final BuildContext context,
+    final MessageModel message,
   ) =>
       showModalBottomSheet(
         context: context,
@@ -83,8 +83,8 @@ class MessageListTile extends StatelessWidget {
       );
 
   Future<void> _showResolvedMessage(
-    BuildContext context,
-    MessageModel message,
+    final BuildContext context,
+    final MessageModel message,
   ) =>
       showModalBottomSheet(
         context: context,

@@ -2,9 +2,9 @@ part of 'auth.dart';
 
 Future<void> showChangePassCode({
   required final BuildContext context,
-  required final OnConfirmed onConfirmed,
   required final String currentPassCode,
-  required final OnVibrate onVibrate,
+  required final OnConfirmed onConfirmed,
+  required final Future<void> Function() onVibrate,
 }) {
   final padding = _getPadding(context);
   return screenLock(

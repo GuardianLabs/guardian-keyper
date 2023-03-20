@@ -11,8 +11,6 @@ part 'change_pass_code.dart';
 
 typedef OnConfirmed = Future<void> Function(String passCode);
 
-typedef OnVibrate = Future<bool> Function([int duration]);
-
 typedef LocalAuthenticate = Future<bool> Function({
   bool biometricOnly,
   String localizedReason,

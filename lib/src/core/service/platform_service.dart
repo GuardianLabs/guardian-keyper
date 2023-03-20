@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:wakelock/wakelock.dart';
 import 'package:vibration/vibration.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 class PlatformService {
@@ -11,9 +12,13 @@ class PlatformService {
 
   const PlatformService();
 
-  Future<void> wakelockEnable() => Wakelock.enable();
+  final share = Share.share;
 
-  void wakelockDisable() => Wakelock.disable();
+  final vibrate = Vibration.vibrate;
+
+  final wakelockEnable = Wakelock.enable;
+
+  final wakelockDisable = Wakelock.disable;
 
   Future<bool> getHasBiometrics() =>
       _localAuth.getAvailableBiometrics().then((value) => value.isNotEmpty);
@@ -59,9 +64,9 @@ class PlatformService {
     return result;
   }
 
-  Future<bool> vibrate([int duration = 500]) async {
-    final hasVibrator = await Vibration.hasVibrator() ?? false;
-    if (hasVibrator) await Vibration.vibrate(duration: duration);
-    return hasVibrator;
-  }
+  // Future<bool> vibrate([int duration = 500]) async {
+  //   final hasVibrator = await Vibration.hasVibrator() ?? false;
+  //   if (hasVibrator) await Vibration.vibrate(duration: duration);
+  //   return hasVibrator;
+  // }
 }
