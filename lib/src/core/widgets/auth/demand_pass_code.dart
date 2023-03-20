@@ -4,7 +4,7 @@ Future<void> showDemandPassCode({
   required final BuildContext context,
   required final String currentPassCode,
   required final LocalAuthenticate localAuthenticate,
-  required final OnVibrate onVibrate,
+  required final Future<void> Function() onVibrate,
   required final bool useBiometrics,
 }) =>
     currentPassCode.isEmpty

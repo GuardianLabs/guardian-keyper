@@ -2,10 +2,10 @@ part of 'auth.dart';
 
 Future<void> showAskPassCode({
   required final BuildContext context,
-  required final void Function() onUnlocked,
-  required final LocalAuthenticate localAuthenticate,
   required final String currentPassCode,
-  required final OnVibrate onVibrate,
+  required final void Function() onUnlocked,
+  required final Future<void> Function() onVibrate,
+  required final LocalAuthenticate localAuthenticate,
   required final bool useBiometrics,
 }) =>
     currentPassCode.isEmpty

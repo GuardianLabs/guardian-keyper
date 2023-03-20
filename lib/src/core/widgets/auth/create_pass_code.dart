@@ -3,7 +3,7 @@ part of 'auth.dart';
 Future<void> showCreatePassCode({
   required final BuildContext context,
   required final OnConfirmed onConfirmed,
-  required final OnVibrate onVibrate,
+  required final Future<void> Function() onVibrate,
 }) {
   final inputController = InputController();
   final padding = _getPadding(context);
