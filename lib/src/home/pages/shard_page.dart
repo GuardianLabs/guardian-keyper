@@ -58,7 +58,10 @@ class ShardPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Secret Shards', style: textStylePoppins620),
+                    Text(
+                      'Secret Shards',
+                      style: textStylePoppins620,
+                    ),
                     Text(
                       vault.secrets.length.toString(),
                       style: textStylePoppins620,
@@ -97,7 +100,10 @@ class ShardPage extends StatelessWidget {
         context: context,
         isScrollControlled: true,
         builder: (final BuildContext context) => BottomSheetWidget(
-          icon: const IconOf.owner(isBig: true, bage: BageType.warning),
+          icon: const IconOf.owner(
+            isBig: true,
+            bage: BageType.warning,
+          ),
           titleString: 'Change Owner',
           textSpan: buildTextWithId(
             leadingText: 'Are you sure you want to change owner for vault ',
