@@ -6,7 +6,7 @@ import '/src/core/repository/repository_root.dart';
 import '/src/core/storage/flutter_secure_storage.dart';
 
 import '/src/settings/settings_repository.dart';
-import '/src/guardian/guardian_controller.dart';
+import '/src/message/messages_controller.dart';
 
 abstract class DI {
   static bool _isInited = false;
@@ -44,7 +44,7 @@ abstract class DI {
       );
     }
 
-    GetIt.I.registerSingleton<GuardianController>(GuardianController());
+    GetIt.I.registerSingleton<MessagesController>(MessagesController());
     return _isInited = true;
   }
 }

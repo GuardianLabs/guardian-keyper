@@ -4,7 +4,7 @@ import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/service/service_root.dart';
 
-import '../guardian_controller.dart';
+import '../../messages_controller.dart';
 
 class MessageActionBottomSheet extends StatefulWidget {
   static const titles = {
@@ -201,7 +201,7 @@ class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
     final response = widget.message.copyWith(status: status);
     setState(() => _isRequestActive = true);
     try {
-      final controller = GetIt.I<GuardianController>();
+      final controller = GetIt.I<MessagesController>();
       switch (response.code) {
         case MessageCode.createGroup:
           await controller.sendCreateGroupResponse(response);

@@ -3,30 +3,28 @@ import 'package:flutter/foundation.dart';
 import '/src/core/service/service_root.dart';
 import '/src/core/repository/repository_root.dart';
 
-export 'package:get_it/get_it.dart';
-export 'package:flutter_bloc/flutter_bloc.dart';
-
 export '/src/core/model/core_model.dart';
 
-class GuardianController extends Cubit<PeerId> {
-  final _networkService = GetIt.I<ServiceRoot>().networkService;
-  final _boxMessages = GetIt.I<RepositoryRoot>().messageRepository;
-  final _vaultRepository = GetIt.I<RepositoryRoot>().vaultRepository;
-
-  GuardianController()
-      : super(PeerId(
-          token: GetIt.I<ServiceRoot>().networkService.myId,
-          name: GetIt.I<RepositoryRoot>().settingsRepository.state.deviceName,
-        )) {
-    GetIt.I<ServiceRoot>().networkService.messageStream.listen(onMessage);
-    GetIt.I<RepositoryRoot>()
-        .settingsRepository
-        .stream
-        .listen((settings) => emit(state.copyWith(name: settings.deviceName)));
+class MessagesController {
+  MessagesController() {
+    _serviceRoot.networkService.messageStream.listen(onMessage);
+    _repositoryRoot.settingsRepository.stream.listen(
+      (settings) => _myPeerId = _myPeerId.copyWith(name: settings.deviceName),
+    );
   }
 
+  final _serviceRoot = GetIt.I<ServiceRoot>();
+  final _repositoryRoot = GetIt.I<RepositoryRoot>();
+
+  late final _vaultRepository = _repositoryRoot.vaultRepository;
+
+  late var _myPeerId = PeerId(
+    token: _serviceRoot.networkService.myId,
+    name: _repositoryRoot.settingsRepository.state.deviceName,
+  );
+
   void onMessage(MessageModel message) {
-    final ticket = _boxMessages.get(message.aKey);
+    final ticket = _repositoryRoot.messageRepository.get(message.aKey);
     if (kDebugMode) print('$message\n$ticket');
 
     switch (message.code) {
@@ -76,7 +74,7 @@ class GuardianController extends Cubit<PeerId> {
         if (!recoveryGroup.secrets.containsKey(message.secretShard.id)) return;
         break;
     }
-    _boxMessages.put(
+    _repositoryRoot.messageRepository.put(
       message.aKey,
       message.copyWith(status: MessageStatus.received),
     );
@@ -162,8 +160,8 @@ class GuardianController extends Cubit<PeerId> {
   }
 
   Future<void> archivateMessage(MessageModel message) async {
-    await _boxMessages.delete(message.aKey);
-    await _boxMessages.put(
+    await _repositoryRoot.messageRepository.delete(message.aKey);
+    await _repositoryRoot.messageRepository.put(
       message.timestamp.millisecondsSinceEpoch.toString(),
       message,
     );
@@ -171,10 +169,10 @@ class GuardianController extends Cubit<PeerId> {
 
   Future<bool> _sendResponse(MessageModel message) async {
     try {
-      await _networkService.sendTo(
+      await _serviceRoot.networkService.sendTo(
         isConfirmable: true,
         peerId: message.peerId,
-        message: message.copyWith(peerId: state),
+        message: message.copyWith(peerId: _myPeerId),
       );
       return true;
     } catch (_) {

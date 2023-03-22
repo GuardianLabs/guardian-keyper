@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '/src/core/theme/theme.dart';
 
-import '../../home_controller.dart';
+import '../home_presenter.dart';
 
 class ShardsCountButton extends StatelessWidget {
   const ShardsCountButton({super.key});
 
   @override
   Widget build(final BuildContext context) {
-    final guardedVaults = context.watch<HomeController>().guardedVaults;
+    final guardedVaults = context.watch<HomePresenter>().guardedVaults;
     return Container(
       decoration: BoxDecoration(
         borderRadius: borderRadius,

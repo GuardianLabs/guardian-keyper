@@ -1,7 +1,7 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
-import '../../home_controller.dart';
+import '../home_presenter.dart';
 
 class SharePanel extends StatelessWidget {
   const SharePanel({super.key});
@@ -44,9 +44,8 @@ class SharePanel extends StatelessWidget {
               child: ElevatedButton(
                 child: const Text('Generate QR Code'),
                 onPressed: () async {
-                  final message = await context
-                      .read<HomeController>()
-                      .createJoinVaultCode();
+                  final message =
+                      await context.read<HomePresenter>().createJoinVaultCode();
                   if (context.mounted) {
                     Navigator.of(context).pushNamed(
                       routeQrCode,
@@ -61,7 +60,7 @@ class SharePanel extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: () async {
                   final box = context.findRenderObject() as RenderBox?;
-                  await context.read<HomeController>().share(
+                  await context.read<HomePresenter>().share(
                         'https://myguardian.network/app-router',
                         sharePositionOrigin:
                             box!.localToGlobal(Offset.zero) & box.size,

@@ -1,7 +1,7 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
-import '../home_controller.dart';
+import 'home_presenter.dart';
 import 'widgets/vault_list_tile.dart';
 
 class VaultsPage extends StatelessWidget {
@@ -9,7 +9,7 @@ class VaultsPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final myVaults = context.watch<HomeController>().myVaults;
+    final myVaults = context.watch<HomePresenter>().myVaults;
     return Column(
       children: [
         // Header

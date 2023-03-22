@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '/src/core/model/core_model.dart';
 
 import '/src/intro/intro_view.dart';
-import '/src/message/ui/qr_code_page.dart';
 import '/src/settings/settings_screen.dart';
+import '/src/message/ui/qr_code_screen.dart';
 import '/src/recovery_group/edit_group/edit_group_view.dart';
 import '/src/recovery_group/add_secret/add_secret_view.dart';
 import '/src/recovery_group/create_group/create_group_view.dart';
@@ -14,8 +14,8 @@ import '/src/recovery_group/recover_secret/recover_secret_view.dart';
 
 Route<dynamic>? onGenerateRoute(final RouteSettings routeSettings) {
   switch (routeSettings.name) {
-    case QRCodePage.routeName:
-      return QRCodePage.getPageRoute(routeSettings);
+    case QRCodeScreen.routeName:
+      return QRCodeScreen.getPageRoute(routeSettings);
   }
   return MaterialPageRoute<void>(
     settings: routeSettings,

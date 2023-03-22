@@ -4,6 +4,8 @@ import 'platform_service.dart';
 import 'analytics_service.dart';
 import 'network/network_service.dart';
 
+export 'package:get_it/get_it.dart';
+
 class ServiceRoot {
   static Future<ServiceRoot> bootstrap() async => ServiceRoot()
     ..analyticsService = await AnalyticsService.bootstrap(Envs.amplitudeKey)

@@ -1,7 +1,7 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
-import '../home_controller.dart';
+import 'home_presenter.dart';
 import 'widgets/share_panel.dart';
 import 'widgets/vaults_panel.dart';
 import 'widgets/copy_my_key_to_clipboard_button.dart';
@@ -14,7 +14,7 @@ class DashboardPage extends StatelessWidget {
         padding: paddingAll20,
         children: [
           // Device Name
-          Selector<HomeController, PeerId>(
+          Selector<HomePresenter, PeerId>(
             selector: (_, state) => state.myPeerId,
             builder: (_, final myPeerId, ___) => RichText(
               text: TextSpan(
@@ -26,7 +26,7 @@ class DashboardPage extends StatelessWidget {
           // My Key
           Row(children: [
             Text(
-              context.read<HomeController>().myPeerId.toHexShort(),
+              context.read<HomePresenter>().myPeerId.toHexShort(),
               style: textStyleSourceSansPro414Purple,
             ),
             Expanded(

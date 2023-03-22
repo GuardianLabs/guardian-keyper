@@ -6,7 +6,7 @@ import '/src/core/widgets/auth/auth.dart';
 import '/src/core/service/service_root.dart';
 import '/src/core/repository/repository_root.dart';
 
-import '/src/guardian/widgets/message_action_widget.dart';
+import '/src/message/ui/widgets/message_action_widget.dart';
 
 class AppHelper extends StatefulWidget {
   final Widget child;
