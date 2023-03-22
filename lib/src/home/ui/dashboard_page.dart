@@ -2,9 +2,9 @@ import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
 import '../home_controller.dart';
-import '../widgets/share_panel.dart';
-import '../widgets/vaults_panel.dart';
-import '../widgets/copy_my_key_to_clipboard_button.dart';
+import 'widgets/share_panel.dart';
+import 'widgets/vaults_panel.dart';
+import 'widgets/copy_my_key_to_clipboard_button.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});

@@ -2,7 +2,7 @@ import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
 import '../home_controller.dart';
-import '../widgets/vault_list_tile.dart';
+import 'widgets/vault_list_tile.dart';
 
 class VaultsPage extends StatelessWidget {
   const VaultsPage({super.key});

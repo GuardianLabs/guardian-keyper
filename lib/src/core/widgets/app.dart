@@ -8,7 +8,7 @@ import '/src/core/di.dart';
 import '/src/core/routes.dart';
 import '/src/core/theme/theme.dart';
 
-import '/src/home/home_screen.dart';
+import '/src/home/ui/home_screen.dart';
 
 import 'init_loader.dart';
 

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
-import '../home_controller.dart';
+import '../../home_controller.dart';
 
 class CopyMyKeyToClipboardButton extends StatefulWidget {
   const CopyMyKeyToClipboardButton({super.key});
