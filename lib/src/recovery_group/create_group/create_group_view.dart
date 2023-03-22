@@ -22,7 +22,7 @@ class CreateGroupView extends StatelessWidget {
         create: (final BuildContext context) => CreateGroupController(
           pages: _pages,
         ),
-        child: ScaffoldWidget(
+        child: ScaffoldSafe(
           child: Selector<CreateGroupController, int>(
             selector: (context, controller) => controller.currentPage,
             builder: (context, currentPage, __) => AnimatedSwitcher(

@@ -13,7 +13,7 @@ class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
       GetIt.I<RepositoryRoot>().settingsRepository.state.deviceName;
 
   @override
-  Widget build(final BuildContext context) => ScaffoldWidget(
+  Widget build(final BuildContext context) => ScaffoldSafe(
         child: Column(
           children: [
             // Header

@@ -25,7 +25,7 @@ class RecoverySecretController extends RecoveryGroupSecretController {
         code: MessageCode.getShard,
         status: guardian == group.ownerId
             ? MessageStatus.accepted
-            : MessageStatus.requested,
+            : MessageStatus.created,
         payload: SecretShardModel(
           id: secretId,
           ownerId: myPeerId,

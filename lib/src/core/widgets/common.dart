@@ -8,11 +8,10 @@ export 'package:flutter/material.dart';
 
 export '/src/core/theme/theme.dart';
 
-//TBD: rename to ScaffoldSafe
-class ScaffoldWidget extends StatelessWidget {
+class ScaffoldSafe extends StatelessWidget {
   final Widget child;
 
-  const ScaffoldWidget({super.key, required this.child});
+  const ScaffoldSafe({super.key, required this.child});
 
   @override
   Widget build(final BuildContext context) => Scaffold(

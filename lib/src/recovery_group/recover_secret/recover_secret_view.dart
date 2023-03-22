@@ -25,7 +25,7 @@ class RecoverSecretView extends StatelessWidget {
           groupId: groupIdWithSecretId.key,
           secretId: groupIdWithSecretId.value,
         ),
-        child: ScaffoldWidget(
+        child: ScaffoldSafe(
           child: Selector<RecoverySecretController, int>(
             selector: (_, controller) => controller.currentPage,
             builder: (_, currentPage, __) => AnimatedSwitcher(

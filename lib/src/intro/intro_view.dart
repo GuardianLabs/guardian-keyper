@@ -22,7 +22,7 @@ class IntroView extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
         create: (final BuildContext context) => IntroController(pages: _pages),
-        child: ScaffoldWidget(
+        child: ScaffoldSafe(
           child: Selector<IntroController, int>(
             selector: (_, controller) => controller.currentPage,
             builder: (_, currentPage, __) => AnimatedSwitcher(
