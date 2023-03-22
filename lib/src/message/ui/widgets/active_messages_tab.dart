@@ -1,11 +1,12 @@
 import '/src/core/widgets/common.dart';
 import '/src/core/repository/repository_root.dart';
 
-import '../guardian_controller.dart';
+import '../../messages_controller.dart';
+
 import 'message_list_tile.dart';
 
-class ActiveTabWidget extends StatelessWidget {
-  const ActiveTabWidget({super.key});
+class ActiveMessagesTab extends StatelessWidget {
+  const ActiveMessagesTab({super.key});
 
   @override
   Widget build(final BuildContext context) =>
@@ -43,7 +44,7 @@ class ActiveTabWidget extends StatelessWidget {
                           ),
                           direction: DismissDirection.startToEnd,
                           confirmDismiss: (_) => _showConfirmation(context),
-                          onDismissed: (_) => GetIt.I<GuardianController>()
+                          onDismissed: (_) => GetIt.I<MessagesController>()
                               .archivateMessage(msg.copyWith(
                             status: MessageStatus.rejected,
                           )),

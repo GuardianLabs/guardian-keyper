@@ -1,6 +1,6 @@
 import '/src/core/widgets/common.dart';
 
-import '../home_controller.dart';
+import 'home_presenter.dart';
 import 'shard_page.dart';
 
 class ShardsPage extends StatelessWidget {
@@ -16,7 +16,7 @@ class ShardsPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final guardedVaults = context.watch<HomeController>().guardedVaults;
+    final guardedVaults = context.watch<HomePresenter>().guardedVaults;
     return ListView(
       primary: true,
       children: [

@@ -2,7 +2,7 @@ import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 
-import '../home_controller.dart';
+import 'home_presenter.dart';
 
 class ShardPage extends StatelessWidget {
   final GroupId groupId;
@@ -11,7 +11,7 @@ class ShardPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final vault = context.watch<HomeController>().guardedVaults[groupId]!;
+    final vault = context.watch<HomePresenter>().guardedVaults[groupId]!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -114,7 +114,7 @@ class ShardPage extends StatelessWidget {
             text: 'Confirm',
             onPressed: () async {
               final message = await context
-                  .read<HomeController>()
+                  .read<HomePresenter>()
                   .createTakeVaultCode(groupId);
               if (context.mounted) {
                 Navigator.of(context).pushNamed(

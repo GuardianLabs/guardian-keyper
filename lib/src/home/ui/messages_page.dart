@@ -1,7 +1,7 @@
 import '/src/core/widgets/common.dart';
 
-import '../widgets/active_tab_widget.dart';
-import '../widgets/resolved_tab_widget.dart';
+import '/src/message/ui/widgets/active_messages_tab.dart';
+import '/src/message/ui/widgets/resolved_messages_tab.dart';
 
 class MessagesPage extends StatelessWidget {
   static const _tabs = [Tab(text: 'Active'), Tab(text: 'Resolved')];
@@ -33,8 +33,8 @@ class MessagesPage extends StatelessWidget {
                 const Expanded(
                   child: TabBarView(
                     children: [
-                      ActiveTabWidget(),
-                      ResolvedTabWidget(),
+                      ActiveMessagesTab(),
+                      ResolvedMessagesTab(),
                     ],
                   ),
                 ),

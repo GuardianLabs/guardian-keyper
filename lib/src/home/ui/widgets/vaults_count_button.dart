@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '/src/core/theme/theme.dart';
 
-import '../../home_controller.dart';
+import '../home_presenter.dart';
 
 class VaultsCountButton extends StatelessWidget {
   const VaultsCountButton({super.key});
 
   @override
   Widget build(final BuildContext context) {
-    final myVaults = context.watch<HomeController>().myVaults;
+    final myVaults = context.watch<HomePresenter>().myVaults;
     return Container(
       decoration: BoxDecoration(
         borderRadius: borderRadius,

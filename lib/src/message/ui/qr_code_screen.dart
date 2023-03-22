@@ -7,9 +7,10 @@ import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/service/service_root.dart';
 import '/src/core/repository/repository_root.dart';
-import '/src/guardian/widgets/message_action_widget.dart';
 
-class QRCodePage extends StatefulWidget {
+import 'widgets/message_action_widget.dart';
+
+class QRCodeScreen extends StatefulWidget {
   static const routeName = routeQrCode;
 
   static MaterialPageRoute<void> getPageRoute(final RouteSettings settings) =>
@@ -19,19 +20,19 @@ class QRCodePage extends StatefulWidget {
         settings: settings,
         builder: (context) {
           final message = settings.arguments as MessageModel;
-          return QRCodePage(key: Key(message.aKey), message: message);
+          return QRCodeScreen(key: Key(message.aKey), message: message);
         },
       );
 
   final MessageModel message;
 
-  const QRCodePage({super.key, required this.message});
+  const QRCodeScreen({super.key, required this.message});
 
   @override
-  State<QRCodePage> createState() => _QRCodePageState();
+  State<QRCodeScreen> createState() => _QRCodeScreenState();
 }
 
-class _QRCodePageState extends State<QRCodePage> {
+class _QRCodeScreenState extends State<QRCodeScreen> {
   static const _caption = {
     MessageCode.createGroup: 'Become a Guardian',
     MessageCode.takeGroup: 'Change owner',

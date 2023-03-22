@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 import '/src/core/theme/theme.dart';

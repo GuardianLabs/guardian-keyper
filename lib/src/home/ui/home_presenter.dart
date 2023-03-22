@@ -8,7 +8,7 @@ export 'package:provider/provider.dart';
 
 export '/src/core/model/core_model.dart';
 
-class HomeController extends PageControllerBase {
+class HomePresenter extends PageControllerBase {
   late final share = _serviceRoot.platformService.share;
   late final wakelockEnable = _serviceRoot.platformService.wakelockEnable;
   late final wakelockDisable = _serviceRoot.platformService.wakelockDisable;
@@ -18,7 +18,7 @@ class HomeController extends PageControllerBase {
   Map<GroupId, RecoveryGroupModel> get myVaults => _myVaults;
   Map<GroupId, RecoveryGroupModel> get guardedVaults => _guardedVaults;
 
-  HomeController({required super.pages}) {
+  HomePresenter({required super.pages}) {
     // cache Vaults
     for (final vault in _repositoryRoot.vaultRepository.values) {
       vault.ownerId == _myPeerId

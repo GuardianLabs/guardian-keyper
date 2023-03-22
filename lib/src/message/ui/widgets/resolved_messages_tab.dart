@@ -3,8 +3,8 @@ import '/src/core/repository/repository_root.dart';
 
 import 'message_list_tile.dart';
 
-class ResolvedTabWidget extends StatelessWidget {
-  const ResolvedTabWidget({super.key});
+class ResolvedMessagesTab extends StatelessWidget {
+  const ResolvedMessagesTab({super.key});
 
   @override
   Widget build(final BuildContext context) =>

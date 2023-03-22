@@ -1,5 +1,3 @@
-import 'package:get_it/get_it.dart';
-
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
