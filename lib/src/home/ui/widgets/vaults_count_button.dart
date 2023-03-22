@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 import '/src/core/theme/theme.dart';
 
-import '../home_controller.dart';
+import '../../home_controller.dart';
 
-class ShardsCountButton extends StatelessWidget {
-  const ShardsCountButton({super.key});
+class VaultsCountButton extends StatelessWidget {
+  const VaultsCountButton({super.key});
 
   @override
   Widget build(final BuildContext context) {
-    final guardedVaults = context.watch<HomeController>().guardedVaults;
+    final myVaults = context.watch<HomeController>().myVaults;
     return Container(
       decoration: BoxDecoration(
         borderRadius: borderRadius,
-        color: clYellow,
+        color: clGreen,
       ),
       padding: paddingAll8,
       child: Row(
@@ -23,11 +23,11 @@ class ShardsCountButton extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Stored Shards',
+                'My Vaults',
                 style: textStyleSourceSansPro612.copyWith(color: clBlack),
               ),
               Text(
-                '${guardedVaults.length} Shards',
+                '${myVaults.length} Vaults',
                 style: textStylePoppins616.copyWith(color: clBlack),
               ),
             ],

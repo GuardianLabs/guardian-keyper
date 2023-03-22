@@ -5,10 +5,10 @@ import '/src/core/widgets/icon_of.dart';
 
 import '/src/guardian/pages/message_page.dart';
 
-import 'home_controller.dart';
-import 'pages/shards_page.dart';
-import 'pages/vaults_page.dart';
-import 'pages/dashboard_page.dart';
+import '../home_controller.dart';
+import 'shards_page.dart';
+import 'vaults_page.dart';
+import 'dashboard_page.dart';
 import 'widgets/notification_icon.dart';
 import 'widgets/app_helper.dart';
 

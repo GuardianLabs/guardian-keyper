@@ -1,7 +1,7 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
-import '../home_controller.dart';
+import '../../home_controller.dart';
 
 class SharePanel extends StatelessWidget {
   const SharePanel({super.key});
