@@ -25,7 +25,7 @@ class AddGuardianView extends StatelessWidget {
           groupId: groupId,
         ),
         lazy: false,
-        child: ScaffoldWidget(
+        child: ScaffoldSafe(
           child: Selector<AddGuardianController, int>(
             selector: (_, controller) => controller.currentPage,
             builder: (_, currentPage, __) => AnimatedSwitcher(

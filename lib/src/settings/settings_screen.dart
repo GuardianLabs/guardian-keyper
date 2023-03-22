@@ -13,7 +13,7 @@ class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(final BuildContext context) => ScaffoldWidget(
+  Widget build(final BuildContext context) => ScaffoldSafe(
         child: Column(
           children: [
             // Header

@@ -48,7 +48,7 @@ class ShardsPage extends StatelessWidget {
                 trailing: const Icon(Icons.arrow_forward_ios),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => ScaffoldWidget(
+                    builder: (_) => ScaffoldSafe(
                       child: ShardPage(groupId: group.id),
                     ),
                   ),

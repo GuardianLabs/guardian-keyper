@@ -84,7 +84,7 @@ class _QRCodePageState extends State<QRCodePage> {
 
   @override
   Widget build(final BuildContext context) {
-    return ScaffoldWidget(
+    return ScaffoldSafe(
       key: widget.key,
       child: Column(
         children: [

@@ -7,7 +7,7 @@ import '/src/core/model/core_model.dart';
 enum MessageCode { createGroup, getShard, setShard, takeGroup }
 
 enum MessageStatus {
-  requested, // TBD: rename to created
+  created,
   received,
   accepted,
   rejected,
@@ -64,7 +64,7 @@ class MessageModel extends Serializable {
     PeerId? peerId,
     DateTime? timestamp,
     required this.code,
-    this.status = MessageStatus.requested,
+    this.status = MessageStatus.created,
     this.payload,
   })  : peerId = peerId ?? PeerId(),
         timestamp = timestamp ?? DateTime.now(),
@@ -108,8 +108,8 @@ class MessageModel extends Serializable {
     }
   }
 
-  bool get isRequested => status == MessageStatus.requested;
-  bool get isNotRequested => status != MessageStatus.requested;
+  bool get isRequested => status == MessageStatus.created;
+  bool get isNotRequested => status != MessageStatus.created;
   bool get isReceived => status == MessageStatus.received;
   bool get isNotReceived => status != MessageStatus.received;
   bool get isAccepted => status == MessageStatus.accepted;
@@ -121,10 +121,10 @@ class MessageModel extends Serializable {
       status == MessageStatus.accepted || status == MessageStatus.rejected;
 
   bool get hasResponse =>
-      status != MessageStatus.requested && status != MessageStatus.received;
+      status != MessageStatus.created && status != MessageStatus.received;
 
   bool get hasNoResponse =>
-      status == MessageStatus.requested || status == MessageStatus.received;
+      status == MessageStatus.created || status == MessageStatus.received;
 
   factory MessageModel.fromBase64(String value) =>
       MessageModel.fromBytes(base64Decode(value));

@@ -23,7 +23,7 @@ class EditGroupView extends StatelessWidget {
           final group = boxRecoveryGroup.get(groupId.asKey);
           // For correct animation on group delete
           if (group == null) return Scaffold(body: Container());
-          return ScaffoldWidget(
+          return ScaffoldSafe(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

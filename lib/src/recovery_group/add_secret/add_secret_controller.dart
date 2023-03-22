@@ -85,7 +85,7 @@ class AddSecretController extends RecoveryGroupSecretController {
           code: MessageCode.setShard,
           status: guardian == myPeerId
               ? MessageStatus.accepted
-              : MessageStatus.requested,
+              : MessageStatus.created,
           payload: SecretShardModel(
             id: secretId,
             ownerId: myPeerId,

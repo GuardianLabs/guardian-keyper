@@ -26,7 +26,7 @@ class RestoreGroupView extends StatelessWidget {
           currentPage: skipExplainer ? 1 : 0,
         ),
         lazy: false,
-        child: ScaffoldWidget(
+        child: ScaffoldSafe(
           child: Selector<RestoreGroupController, int>(
             selector: (_, controller) => controller.currentPage,
             builder: (_, currentPage, __) => AnimatedSwitcher(

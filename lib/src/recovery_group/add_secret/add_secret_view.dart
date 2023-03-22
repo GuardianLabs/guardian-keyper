@@ -29,7 +29,7 @@ class AddSecretView extends StatelessWidget {
           pages: _pages,
           groupId: groupId,
         ),
-        child: ScaffoldWidget(
+        child: ScaffoldSafe(
           child: Selector<AddSecretController, int>(
             selector: (_, controller) => controller.currentPage,
             builder: (_, currentPage, __) => AnimatedSwitcher(
