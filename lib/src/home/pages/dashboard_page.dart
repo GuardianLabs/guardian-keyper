@@ -1,10 +1,10 @@
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
-import '../home_presenter.dart';
+import '../home_controller.dart';
+import '../widgets/share_panel.dart';
 import '../widgets/vaults_panel.dart';
-import '../widgets/qr_code_panel.dart';
-import '../widgets/copy_my_key_to_clipboard_widget.dart';
+import '../widgets/copy_my_key_to_clipboard_button.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -14,24 +14,25 @@ class DashboardPage extends StatelessWidget {
         padding: paddingAll20,
         children: [
           // Device Name
-          Consumer<HomePresenter>(
-            builder: (_, final state, ___) => RichText(
+          Selector<HomeController, PeerId>(
+            selector: (_, state) => state.myPeerId,
+            builder: (_, final myPeerId, ___) => RichText(
               text: TextSpan(
                 style: textStylePoppins620,
-                children: buildTextWithId(id: state.myPeerId),
+                children: buildTextWithId(id: myPeerId),
               ),
             ),
           ),
           // My Key
           Row(children: [
             Text(
-              context.read<HomePresenter>().myPeerId.toHexShort(),
+              context.read<HomeController>().myPeerId.toHexShort(),
               style: textStyleSourceSansPro414Purple,
             ),
             Expanded(
               child: Container(
                 alignment: Alignment.centerLeft,
-                child: const CopyMyKeyToClipboardWidget(),
+                child: const CopyMyKeyToClipboardButton(),
               ),
             ),
             // Settings
@@ -43,7 +44,7 @@ class DashboardPage extends StatelessWidget {
           // QR Code panel
           const Padding(
             padding: paddingTop20,
-            child: QRCodePanel(),
+            child: SharePanel(),
           ),
           // Vaults panel
           const Padding(

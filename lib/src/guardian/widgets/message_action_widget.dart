@@ -6,21 +6,42 @@ import '/src/core/service/service_root.dart';
 
 import '../guardian_controller.dart';
 
-class MessageActionWidget extends StatefulWidget {
+class MessageActionBottomSheet extends StatefulWidget {
+  static const titles = {
+    MessageCode.createGroup: 'Guardian Approval Request',
+    MessageCode.setShard: 'Accept the Secret Shard',
+    MessageCode.getShard: 'Secret Recovery Request',
+    MessageCode.takeGroup: 'Ownership Change Request',
+  };
+
+  static Future<void> show(
+    final BuildContext context,
+    final MessageModel message,
+  ) =>
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (_) => MessageActionBottomSheet(
+          title: titles[message.code]!,
+          message: message,
+        ),
+      );
+
   final String title;
   final MessageModel message;
 
-  const MessageActionWidget({
+  const MessageActionBottomSheet({
     super.key,
     required this.title,
     required this.message,
   });
 
   @override
-  State<MessageActionWidget> createState() => _MessageActionWidgetState();
+  State<MessageActionBottomSheet> createState() =>
+      _MessageActionBottomSheetState();
 }
 
-class _MessageActionWidgetState extends State<MessageActionWidget>
+class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
     with TickerProviderStateMixin {
   static const _subtitles = {
     MessageCode.createGroup: ' asks you to become a Guardian for ',

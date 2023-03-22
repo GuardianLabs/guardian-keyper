@@ -16,14 +16,16 @@ mixin MdnsHandler on NetworkServiceBase {
   Future<void> _initMdns() async {
     // TBD: unregister onDispose
     try {
-      await register(_service);
+      await register(_service).timeout(const Duration(seconds: 3));
     } on NsdError catch (e) {
+      if (kDebugMode) print(e);
+    } on TimeoutException catch (e) {
       if (kDebugMode) print(e);
     }
     final discovery = await startDiscovery(
       _mdnsType,
       ipLookupType: IpLookupType.any,
-    );
+    ).timeout(const Duration(seconds: 3));
     discovery.addServiceListener(_onEvent);
   }
 

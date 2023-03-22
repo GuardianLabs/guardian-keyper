@@ -72,5 +72,7 @@ final _wrongPassCodeSnackbar = buildSnackBar(
 );
 
 EdgeInsets _getPadding(final BuildContext context) =>
-    (MediaQuery.of(context).size.height > 600 ? paddingV32 : paddingV12) +
+    (MediaQuery.of(context).size.height > smallScreenHeight
+        ? paddingV32
+        : paddingV12) +
     paddingH20;

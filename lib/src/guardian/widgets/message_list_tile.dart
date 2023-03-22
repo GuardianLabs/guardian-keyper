@@ -13,14 +13,7 @@ class MessageListTile extends StatelessWidget {
     MessageCode.takeGroup: IconOf.owner(),
   };
 
-  static const _titles = {
-    MessageCode.createGroup: 'Guardian Approval Request',
-    MessageCode.setShard: 'Accept the Secret Shard',
-    MessageCode.getShard: 'Secret Recovery Request',
-    MessageCode.takeGroup: 'Ownership Change Request',
-  };
-
-  static String roundedAgo(final DateTime value) {
+  static String _roundedAgo(final DateTime value) {
     const hoursInMonth = 24 * 30;
     const hoursInYear = 24 * 30 * 365;
     final diff = DateTime.now().difference(value);
@@ -33,22 +26,9 @@ class MessageListTile extends StatelessWidget {
         : '${diff.inHours ~/ hoursInYear}y ago';
   }
 
-  static Future<void> showActiveMessage(
-    final BuildContext context,
-    final MessageModel message,
-  ) =>
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (_) => MessageActionWidget(
-          title: _titles[message.code]!,
-          message: message,
-        ),
-      );
+  const MessageListTile({super.key, required this.message});
 
   final MessageModel message;
-
-  const MessageListTile({super.key, required this.message});
 
   @override
   Widget build(final BuildContext context) => ListTile(
@@ -58,7 +38,7 @@ class MessageListTile extends StatelessWidget {
         title: Row(
           children: [
             Text(
-              _titles[message.code]!,
+              MessageActionBottomSheet.titles[message.code]!,
               style: textStyleSourceSansPro614,
             ),
             if (message.isReceived)
@@ -72,29 +52,26 @@ class MessageListTile extends StatelessWidget {
           text: TextSpan(
             style: textStyleSourceSansPro414Purple,
             children: buildTextWithId(
-              leadingText: '${roundedAgo(message.timestamp)} · from ',
+              leadingText: '${_roundedAgo(message.timestamp)} · from ',
               id: message.peerId,
             ),
           ),
         ),
         onTap: message.isReceived
-            ? () => showActiveMessage(context, message)
-            : () => _showResolvedMessage(context, message),
-      );
-
-  Future<void> _showResolvedMessage(
-    final BuildContext context,
-    final MessageModel message,
-  ) =>
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (_) => BottomSheetWidget(
-          titleString: _titles[message.code]!,
-          body: Padding(
-            padding: paddingV20,
-            child: RequestCard(message: message),
-          ),
-        ),
+            ? () => MessageActionBottomSheet.show(
+                  context,
+                  message,
+                )
+            : () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (_) => BottomSheetWidget(
+                    titleString: MessageActionBottomSheet.titles[message.code]!,
+                    body: Padding(
+                      padding: paddingV20,
+                      child: RequestCard(message: message),
+                    ),
+                  ),
+                ),
       );
 }

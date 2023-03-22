@@ -1,8 +1,8 @@
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/repository/repository_root.dart';
 
-import 'qr_code_page.dart';
+import '../home_controller.dart';
 
 class ShardPage extends StatelessWidget {
   final GroupId groupId;
@@ -10,93 +10,87 @@ class ShardPage extends StatelessWidget {
   const ShardPage({super.key, required this.groupId});
 
   @override
-  Widget build(final BuildContext context) =>
-      ValueListenableBuilder<Box<RecoveryGroupModel>>(
-        valueListenable: GetIt.I<RepositoryRoot>()
-            .vaultRepository
-            .listenable(keys: [groupId.asKey]),
-        builder: (context, boxRecoveryGroups, __) {
-          final recoveryGroup = boxRecoveryGroups.get(groupId.asKey)!;
-          return Column(
+  Widget build(final BuildContext context) {
+    final vault = context.watch<HomeController>().guardedVaults[groupId]!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header
+        HeaderBar(
+          captionSpans: buildTextWithId(id: groupId),
+          backButton: const HeaderBarBackButton(),
+        ),
+        // Body
+        Padding(
+          padding: paddingTop32 + paddingH20,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
-              HeaderBar(
-                captionSpans: buildTextWithId(id: groupId),
-                backButton: const HeaderBarBackButton(),
-              ),
-              // Body
-              Padding(
-                padding: paddingTop32 + paddingH20,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        style: textStyleSourceSansPro414Purple,
-                        children: buildTextWithId(id: recoveryGroup.ownerId),
-                      ),
-                    ),
-                    Padding(
-                      padding: paddingV6,
-                      child: RichText(
-                        text: TextSpan(
-                          style: textStylePoppins616,
-                          children: buildTextWithId(id: groupId),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      groupId.toHexShort(),
-                      style: textStyleSourceSansPro414,
-                    ),
-                    Padding(
-                      padding: paddingTop12,
-                      child: PrimaryButton(
-                        text: 'Change Vault’s Owner',
-                        onPressed: () => _showConfirmationDialog(context),
-                      ),
-                    ),
-                    Padding(
-                      padding: paddingTop32,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Secret Shards', style: textStylePoppins620),
-                          Text(
-                            recoveryGroup.secrets.length.toString(),
-                            style: textStylePoppins620,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+              RichText(
+                text: TextSpan(
+                  style: textStyleSourceSansPro414Purple,
+                  children: buildTextWithId(id: vault.ownerId),
                 ),
               ),
-              // Shards List
-              Expanded(
-                child: ListView(
-                  padding: paddingH20,
+              Padding(
+                padding: paddingV6,
+                child: RichText(
+                  text: TextSpan(
+                    style: textStylePoppins616,
+                    children: buildTextWithId(id: groupId),
+                  ),
+                ),
+              ),
+              Text(
+                groupId.toHexShort(),
+                style: textStyleSourceSansPro414,
+              ),
+              Padding(
+                padding: paddingTop12,
+                child: PrimaryButton(
+                  text: 'Change Vault’s Owner',
+                  onPressed: () => _showConfirmationDialog(context),
+                ),
+              ),
+              Padding(
+                padding: paddingTop32,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    for (final secretShard in recoveryGroup.secrets.keys)
-                      Padding(
-                        padding: paddingV6,
-                        child: ListTile(
-                          title: RichText(
-                            text: TextSpan(
-                              children: buildTextWithId(id: secretShard),
-                            ),
-                          ),
-                        ),
-                      )
+                    Text('Secret Shards', style: textStylePoppins620),
+                    Text(
+                      vault.secrets.length.toString(),
+                      style: textStylePoppins620,
+                    ),
                   ],
                 ),
               ),
             ],
-          );
-        },
-      );
+          ),
+        ),
+        // Shards List
+        Expanded(
+          child: ListView(
+            padding: paddingH20,
+            children: [
+              for (final secretShard in vault.secrets.keys)
+                Padding(
+                  padding: paddingV6,
+                  child: ListTile(
+                    title: RichText(
+                      text: TextSpan(
+                        children: buildTextWithId(id: secretShard),
+                      ),
+                    ),
+                  ),
+                )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   void _showConfirmationDialog(final BuildContext context) =>
       showModalBottomSheet(
@@ -112,13 +106,17 @@ class ShardPage extends StatelessWidget {
           ),
           footer: PrimaryButton(
             text: 'Confirm',
-            onPressed: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                fullscreenDialog: true,
-                maintainState: false,
-                builder: (_) => QRCodePage(groupId: groupId),
-              ),
-            ),
+            onPressed: () async {
+              final message = await context
+                  .read<HomeController>()
+                  .createTakeVaultCode(groupId);
+              if (context.mounted) {
+                Navigator.of(context).pushNamed(
+                  routeQrCode,
+                  arguments: message,
+                );
+              }
+            },
           ),
         ),
       );

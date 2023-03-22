@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '/src/core/consts.dart';
 import '/src/core/theme/theme.dart';
 import '/src/core/model/core_model.dart';
 
@@ -7,21 +8,16 @@ export 'package:flutter/material.dart';
 
 export '/src/core/theme/theme.dart';
 
+//TBD: rename to ScaffoldSafe
 class ScaffoldWidget extends StatelessWidget {
   final Widget child;
-  final BottomNavigationBar? bottomNavigationBar;
 
-  const ScaffoldWidget({
-    super.key,
-    required this.child,
-    this.bottomNavigationBar,
-  });
+  const ScaffoldWidget({super.key, required this.child});
 
   @override
   Widget build(final BuildContext context) => Scaffold(
         primary: true,
         resizeToAvoidBottomInset: true,
-        bottomNavigationBar: bottomNavigationBar,
         body: SafeArea(child: child),
       );
 }
@@ -153,40 +149,45 @@ class PageTitle extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) => Padding(
-        padding: paddingH20,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+  Widget build(final BuildContext context) {
+    final paddingTop = MediaQuery.of(context).size.height > smallScreenHeight
+        ? paddingTop32
+        : paddingTop12;
+    return Padding(
+      padding: paddingH20,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: paddingTop,
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text: title,
+                children: titleSpans,
+                style: textStylePoppins620,
+              ),
+            ),
+          ),
+          if (subtitle != null || subtitleSpans != null)
             Padding(
-              padding: paddingTop32,
+              padding: paddingTop20,
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  text: title,
-                  children: titleSpans,
-                  style: textStylePoppins620,
-                ),
-              ),
-            ),
-            if (subtitle != null || subtitleSpans != null)
-              Padding(
-                padding: paddingTop20,
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    text: subtitle,
-                    children: subtitleSpans,
-                    style: textStyleSourceSansPro416Purple.copyWith(
-                      height: 1.5,
-                    ),
+                  text: subtitle,
+                  children: subtitleSpans,
+                  style: textStyleSourceSansPro416Purple.copyWith(
+                    height: 1.5,
                   ),
                 ),
               ),
-            const Padding(padding: paddingTop32),
-          ],
-        ),
-      );
+            ),
+          Padding(padding: paddingTop),
+        ],
+      ),
+    );
+  }
 }
 
 class PrimaryButton extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 
 import '/src/core/consts.dart';
 import '/src/core/service/service_root.dart';
@@ -20,10 +20,13 @@ abstract class DI {
     final settingsStorage = FlutterSecureStorage(storage: Storages.settings);
     // Ugly hack to fix first read returns null
     await settingsStorage.get<Uint8List>(SettingsKeys.seed);
+
     // Get seed from storage
     final seed = await settingsStorage.get<Uint8List>(SettingsKeys.seed);
+
     // Init network service
     final aesKey = await serviceRoot.networkService.init(seed);
+
     // Saving the seed if just generated
     if (seed == null) {
       await settingsStorage.set<Uint8List>(SettingsKeys.seed, aesKey);

@@ -16,6 +16,10 @@ part 'network_service_connectivity_handler.dart';
 
 class NetworkService extends NetworkServiceBase
     with WidgetsBindingObserver, ConnectivityHandler, MdnsHandler {
+  NetworkService() {
+    WidgetsBinding.instance.addObserver(this);
+  }
+
   final _messagesController = StreamController<MessageModel>.broadcast();
 
   p2p.Route? _bsServer;
@@ -32,8 +36,6 @@ class NetworkService extends NetworkServiceBase
   }
 
   Future<Uint8List> init(Uint8List? seed) async {
-    WidgetsBinding.instance.addObserver(this);
-
     for (final interface in await NetworkInterface.list()) {
       _myAddresses.addAll(interface.addresses.map(
         (a) => PeerAddress(address: a, port: bindPort),

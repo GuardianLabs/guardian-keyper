@@ -10,7 +10,7 @@ import '/src/core/theme/theme.dart';
 
 import '/src/home/home_screen.dart';
 
-import 'loader_widget.dart';
+import 'init_loader.dart';
 
 class App extends StatelessWidget {
   static Future<void> init() async {

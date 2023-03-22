@@ -3,7 +3,7 @@ part of 'core_model.dart';
 enum MessageCode { createGroup, getShard, setShard, takeGroup }
 
 enum MessageStatus {
-  requested,
+  requested, // TBD: rename to created
   received,
   accepted,
   rejected,
