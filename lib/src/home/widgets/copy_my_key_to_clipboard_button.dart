@@ -4,18 +4,18 @@ import 'package:flutter/services.dart';
 import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
-import '../home_presenter.dart';
+import '../home_controller.dart';
 
-class CopyMyKeyToClipboardWidget extends StatefulWidget {
-  const CopyMyKeyToClipboardWidget({super.key});
+class CopyMyKeyToClipboardButton extends StatefulWidget {
+  const CopyMyKeyToClipboardButton({super.key});
 
   @override
-  State<CopyMyKeyToClipboardWidget> createState() =>
-      _CopyMyKeyToClipboardWidgetState();
+  State<CopyMyKeyToClipboardButton> createState() =>
+      _CopyMyKeyToClipboardButtonState();
 }
 
-class _CopyMyKeyToClipboardWidgetState
-    extends State<CopyMyKeyToClipboardWidget> {
+class _CopyMyKeyToClipboardButtonState
+    extends State<CopyMyKeyToClipboardButton> {
   var isDisabled = false;
 
   @override
@@ -25,7 +25,7 @@ class _CopyMyKeyToClipboardWidgetState
             ? null
             : () async {
                 await Clipboard.setData(ClipboardData(
-                  text: context.read<HomePresenter>().myPeerId.asHex,
+                  text: context.read<HomeController>().myPeerId.asHex,
                 ));
                 setState(() => isDisabled = true);
                 Timer(

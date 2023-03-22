@@ -1,7 +1,6 @@
 import '/src/core/widgets/common.dart';
-import '/src/core/repository/repository_root.dart';
 
-import '../home_presenter.dart';
+import '../home_controller.dart';
 import 'shard_page.dart';
 
 class ShardsPage extends StatelessWidget {
@@ -16,54 +15,48 @@ class ShardsPage extends StatelessWidget {
   const ShardsPage({super.key});
 
   @override
-  Widget build(final BuildContext context) =>
-      ValueListenableBuilder<Box<RecoveryGroupModel>>(
-        valueListenable: GetIt.I<RepositoryRoot>().vaultRepository.listenable(),
-        builder: (_, boxRecoveryGroups, __) {
-          final myId = context.read<HomePresenter>().myPeerId;
-          final guardedGroups =
-              boxRecoveryGroups.values.where((e) => e.ownerId != myId);
-          return ListView(
-            primary: true,
-            children: [
-              // Header
-              const HeaderBar(caption: 'Shards'),
-              // Body
-              if (guardedGroups.isEmpty)
-                const PageTitle(
-                  title: 'You don’t have any Shards yet',
-                  subtitle: _textSubtitle,
-                )
-              else ...[
-                for (final group in guardedGroups)
-                  Padding(
-                    padding: paddingH20 + paddingV6,
-                    child: ListTile(
-                      title: RichText(
-                        text: TextSpan(
-                          style: textStyleSourceSansPro614,
-                          children: buildTextWithId(id: group.id),
-                        ),
-                      ),
-                      subtitle: RichText(
-                        text: TextSpan(
-                          style: textStyleSourceSansPro414Purple,
-                          children: buildTextWithId(id: group.ownerId),
-                        ),
-                      ),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => ScaffoldWidget(
-                            child: ShardPage(groupId: group.id),
-                          ),
-                        ),
-                      ),
+  Widget build(final BuildContext context) {
+    final guardedVaults = context.watch<HomeController>().guardedVaults;
+    return ListView(
+      primary: true,
+      children: [
+        // Header
+        const HeaderBar(caption: 'Shards'),
+        // Body
+        if (guardedVaults.isEmpty)
+          const PageTitle(
+            title: 'You don’t have any Shards yet',
+            subtitle: _textSubtitle,
+          )
+        else ...[
+          for (final group in guardedVaults.values)
+            Padding(
+              padding: paddingH20 + paddingV6,
+              child: ListTile(
+                title: RichText(
+                  text: TextSpan(
+                    style: textStyleSourceSansPro614,
+                    children: buildTextWithId(id: group.id),
+                  ),
+                ),
+                subtitle: RichText(
+                  text: TextSpan(
+                    style: textStyleSourceSansPro414Purple,
+                    children: buildTextWithId(id: group.ownerId),
+                  ),
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => ScaffoldWidget(
+                      child: ShardPage(groupId: group.id),
                     ),
-                  )
-              ],
-            ],
-          );
-        },
-      );
+                  ),
+                ),
+              ),
+            )
+        ],
+      ],
+    );
+  }
 }

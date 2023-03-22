@@ -1,9 +1,8 @@
 import '/src/core/widgets/common.dart';
-import '/src/core/model/core_model.dart';
 
-import '/src/guardian/widgets/message_list_tile.dart';
+import '/src/guardian/widgets/message_action_widget.dart';
 
-import '../home_presenter.dart';
+import '../home_controller.dart';
 
 class Locker extends StatefulWidget {
   const Locker({super.key});
@@ -17,7 +16,7 @@ class _LockerState extends State<Locker> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
   }
 
-  late final _controller = context.read<HomePresenter>();
+  late final _controller = context.read<HomeController>();
 
   @override
   void initState() {
@@ -28,10 +27,10 @@ class _LockerState extends State<Locker> with WidgetsBindingObserver {
       if (event.deleted) return;
       final message = event.value as MessageModel;
       if (message.isNotReceived) return;
-      MessageListTile.showActiveMessage(context, message);
+      MessageActionBottomSheet.show(context, message);
     });
 
-    Future.microtask(() => _controller.init(context));
+    Future.microtask(() => _controller.onStart(context));
   }
 
   @override

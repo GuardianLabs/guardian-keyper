@@ -1,11 +1,10 @@
-import 'package:share_plus/share_plus.dart';
-
+import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 
-import '../pages/qr_code_page.dart';
+import '../home_controller.dart';
 
-class QRCodePanel extends StatelessWidget {
-  const QRCodePanel({super.key});
+class SharePanel extends StatelessWidget {
+  const SharePanel({super.key});
 
   @override
   Widget build(final BuildContext context) => Container(
@@ -33,20 +32,28 @@ class QRCodePanel extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Icon(Icons.qr_code_2_rounded, size: 60, color: clWhite),
+                const Icon(
+                  Icons.qr_code_2_rounded,
+                  size: 60,
+                  color: clWhite,
+                ),
               ],
             ),
             Padding(
               padding: paddingTop20,
               child: ElevatedButton(
                 child: const Text('Generate QR Code'),
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    fullscreenDialog: true,
-                    maintainState: false,
-                    builder: (_) => const QRCodePage(),
-                  ),
-                ),
+                onPressed: () async {
+                  final message = await context
+                      .read<HomeController>()
+                      .createJoinVaultCode();
+                  if (context.mounted) {
+                    Navigator.of(context).pushNamed(
+                      routeQrCode,
+                      arguments: message,
+                    );
+                  }
+                },
               ),
             ),
             Padding(
@@ -54,11 +61,11 @@ class QRCodePanel extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: () async {
                   final box = context.findRenderObject() as RenderBox?;
-                  await Share.share(
-                    'https://myguardian.network/app-router',
-                    sharePositionOrigin:
-                        box!.localToGlobal(Offset.zero) & box.size,
-                  );
+                  await context.read<HomeController>().share(
+                        'https://myguardian.network/app-router',
+                        sharePositionOrigin:
+                            box!.localToGlobal(Offset.zero) & box.size,
+                      );
                 },
                 child: const Text('Share download link'),
               ),

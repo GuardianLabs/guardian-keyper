@@ -1,5 +1,6 @@
 const routeHome = '/home';
 const routeIntro = '/intro';
+const routeQrCode = '/qrcode';
 const routeSettings = '/settings';
 const routeGroupEdit = '/recovery_group/edit';
 const routeGroupCreate = '/recovery_group/create';
@@ -18,6 +19,10 @@ const maxForwardsLimit = 3;
 const maxStoredHeaders = 10;
 const maxSecretLength = 256;
 const passCodeLength = 6;
+
+const smallScreenHeight = 600;
+const mediumScreenHeight = 800;
+const bigScreenHeight = 1200;
 
 abstract class Envs {
   static const amplitudeKey = String.fromEnvironment('AMPLITUDE_KEY');

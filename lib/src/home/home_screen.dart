@@ -5,12 +5,12 @@ import '/src/core/widgets/icon_of.dart';
 
 import '/src/guardian/pages/message_page.dart';
 
-import 'home_presenter.dart';
-import 'widgets/locker.dart';
-import 'widgets/notification_icon.dart';
-import 'pages/dashboard_page.dart';
+import 'home_controller.dart';
 import 'pages/shards_page.dart';
 import 'pages/vaults_page.dart';
+import 'pages/dashboard_page.dart';
+import 'widgets/notification_icon.dart';
+import 'widgets/locker.dart';
 
 class HomeScreen extends StatelessWidget {
   static const pages = [
@@ -24,13 +24,15 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (_) => HomePresenter(pages: HomeScreen.pages),
-        child: Selector<HomePresenter, int>(
-          selector: (context, controller) => controller.currentPage,
+        create: (_) => HomeController(pages: HomeScreen.pages),
+        child: Selector<HomeController, int>(
+          selector: (_, controller) => controller.currentPage,
           builder: (context, currentPage, lockerWidget) => Stack(
             children: [
               lockerWidget!,
-              ScaffoldWidget(
+              Scaffold(
+                primary: true,
+                resizeToAvoidBottomInset: true,
                 bottomNavigationBar: BottomNavigationBar(
                   currentIndex: currentPage,
                   items: const [
@@ -56,13 +58,13 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                   onTap: (value) =>
-                      context.read<HomePresenter>().gotoScreen(value),
+                      context.read<HomeController>().gotoScreen(value),
                 ),
-                child: DoubleBackToCloseApp(
+                body: DoubleBackToCloseApp(
                   snackBar: const SnackBar(
                     content: Text('Tap back again to exit'),
                   ),
-                  child: HomeScreen.pages[currentPage],
+                  child: SafeArea(child: HomeScreen.pages[currentPage]),
                 ),
               ),
             ],
