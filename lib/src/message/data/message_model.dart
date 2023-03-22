@@ -1,4 +1,8 @@
-part of 'core_model.dart';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:messagepack/messagepack.dart';
+
+import '/src/core/model/core_model.dart';
 
 enum MessageCode { createGroup, getShard, setShard, takeGroup }
 

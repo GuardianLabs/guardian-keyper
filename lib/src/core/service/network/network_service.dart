@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
@@ -15,25 +14,12 @@ part 'network_service_mdns_handler.dart';
 part 'network_service_connectivity_handler.dart';
 
 class NetworkService extends NetworkServiceBase
-    with WidgetsBindingObserver, ConnectivityHandler, MdnsHandler {
-  NetworkService() {
-    WidgetsBinding.instance.addObserver(this);
-  }
+    with ConnectivityHandler, MdnsHandler {
+  Stream<MessageModel> get messageStream => _messagesController.stream;
 
   final _messagesController = StreamController<MessageModel>.broadcast();
 
   p2p.Route? _bsServer;
-
-  Stream<MessageModel> get messageStream => _messagesController.stream;
-
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.resumed) {
-      await start();
-    } else {
-      await stop();
-    }
-  }
 
   Future<Uint8List> init(Uint8List? seed) async {
     for (final interface in await NetworkInterface.list()) {
