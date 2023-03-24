@@ -7,7 +7,6 @@ import 'package:messagepack/messagepack.dart';
 import '/src/core/consts.dart';
 import '/src/core/utils/random_utils.dart';
 
-export '/src/settings/settings_model.dart';
 export '/src/message/data/message_model.dart';
 
 part 'recovery_group_model.dart';

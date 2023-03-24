@@ -5,7 +5,6 @@ import '/src/core/service/service_root.dart';
 import '/src/core/repository/repository_root.dart';
 import '/src/core/storage/flutter_secure_storage.dart';
 
-import '/src/settings/settings_repository.dart';
 import '/src/message/messages_controller.dart';
 
 abstract class DI {
@@ -19,23 +18,24 @@ abstract class DI {
     // Init network service and save seed
     final settingsStorage = FlutterSecureStorage(storage: Storages.settings);
     // Ugly hack to fix first read returns null
-    await settingsStorage.get<Uint8List>(SettingsKeys.seed);
+    await settingsStorage.get<Uint8List>(SettingsRepositoryKeys.seed);
 
     // Get seed from storage
-    final seed = await settingsStorage.get<Uint8List>(SettingsKeys.seed);
+    final seed =
+        await settingsStorage.get<Uint8List>(SettingsRepositoryKeys.seed);
 
     // Init network service
     final aesKey = await serviceRoot.networkService.init(seed);
 
     // Saving the seed if just generated
     if (seed == null) {
-      await settingsStorage.set<Uint8List>(SettingsKeys.seed, aesKey);
+      await settingsStorage.set<Uint8List>(SettingsRepositoryKeys.seed, aesKey);
     }
 
     final repositoryRoot = await RepositoryRoot.bootstrap(aesKey: aesKey);
     GetIt.I.registerSingleton<RepositoryRoot>(repositoryRoot);
 
-    if (repositoryRoot.settingsRepository.state.isBootstrapEnabled) {
+    if (repositoryRoot.settingsRepository.isBootstrapEnabled) {
       serviceRoot.networkService.addBootstrapServer(
         peerId: Envs.bsPeerId,
         ipV4: Envs.bsAddressV4,

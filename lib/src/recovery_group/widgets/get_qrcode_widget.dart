@@ -19,7 +19,7 @@ class GetQRCodeWidget extends StatefulWidget {
 class _GetQRCodeWidgetState extends State<GetQRCodeWidget> {
   final _myPeerId = PeerId(
     token: GetIt.I<ServiceRoot>().networkService.myId,
-    name: GetIt.I<RepositoryRoot>().settingsRepository.state.deviceName,
+    name: GetIt.I<RepositoryRoot>().settingsRepository.deviceName,
   );
   late Rect _scanWindow;
   var _canPaste = false;

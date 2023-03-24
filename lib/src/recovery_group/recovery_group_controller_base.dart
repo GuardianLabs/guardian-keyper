@@ -3,11 +3,11 @@ part of 'recovery_group_controller.dart';
 abstract class RecoveryGroupControllerBase extends PageControllerBase {
   final serviceRoot = GetIt.I<ServiceRoot>();
   final repositoryRoot = GetIt.I<RepositoryRoot>();
-  final myPeerId = PeerId(
-    token: GetIt.I<ServiceRoot>().networkService.myId,
-    name: GetIt.I<RepositoryRoot>().settingsRepository.state.deviceName,
-  );
 
+  late final myPeerId = PeerId(
+    token: serviceRoot.networkService.myId,
+    name: repositoryRoot.settingsRepository.deviceName,
+  );
   late final networkSubscription =
       serviceRoot.networkService.messageStream.listen(null);
 

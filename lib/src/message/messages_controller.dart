@@ -9,7 +9,11 @@ class MessagesController {
   MessagesController() {
     _serviceRoot.networkService.messageStream.listen(onMessage);
     _repositoryRoot.settingsRepository.stream.listen(
-      (settings) => _myPeerId = _myPeerId.copyWith(name: settings.deviceName),
+      (final MapEntry event) {
+        if (event.key == SettingsRepositoryKeys.deviceName) {
+          _myPeerId = _myPeerId.copyWith(name: event.value as String);
+        }
+      },
     );
   }
 
@@ -20,7 +24,7 @@ class MessagesController {
 
   late var _myPeerId = PeerId(
     token: _serviceRoot.networkService.myId,
-    name: _repositoryRoot.settingsRepository.state.deviceName,
+    name: _repositoryRoot.settingsRepository.deviceName,
   );
 
   void onMessage(MessageModel message) {
