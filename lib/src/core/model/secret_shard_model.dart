@@ -1,9 +1,8 @@
 part of 'core_model.dart';
 
 class SecretShardModel extends Serializable {
-  static const currentVersion = 2;
-  static const boxName = 'shards';
-  static const typeId = 10;
+  static const currentVersion = 1;
+  static const typeId = 11;
 
   final int version;
   final SecretId id;
@@ -39,28 +38,6 @@ class SecretShardModel extends Serializable {
     final version = u.unpackInt()!;
     switch (version) {
       case 1:
-        final shard = u.unpackString()!;
-        final ownerId = PeerId(
-          token: Uint8List.fromList(u.unpackBinary()),
-          name: u.unpackString()!,
-        );
-        final groupId = GroupId(
-          token: Uint8List.fromList(u.unpackBinary()),
-          name: u.unpackString()!,
-        );
-        final groupSize = u.unpackInt()!;
-        final groupThreshold = u.unpackInt()!;
-        return SecretShardModel(
-          version: version,
-          id: SecretId(token: Uint8List(SecretId.size), name: groupId.name),
-          shard: shard,
-          ownerId: ownerId,
-          groupId: groupId,
-          groupSize: groupSize,
-          groupThreshold: groupThreshold,
-        );
-
-      case 2:
         return SecretShardModel(
           version: version,
           id: SecretId.fromBytes(u.unpackBinary()),

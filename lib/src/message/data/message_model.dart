@@ -28,9 +28,9 @@ const type2TypeId = {
 };
 
 class MessageModel extends Serializable {
-  static const currentVersion = 2;
+  static const currentVersion = 1;
   static const boxName = 'messages';
-  static const typeId = 11;
+  static const typeId = 10;
 
   static MessageModel? tryFromBase64(String value) {
     try {
@@ -134,30 +134,6 @@ class MessageModel extends Serializable {
     final version = u.unpackInt()!;
     switch (version) {
       case 1:
-        final timestamp = DateTime.fromMillisecondsSinceEpoch(
-          u.unpackInt()!,
-          isUtc: true,
-        );
-        final code = MessageCode.values[u.unpackInt()!];
-        final status = MessageStatus.values[u.unpackInt()!];
-        final id = MessageId(token: Uint8List.fromList(u.unpackBinary()));
-        final secretShard = SecretShardModel.fromBytes(u.unpackBinary());
-        return MessageModel(
-          version: version,
-          id: id,
-          peerId: secretShard.ownerId,
-          timestamp: timestamp,
-          code: code,
-          status: status,
-          payload: code == MessageCode.getShard || code == MessageCode.setShard
-              ? secretShard
-              : RecoveryGroupModel(
-                  id: secretShard.groupId,
-                  ownerId: secretShard.ownerId,
-                ),
-        );
-
-      case 2:
         final id = MessageId.fromBytes(u.unpackBinary());
         final peerId = PeerId.fromBytes(u.unpackBinary());
         final timestamp =

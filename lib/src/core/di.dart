@@ -5,8 +5,6 @@ import '/src/core/service/service_root.dart';
 import '/src/core/repository/repository_root.dart';
 import '/src/core/storage/flutter_secure_storage.dart';
 
-import '/src/message/messages_controller.dart';
-
 abstract class DI {
   static bool _isInited = false;
 
@@ -43,8 +41,6 @@ abstract class DI {
         port: Envs.bsPort,
       );
     }
-
-    GetIt.I.registerSingleton<MessagesController>(MessagesController());
     return _isInited = true;
   }
 }

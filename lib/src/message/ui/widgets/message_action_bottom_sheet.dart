@@ -2,9 +2,9 @@ import 'dart:async';
 
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
-import '/src/core/service/service_root.dart';
 
-import '../../messages_controller.dart';
+import '../message_presenter.dart';
+import '../../data/message_model.dart';
 
 class MessageActionBottomSheet extends StatefulWidget {
   static const titles = {
@@ -12,6 +12,13 @@ class MessageActionBottomSheet extends StatefulWidget {
     MessageCode.setShard: 'Accept the Secret Shard',
     MessageCode.getShard: 'Secret Recovery Request',
     MessageCode.takeGroup: 'Ownership Change Request',
+  };
+
+  static const subtitles = {
+    MessageCode.createGroup: ' asks you to become a Guardian for ',
+    MessageCode.setShard: ' asks you to accept the Secret Shard for ',
+    MessageCode.getShard: ' asks you to approve a recovery of Secret for ',
+    MessageCode.takeGroup: ' asks you to approve a change of ownership for ',
   };
 
   static Future<void> show(
@@ -43,14 +50,7 @@ class MessageActionBottomSheet extends StatefulWidget {
 
 class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
     with TickerProviderStateMixin {
-  static const _subtitles = {
-    MessageCode.createGroup: ' asks you to become a Guardian for ',
-    MessageCode.setShard: ' asks you to accept the Secret Shard for ',
-    MessageCode.getShard: ' asks you to approve a recovery of Secret for ',
-    MessageCode.takeGroup: ' asks you to approve a change of ownership for ',
-  };
-
-  final _networkService = GetIt.I<ServiceRoot>().networkService;
+  late final _presenter = context.read<MessagesPresenter>();
 
   late final _animationController = AnimationController(
     vsync: this,
@@ -58,9 +58,9 @@ class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
   )..addListener(() => setState(() {}));
 
   late final _timer = Timer.periodic(
-    _networkService.router.messageTTL,
+    _presenter.messageTTL,
     (_) {
-      _networkService.pingPeer(widget.message.peerId).then(
+      _presenter.pingPeer(widget.message.peerId).then(
         (isOnline) {
           if (mounted) setState(() => _isPeerOnline = isOnline);
         },
@@ -68,8 +68,7 @@ class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
     },
   );
 
-  late bool _isPeerOnline =
-      _networkService.getPeerStatus(widget.message.peerId);
+  late bool _isPeerOnline = _presenter.getPeerStatus(widget.message.peerId);
 
   bool _isRequestError = false;
   bool _isRequestActive = false;
@@ -92,7 +91,9 @@ class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
         titleString: widget.title,
         textSpan: [
           ...buildTextWithId(id: widget.message.peerId),
-          TextSpan(text: _subtitles[widget.message.code]!),
+          TextSpan(
+            text: MessageActionBottomSheet.subtitles[widget.message.code]!,
+          ),
           ...buildTextWithId(id: widget.message.groupId),
         ],
         body: Padding(
@@ -201,21 +202,7 @@ class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
     final response = widget.message.copyWith(status: status);
     setState(() => _isRequestActive = true);
     try {
-      final controller = GetIt.I<MessagesController>();
-      switch (response.code) {
-        case MessageCode.createGroup:
-          await controller.sendCreateGroupResponse(response);
-          break;
-        case MessageCode.setShard:
-          await controller.sendSetShardResponse(response);
-          break;
-        case MessageCode.getShard:
-          await controller.sendGetShardResponse(response);
-          break;
-        case MessageCode.takeGroup:
-          await controller.sendTakeGroupResponse(response);
-          break;
-      }
+      await _presenter.sendRespone(response);
       if (mounted) Navigator.of(context).pop();
     } catch (_) {
       _animationController

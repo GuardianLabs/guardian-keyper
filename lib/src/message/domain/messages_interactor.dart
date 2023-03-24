@@ -4,9 +4,21 @@ import '/src/core/service/service_root.dart';
 import '/src/core/repository/repository_root.dart';
 
 export '/src/core/model/core_model.dart';
+export '/src/core/repository/repository_root.dart';
 
-class MessagesController {
-  MessagesController() {
+class MessagesInteractor {
+  late final pingPeer = _serviceRoot.networkService.pingPeer;
+  late final getPeerStatus = _serviceRoot.networkService.getPeerStatus;
+  late final messageTTL = _serviceRoot.networkService.router.messageTTL;
+  late final messagesUpdatesSubscription =
+      _repositoryRoot.messageRepository.watch().listen(null);
+
+  PeerId get myPeerId => _myPeerId;
+
+  Box<MessageModel> get messageRepository => _repositoryRoot.messageRepository;
+
+  MessagesInteractor() {
+    Future.delayed(const Duration(seconds: 1), _pruneMessages);
     _serviceRoot.networkService.messageStream.listen(onMessage);
     _repositoryRoot.settingsRepository.stream.listen(
       (final MapEntry event) {
@@ -26,6 +38,10 @@ class MessagesController {
     token: _serviceRoot.networkService.myId,
     name: _repositoryRoot.settingsRepository.deviceName,
   );
+
+  Future<void> dispose() async {
+    await messagesUpdatesSubscription.cancel();
+  }
 
   void onMessage(MessageModel message) {
     final ticket = _repositoryRoot.messageRepository.get(message.aKey);
@@ -84,24 +100,21 @@ class MessagesController {
     );
   }
 
-  Future<bool> sendCreateGroupResponse(MessageModel request) async {
-    final isDelivered = await _sendResponse(request);
-    if (isDelivered) {
-      if (request.isAccepted) {
-        final recoveryGroup = RecoveryGroupModel(
-          id: request.recoveryGroup.id,
-          ownerId: request.peerId,
-          maxSize: request.recoveryGroup.maxSize,
-          threshold: request.recoveryGroup.threshold,
-        );
-        await _vaultRepository.put(recoveryGroup.aKey, recoveryGroup);
-      }
-      await archivateMessage(request);
+  Future<void> sendCreateGroupResponse(final MessageModel request) async {
+    await _sendResponse(request);
+    if (request.isAccepted) {
+      final recoveryGroup = RecoveryGroupModel(
+        id: request.recoveryGroup.id,
+        ownerId: request.peerId,
+        maxSize: request.recoveryGroup.maxSize,
+        threshold: request.recoveryGroup.threshold,
+      );
+      await _vaultRepository.put(recoveryGroup.aKey, recoveryGroup);
     }
-    return isDelivered;
+    await archivateMessage(request);
   }
 
-  Future<void> sendTakeGroupResponse(MessageModel request) async {
+  Future<void> sendTakeGroupResponse(final MessageModel request) async {
     if (request.isAccepted) {
       final recoveryGroup = _vaultRepository
           .get(request.recoveryGroup.aKey)!
@@ -125,7 +138,7 @@ class MessagesController {
     await archivateMessage(request);
   }
 
-  Future<void> sendSetShardResponse(MessageModel request) async {
+  Future<void> sendSetShardResponse(final MessageModel request) async {
     if (request.isAccepted) {
       final recoveryGroup = _vaultRepository.get(request.groupId.asKey)!;
       await _vaultRepository.put(
@@ -142,7 +155,7 @@ class MessagesController {
     ));
   }
 
-  Future<void> sendGetShardResponse(MessageModel request) async {
+  Future<void> sendGetShardResponse(final MessageModel request) async {
     if (request.isAccepted) {
       final recoveryGroup = _vaultRepository.get(request.groupId.asKey)!;
       await _sendResponse(
@@ -163,7 +176,7 @@ class MessagesController {
     await archivateMessage(request);
   }
 
-  Future<void> archivateMessage(MessageModel message) async {
+  Future<void> archivateMessage(final MessageModel message) async {
     await _repositoryRoot.messageRepository.delete(message.aKey);
     await _repositoryRoot.messageRepository.put(
       message.timestamp.millisecondsSinceEpoch.toString(),
@@ -171,16 +184,26 @@ class MessagesController {
     );
   }
 
-  Future<bool> _sendResponse(MessageModel message) async {
-    try {
-      await _serviceRoot.networkService.sendTo(
+  Future<void> _sendResponse(final MessageModel message) =>
+      _serviceRoot.networkService.sendTo(
         isConfirmable: true,
         peerId: message.peerId,
         message: message.copyWith(peerId: _myPeerId),
       );
-      return true;
-    } catch (_) {
-      return false;
-    }
+
+  // TBD: move to repository
+  Future<void> _pruneMessages() async {
+    if (_repositoryRoot.messageRepository.isEmpty) return;
+    final expired = _repositoryRoot.messageRepository.values
+        .where((e) =>
+            e.isRequested &&
+            (e.code == MessageCode.createGroup ||
+                e.code == MessageCode.takeGroup) &&
+            e.timestamp
+                .isBefore(DateTime.now().subtract(const Duration(days: 1))))
+        .toList(growable: false);
+    await _repositoryRoot.messageRepository
+        .deleteAll(expired.map((e) => e.aKey));
+    await _repositoryRoot.messageRepository.compact();
   }
 }
