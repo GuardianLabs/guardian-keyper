@@ -15,7 +15,6 @@ dependencies:
     sdk: flutter
   double_back_to_close_app: ^2.1.0
   google_fonts: ^4.0.3
-  flutter_bloc: ^8.1.2
   flutter_svg: ^2.0.3
   messagepack: ^0.2.1
   equatable: ^2.0.5

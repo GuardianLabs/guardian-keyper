@@ -15,15 +15,15 @@ class HomePresenter extends PageControllerBase {
 
   PeerId get myPeerId => _myPeerId;
 
-  Map<GroupId, RecoveryGroupModel> get myVaults => _myVaults;
-  Map<GroupId, RecoveryGroupModel> get guardedVaults => _guardedVaults;
+  Map<String, RecoveryGroupModel> get myVaults => _myVaults;
+  Map<String, RecoveryGroupModel> get guardedVaults => _guardedVaults;
 
   HomePresenter({required super.pages}) {
     // cache Vaults
     for (final vault in _repositoryRoot.vaultRepository.values) {
       vault.ownerId == _myPeerId
-          ? _myVaults[vault.id] = vault
-          : _guardedVaults[vault.id] = vault;
+          ? _myVaults[vault.aKey] = vault
+          : _guardedVaults[vault.aKey] = vault;
     }
     // subscribe to updates
     _vaultsUpdatesSubscription =
@@ -38,8 +38,8 @@ class HomePresenter extends PageControllerBase {
   late final StreamSubscription<BoxEvent> _vaultsUpdatesSubscription;
   late final StreamSubscription<MapEntry> _settingsUpdatesSubscription;
 
-  final _myVaults = <GroupId, RecoveryGroupModel>{};
-  final _guardedVaults = <GroupId, RecoveryGroupModel>{};
+  final _myVaults = <String, RecoveryGroupModel>{};
+  final _guardedVaults = <String, RecoveryGroupModel>{};
 
   late var _myPeerId = PeerId(
     token: _serviceRoot.networkService.myId,
@@ -47,9 +47,9 @@ class HomePresenter extends PageControllerBase {
   );
 
   @override
-  void dispose() {
-    _vaultsUpdatesSubscription.cancel();
-    _settingsUpdatesSubscription.cancel();
+  void dispose() async {
+    await _vaultsUpdatesSubscription.cancel();
+    await _settingsUpdatesSubscription.cancel();
     super.dispose();
   }
 
@@ -82,14 +82,14 @@ class HomePresenter extends PageControllerBase {
 
   void _onVaultsUpdate(final BoxEvent event) {
     if (event.deleted) {
-      _guardedVaults.remove(event.value);
-      _myVaults.remove(event.value);
-      notifyListeners();
+      _guardedVaults.remove(event.key as String);
+      _myVaults.remove(event.key as String);
     } else {
       final vault = event.value as RecoveryGroupModel;
       vault.ownerId == myPeerId
-          ? _myVaults[vault.id] = vault
-          : _guardedVaults[vault.id] = vault;
+          ? _myVaults[vault.aKey] = vault
+          : _guardedVaults[vault.aKey] = vault;
     }
+    notifyListeners();
   }
 }

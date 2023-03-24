@@ -1,9 +1,9 @@
 part of 'core_model.dart';
 
 class RecoveryGroupModel extends Serializable {
-  static const currentVersion = 2;
-  static const boxName = 'groups';
-  static const typeId = 20;
+  static const currentVersion = 1;
+  static const boxName = 'vaults';
+  static const typeId = 12;
 
   final int version;
   final GroupId id;
@@ -52,32 +52,6 @@ class RecoveryGroupModel extends Serializable {
     final version = u.unpackInt()!;
     switch (version) {
       case 1:
-        final groupId = GroupId(
-          token: Uint8List.fromList(u.unpackBinary()),
-          name: u.unpackString()!,
-        );
-        u.unpackInt(); // RecoveryGroupType
-        final maxSize = u.unpackInt()!;
-        final hasSecret = u.unpackBool()!;
-        u.unpackBool()!; // isRestoring
-        final guardians =
-            u.unpackList().map<PeerId>((e) => PeerId.fromBytes(e as List<int>));
-        return RecoveryGroupModel(
-          version: version,
-          id: groupId,
-          ownerId: PeerId(),
-          maxSize: maxSize,
-          threshold: maxSize == 3 ? 2 : 5,
-          guardians: {for (final guardian in guardians) guardian: ''},
-          secrets: {
-            if (hasSecret)
-              SecretId(
-                token: Uint8List(SecretId.size),
-                name: groupId.name,
-              ): ''
-          },
-        );
-      case 2:
         return RecoveryGroupModel(
           version: version,
           id: GroupId.fromBytes(u.unpackBinary()),

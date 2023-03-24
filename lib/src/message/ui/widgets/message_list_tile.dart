@@ -2,7 +2,7 @@ import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 import '/src/core/model/core_model.dart';
 
-import 'message_action_widget.dart';
+import 'message_action_bottom_sheet.dart';
 import 'request_card.dart';
 
 class MessageListTile extends StatelessWidget {

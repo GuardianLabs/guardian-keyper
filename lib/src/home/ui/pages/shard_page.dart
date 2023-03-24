@@ -2,7 +2,7 @@ import '/src/core/consts.dart';
 import '/src/core/widgets/common.dart';
 import '/src/core/widgets/icon_of.dart';
 
-import 'home_presenter.dart';
+import '../home_presenter.dart';
 
 class ShardPage extends StatelessWidget {
   final GroupId groupId;

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '/src/core/theme/theme.dart';
 
 import '../home_presenter.dart';
-import '../shards_page.dart';
-import '../vaults_page.dart';
+import '../pages/shards_page.dart';
+import '../pages/vaults_page.dart';
 import 'shards_count_button.dart';
 import 'vaults_count_button.dart';
 

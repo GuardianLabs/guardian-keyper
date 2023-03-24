@@ -8,7 +8,7 @@ import '/src/core/widgets/icon_of.dart';
 import '/src/core/service/service_root.dart';
 import '/src/core/repository/repository_root.dart';
 
-import 'widgets/message_action_widget.dart';
+import 'widgets/message_action_bottom_sheet.dart';
 
 class QRCodeScreen extends StatefulWidget {
   static const routeName = routeQrCode;
