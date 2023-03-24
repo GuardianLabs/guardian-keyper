@@ -46,10 +46,10 @@ class RecoverySecretController extends RecoveryGroupSecretController {
         context: context,
         onUnlocked: onUnlocked,
         onVibrate: serviceRoot.platformService.vibrate,
-        currentPassCode: repositoryRoot.settingsRepository.state.passCode,
+        currentPassCode: repositoryRoot.settingsRepository.passCode,
         localAuthenticate: serviceRoot.platformService.localAuthenticate,
-        useBiometrics: repositoryRoot.settingsRepository.state.hasBiometrics &&
-            repositoryRoot.settingsRepository.state.isBiometricsEnabled,
+        useBiometrics: repositoryRoot.settingsRepository.hasBiometrics &&
+            repositoryRoot.settingsRepository.isBiometricsEnabled,
       );
 
   void startRequest({required Callback onRejected}) {

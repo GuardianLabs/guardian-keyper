@@ -38,7 +38,7 @@ class _AppHelperState extends State<AppHelper> with WidgetsBindingObserver {
     });
 
     Future.microtask(() async {
-      if (_repositoryRoot.settingsRepository.state.passCode.isEmpty) {
+      if (_repositoryRoot.settingsRepository.passCode.isEmpty) {
         await Navigator.of(context).pushNamed(routeIntro);
       } else {
         await _demandPassCode(context);
@@ -72,10 +72,10 @@ class _AppHelperState extends State<AppHelper> with WidgetsBindingObserver {
       showDemandPassCode(
         context: context,
         onVibrate: _serviceRoot.platformService.vibrate,
-        currentPassCode: _repositoryRoot.settingsRepository.state.passCode,
+        currentPassCode: _repositoryRoot.settingsRepository.passCode,
         localAuthenticate: _serviceRoot.platformService.localAuthenticate,
-        useBiometrics: _repositoryRoot.settingsRepository.state.hasBiometrics &&
-            _repositoryRoot.settingsRepository.state.isBiometricsEnabled,
+        useBiometrics: _repositoryRoot.settingsRepository.hasBiometrics &&
+            _repositoryRoot.settingsRepository.isBiometricsEnabled,
       );
 
   Future<void> _pruneMessages() async {

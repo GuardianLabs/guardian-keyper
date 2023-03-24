@@ -36,14 +36,14 @@ class HomePresenter extends PageControllerBase {
   final _repositoryRoot = GetIt.I<RepositoryRoot>();
 
   late final StreamSubscription<BoxEvent> _vaultsUpdatesSubscription;
-  late final StreamSubscription<SettingsModel> _settingsUpdatesSubscription;
+  late final StreamSubscription<MapEntry> _settingsUpdatesSubscription;
 
   final _myVaults = <GroupId, RecoveryGroupModel>{};
   final _guardedVaults = <GroupId, RecoveryGroupModel>{};
 
   late var _myPeerId = PeerId(
     token: _serviceRoot.networkService.myId,
-    name: _repositoryRoot.settingsRepository.state.deviceName,
+    name: _repositoryRoot.settingsRepository.deviceName,
   );
 
   @override
@@ -73,9 +73,11 @@ class HomePresenter extends PageControllerBase {
     return message;
   }
 
-  void _onSettingsUpdate(final SettingsModel settings) {
-    _myPeerId = _myPeerId.copyWith(name: settings.deviceName);
-    notifyListeners();
+  void _onSettingsUpdate(final MapEntry event) {
+    if (event.key == SettingsRepositoryKeys.deviceName) {
+      _myPeerId = _myPeerId.copyWith(name: event.value as String);
+      notifyListeners();
+    }
   }
 
   void _onVaultsUpdate(final BoxEvent event) {

@@ -3,13 +3,13 @@ import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '/src/core/model/core_model.dart';
-import '/src/settings/settings_repository.dart';
+import '/src/settings/data/settings_repository.dart';
 
 export 'package:get_it/get_it.dart';
-export 'package:flutter_bloc/flutter_bloc.dart';
 export 'package:hive_flutter/hive_flutter.dart';
 
 export '/src/core/model/core_model.dart';
+export '/src/settings/data/settings_repository.dart';
 
 class RepositoryRoot with WidgetsBindingObserver {
   static Future<RepositoryRoot> bootstrap({required Uint8List aesKey}) async {

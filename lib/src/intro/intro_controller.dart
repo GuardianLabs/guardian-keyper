@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import '/src/core/controller/page_controller_base.dart';
 import '/src/core/repository/repository_root.dart';
 import '/src/core/service/service_root.dart';
-import '../core/widgets/auth/auth.dart';
+import '/src/core/widgets/auth/auth.dart';
 
 export 'package:provider/provider.dart';
 
@@ -13,7 +13,7 @@ class IntroController extends PageControllerBase {
   final _serviceRoot = GetIt.I<ServiceRoot>();
   final _settingsRepository = GetIt.I<RepositoryRoot>().settingsRepository;
 
-  late String _deviceName = _settingsRepository.state.deviceName;
+  late String _deviceName = _settingsRepository.deviceName;
 
   int _introStep = 0;
 
@@ -21,13 +21,13 @@ class IntroController extends PageControllerBase {
 
   String get deviceName => _deviceName;
 
-  int get maxNameLength => SettingsModel.maxNameLength;
+  int get maxNameLength => IdWithNameBase.maxNameLength;
 
-  int get minNameLength => SettingsModel.minNameLength;
+  int get minNameLength => IdWithNameBase.minNameLength;
 
-  bool get canSaveName => _deviceName.length >= SettingsModel.minNameLength;
+  bool get canSaveName => _deviceName.length >= IdWithNameBase.minNameLength;
 
-  bool get hasBiometrics => _settingsRepository.state.hasBiometrics;
+  bool get hasBiometrics => _settingsRepository.hasBiometrics;
 
   set introStep(final int value) {
     _introStep = value;
@@ -56,7 +56,7 @@ class IntroController extends PageControllerBase {
         onConfirmed: (final String passCode) async {
           await _settingsRepository.setPassCode(passCode);
           if (context.mounted) {
-            _settingsRepository.state.hasBiometrics
+            _settingsRepository.hasBiometrics
                 ? nextScreen()
                 : Navigator.of(context).pop();
           }

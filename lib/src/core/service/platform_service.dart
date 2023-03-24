@@ -63,10 +63,4 @@ class PlatformService {
     }
     return result;
   }
-
-  // Future<bool> vibrate([int duration = 500]) async {
-  //   final hasVibrator = await Vibration.hasVibrator() ?? false;
-  //   if (hasVibrator) await Vibration.vibrate(duration: duration);
-  //   return hasVibrator;
-  // }
 }
