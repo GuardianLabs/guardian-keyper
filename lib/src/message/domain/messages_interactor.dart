@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
 
+import '/src/core/consts.dart';
 import '/src/core/service/service_root.dart';
 import '/src/core/data/repository_root.dart';
 
-export '../../core/data/core_model.dart';
-export '../../core/data/repository_root.dart';
+export '/src/core/data/repository_root.dart';
 
+// TBD: move state out from here
 class MessagesInteractor {
   late final pingPeer = _serviceRoot.networkService.pingPeer;
   late final getPeerStatus = _serviceRoot.networkService.getPeerStatus;
@@ -17,20 +18,18 @@ class MessagesInteractor {
 
   Box<MessageModel> get messageRepository => _repositoryRoot.messageRepository;
 
-  MessagesInteractor() {
+  MessagesInteractor({
+    ServiceRoot? serviceRoot,
+    RepositoryRoot? repositoryRoot,
+  })  : _serviceRoot = serviceRoot ?? GetIt.I<ServiceRoot>(),
+        _repositoryRoot = repositoryRoot ?? GetIt.I<RepositoryRoot>() {
     Future.delayed(const Duration(seconds: 1), _pruneMessages);
     _serviceRoot.networkService.messageStream.listen(onMessage);
-    _repositoryRoot.settingsRepository.stream.listen(
-      (final MapEntry event) {
-        if (event.key == SettingsRepositoryKeys.deviceName) {
-          _myPeerId = _myPeerId.copyWith(name: event.value as String);
-        }
-      },
-    );
+    _repositoryRoot.settingsRepository.stream.listen(_onSettingsChange);
   }
 
-  final _serviceRoot = GetIt.I<ServiceRoot>();
-  final _repositoryRoot = GetIt.I<RepositoryRoot>();
+  final ServiceRoot _serviceRoot;
+  final RepositoryRoot _repositoryRoot;
 
   late final _vaultRepository = _repositoryRoot.vaultRepository;
 
@@ -103,35 +102,28 @@ class MessagesInteractor {
   Future<void> sendCreateGroupResponse(final MessageModel request) async {
     await _sendResponse(request);
     if (request.isAccepted) {
-      final recoveryGroup = VaultModel(
+      final vault = VaultModel(
         id: request.recoveryGroup.id,
         ownerId: request.peerId,
         maxSize: request.recoveryGroup.maxSize,
         threshold: request.recoveryGroup.threshold,
       );
-      await _vaultRepository.put(recoveryGroup.aKey, recoveryGroup);
+      await _vaultRepository.put(vault.aKey, vault);
     }
     await archivateMessage(request);
   }
 
   Future<void> sendTakeGroupResponse(final MessageModel request) async {
     if (request.isAccepted) {
-      final recoveryGroup = _vaultRepository
+      final vault = _vaultRepository
           .get(request.recoveryGroup.aKey)!
           .copyWith(ownerId: request.peerId);
-      await _sendResponse(
-        request.copyWith(
-          payload: recoveryGroup.copyWith(
-            secrets: {
-              for (final secretId in recoveryGroup.secrets.keys) secretId: ''
-            },
-          ),
+      await _sendResponse(request.copyWith(
+        payload: vault.copyWith(
+          secrets: {for (final secretId in vault.secrets.keys) secretId: ''},
         ),
-      );
-      await _vaultRepository.put(
-        recoveryGroup.aKey,
-        recoveryGroup,
-      );
+      ));
+      await _vaultRepository.put(vault.aKey, vault);
     } else {
       await _sendResponse(request.copyWith(payload: null));
     }
@@ -140,35 +132,34 @@ class MessagesInteractor {
 
   Future<void> sendSetShardResponse(final MessageModel request) async {
     if (request.isAccepted) {
-      final recoveryGroup = _vaultRepository.get(request.groupId.asKey)!;
+      final vault = _vaultRepository.get(request.groupId.asKey)!;
       await _vaultRepository.put(
         request.groupId.asKey,
-        recoveryGroup.copyWith(secrets: {
-          ...recoveryGroup.secrets,
+        vault.copyWith(secrets: {
+          ...vault.secrets,
           request.secretShard.id: request.secretShard.shard,
         }),
       );
     }
     await _sendResponse(request.copyWith(payload: null));
     await archivateMessage(request.copyWith(
-      payload: (request.payload as SecretShardModel).copyWith(shard: ''),
+      payload: request.secretShard.copyWith(shard: ''),
     ));
   }
 
   Future<void> sendGetShardResponse(final MessageModel request) async {
     if (request.isAccepted) {
-      final recoveryGroup = _vaultRepository.get(request.groupId.asKey)!;
+      final vault = _vaultRepository.get(request.groupId.asKey)!;
       await _sendResponse(
         request.copyWith(
-          payload: SecretShardModel(
-            id: request.secretShard.id,
-            ownerId: recoveryGroup.ownerId,
-            groupId: recoveryGroup.id,
-            groupSize: recoveryGroup.maxSize,
-            groupThreshold: recoveryGroup.threshold,
-            shard: recoveryGroup.secrets[request.secretShard.id]!,
-          ),
-        ),
+            payload: SecretShardModel(
+          id: request.secretShard.id,
+          ownerId: vault.ownerId,
+          groupId: vault.id,
+          groupSize: vault.maxSize,
+          groupThreshold: vault.threshold,
+          shard: vault.secrets[request.secretShard.id]!,
+        )),
       );
     } else {
       await _sendResponse(request.copyWith(payload: null));
@@ -190,6 +181,21 @@ class MessagesInteractor {
         peerId: message.peerId,
         message: message.copyWith(peerId: _myPeerId),
       );
+
+  void _onSettingsChange(final MapEntry event) {
+    if (event.key == SettingsRepositoryKeys.deviceName) {
+      _myPeerId = _myPeerId.copyWith(name: event.value as String);
+    } else if (event.key == SettingsRepositoryKeys.isBootstrapEnabled) {
+      event.value == true
+          ? _serviceRoot.networkService.addBootstrapServer(
+              Envs.bsPeerId,
+              ipV4: Envs.bsAddressV4,
+              ipV6: Envs.bsAddressV6,
+              port: Envs.bsPort,
+            )
+          : _serviceRoot.networkService.addBootstrapServer(Envs.bsPeerId);
+    }
+  }
 
   // TBD: move to repository
   Future<void> _pruneMessages() async {

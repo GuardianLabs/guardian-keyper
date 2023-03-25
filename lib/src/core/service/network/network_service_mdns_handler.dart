@@ -9,7 +9,7 @@ mixin MdnsHandler on NetworkServiceBase {
   late final _service = Service(
     name: 'Guardian Keyper',
     type: _mdnsType,
-    port: bindPort,
+    port: defaultPort,
     txt: {_mdnsPeerId: _utf8Encoder.convert(base64Encode(router.selfId.value))},
   );
 

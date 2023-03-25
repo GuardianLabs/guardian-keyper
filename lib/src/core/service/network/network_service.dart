@@ -7,7 +7,7 @@ import 'package:p2plib/p2plib.dart' as p2p;
 import 'package:nsd/nsd.dart';
 
 import '/src/core/consts.dart';
-import '../../data/core_model.dart';
+import '/src/core/data/core_model.dart';
 
 part 'network_service_base.dart';
 part 'network_service_mdns_handler.dart';
@@ -24,10 +24,9 @@ class NetworkService extends NetworkServiceBase
   Future<Uint8List> init(Uint8List? seed) async {
     for (final interface in await NetworkInterface.list()) {
       _myAddresses.addAll(interface.addresses.map(
-        (a) => PeerAddress(address: a, port: bindPort),
+        (a) => PeerAddress(address: a, port: defaultPort),
       ));
     }
-
     final cryptoKeys = await router
         .init(seed == null ? null : (p2p.CryptoKeys.empty()..seed = seed));
     router.messageStream.listen(onMessage);
@@ -59,8 +58,8 @@ class NetworkService extends NetworkServiceBase
     _messagesController.add(message);
   }
 
-  void addBootstrapServer({
-    required String peerId,
+  void addBootstrapServer(
+    String peerId, {
     String ipV4 = '',
     String ipV6 = '',
     int? port,
@@ -77,12 +76,12 @@ class NetworkService extends NetworkServiceBase
           if (ipV4.isNotEmpty && myAddresses.any((e) => e.isIPv4))
             p2p.FullAddress(
               address: InternetAddress(ipV4),
-              port: port ?? bindPort,
+              port: port ?? defaultPort,
             ): p2p.AddressProperties(isStatic: true),
           if (ipV6.isNotEmpty && myAddresses.any((e) => e.isIPv6))
             p2p.FullAddress(
               address: InternetAddress(ipV6),
-              port: port ?? bindPort,
+              port: port ?? defaultPort,
             ): p2p.AddressProperties(isStatic: true),
         },
       );
