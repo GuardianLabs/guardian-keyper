@@ -27,6 +27,7 @@ class App extends StatelessWidget {
         builder: (context, snapshot) => snapshot.data == null
             ? MaterialApp(
                 home: const InitLoader(),
+                theme: themeLight,
                 darkTheme: themeDark,
                 themeMode: ThemeMode.dark,
               )

@@ -2,7 +2,6 @@ part of 'network_service.dart';
 
 abstract class NetworkServiceBase {
   final p2p.RouterL2 router;
-  final bindPort = p2p.TransportUdp.defaultPort;
 
   final _myAddresses = <PeerAddress>[];
 
@@ -15,6 +14,8 @@ abstract class NetworkServiceBase {
           ..maxStoredHeaders = maxStoredHeaders;
 
   Uint8List get myId => router.selfId.value;
+
+  int get defaultPort => p2p.TransportUdp.defaultPort;
 
   Stream<MapEntry<PeerId, bool>> get peerStatusChangeStream =>
       router.lastSeenStream

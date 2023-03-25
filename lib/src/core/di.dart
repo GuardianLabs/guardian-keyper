@@ -35,7 +35,7 @@ abstract class DI {
 
     if (repositoryRoot.settingsRepository.isBootstrapEnabled) {
       serviceRoot.networkService.addBootstrapServer(
-        peerId: Envs.bsPeerId,
+        Envs.bsPeerId,
         ipV4: Envs.bsAddressV4,
         ipV6: Envs.bsAddressV6,
         port: Envs.bsPort,
