@@ -2,11 +2,11 @@ import 'dart:async';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
-import '/src/core/widgets/icon_of.dart';
-import '/src/core/widgets/auth/auth.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/ui/widgets/icon_of.dart';
+import '/src/core/ui/widgets/auth/auth.dart';
 import '/src/core/service/service_root.dart';
-import '/src/core/repository/repository_root.dart';
+import '/src/core/data/repository_root.dart';
 import '/src/message/ui/widgets/message_action_bottom_sheet.dart';
 
 import 'home_presenter.dart';
@@ -67,6 +67,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       await _serviceRoot.networkService.start();
     } else {
       await _serviceRoot.networkService.stop();
+      await _repositoryRoot.messageRepository.flush();
+      await _repositoryRoot.vaultRepository.flush();
     }
   }
 

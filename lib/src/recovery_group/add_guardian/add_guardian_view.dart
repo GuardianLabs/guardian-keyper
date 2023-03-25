@@ -1,6 +1,6 @@
 import '/src/core/consts.dart';
-import '/src/core/model/core_model.dart';
-import '/src/core/widgets/common.dart';
+import '/src/core/data/core_model.dart';
+import '/src/core/ui/widgets/common.dart';
 
 import 'add_guardian_controller.dart';
 import 'pages/scan_qrcode_page.dart';
@@ -14,7 +14,7 @@ class AddGuardianView extends StatelessWidget {
     LoadingPage(),
   ];
 
-  final GroupId groupId;
+  final VaultId groupId;
 
   const AddGuardianView({super.key, required this.groupId});
 

@@ -1,4 +1,4 @@
-import '/src/core/model/core_model.dart';
+import '/src/core/data/core_model.dart';
 import '/src/core/service/analytics_service.dart';
 
 import '../recovery_group_controller.dart';

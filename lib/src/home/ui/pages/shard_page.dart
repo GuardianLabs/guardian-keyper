@@ -1,11 +1,11 @@
 import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
-import '/src/core/widgets/icon_of.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/ui/widgets/icon_of.dart';
 
 import '../home_presenter.dart';
 
 class ShardPage extends StatelessWidget {
-  final GroupId groupId;
+  final VaultId groupId;
 
   const ShardPage({super.key, required this.groupId});
 

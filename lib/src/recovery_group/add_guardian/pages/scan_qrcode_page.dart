@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/src/core/model/core_model.dart';
+import '/src/core/data/core_model.dart';
 
 import '../add_guardian_controller.dart';
 import '../../widgets/get_qrcode_widget.dart';

@@ -1,12 +1,12 @@
 import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
-import '/src/core/repository/repository_root.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/data/repository_root.dart';
 
 import '../widgets/guardians_expansion_tile.dart';
 import '../widgets/secrets_panel_list.dart';
 
 class VaultPage extends StatelessWidget {
-  final RecoveryGroupModel group;
+  final VaultModel group;
 
   const VaultPage({super.key, required this.group});
 

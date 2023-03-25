@@ -1,5 +1,5 @@
-import '/src/core/widgets/common.dart';
-import '/src/core/model/core_model.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/data/core_model.dart';
 
 import 'guardian_with_ping_tile.dart';
 import '../../../widgets/guardian_self_list_tile.dart';
@@ -7,7 +7,7 @@ import '../../../widgets/guardian_self_list_tile.dart';
 class GuardiansExpansionTile extends StatelessWidget {
   const GuardiansExpansionTile({super.key, required this.group});
 
-  final RecoveryGroupModel group;
+  final VaultModel group;
 
   @override
   Widget build(final BuildContext context) => ExpansionTile(

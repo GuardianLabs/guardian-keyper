@@ -1,6 +1,6 @@
-import '/src/core/widgets/common.dart';
-import '/src/core/widgets/icon_of.dart';
-import '/src/core/repository/repository_root.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/ui/widgets/icon_of.dart';
+import '/src/core/data/repository_root.dart';
 
 class MessagesIcon extends StatelessWidget {
   final bool isSelected;

@@ -1,5 +1,5 @@
 import '/src/core/consts.dart';
-import '/src/core/model/core_model.dart';
+import '/src/core/data/core_model.dart';
 import '/src/core/service/analytics_service.dart';
 
 import '../recovery_group_controller.dart';
@@ -7,7 +7,7 @@ import '../recovery_group_controller.dart';
 export 'package:provider/provider.dart';
 
 class AddGuardianController extends RecoveryGroupGuardianController {
-  final GroupId groupId;
+  final VaultId groupId;
 
   AddGuardianController({required super.pages, required this.groupId});
 

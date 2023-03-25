@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
-import '/src/core/widgets/common.dart';
-import '/src/core/model/core_model.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/data/core_model.dart';
 
 class RequestCard extends StatelessWidget {
   final MessageModel message;
@@ -45,7 +45,7 @@ class RequestCard extends StatelessWidget {
                 ],
               ),
             ),
-            if (message.payload is RecoveryGroupModel)
+            if (message.payload is VaultModel)
               Padding(
                 padding: paddingBottom20,
                 child: Row(

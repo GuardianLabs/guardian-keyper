@@ -2,8 +2,8 @@ part of 'recovery_group_controller.dart';
 
 class RecoveryGroupSecretController extends RecoveryGroupControllerBase {
   SecretId secretId;
-  final GroupId groupId;
-  late final RecoveryGroupModel group;
+  final VaultId groupId;
+  late final VaultModel group;
   final Set<MessageModel> messages = {};
 
   RecoveryGroupSecretController({

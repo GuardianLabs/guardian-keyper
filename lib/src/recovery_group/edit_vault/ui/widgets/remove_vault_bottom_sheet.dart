@@ -1,12 +1,12 @@
 import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
-import '/src/core/widgets/icon_of.dart';
-import '/src/core/repository/repository_root.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/ui/widgets/icon_of.dart';
+import '/src/core/data/repository_root.dart';
 
 class RemoveVaultBottomSheet extends StatelessWidget {
   const RemoveVaultBottomSheet({super.key, required this.group});
 
-  final RecoveryGroupModel group;
+  final VaultModel group;
 
   @override
   Widget build(final BuildContext context) => BottomSheetWidget(

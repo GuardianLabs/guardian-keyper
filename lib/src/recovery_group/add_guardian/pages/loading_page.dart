@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 
 import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
-import '/src/core/widgets/icon_of.dart';
-import '/src/core/model/core_model.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/ui/widgets/icon_of.dart';
+import '/src/core/data/core_model.dart';
 
 import '../add_guardian_controller.dart';
 

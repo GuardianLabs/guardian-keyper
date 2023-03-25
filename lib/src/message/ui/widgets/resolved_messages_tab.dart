@@ -1,4 +1,4 @@
-import '/src/core/widgets/common.dart';
+import '/src/core/ui/widgets/common.dart';
 
 import '../message_presenter.dart';
 import 'message_list_tile.dart';

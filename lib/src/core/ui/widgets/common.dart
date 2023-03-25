@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '/src/core/consts.dart';
-import '/src/core/theme/theme.dart';
-import '/src/core/model/core_model.dart';
+import '/src/core/ui/theme/theme.dart';
+import '/src/core/data/core_model.dart';
 
 export 'package:flutter/material.dart';
 
-export '/src/core/theme/theme.dart';
+export '/src/core/ui/theme/theme.dart';
 
 class ScaffoldSafe extends StatelessWidget {
   final Widget child;

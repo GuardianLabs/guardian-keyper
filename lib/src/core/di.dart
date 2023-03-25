@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '/src/core/consts.dart';
 import '/src/core/service/service_root.dart';
-import '/src/core/repository/repository_root.dart';
+import 'data/repository_root.dart';
 import '/src/core/storage/flutter_secure_storage.dart';
 
 abstract class DI {

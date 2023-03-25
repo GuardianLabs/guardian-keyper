@@ -1,4 +1,44 @@
-part of 'core_model.dart';
+import 'package:flutter/foundation.dart';
+import 'package:messagepack/messagepack.dart';
+
+import '/src/core/consts.dart';
+import '/src/core/data/core_model.dart';
+import '/src/core/utils/random_utils.dart';
+
+class SecretId extends IdWithNameBase {
+  static const currentVersion = 1;
+  static const size = 8;
+
+  @override
+  String get emoji => String.fromCharCode(emojiSecret[tokenEmojiByte]);
+
+  SecretId({Uint8List? token, required super.name})
+      : super(token: token ?? getRandomBytes(size));
+
+  factory SecretId.fromBytes(List<int> token) {
+    final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));
+    final version = u.unpackInt()!;
+    if (version != currentVersion) throw const FormatException();
+    return SecretId(
+      token: Uint8List.fromList(u.unpackBinary()),
+      name: u.unpackString()!,
+    );
+  }
+
+  @override
+  Uint8List toBytes() {
+    final p = Packer()
+      ..packInt(currentVersion)
+      ..packBinary(token)
+      ..packString(name);
+    return p.takeBytes();
+  }
+
+  SecretId copyWith({String? name}) => SecretId(
+        token: token,
+        name: name ?? this.name,
+      );
+}
 
 class SecretShardModel extends Serializable {
   static const currentVersion = 1;
@@ -7,7 +47,7 @@ class SecretShardModel extends Serializable {
   final int version;
   final SecretId id;
   final PeerId ownerId;
-  final GroupId groupId;
+  final VaultId groupId;
   final int groupSize;
   final int groupThreshold;
   final String shard;
@@ -42,7 +82,7 @@ class SecretShardModel extends Serializable {
           version: version,
           id: SecretId.fromBytes(u.unpackBinary()),
           ownerId: PeerId.fromBytes(u.unpackBinary()),
-          groupId: GroupId.fromBytes(u.unpackBinary()),
+          groupId: VaultId.fromBytes(u.unpackBinary()),
           groupSize: u.unpackInt()!,
           groupThreshold: u.unpackInt()!,
           shard: u.unpackString()!,

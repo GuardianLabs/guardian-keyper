@@ -1,5 +1,5 @@
 import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
+import '/src/core/ui/widgets/common.dart';
 
 import 'restore_group_controller.dart';
 import 'pages/explainer_page.dart';

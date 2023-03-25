@@ -1,6 +1,6 @@
 part of 'recovery_group_controller.dart';
 
-abstract class RecoveryGroupControllerBase extends PageControllerBase {
+abstract class RecoveryGroupControllerBase extends PagePresenterBase {
   final serviceRoot = GetIt.I<ServiceRoot>();
   final repositoryRoot = GetIt.I<RepositoryRoot>();
 
@@ -48,17 +48,17 @@ abstract class RecoveryGroupControllerBase extends PageControllerBase {
         message: message.copyWith(peerId: myPeerId),
       );
 
-  RecoveryGroupModel? getGroupById(final GroupId groupId) =>
+  VaultModel? getGroupById(final VaultId groupId) =>
       repositoryRoot.vaultRepository.get(groupId.asKey);
 
-  Future<RecoveryGroupModel> createGroup(final RecoveryGroupModel group) async {
+  Future<VaultModel> createGroup(final VaultModel group) async {
     await repositoryRoot.vaultRepository.put(group.aKey, group);
     notifyListeners();
     return group;
   }
 
-  Future<RecoveryGroupModel> addGuardian(
-    final GroupId groupId,
+  Future<VaultModel> addGuardian(
+    final VaultId groupId,
     final PeerId guardian,
   ) async {
     var group = repositoryRoot.vaultRepository.get(groupId.asKey)!;

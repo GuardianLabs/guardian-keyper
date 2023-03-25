@@ -1,6 +1,6 @@
 import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
-import '/src/core/repository/repository_root.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/data/repository_root.dart';
 
 import 'pages/vault_page.dart';
 import 'pages/new_vault_page.dart';
@@ -15,16 +15,16 @@ class EditVaultScreen extends StatelessWidget {
         fullscreenDialog: true,
         maintainState: false,
         settings: settings,
-        builder: (_) => EditVaultScreen(groupId: settings.arguments as GroupId),
+        builder: (_) => EditVaultScreen(groupId: settings.arguments as VaultId),
       );
 
-  final GroupId groupId;
+  final VaultId groupId;
 
   const EditVaultScreen({super.key, required this.groupId});
 
   @override
   Widget build(final BuildContext context) =>
-      ValueListenableBuilder<Box<RecoveryGroupModel>>(
+      ValueListenableBuilder<Box<VaultModel>>(
         valueListenable: GetIt.I<RepositoryRoot>().vaultRepository.listenable(),
         builder: (context, boxRecoveryGroup, __) {
           final group = boxRecoveryGroup.get(groupId.asKey);
