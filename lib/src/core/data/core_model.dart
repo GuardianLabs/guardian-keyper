@@ -6,9 +6,9 @@ import 'package:messagepack/messagepack.dart';
 
 import '/src/core/consts.dart';
 
+export '/src/vaults/data/vault_model.dart';
+export '/src/vaults/data/secret_shard_model.dart';
 export '/src/message/data/message_model.dart';
-export '/src/recovery_group/data/vault_model.dart';
-export '/src/recovery_group/data/secret_shard_model.dart';
 
 part 'peer_id.dart';
 
