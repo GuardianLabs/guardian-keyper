@@ -1,12 +1,12 @@
 import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
-import '/src/core/widgets/icon_of.dart';
-import '/src/core/model/core_model.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/ui/widgets/icon_of.dart';
+import '/src/core/data/core_model.dart';
 
 import 'remove_secret_bottom_sheet.dart';
 
 class SecretsPanelList extends StatelessWidget {
-  final RecoveryGroupModel group;
+  final VaultModel group;
 
   const SecretsPanelList({super.key, required this.group});
 

@@ -1,6 +1,6 @@
 import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
-import '/src/core/model/core_model.dart';
+import '/src/core/data/core_model.dart';
+import '/src/core/ui/widgets/common.dart';
 import '/src/core/service/service_root.dart';
 
 import '../../../widgets/guardian_list_tile.dart';

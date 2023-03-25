@@ -7,7 +7,7 @@ import 'package:p2plib/p2plib.dart' as p2p;
 import 'package:nsd/nsd.dart';
 
 import '/src/core/consts.dart';
-import '/src/core/model/core_model.dart';
+import '../../data/core_model.dart';
 
 part 'network_service_base.dart';
 part 'network_service_mdns_handler.dart';

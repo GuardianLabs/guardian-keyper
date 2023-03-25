@@ -6,8 +6,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '/src/core/di.dart';
 import '/src/core/routes.dart';
-import '/src/core/theme/theme.dart';
-import '/src/core/widgets/init_loader.dart';
+import '/src/core/ui/theme/theme.dart';
+import 'ui/widgets/init_loader.dart';
 
 import '/src/home/ui/home_screen.dart';
 import '/src/message/ui/message_presenter.dart';

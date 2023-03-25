@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/src/core/theme/theme.dart';
+import '/src/core/ui/theme/theme.dart';
 
 class SelectableCard extends StatelessWidget {
   final Widget child;

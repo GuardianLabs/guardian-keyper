@@ -1,27 +1,67 @@
-part of 'core_model.dart';
+import 'package:flutter/foundation.dart';
+import 'package:messagepack/messagepack.dart';
 
-class RecoveryGroupModel extends Serializable {
+import '/src/core/consts.dart';
+import '/src/core/data/core_model.dart';
+import '/src/core/utils/random_utils.dart';
+
+class VaultId extends IdWithNameBase {
+  static const currentVersion = 1;
+  static const size = 8;
+
+  @override
+  String get emoji => String.fromCharCode(emojiVault[tokenEmojiByte]);
+
+  VaultId({Uint8List? token, super.name = ''})
+      : super(token: token ?? getRandomBytes(size));
+
+  factory VaultId.fromBytes(List<int> token) {
+    final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));
+    final version = u.unpackInt()!;
+    if (version != currentVersion) throw const FormatException();
+    return VaultId(
+      token: Uint8List.fromList(u.unpackBinary()),
+      name: u.unpackString()!,
+    );
+  }
+
+  @override
+  Uint8List toBytes() {
+    final p = Packer()
+      ..packInt(currentVersion)
+      ..packBinary(token)
+      ..packString(name);
+    return p.takeBytes();
+  }
+
+  VaultId copyWith({String? name}) => VaultId(
+        token: token,
+        name: name ?? this.name,
+      );
+}
+
+class VaultModel extends Serializable {
   static const currentVersion = 1;
   static const boxName = 'vaults';
   static const typeId = 12;
 
   final int version;
-  final GroupId id;
+  final VaultId id;
   final int maxSize;
   final int threshold;
   final PeerId ownerId;
   final Map<PeerId, String> guardians;
   final Map<SecretId, String> secrets;
 
-  RecoveryGroupModel({
+  VaultModel({
     this.version = currentVersion,
-    GroupId? id,
+    VaultId? id,
     PeerId? ownerId,
     this.maxSize = 0,
     this.threshold = 0,
     this.guardians = const {},
     this.secrets = const {},
-  })  : id = id ?? GroupId(),
+  })  : id = id ?? VaultId(),
         ownerId = ownerId ?? PeerId();
 
   @override
@@ -56,14 +96,14 @@ class RecoveryGroupModel extends Serializable {
 
   bool get isSelfGuarded => guardians.containsKey(ownerId);
 
-  factory RecoveryGroupModel.fromBytes(List<int> value) {
+  factory VaultModel.fromBytes(List<int> value) {
     final u = Unpacker(value is Uint8List ? value : Uint8List.fromList(value));
     final version = u.unpackInt()!;
     switch (version) {
       case 1:
-        return RecoveryGroupModel(
+        return VaultModel(
           version: version,
-          id: GroupId.fromBytes(u.unpackBinary()),
+          id: VaultId.fromBytes(u.unpackBinary()),
           maxSize: u.unpackInt()!,
           threshold: u.unpackInt()!,
           ownerId: PeerId.fromBytes(u.unpackBinary()),
@@ -101,12 +141,12 @@ class RecoveryGroupModel extends Serializable {
     return p.takeBytes();
   }
 
-  RecoveryGroupModel copyWith({
+  VaultModel copyWith({
     PeerId? ownerId,
     Map<PeerId, String>? guardians,
     Map<SecretId, String>? secrets,
   }) =>
-      RecoveryGroupModel(
+      VaultModel(
         id: id,
         ownerId: ownerId ?? this.ownerId,
         maxSize: maxSize,

@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 
 import '/src/core/service/service_root.dart';
-import '/src/core/repository/repository_root.dart';
+import '/src/core/data/repository_root.dart';
 
-export '/src/core/model/core_model.dart';
-export '/src/core/repository/repository_root.dart';
+export '../../core/data/core_model.dart';
+export '../../core/data/repository_root.dart';
 
 class MessagesInteractor {
   late final pingPeer = _serviceRoot.networkService.pingPeer;
@@ -103,7 +103,7 @@ class MessagesInteractor {
   Future<void> sendCreateGroupResponse(final MessageModel request) async {
     await _sendResponse(request);
     if (request.isAccepted) {
-      final recoveryGroup = RecoveryGroupModel(
+      final recoveryGroup = VaultModel(
         id: request.recoveryGroup.id,
         ownerId: request.peerId,
         maxSize: request.recoveryGroup.maxSize,

@@ -3,10 +3,10 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
-import '/src/core/widgets/icon_of.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/ui/widgets/icon_of.dart';
 import '/src/core/service/service_root.dart';
-import '/src/core/repository/repository_root.dart';
+import '/src/core/data/repository_root.dart';
 
 import 'widgets/message_action_bottom_sheet.dart';
 

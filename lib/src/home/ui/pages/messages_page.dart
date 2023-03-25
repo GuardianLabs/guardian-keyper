@@ -1,4 +1,4 @@
-import '/src/core/widgets/common.dart';
+import '/src/core/ui/widgets/common.dart';
 
 import '/src/message/ui/widgets/active_messages_tab.dart';
 import '/src/message/ui/widgets/resolved_messages_tab.dart';

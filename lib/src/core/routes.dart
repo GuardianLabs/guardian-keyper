@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/src/core/model/core_model.dart';
+import 'data/core_model.dart';
 
 import '/src/intro/intro_view.dart';
 import '/src/message/ui/qr_code_screen.dart';
@@ -32,18 +32,18 @@ Route? onGenerateRoute(final RouteSettings routeSettings) {
 
         case AddGuardianView.routeName:
           return AddGuardianView(
-            groupId: routeSettings.arguments as GroupId,
+            groupId: routeSettings.arguments as VaultId,
           );
 
         case AddSecretView.routeName:
           return AddSecretView(
-            groupId: routeSettings.arguments as GroupId,
+            groupId: routeSettings.arguments as VaultId,
           );
 
         case RecoverSecretView.routeName:
           return RecoverSecretView(
             groupIdWithSecretId:
-                routeSettings.arguments as MapEntry<GroupId, SecretId>,
+                routeSettings.arguments as MapEntry<VaultId, SecretId>,
           );
 
         case RestoreGroupView.routeName:

@@ -1,6 +1,6 @@
-import '/src/core/model/core_model.dart';
-import '/src/core/widgets/common.dart';
-import '/src/core/widgets/icon_of.dart';
+import '/src/core/data/core_model.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/ui/widgets/icon_of.dart';
 
 import '../recover_secret_controller.dart';
 import '../../widgets/guardian_list_tile.dart';

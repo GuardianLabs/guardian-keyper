@@ -1,7 +1,6 @@
 import 'package:flutter_svg/flutter_svg.dart';
 
-// import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
+import '/src/core/ui/widgets/common.dart';
 
 import '../intro_controller.dart';
 

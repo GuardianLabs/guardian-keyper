@@ -1,7 +1,7 @@
 import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
-import '/src/core/widgets/icon_of.dart';
-import '/src/core/widgets/auth/auth.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/ui/widgets/icon_of.dart';
+import '/src/core/ui/widgets/auth/auth.dart';
 
 import 'settings_provider.dart';
 import 'pages/set_device_name_page.dart';

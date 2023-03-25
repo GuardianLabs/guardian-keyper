@@ -1,4 +1,4 @@
-import '/src/core/widgets/common.dart';
+import '/src/core/ui/widgets/common.dart';
 
 import '../add_secret_controller.dart';
 import '../widgets/add_secret_close_button.dart';

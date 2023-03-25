@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sss256/sss256.dart';
 
-import '/src/core/model/core_model.dart';
+import '/src/core/data/core_model.dart';
 import '/src/core/service/analytics_service.dart';
-import '../../core/widgets/auth/auth.dart';
+import '/src/core/ui/widgets/auth/auth.dart';
 
 import '../recovery_group_controller.dart';
 

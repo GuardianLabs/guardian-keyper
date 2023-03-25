@@ -1,4 +1,4 @@
-import '/src/core/widgets/common.dart';
+import '/src/core/ui/widgets/common.dart';
 
 class GroupSizeInfoPanel extends StatefulWidget {
   final int atLeast, ofAmount;

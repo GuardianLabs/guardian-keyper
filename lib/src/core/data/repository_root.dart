@@ -1,22 +1,21 @@
 import 'dart:typed_data';
-import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '/src/core/model/core_model.dart';
+import 'core_model.dart';
 import '/src/settings/data/settings_repository.dart';
 
 export 'package:get_it/get_it.dart';
 export 'package:hive_flutter/hive_flutter.dart';
 
-export '/src/core/model/core_model.dart';
+export 'core_model.dart';
 export '/src/settings/data/settings_repository.dart';
 
-class RepositoryRoot with WidgetsBindingObserver {
+class RepositoryRoot {
   static Future<RepositoryRoot> bootstrap({required Uint8List aesKey}) async {
     await Hive.initFlutter('data_v1');
     Hive
       ..registerAdapter<MessageModel>(MessageModelAdapter())
-      ..registerAdapter<RecoveryGroupModel>(RecoveryGroupModelAdapter());
+      ..registerAdapter<VaultModel>(RecoveryGroupModelAdapter());
 
     final cipher = HiveAesCipher(aesKey);
     final repositoryRoot = RepositoryRoot()
@@ -25,8 +24,8 @@ class RepositoryRoot with WidgetsBindingObserver {
         MessageModel.boxName,
         encryptionCipher: cipher,
       )
-      ..vaultRepository = await Hive.openBox<RecoveryGroupModel>(
-        RecoveryGroupModel.boxName,
+      ..vaultRepository = await Hive.openBox<VaultModel>(
+        VaultModel.boxName,
         encryptionCipher: cipher,
       );
     await repositoryRoot.settingsRepository.load();
@@ -34,33 +33,21 @@ class RepositoryRoot with WidgetsBindingObserver {
     return repositoryRoot;
   }
 
-  RepositoryRoot() {
-    WidgetsBinding.instance.addObserver(this);
-  }
-
   late final SettingsRepository settingsRepository;
-  late final Box<RecoveryGroupModel> vaultRepository;
+  late final Box<VaultModel> vaultRepository;
   late final Box<MessageModel> messageRepository;
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state != AppLifecycleState.resumed) {
-      await messageRepository.flush();
-      await vaultRepository.flush();
-    }
-  }
 }
 
-class RecoveryGroupModelAdapter extends TypeAdapter<RecoveryGroupModel> {
+class RecoveryGroupModelAdapter extends TypeAdapter<VaultModel> {
   @override
-  final typeId = RecoveryGroupModel.typeId;
+  final typeId = VaultModel.typeId;
 
   @override
-  RecoveryGroupModel read(BinaryReader reader) =>
-      RecoveryGroupModel.fromBytes(reader.readByteList());
+  VaultModel read(BinaryReader reader) =>
+      VaultModel.fromBytes(reader.readByteList());
 
   @override
-  void write(BinaryWriter writer, RecoveryGroupModel obj) =>
+  void write(BinaryWriter writer, VaultModel obj) =>
       writer.writeByteList(obj.toBytes());
 }
 

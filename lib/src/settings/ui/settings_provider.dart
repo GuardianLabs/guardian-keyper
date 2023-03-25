@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 import '/src/core/service/service_root.dart';
-import '/src/core/repository/repository_root.dart';
+import '/src/core/data/repository_root.dart';
 
 export 'package:provider/provider.dart';
 

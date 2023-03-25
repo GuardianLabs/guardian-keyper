@@ -1,4 +1,4 @@
-import '/src/core/model/core_model.dart';
+import '/src/core/data/core_model.dart';
 import '/src/core/service/analytics_service.dart';
 
 import '../recovery_group_controller.dart';
@@ -44,10 +44,10 @@ class CreateGroupController extends RecoveryGroupControllerBase {
     notifyListeners();
   }
 
-  Future<RecoveryGroupModel> createVault() {
+  Future<VaultModel> createVault() {
     serviceRoot.analyticsService.logEvent(eventFinishCreateVault);
-    return createGroup(RecoveryGroupModel(
-      id: GroupId(name: _groupName),
+    return createGroup(VaultModel(
+      id: VaultId(name: _groupName),
       maxSize: _groupSize,
       threshold: _groupThreshold,
       ownerId: myPeerId,

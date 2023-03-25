@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '/src/core/model/core_model.dart';
+import '/src/core/data/core_model.dart';
 import '/src/core/service/service_root.dart';
 import '/src/core/storage/flutter_secure_storage.dart';
 

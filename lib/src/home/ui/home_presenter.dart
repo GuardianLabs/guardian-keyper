@@ -1,22 +1,22 @@
 import 'dart:async';
 
+import '/src/core/data/repository_root.dart';
 import '/src/core/service/service_root.dart';
-import '/src/core/repository/repository_root.dart';
-import '/src/core/controller/page_controller_base.dart';
+import '/src/core/ui/page_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 
-export '/src/core/model/core_model.dart';
+export '/src/core/data/core_model.dart';
 
-class HomePresenter extends PageControllerBase {
+class HomePresenter extends PagePresenterBase {
   late final share = _serviceRoot.platformService.share;
   late final wakelockEnable = _serviceRoot.platformService.wakelockEnable;
   late final wakelockDisable = _serviceRoot.platformService.wakelockDisable;
 
   PeerId get myPeerId => _myPeerId;
 
-  Map<String, RecoveryGroupModel> get myVaults => _myVaults;
-  Map<String, RecoveryGroupModel> get guardedVaults => _guardedVaults;
+  Map<String, VaultModel> get myVaults => _myVaults;
+  Map<String, VaultModel> get guardedVaults => _guardedVaults;
 
   HomePresenter({required super.pages}) {
     // cache Vaults
@@ -38,8 +38,8 @@ class HomePresenter extends PageControllerBase {
   late final StreamSubscription<BoxEvent> _vaultsUpdatesSubscription;
   late final StreamSubscription<MapEntry> _settingsUpdatesSubscription;
 
-  final _myVaults = <String, RecoveryGroupModel>{};
-  final _guardedVaults = <String, RecoveryGroupModel>{};
+  final _myVaults = <String, VaultModel>{};
+  final _guardedVaults = <String, VaultModel>{};
 
   late var _myPeerId = PeerId(
     token: _serviceRoot.networkService.myId,
@@ -64,11 +64,11 @@ class HomePresenter extends PageControllerBase {
   }
 
   /// Create ticket to take vault
-  Future<MessageModel> createTakeVaultCode(final GroupId? groupId) async {
+  Future<MessageModel> createTakeVaultCode(final VaultId? groupId) async {
     final message = MessageModel(code: MessageCode.takeGroup, peerId: myPeerId);
     await _repositoryRoot.messageRepository.put(
       message.aKey,
-      message.copyWith(payload: RecoveryGroupModel(id: groupId)),
+      message.copyWith(payload: VaultModel(id: groupId)),
     );
     return message;
   }
@@ -85,7 +85,7 @@ class HomePresenter extends PageControllerBase {
       _guardedVaults.remove(event.key as String);
       _myVaults.remove(event.key as String);
     } else {
-      final vault = event.value as RecoveryGroupModel;
+      final vault = event.value as VaultModel;
       vault.ownerId == myPeerId
           ? _myVaults[vault.aKey] = vault
           : _guardedVaults[vault.aKey] = vault;

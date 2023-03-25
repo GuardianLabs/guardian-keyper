@@ -2,9 +2,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:messagepack/messagepack.dart';
 
-import '/src/core/model/core_model.dart';
-
-enum MessageCode { createGroup, getShard, setShard, takeGroup }
+import '/src/core/data/core_model.dart';
+import '/src/core/utils/random_utils.dart';
 
 enum MessageStatus {
   created,
@@ -15,17 +14,29 @@ enum MessageStatus {
   duplicated,
 }
 
-const typeId2Type = {
-  PeerAddressList.typeId: PeerAddressList.fromBytes,
-  SecretShardModel.typeId: SecretShardModel.fromBytes,
-  RecoveryGroupModel.typeId: RecoveryGroupModel.fromBytes,
-};
+enum MessageCode { createGroup, getShard, setShard, takeGroup }
 
-const type2TypeId = {
-  PeerAddressList: PeerAddressList.typeId,
-  SecretShardModel: SecretShardModel.typeId,
-  RecoveryGroupModel: RecoveryGroupModel.typeId,
-};
+class MessageId extends IdBase {
+  static const currentVersion = 1;
+  static const size = 16;
+
+  MessageId({Uint8List? token}) : super(token: token ?? getRandomBytes(size));
+
+  factory MessageId.fromBytes(List<int> token) {
+    final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));
+    final version = u.unpackInt()!;
+    if (version != currentVersion) throw const FormatException();
+    return MessageId(token: Uint8List.fromList(u.unpackBinary()));
+  }
+
+  @override
+  Uint8List toBytes() {
+    final p = Packer()
+      ..packInt(currentVersion)
+      ..packBinary(token);
+    return p.takeBytes();
+  }
+}
 
 class MessageModel extends Serializable {
   static const currentVersion = 1;
@@ -84,25 +95,25 @@ class MessageModel extends Serializable {
 
   SecretShardModel get secretShard => payload as SecretShardModel;
 
-  RecoveryGroupModel get recoveryGroup => payload as RecoveryGroupModel;
+  VaultModel get recoveryGroup => payload as VaultModel;
 
   PeerId get ownerId {
     switch (payload.runtimeType) {
       case SecretShardModel:
         return (payload as SecretShardModel).ownerId;
-      case RecoveryGroupModel:
-        return (payload as RecoveryGroupModel).ownerId;
+      case VaultModel:
+        return (payload as VaultModel).ownerId;
       default:
         throw const FormatException('Payload have no ownerId!');
     }
   }
 
-  GroupId get groupId {
+  VaultId get groupId {
     switch (payload.runtimeType) {
       case SecretShardModel:
         return (payload as SecretShardModel).groupId;
-      case RecoveryGroupModel:
-        return (payload as RecoveryGroupModel).id;
+      case VaultModel:
+        return (payload as VaultModel).id;
       default:
         throw const FormatException('Payload have no groupId!');
     }
@@ -190,3 +201,13 @@ class MessageModel extends Serializable {
         payload: payload ?? this.payload,
       );
 }
+
+const typeId2Type = {
+  SecretShardModel.typeId: SecretShardModel.fromBytes,
+  VaultModel.typeId: VaultModel.fromBytes,
+};
+
+const type2TypeId = {
+  SecretShardModel: SecretShardModel.typeId,
+  VaultModel: VaultModel.typeId,
+};

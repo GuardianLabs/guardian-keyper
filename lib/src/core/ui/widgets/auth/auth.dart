@@ -1,8 +1,8 @@
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 
 import '/src/core/consts.dart';
-import '/src/core/widgets/common.dart';
-import '/src/core/widgets/icon_of.dart';
+import '../common.dart';
+import '../icon_of.dart';
 
 part 'ask_pass_code.dart';
 part 'demand_pass_code.dart';

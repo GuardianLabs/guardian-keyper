@@ -1,5 +1,5 @@
-import '/src/core/widgets/common.dart';
-import '/src/core/widgets/icon_of.dart';
+import '/src/core/ui/widgets/common.dart';
+import '/src/core/ui/widgets/icon_of.dart';
 
 import '../intro_controller.dart';
 

@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 
-import '/src/core/controller/page_controller_base.dart';
-import '/src/core/repository/repository_root.dart';
+import '/src/core/ui/page_presenter_base.dart';
+import '/src/core/data/repository_root.dart';
 import '/src/core/service/service_root.dart';
-import '/src/core/widgets/auth/auth.dart';
+import '/src/core/ui/widgets/auth/auth.dart';
 
 export 'package:provider/provider.dart';
 
-class IntroController extends PageControllerBase {
+class IntroController extends PagePresenterBase {
   IntroController({required super.pages});
 
   final _serviceRoot = GetIt.I<ServiceRoot>();

@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '/src/core/widgets/common.dart';
+import '/src/core/ui/widgets/common.dart';
 
 import '../recover_secret_controller.dart';
 
