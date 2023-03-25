@@ -6,7 +6,7 @@ version: 2.0.0+1
 
 environment:
   sdk: ">=2.19.2 <3.0.0"
-  flutter: ^3.7.5
+  flutter: ^3.7.8
 
 dependencies:
   flutter:
@@ -15,27 +15,27 @@ dependencies:
     sdk: flutter
   double_back_to_close_app: ^2.1.0
   google_fonts: ^4.0.3
-  flutter_svg: ^2.0.3
+  flutter_svg: ^2.0.4
   messagepack: ^0.2.1
   equatable: ^2.0.5
   provider: ^6.0.5
   get_it: ^7.2.0
+  p2plib: ^1.1.2
   sss256: ^1.0.0
   intl: ^0.17.0
   qr_flutter:
     git:
       url: "https://github.com/theyakka/qr.flutter"
-  p2plib: ^1.1.2+0
 
   # Platform dependent
   flutter_secure_storage: ^8.0.0
   flutter_screen_lock: ^9.0.1
   connectivity_plus: ^3.0.3
   device_info_plus: ^8.1.0
-  mobile_scanner: ^3.0.0
+  mobile_scanner: ^3.1.1
   url_launcher: ^6.1.10
   hive_flutter: ^1.1.0
-  sodium_libs: ^2.0.0
+  sodium_libs: ^2.1.0
   local_auth: ^2.1.5
   share_plus: ^6.3.1
   vibration: ^1.7.6
@@ -44,7 +44,7 @@ dependencies:
 
   # Analytics
   amplitude_flutter: ^3.13.0
-  sentry_flutter: ^6.22.0
+  sentry_flutter: ^7.2.0
 
 dev_dependencies:
   flutter_test:
