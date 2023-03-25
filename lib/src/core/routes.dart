@@ -1,63 +1,44 @@
 import 'package:flutter/material.dart';
 
-import 'data/core_model.dart';
-
-import '/src/intro/intro_view.dart';
+import '/src/intro/ui/intro_screen.dart';
 import '/src/message/ui/qr_code_screen.dart';
 import '/src/settings/ui/settings_screen.dart';
-import '/src/recovery_group/add_secret/add_secret_view.dart';
-import '/src/recovery_group/create_group/create_group_view.dart';
-import '/src/recovery_group/add_guardian/add_guardian_view.dart';
-import '/src/recovery_group/edit_vault/ui/edit_vault_screen.dart';
-import '/src/recovery_group/restore_group/restore_group_view.dart';
-import '/src/recovery_group/recover_secret/recover_secret_view.dart';
+import '/src/vaults/ui/edit/vault_edit_screen.dart';
+import '/src/vaults/ui/create/vault_create_screen.dart';
+import '/src/vaults/ui/add_secret/vault_add_secret_screen.dart';
+import '/src/vaults/ui/restore/vault_restore_group_screen.dart';
+import '/src/vaults/ui/add_guardian/vault_add_guardian_screen.dart';
+import '/src/vaults/ui/recover_secret/vault_recover_secret_screen.dart';
 
 Route? onGenerateRoute(final RouteSettings routeSettings) {
   switch (routeSettings.name) {
+    // Vaults
+    case VaultCreateScreen.routeName:
+      return VaultCreateScreen.getPageRoute(routeSettings);
+    case VaultEditScreen.routeName:
+      return VaultEditScreen.getPageRoute(routeSettings);
+    case VaultAddGuardianScreen.routeName:
+      return VaultAddGuardianScreen.getPageRoute(routeSettings);
+    case VaultAddSecretScreen.routeName:
+      return VaultAddSecretScreen.getPageRoute(routeSettings);
+    case VaultRecoverSecretScreen.routeName:
+      return VaultRecoverSecretScreen.getPageRoute(routeSettings);
+    case VaultRestoreGroupScreen.routeName:
+      return VaultRestoreGroupScreen.getPageRoute(routeSettings);
+
+    // Show QRCode
     case QRCodeScreen.routeName:
       return QRCodeScreen.getPageRoute(routeSettings);
 
-    case EditVaultScreen.routeName:
-      return EditVaultScreen.getPageRoute(routeSettings);
-
+    // Settings
     case SettingsScreen.routeName:
       return SettingsScreen.getPageRoute(routeSettings);
+
+    // Intro
+    case IntroScreen.routeName:
+      return IntroScreen.getPageRoute(routeSettings);
+
+    default:
+      return null;
   }
-  return MaterialPageRoute<void>(
-    settings: routeSettings,
-    builder: (final BuildContext context) {
-      switch (routeSettings.name) {
-        case CreateGroupView.routeName:
-          return const CreateGroupView();
-
-        case AddGuardianView.routeName:
-          return AddGuardianView(
-            groupId: routeSettings.arguments as VaultId,
-          );
-
-        case AddSecretView.routeName:
-          return AddSecretView(
-            groupId: routeSettings.arguments as VaultId,
-          );
-
-        case RecoverSecretView.routeName:
-          return RecoverSecretView(
-            groupIdWithSecretId:
-                routeSettings.arguments as MapEntry<VaultId, SecretId>,
-          );
-
-        case RestoreGroupView.routeName:
-          return RestoreGroupView(
-            skipExplainer: routeSettings.arguments as bool,
-          );
-
-        case SettingsScreen.routeName:
-          return const SettingsScreen();
-
-        case IntroView.routeName:
-          return const IntroView();
-      }
-      throw Exception('Route not found!');
-    },
-  );
 }

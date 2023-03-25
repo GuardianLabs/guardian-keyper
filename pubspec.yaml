@@ -19,8 +19,8 @@ dependencies:
   messagepack: ^0.2.1
   equatable: ^2.0.5
   provider: ^6.0.5
-  sss256: ^1.0.0
   get_it: ^7.2.0
+  sss256: ^1.0.0
   intl: ^0.17.0
   qr_flutter:
     git:
