@@ -36,14 +36,23 @@ class RecoveryGroupModel extends Serializable {
   String get aKey => id.asKey;
 
   int get size => guardians.length;
-
+  int get missed => maxSize - size;
   int get redudancy => maxSize - threshold;
 
   bool get isFull => guardians.length == maxSize;
   bool get isNotFull => !isFull;
 
+  bool get hasQuorum => size >= threshold;
+  bool get hasNoQuorum => size < threshold;
+
   bool get isRestoring => isNotFull && secrets.isNotEmpty;
   bool get isNotRestoring => !isRestoring;
+
+  bool get isRestricted => isRestoring && isNotFull;
+  bool get isNotRestricted => !isRestricted;
+
+  bool get hasSecrets => secrets.isNotEmpty;
+  bool get hasNoSecrets => secrets.isEmpty;
 
   bool get isSelfGuarded => guardians.containsKey(ownerId);
 

@@ -1,8 +1,8 @@
 import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 
-import 'guardian_tile_with_ping_widget.dart';
-import '../../widgets/guardian_self_list_tile.dart';
+import 'guardian_with_ping_tile.dart';
+import '../../../widgets/guardian_self_list_tile.dart';
 
 class GuardiansExpansionTile extends StatelessWidget {
   const GuardiansExpansionTile({super.key, required this.group});
@@ -24,7 +24,7 @@ class GuardiansExpansionTile extends StatelessWidget {
           for (final guardian in group.guardians.keys)
             guardian == group.ownerId
                 ? GuardianSelfListTile(guardian: guardian)
-                : GuardianTileWithPingWidget(guardian: guardian),
+                : GuardianWithPingTile(guardian: guardian),
         ],
       );
 }

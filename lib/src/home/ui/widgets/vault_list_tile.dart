@@ -17,20 +17,7 @@ class VaultListTile extends StatelessWidget {
             children: buildTextWithId(id: group.id),
           ),
         ),
-        subtitle: group.isRestoring
-            ? Text(
-                'Complete the Vault recovery',
-                style: textStyleSourceSansPro414.copyWith(color: clRed),
-              )
-            : group.isFull
-                ? Text(
-                    '${group.size} Guardians',
-                    style: textStyleSourceSansPro414,
-                  )
-                : Text(
-                    'This Vault is not complited',
-                    style: textStyleSourceSansPro414.copyWith(color: clRed),
-                  ),
+        subtitle: _buildSubtitle(group),
         trailing: const Icon(Icons.arrow_forward_ios_rounded, color: clWhite),
         onTap: () => Navigator.pushNamed(
           context,
@@ -38,4 +25,21 @@ class VaultListTile extends StatelessWidget {
           arguments: group.id,
         ),
       );
+
+  Text _buildSubtitle(final RecoveryGroupModel group) {
+    final styleRed = textStyleSourceSansPro414.copyWith(color: clRed);
+    if (group.isRestoring) {
+      return group.isRestricted
+          ? Text('Restricted usage', style: styleRed)
+          : Text('Complete the Recovery', style: styleRed);
+    } else {
+      return group.isFull
+          ? Text(
+              // TBD: i18n
+              '${group.size} Guardians, ${group.secrets.length} Secrets',
+              style: textStyleSourceSansPro414,
+            )
+          : Text('Add more Guardians', style: styleRed);
+    }
+  }
 }

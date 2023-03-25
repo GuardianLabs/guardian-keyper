@@ -3,20 +3,18 @@ import '/src/core/widgets/common.dart';
 import '/src/core/model/core_model.dart';
 import '/src/core/service/service_root.dart';
 
-import '../../widgets/guardian_list_tile.dart';
+import '../../../widgets/guardian_list_tile.dart';
 
-class GuardianTileWithPingWidget extends StatefulWidget {
-  const GuardianTileWithPingWidget({super.key, required this.guardian});
+class GuardianWithPingTile extends StatefulWidget {
+  const GuardianWithPingTile({super.key, required this.guardian});
 
   final PeerId guardian;
 
   @override
-  State<GuardianTileWithPingWidget> createState() =>
-      _GuardianTileWithPingWidgetState();
+  State<GuardianWithPingTile> createState() => _GuardianWithPingTileState();
 }
 
-class _GuardianTileWithPingWidgetState
-    extends State<GuardianTileWithPingWidget> {
+class _GuardianWithPingTileState extends State<GuardianWithPingTile> {
   bool _isWaiting = false;
 
   @override
