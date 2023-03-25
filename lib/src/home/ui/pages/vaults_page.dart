@@ -16,7 +16,7 @@ class VaultsPage extends StatelessWidget {
             // Body
             if (presenter.myVaults.isEmpty)
               const PageTitle(
-                title: 'You don’t have any Shards yet',
+                title: 'Welcome to Vaults',
                 subtitle: 'The Vaults is a place where you can securely keep '
                     'your secrets such as seed phrases or passwords.',
               ),

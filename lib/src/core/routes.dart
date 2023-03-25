@@ -3,19 +3,22 @@ import 'package:flutter/material.dart';
 import '/src/core/model/core_model.dart';
 
 import '/src/intro/intro_view.dart';
-import '../settings/ui/settings_screen.dart';
 import '/src/message/ui/qr_code_screen.dart';
-import '/src/recovery_group/edit_group/edit_group_view.dart';
+import '/src/settings/ui/settings_screen.dart';
 import '/src/recovery_group/add_secret/add_secret_view.dart';
 import '/src/recovery_group/create_group/create_group_view.dart';
 import '/src/recovery_group/add_guardian/add_guardian_view.dart';
+import '/src/recovery_group/edit_vault/ui/edit_vault_screen.dart';
 import '/src/recovery_group/restore_group/restore_group_view.dart';
 import '/src/recovery_group/recover_secret/recover_secret_view.dart';
 
-Route<dynamic>? onGenerateRoute(final RouteSettings routeSettings) {
+Route? onGenerateRoute(final RouteSettings routeSettings) {
   switch (routeSettings.name) {
     case QRCodeScreen.routeName:
       return QRCodeScreen.getPageRoute(routeSettings);
+
+    case EditVaultScreen.routeName:
+      return EditVaultScreen.getPageRoute(routeSettings);
 
     case SettingsScreen.routeName:
       return SettingsScreen.getPageRoute(routeSettings);
@@ -26,11 +29,6 @@ Route<dynamic>? onGenerateRoute(final RouteSettings routeSettings) {
       switch (routeSettings.name) {
         case CreateGroupView.routeName:
           return const CreateGroupView();
-
-        case EditGroupView.routeName:
-          return EditGroupView(
-            groupId: routeSettings.arguments as GroupId,
-          );
 
         case AddGuardianView.routeName:
           return AddGuardianView(
