@@ -35,11 +35,12 @@ dependencies:
   mobile_scanner: ^3.1.1
   url_launcher: ^6.1.10
   hive_flutter: ^1.1.0
-  sodium_libs: ^2.1.0
+  sodium_libs: 2.0.0
   local_auth: ^2.1.5
   share_plus: ^6.3.1
   vibration: ^1.7.6
   wakelock: ^0.6.2
+  sodium: 2.0.1
   nsd: ^2.3.0
 
   # Analytics

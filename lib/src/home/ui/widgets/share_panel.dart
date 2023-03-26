@@ -66,7 +66,7 @@ class SharePanel extends StatelessWidget {
                             box!.localToGlobal(Offset.zero) & box.size,
                       );
                 },
-                child: const Text('Share download link'),
+                child: const Text('Share the App link'),
               ),
             ),
           ],
