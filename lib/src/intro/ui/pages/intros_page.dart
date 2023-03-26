@@ -1,4 +1,5 @@
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 
 import '/src/core/ui/widgets/common.dart';
 
@@ -6,11 +7,11 @@ import '../intro_presenter.dart';
 
 // TBD: use PageControllerBase?
 class IntrosPage extends StatelessWidget {
-  static final _pictures = [
-    SvgPicture.asset('assets/images/intro_1.svg'),
-    SvgPicture.asset('assets/images/intro_2.svg'),
-    SvgPicture.asset('assets/images/intro_3.svg'),
-    SvgPicture.asset('assets/images/intro_4.svg'),
+  static const _pictures = [
+    SvgPicture(AssetBytesLoader('assets/images/intro_1.svg.vec')),
+    SvgPicture(AssetBytesLoader('assets/images/intro_2.svg.vec')),
+    SvgPicture(AssetBytesLoader('assets/images/intro_3.svg.vec')),
+    SvgPicture(AssetBytesLoader('assets/images/intro_4.svg.vec')),
   ];
 
   final _titles = const [
