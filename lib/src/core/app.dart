@@ -16,6 +16,10 @@ class App extends StatelessWidget {
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setSystemUIOverlayStyle(systemStyleDark);
+    // await SystemChrome.setEnabledSystemUIMode(
+    //   SystemUiMode.manual,
+    //   overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top],
+    // );
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
