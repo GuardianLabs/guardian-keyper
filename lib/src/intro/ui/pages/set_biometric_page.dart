@@ -1,4 +1,5 @@
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 
 import '/src/core/ui/widgets/common.dart';
 
@@ -13,7 +14,9 @@ class SetBiometricPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset('assets/images/intro_biometrics.svg'),
+            const SvgPicture(AssetBytesLoader(
+              'assets/images/intro_biometrics.svg.vec',
+            )),
             Padding(
               padding: paddingTop32,
               child: Text(

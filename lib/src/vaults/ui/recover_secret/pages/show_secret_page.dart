@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 
 import '/src/core/ui/widgets/common.dart';
 
@@ -51,9 +52,9 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
                           height: 160,
                           padding: paddingBottom20,
                           child: _isObfuscated
-                              ? SvgPicture.asset(
-                                  'assets/images/secret_mask.svg',
-                                )
+                              ? const SvgPicture(AssetBytesLoader(
+                                  'assets/images/secret_mask.svg.vec',
+                                ))
                               : Text(
                                   _controller.secret,
                                   style: textStyleSourceSansPro414Purple,
