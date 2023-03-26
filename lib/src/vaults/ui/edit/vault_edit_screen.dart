@@ -33,7 +33,7 @@ class VaultEditScreen extends StatelessWidget {
           late final Widget body;
           if (group.isRestoring) {
             body = RestrictedVaultPage(group: group);
-          } else if (group.isEmpty) {
+          } else if (group.isNotFull) {
             body = NewVaultPage(group: group);
           } else {
             body = VaultPage(group: group);
