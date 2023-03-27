@@ -105,7 +105,7 @@ class _LoadingPageState extends State<LoadingPage> {
           textString: 'Guardian rejected your request to join Vault.',
           icon: const IconOf.shield(isBig: true, bage: BageType.error),
           footer: PrimaryButton(
-            text: 'Done',
+            text: 'Close',
             onPressed: Navigator.of(context).pop,
           ),
         ),
@@ -139,9 +139,9 @@ class _LoadingPageState extends State<LoadingPage> {
         isDismissible: false,
         isScrollControlled: true,
         builder: (final BuildContext context) => BottomSheetWidget(
-          titleString: 'Invalid QR Code',
-          textString:
-              'Please ask the Guardian to generate a new QR Code via dashboard.',
+          titleString: 'Invalid Code',
+          textString: 'Seems like the Code you’ve just used is not valid. '
+              'Ask Guardian to share a new code.',
           icon: const IconOf.shield(isBig: true, bage: BageType.error),
           footer: PrimaryButton(
             text: 'Done',
@@ -171,17 +171,22 @@ class _LoadingPageState extends State<LoadingPage> {
                 titleString: 'Update the app',
                 textString: 'Seems like your Guardian is using the latest '
                     'version of the Guardian Keyper. Please update the app.',
-                body: OutlinedButton(
-                  onPressed: () async => await launchUrl(Uri.parse(
-                    Platform.isAndroid
-                        ? 'https://play.google.com/store/apps/details?id=com.guardianlabs.keyper'
-                        : 'https://apps.apple.com/ua/app/guardian-keyper/id1637977332',
-                  )),
-                  child: const Text('Update'),
-                ),
-                footer: PrimaryButton(
-                  text: 'Close',
-                  onPressed: Navigator.of(context).pop,
+                footer: Column(
+                  children: [
+                    PrimaryButton(
+                      text: 'Close',
+                      onPressed: Navigator.of(context).pop,
+                    ),
+                    const Padding(padding: paddingTop20),
+                    TertiaryButton(
+                      text: 'Update',
+                      onPressed: () async => await launchUrl(Uri.parse(
+                        Platform.isAndroid
+                            ? 'https://play.google.com/store/apps/details?id=com.guardianlabs.keyper'
+                            : 'https://apps.apple.com/ua/app/guardian-keyper/id1637977332',
+                      )),
+                    )
+                  ],
                 ),
               ),
       ).then(Navigator.of(context).pop);
