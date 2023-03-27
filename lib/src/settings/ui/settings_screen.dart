@@ -3,7 +3,7 @@ import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 import '/src/core/ui/widgets/auth/auth.dart';
 
-import 'settings_provider.dart';
+import 'settings_presenter.dart';
 import 'pages/set_device_name_page.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -20,111 +20,108 @@ class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (_) => SettingsProvider(),
-        child: ScaffoldSafe(
-          child: Column(
-            children: [
-              // Header
-              const HeaderBar(
-                caption: 'Settings',
-                closeButton: HeaderBarCloseButton(),
-              ),
-              // Body
-              Expanded(
-                child: Consumer<SettingsProvider>(
-                  builder: (context, provider, _) => ListView(
-                    padding: paddingAll20,
-                    children: [
-                      // Change Device Name
-                      Padding(
-                        padding: paddingV6,
-                        child: ListTile(
-                          leading: const IconOf.shardOwner(),
-                          title: const Text('Change Guardian name'),
-                          subtitle: Text(
-                            provider.deviceName,
-                            style: textStyleSourceSansPro414Purple,
-                          ),
-                          trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                          onTap: () async {
-                            final newName = await Navigator.of(context).push(
-                              MaterialPageRoute<String>(
-                                maintainState: false,
-                                fullscreenDialog: true,
-                                builder: (_) => SetDeviceNamePage(
-                                  deviceName: provider.deviceName,
-                                ),
+  Widget build(final BuildContext context) => ScaffoldSafe(
+        child: Column(
+          children: [
+            // Header
+            const HeaderBar(
+              caption: 'Settings',
+              closeButton: HeaderBarCloseButton(),
+            ),
+            // Body
+            Expanded(
+              child: Consumer<SettingsPresenter>(
+                builder: (context, provider, _) => ListView(
+                  padding: paddingAll20,
+                  children: [
+                    // Change Device Name
+                    Padding(
+                      padding: paddingV6,
+                      child: ListTile(
+                        leading: const IconOf.shardOwner(),
+                        title: const Text('Change Guardian name'),
+                        subtitle: Text(
+                          provider.deviceName,
+                          style: textStyleSourceSansPro414Purple,
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                        onTap: () async {
+                          final newName = await Navigator.of(context).push(
+                            MaterialPageRoute<String>(
+                              maintainState: false,
+                              fullscreenDialog: true,
+                              builder: (_) => SetDeviceNamePage(
+                                deviceName: provider.deviceName,
                               ),
-                            );
-                            if (newName == null) return;
-                            await provider.setDeviceName(newName);
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(buildSnackBar(
-                                text: 'Device name was changed successfully.',
-                              ));
-                            }
-                          },
-                        ),
+                            ),
+                          );
+                          if (newName == null) return;
+                          await provider.setDeviceName(newName);
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(buildSnackBar(
+                              text: 'Device name was changed successfully.',
+                            ));
+                          }
+                        },
                       ),
-                      // Change PassCode
+                    ),
+                    // Change PassCode
+                    Padding(
+                      padding: paddingV6,
+                      child: ListTile(
+                        leading: const IconOf.passcode(),
+                        title: const Text('Passcode'),
+                        subtitle: Text(
+                          'Change authentication passcode',
+                          style: textStyleSourceSansPro414Purple,
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                        onTap: () => provider.passCode.isEmpty
+                            ? showCreatePassCode(
+                                context: context,
+                                onConfirmed: provider.setPassCode,
+                                onVibrate: provider.vibrate,
+                              )
+                            : showChangePassCode(
+                                context: context,
+                                onConfirmed: provider.setPassCode,
+                                currentPassCode: provider.passCode,
+                                onVibrate: provider.vibrate,
+                              ),
+                      ),
+                    ),
+                    // Toggle Biometrics
+                    if (provider.hasBiometrics)
                       Padding(
                         padding: paddingV6,
-                        child: ListTile(
-                          leading: const IconOf.passcode(),
-                          title: const Text('Passcode'),
-                          subtitle: Text(
-                            'Change authentication passcode',
-                            style: textStyleSourceSansPro414Purple,
+                        child: SwitchListTile.adaptive(
+                          secondary: const IconOf.biometricLogon(),
+                          title: const Text('Biometric login'),
+                          subtitle: const Text(
+                            'Easier, faster authentication with biometry',
                           ),
-                          trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                          onTap: () => provider.passCode.isEmpty
-                              ? showCreatePassCode(
-                                  context: context,
-                                  onConfirmed: provider.setPassCode,
-                                  onVibrate: provider.vibrate,
-                                )
-                              : showChangePassCode(
-                                  context: context,
-                                  onConfirmed: provider.setPassCode,
-                                  currentPassCode: provider.passCode,
-                                  onVibrate: provider.vibrate,
-                                ),
+                          value: provider.isBiometricsEnabled,
+                          onChanged: provider.setIsBiometricsEnabled,
                         ),
                       ),
-                      // Toggle Biometrics
-                      if (provider.hasBiometrics)
-                        Padding(
-                          padding: paddingV6,
-                          child: SwitchListTile.adaptive(
-                            secondary: const IconOf.biometricLogon(),
-                            title: const Text('Biometric login'),
-                            subtitle: const Text(
-                              'Easier, faster authentication with biometry',
-                            ),
-                            value: provider.isBiometricsEnabled,
-                            onChanged: provider.setIsBiometricsEnabled,
+                    // Toggle Bootstrap
+                    Padding(
+                        padding: paddingV6,
+                        child: SwitchListTile.adaptive(
+                          secondary: const IconOf.splitAndShare(),
+                          title: const Text('Proxy connection'),
+                          subtitle: const Text(
+                            'Connect through Keyper-operated proxy server',
                           ),
-                        ),
-                      // Toggle Bootstrap
-                      Padding(
-                          padding: paddingV6,
-                          child: SwitchListTile.adaptive(
-                            secondary: const IconOf.splitAndShare(),
-                            title: const Text('Proxy connection'),
-                            subtitle: const Text(
-                              'Connect through Keyper-operated proxy server',
-                            ),
-                            value: provider.isBootstrapEnabled,
-                            onChanged: provider.setIsBootstrapEnabled,
-                          )),
-                    ],
-                  ),
+                          value: provider.isBootstrapEnabled,
+                          onChanged: provider.setIsBootstrapEnabled,
+                        )),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
 }

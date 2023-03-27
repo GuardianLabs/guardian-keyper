@@ -6,8 +6,8 @@ import '/src/core/data/repository_root.dart';
 
 export 'package:provider/provider.dart';
 
-class SettingsProvider extends ChangeNotifier {
-  SettingsProvider({
+class SettingsPresenter extends ChangeNotifier {
+  SettingsPresenter({
     ServiceRoot? serviceRoot,
     RepositoryRoot? repositoryRoot,
   })  : _serviceRoot = serviceRoot ?? GetIt.I<ServiceRoot>(),
