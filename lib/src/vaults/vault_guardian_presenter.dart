@@ -1,9 +1,9 @@
-part of 'vault_controller.dart';
+part of 'vault_presenter.dart';
 
-class VaultGuardianController extends VaultControllerBase {
+class VaultGuardianPresenter extends VaultPresenterBase {
   MessageModel? _qrCode;
 
-  VaultGuardianController({required super.pages, super.currentPage});
+  VaultGuardianPresenter({required super.pages, super.currentPage});
 
   MessageModel? get qrCode => _qrCode;
 

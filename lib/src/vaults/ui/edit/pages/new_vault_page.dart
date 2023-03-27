@@ -35,7 +35,7 @@ class NewVaultPage extends StatelessWidget {
             child: PrimaryButton(
               text: 'Add a Guardian',
               onPressed: () => Navigator.of(context).pushNamed(
-                routeGroupAddGuardian,
+                routeVaultAddGuardian,
                 arguments: group.id,
               ),
             ),

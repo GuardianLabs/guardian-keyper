@@ -4,12 +4,12 @@ import '/src/core/service/service_root.dart';
 import '/src/core/data/repository_root.dart';
 import '/src/core/ui/page_presenter_base.dart';
 
-part 'vault_secret_controller.dart';
-part 'vault_guardian_controller.dart';
+part 'vault_secret_presenter.dart';
+part 'vault_guardian_presenter.dart';
 
 typedef Callback = void Function(MessageModel message);
 
-abstract class VaultControllerBase extends PagePresenterBase {
+abstract class VaultPresenterBase extends PagePresenterBase {
   final serviceRoot = GetIt.I<ServiceRoot>();
   final repositoryRoot = GetIt.I<RepositoryRoot>();
 
@@ -22,7 +22,7 @@ abstract class VaultControllerBase extends PagePresenterBase {
 
   Timer? timer;
 
-  VaultControllerBase({required super.pages, super.currentPage});
+  VaultPresenterBase({required super.pages, super.currentPage});
 
   bool get isWaiting => timer?.isActive == true;
 
@@ -57,7 +57,7 @@ abstract class VaultControllerBase extends PagePresenterBase {
         message: message.copyWith(peerId: myPeerId),
       );
 
-  VaultModel? getGroupById(final VaultId groupId) =>
+  VaultModel? getVaultById(final VaultId groupId) =>
       repositoryRoot.vaultRepository.get(groupId.asKey);
 
   Future<VaultModel> createGroup(final VaultModel group) async {
@@ -67,14 +67,14 @@ abstract class VaultControllerBase extends PagePresenterBase {
   }
 
   Future<VaultModel> addGuardian(
-    final VaultId groupId,
+    final VaultId vaultId,
     final PeerId guardian,
   ) async {
-    var group = repositoryRoot.vaultRepository.get(groupId.asKey)!;
-    group = group.copyWith(
-      guardians: {...group.guardians, guardian: ''},
+    var vault = repositoryRoot.vaultRepository.get(vaultId.asKey)!;
+    vault = vault.copyWith(
+      guardians: {...vault.guardians, guardian: ''},
     );
-    await repositoryRoot.vaultRepository.put(groupId.asKey, group);
-    return group;
+    await repositoryRoot.vaultRepository.put(vaultId.asKey, vault);
+    return vault;
   }
 }

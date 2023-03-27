@@ -5,16 +5,16 @@ import '/src/core/ui/theme/theme.dart';
 import '/src/core/data/core_model.dart';
 import '/src/core/service/service_root.dart';
 
-class OnlineStatusWidget extends StatefulWidget {
+class OnlineStatusText extends StatefulWidget {
   final PeerId peerId;
 
-  const OnlineStatusWidget({super.key, required this.peerId});
+  const OnlineStatusText({super.key, required this.peerId});
 
   @override
-  State<OnlineStatusWidget> createState() => _OnlineStatusWidgetState();
+  State<OnlineStatusText> createState() => _OnlineStatusTextState();
 }
 
-class _OnlineStatusWidgetState extends State<OnlineStatusWidget> {
+class _OnlineStatusTextState extends State<OnlineStatusText> {
   final _networkService = GetIt.I<ServiceRoot>().networkService;
   late Timer _timer;
 

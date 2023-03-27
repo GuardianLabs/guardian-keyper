@@ -21,7 +21,7 @@ class VaultListTile extends StatelessWidget {
         trailing: const Icon(Icons.arrow_forward_ios_rounded, color: clWhite),
         onTap: () => Navigator.pushNamed(
           context,
-          routeGroupEdit,
+          routeVaultEdit,
           arguments: group.id,
         ),
       );

@@ -10,7 +10,7 @@ import 'pages/split_and_share_page.dart';
 import 'pages/secret_transmitting_page.dart';
 
 class VaultAddSecretScreen extends StatelessWidget {
-  static const routeName = routeGroupAddSecret;
+  static const routeName = routeVaultAddSecret;
 
   static const _pages = [
     AddNamePage(),

@@ -2,12 +2,12 @@ import '/src/core/consts.dart';
 import '/src/core/data/core_model.dart';
 import '/src/core/ui/widgets/common.dart';
 
-import 'vault_add_guardian_controller.dart';
+import 'vault_add_guardian_presenter.dart';
 import 'pages/get_code_page.dart';
 import 'pages/loading_page.dart';
 
 class VaultAddGuardianScreen extends StatelessWidget {
-  static const routeName = routeGroupAddGuardian;
+  static const routeName = routeVaultAddGuardian;
 
   static const _pages = [
     GetCodePage(),
@@ -19,23 +19,23 @@ class VaultAddGuardianScreen extends StatelessWidget {
         settings: settings,
         fullscreenDialog: true,
         builder: (_) => VaultAddGuardianScreen(
-          groupId: settings.arguments as VaultId,
+          vaultId: settings.arguments as VaultId,
         ),
       );
 
-  final VaultId groupId;
+  final VaultId vaultId;
 
-  const VaultAddGuardianScreen({super.key, required this.groupId});
+  const VaultAddGuardianScreen({super.key, required this.vaultId});
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (_) => VaultAddGuardianController(
+        create: (_) => VaultAddGuardianPresenter(
           pages: _pages,
-          groupId: groupId,
+          vaultId: vaultId,
         ),
         lazy: false,
         child: ScaffoldSafe(
-          child: Selector<VaultAddGuardianController, int>(
+          child: Selector<VaultAddGuardianPresenter, int>(
             selector: (_, controller) => controller.currentPage,
             builder: (_, currentPage, __) => AnimatedSwitcher(
               duration: pageChangeDuration,

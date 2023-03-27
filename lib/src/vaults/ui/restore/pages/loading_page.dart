@@ -3,7 +3,7 @@ import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 import '/src/core/data/core_model.dart';
 
-import '../restore_group_controller.dart';
+import '../vault_restore_presenter.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -13,17 +13,17 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  late final _controller = context.read<VaultRestoreGroupController>();
+  late final _controller = context.read<VaultRestorePresenter>();
 
   @override
   void initState() {
     super.initState();
-    _controller.startRequest(
-      onSuccess: _showSuccess,
-      onReject: _showRejected,
-      onDuplicate: _showDuplicated,
-      onFail: _showError,
-    );
+    Future.microtask(() => _controller.startRequest(
+          onDuplicate: _showDuplicated,
+          onSuccess: _showSuccess,
+          onReject: _showRejected,
+          onFail: _showError,
+        ));
   }
 
   @override
@@ -50,7 +50,7 @@ class _LoadingPageState extends State<LoadingPage> {
                 children: [
                   Padding(
                     padding: paddingTop20,
-                    child: Selector<VaultRestoreGroupController, bool>(
+                    child: Selector<VaultRestorePresenter, bool>(
                       selector: (_, controller) => controller.isWaiting,
                       builder: (_, isWaiting, indicator) => Visibility(
                         visible: isWaiting,
@@ -67,7 +67,7 @@ class _LoadingPageState extends State<LoadingPage> {
                         children: buildTextWithId(
                           leadingText: 'Awaiting ',
                           id: context
-                              .read<VaultRestoreGroupController>()
+                              .read<VaultRestorePresenter>()
                               .qrCode!
                               .peerId,
                           trailingText: '’s response',
@@ -82,68 +82,54 @@ class _LoadingPageState extends State<LoadingPage> {
         ],
       );
 
-  void _showSuccess(final MessageModel message) {
-    final count = message.recoveryGroup.maxSize - message.recoveryGroup.size;
-    count == 0
-        ? showModalBottomSheet(
-            context: context,
-            isDismissible: false,
-            isScrollControlled: true,
-            builder: (final BuildContext context) => BottomSheetWidget(
-              icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
-              titleString: 'Ownership Changed',
-              textSpan: buildTextWithId(
-                leadingText: 'The ownership of the Vault ',
-                id: message.groupId,
-                trailingText: ' has been transferred to your device.',
-              ),
-              footer: PrimaryButton(
-                text: 'Done',
-                onPressed: Navigator.of(context).pop,
-              ),
-            ),
-          ).then(Navigator.of(context).pop)
-        : showModalBottomSheet(
-            context: context,
-            isDismissible: false,
-            isScrollControlled: true,
-            useRootNavigator: true,
-            builder: (final BuildContext context) => BottomSheetWidget(
-              icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
-              titleString: 'Ownership Transfer Approved',
-              textSpan: [
-                ...buildTextWithId(
-                  id: message.peerId,
-                  trailingText:
-                      ' approved the transfer of ownership for the Vault ',
+  void _showSuccess(final MessageModel message) =>
+      message.recoveryGroup.missed == 0
+          ? showModalBottomSheet(
+              context: context,
+              isDismissible: false,
+              isScrollControlled: true,
+              builder: (final BuildContext context) => BottomSheetWidget(
+                icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
+                titleString: 'Ownership Changed',
+                textSpan: buildTextWithId(
+                  leadingText: 'The ownership of the Vault ',
+                  id: message.groupId,
+                  trailingText: ' has been transferred to your device.',
                 ),
-                ...buildTextWithId(id: message.groupId),
-              ],
-              body: Padding(
-                padding: paddingV20,
-                child: Container(
-                  decoration: boxDecoration,
-                  padding: paddingAll20,
-                  child: Text(
-                    'Get $count more approvals from other Guardians '
-                    'of the Vault to finish the restoration.',
-                    style: textStyleSourceSansPro416,
+                footer: PrimaryButton(
+                  text: 'Done',
+                  onPressed: Navigator.of(context).pop,
+                ),
+              ),
+            ).then(Navigator.of(context).pop)
+          : showModalBottomSheet(
+              context: context,
+              isDismissible: false,
+              isScrollControlled: true,
+              useRootNavigator: true,
+              builder: (final BuildContext context) => BottomSheetWidget(
+                icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
+                titleString: 'Ownership Transfer Approved',
+                textSpan: [
+                  ...buildTextWithId(
+                    id: message.peerId,
+                    trailingText:
+                        ' approved the transfer of ownership for the Vault ',
                   ),
+                  ...buildTextWithId(id: message.groupId),
+                ],
+                footer: PrimaryButton(
+                  text: 'Add another Guardian',
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushReplacementNamed(
+                      routeVaultRestore,
+                      arguments: message.groupId,
+                    );
+                  },
                 ),
               ),
-              footer: PrimaryButton(
-                text: 'Scan New QR Code',
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacementNamed(
-                    routeGroupRestoreGroup,
-                    arguments: true,
-                  );
-                },
-              ),
-            ),
-          );
-  }
+            );
 
   void _showRejected(final MessageModel message) => showModalBottomSheet(
         context: context,
@@ -187,10 +173,10 @@ class _LoadingPageState extends State<LoadingPage> {
         builder: (final BuildContext context) => BottomSheetWidget(
           icon: const IconOf.owner(isBig: true),
           titleString: 'The Vault is yours',
-          textString: 'Seems like you are the owner of the group already. '
+          textString: 'Seems like you are the owner of the Vault already. '
               'No recovery required here.',
           footer: PrimaryButton(
-            text: 'Done',
+            text: 'Close',
             onPressed: Navigator.of(context).pop,
           ),
         ),
@@ -206,15 +192,9 @@ class _LoadingPageState extends State<LoadingPage> {
           textString:
               'We couldn’t finish scanning the QR Code.\nPlease try again.',
           footer: PrimaryButton(
-            text: 'Scan QR Code Again',
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushReplacementNamed(
-                routeGroupRestoreGroup,
-                arguments: true,
-              );
-            },
+            text: 'Close',
+            onPressed: Navigator.of(context).pop,
           ),
         ),
-      );
+      ).then(Navigator.of(context).pop);
 }

@@ -25,7 +25,7 @@ class VaultsPage extends StatelessWidget {
               padding: paddingAll20,
               child: PrimaryButton(
                 text: 'Add a new Vault',
-                onPressed: () => Navigator.pushNamed(context, routeGroupCreate),
+                onPressed: () => Navigator.pushNamed(context, routeVaultCreate),
               ),
             ),
             if (presenter.myVaults.isNotEmpty)

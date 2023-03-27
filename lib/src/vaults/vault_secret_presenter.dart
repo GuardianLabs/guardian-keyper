@@ -1,18 +1,18 @@
-part of 'vault_controller.dart';
+part of 'vault_presenter.dart';
 
-class VaultSecretController extends VaultControllerBase {
+class VaultSecretPresenter extends VaultPresenterBase {
   SecretId secretId;
   final VaultId groupId;
   late final VaultModel group;
   final Set<MessageModel> messages = {};
 
-  VaultSecretController({
+  VaultSecretPresenter({
     required super.pages,
     super.currentPage,
     required this.groupId,
     required this.secretId,
   }) {
-    group = getGroupById(groupId)!;
+    group = getVaultById(groupId)!;
   }
 
   void updateMessage(MessageModel message) {

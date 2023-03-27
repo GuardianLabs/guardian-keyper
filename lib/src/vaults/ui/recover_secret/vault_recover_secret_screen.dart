@@ -7,7 +7,7 @@ import 'pages/discovering_peers_page.dart';
 import 'pages/show_secret_page.dart';
 
 class VaultRecoverSecretScreen extends StatelessWidget {
-  static const routeName = routeGroupRecoverSecret;
+  static const routeName = routeVaultRecoverSecret;
 
   static const _pages = [
     DiscoveryPeersPage(),

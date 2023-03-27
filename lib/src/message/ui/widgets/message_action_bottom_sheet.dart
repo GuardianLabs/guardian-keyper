@@ -56,7 +56,7 @@ class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
   late final _animationController = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 3),
-  )..addListener(() => setState(() {}));
+  );
 
   late final _timer = Timer.periodic(
     _presenter.messageTTL,
@@ -78,6 +78,9 @@ class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
   void initState() {
     super.initState();
     _timer.isActive;
+    _animationController.addListener(() {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
