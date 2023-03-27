@@ -110,20 +110,32 @@ class ShardPage extends StatelessWidget {
             id: groupId,
             trailingText: '? This action cannot be undone.',
           ),
-          footer: PrimaryButton(
-            text: 'Confirm',
-            onPressed: () async {
-              Navigator.of(context).pop();
-              final message = await context
-                  .read<HomePresenter>()
-                  .createTakeVaultCode(groupId);
-              if (context.mounted) {
-                Navigator.of(context).pushNamed(
-                  routeQrCode,
-                  arguments: message,
-                );
-              }
-            },
+          footer: Column(
+            children: [
+              PrimaryButton(
+                text: 'Confirm',
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  final message = await context
+                      .read<HomePresenter>()
+                      .createTakeVaultCode(groupId);
+                  if (context.mounted) {
+                    Navigator.of(context).pushNamed(
+                      routeQrCode,
+                      arguments: message,
+                    );
+                  }
+                },
+              ),
+              const Padding(padding: paddingTop20),
+              SizedBox(
+                width: double.infinity,
+                child: TertiaryButton(
+                  text: 'Keep current Owner',
+                  onPressed: Navigator.of(context).pop,
+                ),
+              ),
+            ],
           ),
         ),
       );

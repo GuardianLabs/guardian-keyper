@@ -12,6 +12,7 @@ import 'ui/widgets/init_loader.dart';
 import '/src/home/ui/home_screen.dart';
 import '/src/home/ui/home_presenter.dart';
 import '/src/message/ui/message_presenter.dart';
+import '/src/settings/ui/settings_presenter.dart';
 
 class App extends StatelessWidget {
   static Future<void> init() async {
@@ -38,11 +39,14 @@ class App extends StatelessWidget {
               )
             : MultiProvider(
                 providers: [
-                  ChangeNotifierProvider<HomePresenter>(
-                    create: (_) => HomePresenter(pages: HomeScreen.pages),
+                  ChangeNotifierProvider<SettingsPresenter>(
+                    create: (_) => SettingsPresenter(),
                   ),
                   ChangeNotifierProvider<MessagesPresenter>(
                     create: (_) => MessagesPresenter(),
+                  ),
+                  ChangeNotifierProvider<HomePresenter>(
+                    create: (_) => HomePresenter(pages: HomeScreen.pages),
                   ),
                 ],
                 child: MaterialApp(
