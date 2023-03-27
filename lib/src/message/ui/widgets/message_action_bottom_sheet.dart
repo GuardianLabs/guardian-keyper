@@ -27,6 +27,7 @@ class MessageActionBottomSheet extends StatefulWidget {
   ) =>
       showModalBottomSheet(
         context: context,
+        useSafeArea: true,
         isScrollControlled: true,
         builder: (_) => MessageActionBottomSheet(
           title: titles[message.code]!,

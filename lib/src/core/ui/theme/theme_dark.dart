@@ -40,11 +40,8 @@ final themeDark = ThemeData.dark().copyWith(
   ),
   // Bottom Sheet
   bottomSheetTheme: const BottomSheetThemeData(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-    topLeft: radius8,
-    topRight: radius8,
-  ))),
+    shape: RoundedRectangleBorder(borderRadius: borderRadiusTop10),
+  ),
   // Card
   cardTheme: CardTheme(
     color: clSurface,
@@ -136,7 +133,7 @@ final themeDark = ThemeData.dark().copyWith(
   // TabBar
   tabBarTheme: TabBarTheme(
     indicator: const BoxDecoration(
-      borderRadius: borderRadiusTop,
+      borderRadius: borderRadiusTop10,
       color: clIndigo600,
     ),
     labelPadding: EdgeInsets.zero,

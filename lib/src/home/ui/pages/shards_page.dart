@@ -38,13 +38,32 @@ class ShardsPage extends StatelessWidget {
                         children: buildTextWithId(id: group.id),
                       ),
                     ),
+                    isThreeLine: true,
                     subtitle: RichText(
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      strutStyle: const StrutStyle(height: 1.5),
                       text: TextSpan(
                         style: textStyleSourceSansPro414Purple,
-                        children: buildTextWithId(id: group.ownerId),
+                        children: [
+                          TextSpan(
+                            style: textStyleSourceSansPro414Purple,
+                            children: buildTextWithId(id: group.ownerId),
+                          ),
+                          TextSpan(
+                            style: textStyleSourceSansPro414Purple,
+                            text: '\n${group.secrets.length} Shard(s)',
+                          ),
+                        ],
                       ),
                     ),
-                    trailing: const Icon(Icons.arrow_forward_ios),
+                    trailing: Container(
+                      width: 0,
+                      margin: paddingH20,
+                      alignment: Alignment.centerRight,
+                      child: const Icon(Icons.arrow_forward_ios),
+                    ),
+                    visualDensity: VisualDensity.standard,
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => ScaffoldSafe(

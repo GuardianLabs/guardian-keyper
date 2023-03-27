@@ -15,15 +15,15 @@ class HomePresenter extends PagePresenterBase {
 
   PeerId get myPeerId => _myPeerId;
 
-  Map<String, VaultModel> get myVaults => _myVaults;
-  Map<String, VaultModel> get guardedVaults => _guardedVaults;
+  Map<VaultId, VaultModel> get myVaults => _myVaults;
+  Map<VaultId, VaultModel> get guardedVaults => _guardedVaults;
 
   HomePresenter({required super.pages}) {
     // cache Vaults
     for (final vault in _repositoryRoot.vaultRepository.values) {
       vault.ownerId == _myPeerId
-          ? _myVaults[vault.aKey] = vault
-          : _guardedVaults[vault.aKey] = vault;
+          ? _myVaults[vault.id] = vault
+          : _guardedVaults[vault.id] = vault;
     }
     // subscribe to updates
     _vaultsUpdatesSubscription =
@@ -38,8 +38,8 @@ class HomePresenter extends PagePresenterBase {
   late final StreamSubscription<BoxEvent> _vaultsUpdatesSubscription;
   late final StreamSubscription<MapEntry> _settingsUpdatesSubscription;
 
-  final _myVaults = <String, VaultModel>{};
-  final _guardedVaults = <String, VaultModel>{};
+  final _myVaults = <VaultId, VaultModel>{};
+  final _guardedVaults = <VaultId, VaultModel>{};
 
   late var _myPeerId = PeerId(
     token: _serviceRoot.networkService.myId,
@@ -82,13 +82,13 @@ class HomePresenter extends PagePresenterBase {
 
   void _onVaultsUpdate(final BoxEvent event) {
     if (event.deleted) {
-      _guardedVaults.remove(event.key as String);
-      _myVaults.remove(event.key as String);
+      _myVaults.removeWhere((_, v) => v.aKey == event.key);
+      _guardedVaults.removeWhere((_, v) => v.aKey == event.key);
     } else {
       final vault = event.value as VaultModel;
       vault.ownerId == myPeerId
-          ? _myVaults[vault.aKey] = vault
-          : _guardedVaults[vault.aKey] = vault;
+          ? _myVaults[vault.id] = vault
+          : _guardedVaults[vault.id] = vault;
     }
     notifyListeners();
   }

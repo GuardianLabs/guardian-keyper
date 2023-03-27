@@ -10,6 +10,7 @@ import '/src/core/ui/theme/theme.dart';
 import 'ui/widgets/init_loader.dart';
 
 import '/src/home/ui/home_screen.dart';
+import '/src/home/ui/home_presenter.dart';
 import '/src/message/ui/message_presenter.dart';
 
 class App extends StatelessWidget {
@@ -35,8 +36,15 @@ class App extends StatelessWidget {
                 darkTheme: themeDark,
                 themeMode: ThemeMode.dark,
               )
-            : ChangeNotifierProvider(
-                create: (_) => MessagesPresenter(),
+            : MultiProvider(
+                providers: [
+                  ChangeNotifierProvider<HomePresenter>(
+                    create: (_) => HomePresenter(pages: HomeScreen.pages),
+                  ),
+                  ChangeNotifierProvider<MessagesPresenter>(
+                    create: (_) => MessagesPresenter(),
+                  ),
+                ],
                 child: MaterialApp(
                   title: 'Guardian Keyper',
                   supportedLocales: const [Locale('en', '')],
