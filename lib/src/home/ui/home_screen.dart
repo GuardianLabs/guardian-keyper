@@ -90,45 +90,42 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       );
 
   @override
-  Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (_) => HomePresenter(pages: HomeScreen.pages),
-        child: Selector<HomePresenter, int>(
-          selector: (_, controller) => controller.currentPage,
-          builder: (context, currentPage, _) => Scaffold(
-            primary: true,
-            resizeToAvoidBottomInset: true,
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: currentPage,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: IconOf.navBarHome(),
-                  activeIcon: IconOf.navBarHomeSelected(),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: IconOf.navBarKey(),
-                  activeIcon: IconOf.navBarKeySelected(),
-                  label: 'Vaults',
-                ),
-                BottomNavigationBarItem(
-                  icon: IconOf.navBarShield(),
-                  activeIcon: IconOf.navBarShieldSelected(),
-                  label: 'Shards',
-                ),
-                BottomNavigationBarItem(
-                  icon: MessagesIcon(),
-                  activeIcon: MessagesIcon.selected(),
-                  label: 'Messages',
-                ),
-              ],
-              onTap: (value) => context.read<HomePresenter>().gotoScreen(value),
-            ),
-            body: DoubleBackToCloseApp(
-              snackBar: const SnackBar(
-                content: Text('Tap back again to exit'),
+  Widget build(final BuildContext context) => Selector<HomePresenter, int>(
+        selector: (_, controller) => controller.currentPage,
+        builder: (context, currentPage, _) => Scaffold(
+          primary: true,
+          resizeToAvoidBottomInset: true,
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: currentPage,
+            items: const [
+              BottomNavigationBarItem(
+                icon: IconOf.navBarHome(),
+                activeIcon: IconOf.navBarHomeSelected(),
+                label: 'Home',
               ),
-              child: SafeArea(child: HomeScreen.pages[currentPage]),
+              BottomNavigationBarItem(
+                icon: IconOf.navBarKey(),
+                activeIcon: IconOf.navBarKeySelected(),
+                label: 'Vaults',
+              ),
+              BottomNavigationBarItem(
+                icon: IconOf.navBarShield(),
+                activeIcon: IconOf.navBarShieldSelected(),
+                label: 'Shards',
+              ),
+              BottomNavigationBarItem(
+                icon: MessagesIcon(),
+                activeIcon: MessagesIcon.selected(),
+                label: 'Messages',
+              ),
+            ],
+            onTap: (value) => context.read<HomePresenter>().gotoScreen(value),
+          ),
+          body: DoubleBackToCloseApp(
+            snackBar: const SnackBar(
+              content: Text('Tap back again to exit'),
             ),
+            child: SafeArea(child: HomeScreen.pages[currentPage]),
           ),
         ),
       );

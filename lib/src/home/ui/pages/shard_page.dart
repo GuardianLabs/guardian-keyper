@@ -113,6 +113,7 @@ class ShardPage extends StatelessWidget {
           footer: PrimaryButton(
             text: 'Confirm',
             onPressed: () async {
+              Navigator.of(context).pop();
               final message = await context
                   .read<HomePresenter>()
                   .createTakeVaultCode(groupId);

@@ -434,7 +434,7 @@ List<TextSpan> buildTextWithId({
     [
       if (leadingText != null) TextSpan(text: leadingText),
       TextSpan(
-        text: '${id.name} ',
+        text: '${id.name}  ',
         style: isIdBold
             ? style?.copyWith(fontWeight: FontWeight.w600) ?? textStyleBold
             : style,

@@ -19,7 +19,7 @@ class MessagesPage extends StatelessWidget {
               title: const Text('Messages'),
               bottom: const TabBar(
                 tabs: _tabs,
-                splashBorderRadius: borderRadiusTop,
+                splashBorderRadius: borderRadiusTop10,
               ),
             ),
             // Body

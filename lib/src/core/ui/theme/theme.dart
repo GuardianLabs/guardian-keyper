@@ -24,7 +24,7 @@ const paddingBottom32 = EdgeInsets.only(bottom: 32);
 
 const radius8 = Radius.circular(8);
 
-const borderRadiusTop = BorderRadius.vertical(top: radius8);
+const borderRadiusTop10 = BorderRadius.vertical(top: Radius.circular(10));
 
 final borderRadius = BorderRadius.circular(8);
 
