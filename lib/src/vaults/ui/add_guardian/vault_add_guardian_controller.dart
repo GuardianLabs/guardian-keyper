@@ -11,14 +11,14 @@ class VaultAddGuardianController extends VaultGuardianController {
 
   VaultAddGuardianController({required super.pages, required this.groupId});
 
-  void startRequest({
+  Future<void> startRequest({
     required Callback onSuccess,
     required Callback onRejected,
     required Callback onFailed,
     required Callback onDuplicate,
     required Callback onAppVersion,
-  }) {
-    serviceRoot.analyticsService.logEvent(eventStartAddGuardian);
+  }) async {
+    await serviceRoot.analyticsService.logEvent(eventStartAddGuardian);
 
     if (qrCode == null ||
         qrCode!.timestamp.subtract(qrCodeExpires).isAfter(DateTime.now())) {

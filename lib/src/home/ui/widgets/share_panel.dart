@@ -48,7 +48,7 @@ class SharePanel extends StatelessWidget {
                       await context.read<HomePresenter>().createJoinVaultCode();
                   if (context.mounted) {
                     Navigator.of(context).pushNamed(
-                      routeQrCode,
+                      routeShowQrCode,
                       arguments: message,
                     );
                   }

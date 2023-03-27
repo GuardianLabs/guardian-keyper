@@ -43,7 +43,8 @@ class MessageModel extends Serializable {
   static const boxName = 'messages';
   static const typeId = 10;
 
-  static MessageModel? tryFromBase64(String value) {
+  static MessageModel? tryFromBase64(String? value) {
+    if (value == null) return null;
     try {
       return MessageModel.fromBase64(value);
     } catch (_) {

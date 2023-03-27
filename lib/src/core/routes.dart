@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '/src/intro/ui/intro_screen.dart';
-import '/src/message/ui/qr_code_screen.dart';
 import '/src/settings/ui/settings_screen.dart';
+import '/src/message/ui/show_qr_code_screen.dart';
+import '/src/message/ui/scan_qr_code_screen.dart';
 import '/src/vaults/ui/edit/vault_edit_screen.dart';
 import '/src/vaults/ui/create/vault_create_screen.dart';
 import '/src/vaults/ui/add_secret/vault_add_secret_screen.dart';
@@ -27,8 +28,10 @@ Route? onGenerateRoute(final RouteSettings routeSettings) {
       return VaultRestoreGroupScreen.getPageRoute(routeSettings);
 
     // Show QRCode
-    case QRCodeScreen.routeName:
-      return QRCodeScreen.getPageRoute(routeSettings);
+    case ShowQRCodeScreen.routeName:
+      return ShowQRCodeScreen.getPageRoute(routeSettings);
+    case ScanQRCodeScreen.routeName:
+      return ScanQRCodeScreen.getPageRoute(routeSettings);
 
     // Settings
     case SettingsScreen.routeName:

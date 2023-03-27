@@ -3,22 +3,21 @@ import '/src/core/data/core_model.dart';
 import '/src/core/ui/widgets/common.dart';
 
 import 'vault_add_guardian_controller.dart';
-import 'pages/scan_qrcode_page.dart';
+import 'pages/get_code_page.dart';
 import 'pages/loading_page.dart';
 
 class VaultAddGuardianScreen extends StatelessWidget {
   static const routeName = routeGroupAddGuardian;
 
   static const _pages = [
-    ScanQRCodePage(),
+    GetCodePage(),
     LoadingPage(),
   ];
 
   static MaterialPageRoute<void> getPageRoute(final RouteSettings settings) =>
       MaterialPageRoute<void>(
-        fullscreenDialog: true,
-        maintainState: false,
         settings: settings,
+        fullscreenDialog: true,
         builder: (_) => VaultAddGuardianScreen(
           groupId: settings.arguments as VaultId,
         ),
@@ -30,7 +29,7 @@ class VaultAddGuardianScreen extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => VaultAddGuardianController(
+        create: (_) => VaultAddGuardianController(
           pages: _pages,
           groupId: groupId,
         ),

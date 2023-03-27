@@ -11,6 +11,7 @@ class MessagesPresenter extends ChangeNotifier {
   late final getPeerStatus = _messagesInteractor.getPeerStatus;
   late final pingPeer = _messagesInteractor.pingPeer;
 
+  PeerId get myPeerId => _messagesInteractor.myPeerId;
   List<MessageModel> get activeMessages => _activeMessages;
   List<MessageModel> get resolvedMessages => _resolvedMessages;
 
