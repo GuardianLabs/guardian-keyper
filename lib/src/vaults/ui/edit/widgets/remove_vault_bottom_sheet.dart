@@ -41,7 +41,7 @@ class RemoveVaultBottomSheet extends StatelessWidget {
                           .delete(group.aKey);
                       if (context.mounted) {
                         Navigator.of(context).popUntil(
-                          ModalRoute.withName(routeGroupEdit),
+                          ModalRoute.withName(routeVaultEdit),
                         );
                       }
                     },

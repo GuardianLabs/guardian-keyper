@@ -43,7 +43,7 @@ class InputNamePage extends StatelessWidget {
                         : () => controller.createVault().then(
                               (vault) => Navigator.popAndPushNamed(
                                 context,
-                                routeGroupEdit,
+                                routeVaultEdit,
                                 arguments: vault.id,
                               ),
                             ),

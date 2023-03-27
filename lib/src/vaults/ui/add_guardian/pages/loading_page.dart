@@ -6,7 +6,7 @@ import '/src/core/data/core_model.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 
-import '../vault_add_guardian_controller.dart';
+import '../vault_add_guardian_presenter.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -16,15 +16,15 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  late final _controller = context.read<VaultAddGuardianController>();
+  late final _controller = context.read<VaultAddGuardianPresenter>();
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() => _controller.startRequest(
+          onFailed: _onFailed,
           onSuccess: _onSuccess,
           onRejected: _onRejected,
-          onFailed: _onFailed,
           onDuplicate: _onDuplicate,
           onAppVersion: _onAppVersion,
         ));
@@ -54,7 +54,7 @@ class _LoadingPageState extends State<LoadingPage> {
                 children: [
                   Padding(
                     padding: paddingTop20,
-                    child: Selector<VaultAddGuardianController, bool>(
+                    child: Selector<VaultAddGuardianPresenter, bool>(
                       selector: (_, controller) => controller.isWaiting,
                       builder: (_, isWaiting, indicator) => Visibility(
                         visible: isWaiting,
@@ -137,8 +137,8 @@ class _LoadingPageState extends State<LoadingPage> {
         ),
       ).then(
         (_) => Navigator.of(context).popAndPushNamed(
-          routeGroupAddGuardian,
-          arguments: _controller.groupId,
+          routeVaultAddGuardian,
+          arguments: _controller.vaultId,
         ),
       );
 

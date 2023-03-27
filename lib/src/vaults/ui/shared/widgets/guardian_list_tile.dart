@@ -2,7 +2,7 @@ import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 import '/src/core/data/core_model.dart';
 
-import 'online_status_widget.dart';
+import 'online_status_text.dart';
 
 class GuardianListTile extends StatelessWidget {
   final PeerId guardian;
@@ -28,7 +28,7 @@ class GuardianListTile extends StatelessWidget {
                 _buildLeading(),
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: OnlineStatusWidget(peerId: guardian),
+                  child: OnlineStatusText(peerId: guardian),
                 ),
               ])
             : _buildLeading(),

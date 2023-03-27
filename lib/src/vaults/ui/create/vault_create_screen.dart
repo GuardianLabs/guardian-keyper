@@ -7,7 +7,7 @@ import 'pages/choose_type_page.dart';
 import 'pages/input_name_page.dart';
 
 class VaultCreateScreen extends StatelessWidget {
-  static const routeName = routeGroupCreate;
+  static const routeName = routeVaultCreate;
 
   static const _pages = [
     ChooseTypePage(),

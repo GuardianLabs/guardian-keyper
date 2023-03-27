@@ -3,11 +3,11 @@ import 'package:sss256/sss256.dart';
 import '/src/core/data/core_model.dart';
 import '/src/core/service/analytics_service.dart';
 
-import '../../vault_controller.dart';
+import '../../vault_presenter.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultAddSecretController extends VaultSecretController {
+class VaultAddSecretController extends VaultSecretPresenter {
   var _secretName = '';
   var _secret = '';
 

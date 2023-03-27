@@ -8,7 +8,7 @@ import 'pages/restricted_vault_page.dart';
 import 'widgets/remove_vault_bottom_sheet.dart';
 
 class VaultEditScreen extends StatelessWidget {
-  static const routeName = routeGroupEdit;
+  static const routeName = routeVaultEdit;
 
   static MaterialPageRoute<void> getPageRoute(final RouteSettings settings) =>
       MaterialPageRoute<void>(

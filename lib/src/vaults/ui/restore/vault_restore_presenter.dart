@@ -1,20 +1,23 @@
 import '/src/core/data/core_model.dart';
 import '/src/core/service/analytics_service.dart';
 
-import '../../vault_controller.dart';
+import '../../vault_presenter.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultRestoreGroupController extends VaultGuardianController {
-  VaultRestoreGroupController({required super.pages, super.currentPage});
+class VaultRestorePresenter extends VaultGuardianPresenter {
+  // TBD: check if vaultId is same as provided
+  final VaultId? vaultId;
 
-  void startRequest({
+  VaultRestorePresenter({required super.pages, this.vaultId});
+
+  Future<void> startRequest({
     required Callback onSuccess,
     required Callback onReject,
     required Callback onDuplicate,
     required Callback onFail,
-  }) {
-    serviceRoot.analyticsService.logEvent(eventStartRestoreVault);
+  }) async {
+    await serviceRoot.analyticsService.logEvent(eventStartRestoreVault);
     networkSubscription.onData(
       (message) {
         if (!isWaiting) return;
@@ -28,7 +31,7 @@ class VaultRestoreGroupController extends VaultGuardianController {
 
         if (message.isAccepted) {
           final guardian = qrCode!.peerId;
-          final existingGroup = getGroupById(message.groupId);
+          final existingGroup = getVaultById(message.groupId);
           if (existingGroup == null) {
             serviceRoot.analyticsService.logEvent(eventFinishRestoreVault);
             createGroup(message.recoveryGroup.copyWith(

@@ -1,17 +1,16 @@
 import '/src/core/consts.dart';
+import '/src/core/data/core_model.dart';
 import '/src/core/ui/widgets/common.dart';
 
-import 'restore_group_controller.dart';
-import 'pages/explainer_page.dart';
-import 'pages/scan_qr_code_page.dart';
+import 'vault_restore_presenter.dart';
+import 'pages/get_code_page.dart';
 import 'pages/loading_page.dart';
 
-class VaultRestoreGroupScreen extends StatelessWidget {
-  static const routeName = routeGroupRestoreGroup;
+class VaultRestoreScreen extends StatelessWidget {
+  static const routeName = routeVaultRestore;
 
   static const _pages = [
-    ExplainerPage(),
-    ScanQRCodePage(),
+    GetCodePage(),
     LoadingPage(),
   ];
 
@@ -19,24 +18,24 @@ class VaultRestoreGroupScreen extends StatelessWidget {
       MaterialPageRoute<void>(
         fullscreenDialog: true,
         settings: settings,
-        builder: (_) => VaultRestoreGroupScreen(
-          skipExplainer: settings.arguments as bool,
+        builder: (_) => VaultRestoreScreen(
+          vaultId: settings.arguments as VaultId?,
         ),
       );
 
-  final bool skipExplainer;
+  final VaultId? vaultId;
 
-  const VaultRestoreGroupScreen({super.key, this.skipExplainer = false});
+  const VaultRestoreScreen({super.key, required this.vaultId});
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => VaultRestoreGroupController(
+        create: (_) => VaultRestorePresenter(
           pages: _pages,
-          currentPage: skipExplainer ? 1 : 0,
+          vaultId: vaultId,
         ),
         lazy: false,
         child: ScaffoldSafe(
-          child: Selector<VaultRestoreGroupController, int>(
+          child: Selector<VaultRestorePresenter, int>(
             selector: (_, controller) => controller.currentPage,
             builder: (_, currentPage, __) => AnimatedSwitcher(
               duration: pageChangeDuration,

@@ -6,11 +6,11 @@ import '/src/core/data/core_model.dart';
 import '/src/core/service/analytics_service.dart';
 import '/src/core/ui/widgets/auth/auth.dart';
 
-import '../../vault_controller.dart';
+import '../../vault_presenter.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultRecoverySecretController extends VaultSecretController {
+class VaultRecoverySecretController extends VaultSecretPresenter {
   String secret = '';
 
   VaultRecoverySecretController({

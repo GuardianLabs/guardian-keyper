@@ -35,7 +35,7 @@ class VaultPage extends StatelessWidget {
             child: PrimaryButton(
               text: 'Add a Secret',
               onPressed: () => Navigator.of(context).pushNamed(
-                routeGroupAddSecret,
+                routeVaultAddSecret,
                 arguments: group.id,
               ),
             ),

@@ -1,11 +1,11 @@
 import '/src/core/data/core_model.dart';
 import '/src/core/service/analytics_service.dart';
 
-import '../../vault_controller.dart';
+import '../../vault_presenter.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultCreateController extends VaultControllerBase {
+class VaultCreateController extends VaultPresenterBase {
   var _groupSize = 3;
   var _groupThreshold = 2;
   var _isGroupMember = false;

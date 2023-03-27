@@ -2,14 +2,14 @@ import '/src/core/consts.dart';
 import '/src/core/data/core_model.dart';
 import '/src/core/service/analytics_service.dart';
 
-import '../../vault_controller.dart';
+import '../../vault_presenter.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultAddGuardianController extends VaultGuardianController {
-  final VaultId groupId;
+class VaultAddGuardianPresenter extends VaultGuardianPresenter {
+  final VaultId vaultId;
 
-  VaultAddGuardianController({required super.pages, required this.groupId});
+  VaultAddGuardianPresenter({required super.pages, required this.vaultId});
 
   Future<void> startRequest({
     required Callback onSuccess,
@@ -27,7 +27,7 @@ class VaultAddGuardianController extends VaultGuardianController {
     if (qrCode!.version != MessageModel.currentVersion) {
       return onAppVersion(qrCode!);
     }
-    if (getGroupById(groupId)?.guardians.containsKey(qrCode?.peerId) ?? false) {
+    if (getVaultById(vaultId)?.guardians.containsKey(qrCode?.peerId) ?? false) {
       return onDuplicate(qrCode!);
     }
 
@@ -38,12 +38,12 @@ class VaultAddGuardianController extends VaultGuardianController {
         if (message.hasNoResponse) return;
         if (message.code != MessageCode.createGroup) return;
         if (message.peerId != qrCode!.peerId) return;
-        if (message.groupId != groupId) return;
+        if (message.groupId != vaultId) return;
         stopListenResponse();
         switch (message.status) {
           case MessageStatus.accepted:
             serviceRoot.analyticsService.logEvent(eventFinishAddGuardian);
-            addGuardian(groupId, message.peerId);
+            addGuardian(vaultId, message.peerId);
             onSuccess(message);
             break;
           case MessageStatus.rejected:
@@ -58,7 +58,7 @@ class VaultAddGuardianController extends VaultGuardianController {
     );
 
     startNetworkRequest(([_]) {
-      sendToGuardian(qrCode!.copyWith(payload: getGroupById(groupId)));
+      sendToGuardian(qrCode!.copyWith(payload: getVaultById(vaultId)));
     });
   }
 }

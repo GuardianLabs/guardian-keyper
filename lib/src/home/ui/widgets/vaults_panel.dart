@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '/src/core/consts.dart';
 import '/src/core/ui/theme/theme.dart';
 
 import '../home_presenter.dart';
@@ -29,9 +30,10 @@ class VaultsPanel extends StatelessWidget {
             Padding(
               padding: paddingBottom20,
               child: Text(
-                'Create a Vault to secure your Secret with the help of your Guardians.',
+                'Create a Vault to secure your Secret '
+                'with the help of your Guardians.',
+                style: textStyleSourceSansPro416Purple,
                 textAlign: TextAlign.left,
-                style: textStyleSourceSansPro416.copyWith(color: clPurpleLight),
               ),
             ),
             // My Vaults
@@ -56,10 +58,7 @@ class VaultsPanel extends StatelessWidget {
             Padding(
               padding: paddingV6,
               child: GestureDetector(
-                onTap: () => Navigator.of(context).pushNamed(
-                  '/recovery_group/restore',
-                  arguments: false,
-                ),
+                onTap: () => Navigator.of(context).pushNamed(routeVaultRestore),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: borderRadius,

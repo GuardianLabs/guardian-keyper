@@ -128,7 +128,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
             child: PrimaryButton(
               text: 'Done',
               onPressed: () => Navigator.of(context)
-                  .popUntil(ModalRoute.withName(routeGroupEdit)),
+                  .popUntil(ModalRoute.withName(routeVaultEdit)),
             ),
           ),
         ),
@@ -151,7 +151,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
             child: PrimaryButton(
               text: 'Close',
               onPressed: () => Navigator.of(context)
-                  .popUntil(ModalRoute.withName(routeGroupEdit)),
+                  .popUntil(ModalRoute.withName(routeVaultEdit)),
             ),
           ),
         ),
