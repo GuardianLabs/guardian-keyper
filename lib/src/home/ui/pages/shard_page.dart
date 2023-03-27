@@ -121,7 +121,7 @@ class ShardPage extends StatelessWidget {
                       .createTakeVaultCode(groupId);
                   if (context.mounted) {
                     Navigator.of(context).pushNamed(
-                      routeQrCode,
+                      routeShowQrCode,
                       arguments: message,
                     );
                   }

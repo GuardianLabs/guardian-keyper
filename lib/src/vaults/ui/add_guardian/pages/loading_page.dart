@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 
 import '/src/core/consts.dart';
+import '/src/core/data/core_model.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
-import '/src/core/data/core_model.dart';
 
 import '../vault_add_guardian_controller.dart';
 
@@ -16,14 +16,19 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  late final _controller = context.read<VaultAddGuardianController>()
-    ..startRequest(
-      onSuccess: _onSuccess,
-      onRejected: _onRejected,
-      onFailed: _onFailed,
-      onDuplicate: _onDuplicate,
-      onAppVersion: _onAppVersion,
-    );
+  late final _controller = context.read<VaultAddGuardianController>();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => _controller.startRequest(
+          onSuccess: _onSuccess,
+          onRejected: _onRejected,
+          onFailed: _onFailed,
+          onDuplicate: _onDuplicate,
+          onAppVersion: _onAppVersion,
+        ));
+  }
 
   @override
   void dispose() {
@@ -131,7 +136,10 @@ class _LoadingPageState extends State<LoadingPage> {
           ),
         ),
       ).then(
-        (_) => Navigator.of(context).popAndPushNamed(routeGroupAddGuardian),
+        (_) => Navigator.of(context).popAndPushNamed(
+          routeGroupAddGuardian,
+          arguments: _controller.groupId,
+        ),
       );
 
   void _onFailed([MessageModel? qrCode]) => showModalBottomSheet(

@@ -13,7 +13,6 @@ class VaultEditScreen extends StatelessWidget {
   static MaterialPageRoute<void> getPageRoute(final RouteSettings settings) =>
       MaterialPageRoute<void>(
         fullscreenDialog: true,
-        maintainState: false,
         settings: settings,
         builder: (_) => VaultEditScreen(groupId: settings.arguments as VaultId),
       );

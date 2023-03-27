@@ -18,7 +18,6 @@ class VaultCreateScreen extends StatelessWidget {
   static MaterialPageRoute<void> getPageRoute(final RouteSettings settings) =>
       MaterialPageRoute<void>(
         fullscreenDialog: true,
-        maintainState: false,
         settings: settings,
         builder: (_) => const VaultCreateScreen(),
       );

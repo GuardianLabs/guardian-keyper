@@ -10,29 +10,28 @@ import '/src/core/data/repository_root.dart';
 
 import 'widgets/message_action_bottom_sheet.dart';
 
-class QRCodeScreen extends StatefulWidget {
-  static const routeName = routeQrCode;
+class ShowQRCodeScreen extends StatefulWidget {
+  static const routeName = routeShowQrCode;
 
   static MaterialPageRoute<void> getPageRoute(final RouteSettings settings) =>
       MaterialPageRoute<void>(
         fullscreenDialog: true,
-        maintainState: false,
         settings: settings,
         builder: (context) {
           final message = settings.arguments as MessageModel;
-          return QRCodeScreen(key: Key(message.aKey), message: message);
+          return ShowQRCodeScreen(key: Key(message.aKey), message: message);
         },
       );
 
   final MessageModel message;
 
-  const QRCodeScreen({super.key, required this.message});
+  const ShowQRCodeScreen({super.key, required this.message});
 
   @override
-  State<QRCodeScreen> createState() => _QRCodeScreenState();
+  State<ShowQRCodeScreen> createState() => _ShowQRCodeScreenState();
 }
 
-class _QRCodeScreenState extends State<QRCodeScreen> {
+class _ShowQRCodeScreenState extends State<ShowQRCodeScreen> {
   static const _caption = {
     MessageCode.createGroup: 'Become a Guardian',
     MessageCode.takeGroup: 'Change owner',

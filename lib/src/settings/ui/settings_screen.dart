@@ -12,7 +12,6 @@ class SettingsScreen extends StatelessWidget {
   static MaterialPageRoute<void> getPageRoute(final RouteSettings settings) =>
       MaterialPageRoute<void>(
         fullscreenDialog: true,
-        maintainState: false,
         settings: settings,
         builder: (_) => const SettingsScreen(),
       );
@@ -48,7 +47,6 @@ class SettingsScreen extends StatelessWidget {
                         onTap: () async {
                           final newName = await Navigator.of(context).push(
                             MaterialPageRoute<String>(
-                              maintainState: false,
                               fullscreenDialog: true,
                               builder: (_) => SetDeviceNamePage(
                                 deviceName: provider.deviceName,
