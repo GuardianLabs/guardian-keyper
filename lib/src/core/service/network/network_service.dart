@@ -9,33 +9,43 @@ import 'package:nsd/nsd.dart';
 import '/src/core/consts.dart';
 import '/src/core/data/core_model.dart';
 
-part 'network_service_base.dart';
 part 'network_service_mdns_handler.dart';
 part 'network_service_connectivity_handler.dart';
 
-class NetworkService extends NetworkServiceBase
-    with ConnectivityHandler, MdnsHandler {
+class NetworkService with ConnectivityHandler, MdnsHandler {
+  NetworkService()
+      : _router = p2p.RouterL2(
+          logger: kDebugMode ? print : null,
+          keepalivePeriod: keepalivePeriod,
+        )
+          ..maxForwardsLimit = maxForwardsLimit
+          ..maxStoredHeaders = maxStoredHeaders;
+
+  Duration get messageTTL => _router.messageTTL;
+
+  PeerId get myPeerId => PeerId(token: _router.selfId.value);
+
   Stream<MessageModel> get messageStream => _messagesController.stream;
+
+  Stream<MapEntry<PeerId, bool>> get peerStatusChangeStream =>
+      _router.lastSeenStream
+          .map((e) => MapEntry(PeerId(token: e.key.value), e.value));
+
+  @override
+  final p2p.RouterL2 _router;
 
   final _messagesController = StreamController<MessageModel>.broadcast();
 
   p2p.Route? _bsServer;
 
   Future<Uint8List> init(Uint8List? seed) async {
-    for (final interface in await NetworkInterface.list()) {
-      _myAddresses.addAll(interface.addresses.map(
-        (a) => PeerAddress(address: a, port: defaultPort),
-      ));
-    }
-    final cryptoKeys = await router
+    final cryptoKeys = await _router
         .init(seed == null ? null : (p2p.CryptoKeys.empty()..seed = seed));
-    router.messageStream.listen(onMessage);
+    _router.messageStream.listen(onMessage);
     await _connectivityInit();
     await _initMdns();
-    if (kDebugMode) {
-      print(_myAddresses);
-      print(router.selfId);
-    }
+    if (kDebugMode) print(_router.selfId);
+
     return cryptoKeys.seed;
   }
 
@@ -43,12 +53,24 @@ class NetworkService extends NetworkServiceBase
     _connectivityType = await _connectivity.checkConnectivity();
     if (kDebugMode) print(_connectivityType);
     if (_connectivityType == ConnectivityResult.none) return;
-    await router.start();
-    if (_bsServer != null) router.sendMessage(dstPeerId: _bsServer!.peerId);
+    await _startMdns();
+    await _router.start();
+    if (_bsServer != null) {
+      _router.sendMessage(
+        dstPeerId: _bsServer!.peerId,
+        useAddresses: _bsServer!.addresses.keys,
+      );
+    }
+  }
+
+  Future<void> pause([void _]) async {
+    _router.stop();
+    await _pauseMdns();
   }
 
   Future<void> stop([void _]) async {
-    router.stop();
+    _router.stop();
+    await _stopMdns();
   }
 
   void onMessage(final p2p.Message p2pMessage) {
@@ -58,39 +80,57 @@ class NetworkService extends NetworkServiceBase
     _messagesController.add(message);
   }
 
+  bool getPeerStatus(final PeerId peerId) =>
+      _router.getPeerStatus(p2p.PeerId(value: peerId.token));
+
+  Future<bool> pingPeer(final PeerId peerId) =>
+      _router.pingPeer(p2p.PeerId(value: peerId.token));
+
+  Future<void> sendTo({
+    required final PeerId peerId,
+    required final MessageModel message,
+    required final bool isConfirmable,
+  }) async {
+    try {
+      await _router.sendMessage(
+        isConfirmable: isConfirmable,
+        dstPeerId: p2p.PeerId(value: peerId.token),
+        payload: message.toBytes(),
+      );
+    } catch (_) {
+      if (isConfirmable) rethrow;
+    }
+  }
+
+  void removeBootstrapServer(final String peerId) =>
+      _router.removePeerAddress(p2p.PeerId(value: base64Decode(peerId)));
+
   void addBootstrapServer(
-    String peerId, {
-    String ipV4 = '',
-    String ipV6 = '',
-    int? port,
+    final String peerId, {
+    final String ipV4 = '',
+    final String ipV6 = '',
+    final int? port,
   }) {
     final bsPeerId = p2p.PeerId(value: base64Decode(peerId));
-    if (ipV4.isEmpty && ipV6.isEmpty) {
-      _bsServer = null;
-      router.removePeerAddress(bsPeerId);
-    } else {
-      _bsServer = p2p.Route(
-        peerId: bsPeerId,
-        canForward: true,
-        addresses: {
-          if (ipV4.isNotEmpty && myAddresses.any((e) => e.isIPv4))
-            p2p.FullAddress(
-              address: InternetAddress(ipV4),
-              port: port ?? defaultPort,
-            ): p2p.AddressProperties(isStatic: true),
-          if (ipV6.isNotEmpty && myAddresses.any((e) => e.isIPv6))
-            p2p.FullAddress(
-              address: InternetAddress(ipV6),
-              port: port ?? defaultPort,
-            ): p2p.AddressProperties(isStatic: true),
-        },
-      );
-      router.routes[bsPeerId] = _bsServer!;
-      if (kDebugMode) {
-        print('See ${router.routes.length} existing routes');
-        print('Bootstrap addresses: ${router.routes[bsPeerId]?.addresses}');
-      }
-      if (router.isRun) router.sendMessage(dstPeerId: bsPeerId);
+    _bsServer = p2p.Route(
+      peerId: bsPeerId,
+      canForward: true,
+      addresses: {
+        p2p.FullAddress(
+          address: InternetAddress(ipV4),
+          port: port ?? defaultPort,
+        ): p2p.AddressProperties(isStatic: true),
+        p2p.FullAddress(
+          address: InternetAddress(ipV6),
+          port: port ?? defaultPort,
+        ): p2p.AddressProperties(isStatic: true),
+      },
+    );
+    _router.routes[bsPeerId] = _bsServer!;
+    if (kDebugMode) {
+      print('See ${_router.routes.length} existing routes');
+      print('Bootstrap addresses: ${_router.routes[bsPeerId]?.addresses}');
     }
+    if (_router.isRun) _router.sendMessage(dstPeerId: bsPeerId);
   }
 }

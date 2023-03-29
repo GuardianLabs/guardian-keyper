@@ -41,8 +41,7 @@ class HomePresenter extends PagePresenterBase {
   final _myVaults = <VaultId, VaultModel>{};
   final _guardedVaults = <VaultId, VaultModel>{};
 
-  late var _myPeerId = PeerId(
-    token: _serviceRoot.networkService.myId,
+  late var _myPeerId = _serviceRoot.networkService.myPeerId.copyWith(
     name: _repositoryRoot.settingsRepository.deviceName,
   );
 

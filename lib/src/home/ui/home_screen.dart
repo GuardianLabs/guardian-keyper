@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       await _serviceRoot.networkService.start();
     } else if (state != AppLifecycleState.inactive) {
       _isLocked = true;
-      await _serviceRoot.networkService.stop();
+      await _serviceRoot.networkService.pause();
       await _repositoryRoot.vaultRepository.flush();
       await _repositoryRoot.messageRepository.flush();
     }

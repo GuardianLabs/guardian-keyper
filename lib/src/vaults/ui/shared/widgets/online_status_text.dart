@@ -22,7 +22,7 @@ class _OnlineStatusTextState extends State<OnlineStatusText> {
   void initState() {
     super.initState();
     _timer = Timer.periodic(
-      _networkService.router.messageTTL,
+      _networkService.messageTTL,
       (_) => _networkService.pingPeer(widget.peerId),
     );
   }

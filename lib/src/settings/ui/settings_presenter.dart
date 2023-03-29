@@ -23,8 +23,7 @@ class SettingsPresenter extends ChangeNotifier {
       _repositoryRoot.settingsRepository.isBootstrapEnabled;
   bool get isBiometricsEnabled =>
       _repositoryRoot.settingsRepository.isBiometricsEnabled;
-  PeerId get myPeerId => PeerId(
-        token: _serviceRoot.networkService.myId,
+  PeerId get myPeerId => _serviceRoot.networkService.myPeerId.copyWith(
         name: _repositoryRoot.settingsRepository.deviceName,
       );
 

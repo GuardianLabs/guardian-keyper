@@ -10,7 +10,7 @@ export '/src/core/data/repository_root.dart';
 class MessagesInteractor {
   late final pingPeer = _serviceRoot.networkService.pingPeer;
   late final getPeerStatus = _serviceRoot.networkService.getPeerStatus;
-  late final messageTTL = _serviceRoot.networkService.router.messageTTL;
+  late final messageTTL = _serviceRoot.networkService.messageTTL;
   late final messagesUpdatesSubscription =
       _repositoryRoot.messageRepository.watch().listen(null);
 
@@ -33,8 +33,7 @@ class MessagesInteractor {
 
   late final _vaultRepository = _repositoryRoot.vaultRepository;
 
-  late var _myPeerId = PeerId(
-    token: _serviceRoot.networkService.myId,
+  late var _myPeerId = _serviceRoot.networkService.myPeerId.copyWith(
     name: _repositoryRoot.settingsRepository.deviceName,
   );
 
@@ -193,7 +192,7 @@ class MessagesInteractor {
               ipV6: Envs.bsAddressV6,
               port: Envs.bsPort,
             )
-          : _serviceRoot.networkService.addBootstrapServer(Envs.bsPeerId);
+          : _serviceRoot.networkService.removeBootstrapServer(Envs.bsPeerId);
     }
   }
 
