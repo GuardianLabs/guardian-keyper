@@ -13,8 +13,7 @@ abstract class VaultPresenterBase extends PagePresenterBase {
   final serviceRoot = GetIt.I<ServiceRoot>();
   final repositoryRoot = GetIt.I<RepositoryRoot>();
 
-  late final myPeerId = PeerId(
-    token: serviceRoot.networkService.myId,
+  late final myPeerId = serviceRoot.networkService.myPeerId.copyWith(
     name: repositoryRoot.settingsRepository.deviceName,
   );
   late final networkSubscription =
@@ -43,7 +42,7 @@ abstract class VaultPresenterBase extends PagePresenterBase {
   void startNetworkRequest(void Function([Timer?]) callback) async {
     await serviceRoot.platformService.wakelockEnable();
     timer = Timer.periodic(
-      serviceRoot.networkService.router.messageTTL,
+      serviceRoot.networkService.messageTTL,
       callback,
     );
     callback();

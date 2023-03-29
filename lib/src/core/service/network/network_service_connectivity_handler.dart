@@ -1,7 +1,7 @@
 part of 'network_service.dart';
 
 // TBD: separate to independent repository
-mixin ConnectivityHandler on NetworkServiceBase {
+mixin ConnectivityHandler {
   final _connectivity = Connectivity();
   final _connectivityController = StreamController<bool>.broadcast();
 
