@@ -36,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   late final StreamSubscription<BoxEvent> _messageStreamSubscription;
 
+  bool _isLocked = true;
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
     Future.microtask(() async {
       if (_repositoryRoot.settingsRepository.passCode.isEmpty) {
+        _isLocked = false;
         await Navigator.of(context).pushNamed(routeIntro);
       } else {
         await _demandPassCode(context);
@@ -63,31 +66,25 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      await _demandPassCode(context);
+      if (_isLocked) await _demandPassCode(context);
       await _serviceRoot.networkService.start();
-    } else {
+    } else if (state != AppLifecycleState.inactive) {
+      _isLocked = true;
       await _serviceRoot.networkService.stop();
-      await _repositoryRoot.messageRepository.flush();
       await _repositoryRoot.vaultRepository.flush();
+      await _repositoryRoot.messageRepository.flush();
     }
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     WidgetsBinding.instance.removeObserver(this);
-    _messageStreamSubscription.cancel();
+    await _serviceRoot.networkService.stop();
+    await _messageStreamSubscription.cancel();
+    await _repositoryRoot.vaultRepository.flush();
+    await _repositoryRoot.messageRepository.flush();
     super.dispose();
   }
-
-  Future<void> _demandPassCode(final BuildContext context) =>
-      showDemandPassCode(
-        context: context,
-        onVibrate: _serviceRoot.platformService.vibrate,
-        currentPassCode: _repositoryRoot.settingsRepository.passCode,
-        localAuthenticate: _serviceRoot.platformService.localAuthenticate,
-        useBiometrics: _repositoryRoot.settingsRepository.hasBiometrics &&
-            _repositoryRoot.settingsRepository.isBiometricsEnabled,
-      );
 
   @override
   Widget build(final BuildContext context) => Selector<HomePresenter, int>(
@@ -128,5 +125,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             child: SafeArea(child: HomeScreen.pages[currentPage]),
           ),
         ),
+      );
+
+  Future<void> _demandPassCode(final BuildContext context) =>
+      showDemandPassCode(
+        context: context,
+        onVibrate: _serviceRoot.platformService.vibrate,
+        currentPassCode: _repositoryRoot.settingsRepository.passCode,
+        localAuthenticate: _serviceRoot.platformService.localAuthenticate,
+        useBiometrics: _repositoryRoot.settingsRepository.hasBiometrics &&
+            _repositoryRoot.settingsRepository.isBiometricsEnabled,
       );
 }
