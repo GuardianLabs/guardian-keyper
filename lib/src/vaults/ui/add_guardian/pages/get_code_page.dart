@@ -86,6 +86,7 @@ class _GetCodePageState extends State<GetCodePage> {
       );
 
   void _processCode(final String? code) {
+    if (code == null) return;
     final message = MessageModel.tryFromBase64(code);
     String errorText = '';
 
