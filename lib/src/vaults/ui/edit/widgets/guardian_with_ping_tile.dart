@@ -22,11 +22,11 @@ class _GuardianWithPingTileState extends State<GuardianWithPingTile> {
         onLongPress: _isWaiting
             ? null
             : () async {
+                final networkService = GetIt.I<ServiceRoot>().networkService;
+                if (widget.guardian == networkService.myPeerId) return;
                 setState(() => _isWaiting = true);
                 final startedAt = DateTime.now();
-                final hasPong = await GetIt.I<ServiceRoot>()
-                    .networkService
-                    .pingPeer(widget.guardian);
+                final hasPong = await networkService.pingPeer(widget.guardian);
                 if (!mounted) return;
                 final msElapsed =
                     DateTime.now().difference(startedAt).inMilliseconds;

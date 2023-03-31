@@ -1,8 +1,6 @@
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/data/core_model.dart';
 
-// TBD: use itself Provider?
-// TBD: use nested Navigator?
 class SetDeviceNamePage extends StatefulWidget {
   final String deviceName;
 

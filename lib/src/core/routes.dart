@@ -11,38 +11,21 @@ import '/src/vaults/ui/add_secret/vault_add_secret_screen.dart';
 import '/src/vaults/ui/add_guardian/vault_add_guardian_screen.dart';
 import '/src/vaults/ui/recover_secret/vault_recover_secret_screen.dart';
 
-Route? onGenerateRoute(final RouteSettings routeSettings) {
-  switch (routeSettings.name) {
-    // Vaults
-    case VaultCreateScreen.routeName:
-      return VaultCreateScreen.getPageRoute(routeSettings);
-    case VaultEditScreen.routeName:
-      return VaultEditScreen.getPageRoute(routeSettings);
-    case VaultRestoreScreen.routeName:
-      return VaultRestoreScreen.getPageRoute(routeSettings);
-    case VaultAddGuardianScreen.routeName:
-      return VaultAddGuardianScreen.getPageRoute(routeSettings);
-    // Secrets
-    case VaultAddSecretScreen.routeName:
-      return VaultAddSecretScreen.getPageRoute(routeSettings);
-    case VaultRecoverSecretScreen.routeName:
-      return VaultRecoverSecretScreen.getPageRoute(routeSettings);
+Route? onGenerateRoute(final RouteSettings routeSettings) =>
+    routes[routeSettings.name]?.call(routeSettings);
 
-    // Show QRCode
-    case ShowQRCodeScreen.routeName:
-      return ShowQRCodeScreen.getPageRoute(routeSettings);
-    case ScanQRCodeScreen.routeName:
-      return ScanQRCodeScreen.getPageRoute(routeSettings);
-
-    // Settings
-    case SettingsScreen.routeName:
-      return SettingsScreen.getPageRoute(routeSettings);
-
-    // Intro
-    case IntroScreen.routeName:
-      return IntroScreen.getPageRoute(routeSettings);
-
-    default:
-      return null;
-  }
-}
+const routes = {
+  IntroScreen.routeName: IntroScreen.getPageRoute,
+  SettingsScreen.routeName: SettingsScreen.getPageRoute,
+  // QRCodes
+  ShowQRCodeScreen.routeName: ShowQRCodeScreen.getPageRoute,
+  ScanQRCodeScreen.routeName: ScanQRCodeScreen.getPageRoute,
+  // Vaults
+  VaultCreateScreen.routeName: VaultCreateScreen.getPageRoute,
+  VaultEditScreen.routeName: VaultEditScreen.getPageRoute,
+  VaultRestoreScreen.routeName: VaultRestoreScreen.getPageRoute,
+  VaultAddGuardianScreen.routeName: VaultAddGuardianScreen.getPageRoute,
+  // Secrets
+  VaultAddSecretScreen.routeName: VaultAddSecretScreen.getPageRoute,
+  VaultRecoverSecretScreen.routeName: VaultRecoverSecretScreen.getPageRoute,
+};
