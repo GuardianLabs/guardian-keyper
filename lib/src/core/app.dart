@@ -1,8 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '/src/core/di.dart';
 import '/src/core/routes.dart';
@@ -18,10 +16,6 @@ class App extends StatelessWidget {
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setSystemUIOverlayStyle(systemStyleDark);
-    // await SystemChrome.setEnabledSystemUIMode(
-    //   SystemUiMode.manual,
-    //   overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top],
-    // );
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
@@ -51,13 +45,6 @@ class App extends StatelessWidget {
                 ],
                 child: MaterialApp(
                   title: 'Guardian Keyper',
-                  supportedLocales: const [Locale('en', '')],
-                  localizationsDelegates: const [
-                    AppLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                  ],
                   theme: themeLight,
                   darkTheme: themeDark,
                   themeMode: ThemeMode.dark,
