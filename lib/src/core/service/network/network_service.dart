@@ -13,6 +13,8 @@ part 'network_service_mdns_handler.dart';
 part 'network_service_connectivity_handler.dart';
 
 class NetworkService with ConnectivityHandler, MdnsHandler {
+  static const _initLimit = Duration(seconds: 5);
+
   NetworkService()
       : _router = p2p.RouterL2(
           logger: kDebugMode ? print : null,
@@ -40,12 +42,12 @@ class NetworkService with ConnectivityHandler, MdnsHandler {
 
   Future<Uint8List> init(Uint8List? seed) async {
     final cryptoKeys = await _router
-        .init(seed == null ? null : (p2p.CryptoKeys.empty()..seed = seed));
+        .init(seed == null ? null : (p2p.CryptoKeys.empty()..seed = seed))
+        .timeout(_initLimit);
     _router.messageStream.listen(onMessage);
-    await _connectivityInit();
-    await _initMdns();
+    await _connectivityInit().timeout(_initLimit);
+    await _initMdns().timeout(_initLimit);
     if (kDebugMode) print(_router.selfId);
-
     return cryptoKeys.seed;
   }
 

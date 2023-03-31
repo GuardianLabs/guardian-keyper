@@ -2,15 +2,16 @@ import 'package:flutter/foundation.dart';
 
 import '/src/core/consts.dart';
 import '/src/core/service/service_root.dart';
-import 'data/repository_root.dart';
+import '/src/core/data/repository_root.dart';
 import '/src/core/storage/flutter_secure_storage.dart';
 
 abstract class DI {
+  static const _initLimit = Duration(seconds: 5);
   static bool _isInited = false;
 
   static Future<bool> init() async {
     if (_isInited) return true;
-    final serviceRoot = await ServiceRoot.bootstrap();
+    final serviceRoot = await ServiceRoot.bootstrap().timeout(_initLimit);
     GetIt.I.registerSingleton<ServiceRoot>(serviceRoot);
 
     // Init network service and save seed
@@ -23,7 +24,8 @@ abstract class DI {
         await settingsStorage.get<Uint8List>(SettingsRepositoryKeys.seed);
 
     // Init network service
-    final aesKey = await serviceRoot.networkService.init(seed);
+    final aesKey =
+        await serviceRoot.networkService.init(seed).timeout(_initLimit);
 
     // Saving the seed if just generated
     if (seed == null) {
