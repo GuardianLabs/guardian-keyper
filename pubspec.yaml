@@ -2,7 +2,7 @@ name: guardian_keyper
 description: "A Guardian Network-based secrets backup app"
 publish_to: 'none'
 
-version: 2.0.0+1
+version: 2.0.1
 
 environment:
   sdk: ">=2.19.2 <3.0.0"
@@ -52,30 +52,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.1
-  # icons_launcher: ^2.1.0
-  # flutter_native_splash: ^2.2.19
 
 flutter:
+  uses-material-design: true
+
   assets:
     - assets/images/
     - assets/icons/
     - assets/fonts/
-
-# icons_launcher:
-#   platforms:
-#     android:
-#       enable: true
-#       image_path: "assets/images/logo512.png"
-#     ios:
-#       enable: true
-#       image_path: "assets/images/logo1024.png"
-
-# flutter_native_splash:
-#   fullscreen: true
-#   color: "#42a5f5"
-#   color_dark: "#042a49"
-#   android_12:
-#     color: "#42a5f5"
-#     color_dark: "#042a49"
-#     icon_background_color: "#111111"
-#     icon_background_color_dark: "#eeeeee"

@@ -14,12 +14,11 @@ class DashboardPage extends StatelessWidget {
         padding: paddingAll20,
         children: [
           // Device Name
-          Selector<HomePresenter, PeerId>(
-            selector: (_, state) => state.myPeerId,
-            builder: (_, final myPeerId, ___) => RichText(
+          Consumer<HomePresenter>(
+            builder: (_, final state, ___) => RichText(
               text: TextSpan(
                 style: textStylePoppins620,
-                children: buildTextWithId(id: myPeerId),
+                children: buildTextWithId(id: state.myPeerId),
               ),
             ),
           ),
