@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   late final StreamSubscription<BoxEvent> _messageStreamSubscription;
 
-  bool _isLocked = true;
+  // bool _isLocked = true;
   bool _canShowMessage = false;
 
   @override
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
     Future.microtask(() async {
       if (_repositoryRoot.settingsRepository.passCode.isEmpty) {
-        _isLocked = false;
+        // _isLocked = false;
         await Navigator.of(context).pushNamed(routeIntro);
       } else {
         await _demandPassCode(context);
@@ -74,10 +74,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      if (_isLocked) await _demandPassCode(context);
+      // if (_isLocked) await _demandPassCode(context);
       await _serviceRoot.networkService.start();
-    } else if (state == AppLifecycleState.detached) {
-      _isLocked = true;
+    } else {
+      // _isLocked = true;
       await _serviceRoot.networkService.pause();
       await _repositoryRoot.vaultRepository.flush();
       await _repositoryRoot.messageRepository.flush();

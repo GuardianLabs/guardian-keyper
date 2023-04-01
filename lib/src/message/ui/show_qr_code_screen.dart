@@ -1,4 +1,3 @@
-// import 'dart:async';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -7,8 +6,6 @@ import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 import '/src/core/service/service_root.dart';
 import '/src/core/data/repository_root.dart';
-
-// import 'widgets/message_action_bottom_sheet.dart';
 
 class ShowQRCodeScreen extends StatefulWidget {
   static const routeName = routeShowQrCode;
@@ -48,37 +45,19 @@ class _ShowQRCodeScreenState extends State<ShowQRCodeScreen> {
             'or Share as a Text via any messenger.',
   };
 
-  // final _repositoryRoot = GetIt.I<RepositoryRoot>();
   final _serviceRoot = GetIt.I<ServiceRoot>();
 
   late final _qrCode = widget.message.toBase64url();
-
-  // late final StreamSubscription<BoxEvent> _boxMessagesEventsSubscription;
 
   @override
   void initState() {
     super.initState();
     _serviceRoot.platformService.wakelockEnable();
-    // _boxMessagesEventsSubscription = _repositoryRoot.messageRepository
-    //     .watch(key: widget.message.aKey)
-    //     .listen(
-    //   (event) {
-    //     if (!mounted) return;
-    //     final message = event.value as MessageModel;
-    //     if (message.isResolved) Navigator.of(context).pop();
-    //     // if (message.isReceived) {
-    //     //   // Navigator.of(context).pop();
-    //     //   MessageActionBottomSheet.show(context, message)
-    //     //       .then((_) => Navigator.of(context).pop);
-    //     // }
-    //   },
-    // );
   }
 
   @override
   void dispose() {
     _serviceRoot.platformService.wakelockDisable();
-    // _boxMessagesEventsSubscription.cancel();
     super.dispose();
   }
 
