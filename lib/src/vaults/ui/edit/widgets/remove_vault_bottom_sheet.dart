@@ -1,4 +1,3 @@
-import '/src/core/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 import '/src/core/data/repository_root.dart';
@@ -19,7 +18,6 @@ class RemoveVaultBottomSheet extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            Navigator.of(context).pop();
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
@@ -40,9 +38,7 @@ class RemoveVaultBottomSheet extends StatelessWidget {
                           .vaultRepository
                           .delete(group.aKey);
                       if (context.mounted) {
-                        Navigator.of(context).popUntil(
-                          ModalRoute.withName(routeVaultEdit),
-                        );
+                        Navigator.of(context).popUntil((r) => r.isFirst);
                       }
                     },
                   ),
