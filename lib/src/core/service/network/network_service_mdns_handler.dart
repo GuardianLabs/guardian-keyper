@@ -6,7 +6,7 @@ mixin MdnsHandler {
 
   p2p.RouterL2 get _router;
 
-  int get defaultPort => p2p.TransportUdp.defaultPort;
+  int get defaultPort;
 
   final _mdnsType = '_dartshare._udp';
   final _mdnsPeerId = 'peer_id';
@@ -21,7 +21,7 @@ mixin MdnsHandler {
     },
   );
 
-  late Discovery _discovery;
+  Discovery? _discovery;
 
   Future<void> _initMdns() async {
     try {
@@ -36,16 +36,24 @@ mixin MdnsHandler {
   }
 
   Future<void> _startMdns() async {
-    _discovery = await startDiscovery(
+    _discovery ??= await startDiscovery(
       _mdnsType,
       ipLookupType: IpLookupType.any,
-    ).timeout(const Duration(seconds: 3));
-    _discovery.addServiceListener(_onEvent);
+    ).timeout(const Duration(seconds: 3))
+      ..addServiceListener(_onEvent);
   }
 
-  Future<void> _pauseMdns() => stopDiscovery(_discovery);
+  Future<void> _pauseMdns() async {
+    if (_discovery == null) return;
+    await stopDiscovery(_discovery!);
+    _discovery?.dispose();
+    _discovery = null;
+  }
 
-  Future<void> _stopMdns() => unregister(_registration);
+  Future<void> _stopMdns() async {
+    await _pauseMdns();
+    await unregister(_registration);
+  }
 
   void _onEvent(Service service, ServiceStatus status) {
     if (kDebugMode) print('mDNS $status: ${service.addresses}');

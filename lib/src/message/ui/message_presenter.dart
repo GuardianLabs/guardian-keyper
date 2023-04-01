@@ -11,7 +11,6 @@ class MessagesPresenter extends ChangeNotifier {
   late final getPeerStatus = _messagesInteractor.getPeerStatus;
   late final pingPeer = _messagesInteractor.pingPeer;
 
-  PeerId get myPeerId => _messagesInteractor.myPeerId;
   List<MessageModel> get activeMessages => _activeMessages;
   List<MessageModel> get resolvedMessages => _resolvedMessages;
 
@@ -26,7 +25,9 @@ class MessagesPresenter extends ChangeNotifier {
     }
     _activeMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     _resolvedMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    _messagesInteractor.messagesUpdatesSubscription.onData(_onMessagesUpdates);
+    _messagesUpdatesSubscription = _messagesInteractor.messageRepository
+        .watch()
+        .listen(_onMessagesUpdates);
   }
 
   final _activeMessages = <MessageModel>[];
@@ -34,9 +35,11 @@ class MessagesPresenter extends ChangeNotifier {
 
   final MessagesInteractor _messagesInteractor;
 
+  late final StreamSubscription<BoxEvent> _messagesUpdatesSubscription;
+
   @override
-  void dispose() async {
-    await _messagesInteractor.dispose();
+  void dispose() {
+    _messagesUpdatesSubscription.cancel();
     super.dispose();
   }
 

@@ -6,15 +6,14 @@ import '/src/core/data/repository_root.dart';
 
 export '/src/core/data/repository_root.dart';
 
-// TBD: move state out from here
 class MessagesInteractor {
   late final pingPeer = _serviceRoot.networkService.pingPeer;
   late final getPeerStatus = _serviceRoot.networkService.getPeerStatus;
   late final messageTTL = _serviceRoot.networkService.messageTTL;
-  late final messagesUpdatesSubscription =
-      _repositoryRoot.messageRepository.watch().listen(null);
 
-  PeerId get myPeerId => _myPeerId;
+  PeerId get myPeerId => _serviceRoot.networkService.myPeerId.copyWith(
+        name: _repositoryRoot.settingsRepository.deviceName,
+      );
 
   Box<MessageModel> get messageRepository => _repositoryRoot.messageRepository;
 
@@ -32,14 +31,6 @@ class MessagesInteractor {
   final RepositoryRoot _repositoryRoot;
 
   late final _vaultRepository = _repositoryRoot.vaultRepository;
-
-  late var _myPeerId = _serviceRoot.networkService.myPeerId.copyWith(
-    name: _repositoryRoot.settingsRepository.deviceName,
-  );
-
-  Future<void> dispose() async {
-    await messagesUpdatesSubscription.cancel();
-  }
 
   void onMessage(MessageModel message) {
     final ticket = _repositoryRoot.messageRepository.get(message.aKey);
@@ -124,7 +115,7 @@ class MessagesInteractor {
       ));
       await _vaultRepository.put(vault.aKey, vault);
     } else {
-      await _sendResponse(request.copyWith(payload: null));
+      await _sendResponse(request.copyWith(emptyPayload: true));
     }
     await archivateMessage(request);
   }
@@ -140,7 +131,7 @@ class MessagesInteractor {
         }),
       );
     }
-    await _sendResponse(request.copyWith(payload: null));
+    await _sendResponse(request.copyWith(emptyPayload: true));
     await archivateMessage(request.copyWith(
       payload: request.secretShard.copyWith(shard: ''),
     ));
@@ -161,7 +152,7 @@ class MessagesInteractor {
         )),
       );
     } else {
-      await _sendResponse(request.copyWith(payload: null));
+      await _sendResponse(request.copyWith(emptyPayload: true));
     }
     await archivateMessage(request);
   }
@@ -178,13 +169,11 @@ class MessagesInteractor {
       _serviceRoot.networkService.sendTo(
         isConfirmable: true,
         peerId: message.peerId,
-        message: message.copyWith(peerId: _myPeerId),
+        message: message.copyWith(peerId: myPeerId),
       );
 
   void _onSettingsChange(final MapEntry event) {
-    if (event.key == SettingsRepositoryKeys.deviceName) {
-      _myPeerId = _myPeerId.copyWith(name: event.value as String);
-    } else if (event.key == SettingsRepositoryKeys.isBootstrapEnabled) {
+    if (event.key == SettingsRepositoryKeys.isBootstrapEnabled) {
       event.value == true
           ? _serviceRoot.networkService.addBootstrapServer(
               Envs.bsPeerId,
@@ -196,7 +185,6 @@ class MessagesInteractor {
     }
   }
 
-  // TBD: move to repository
   Future<void> _pruneMessages() async {
     if (_repositoryRoot.messageRepository.isEmpty) return;
     final expired = _repositoryRoot.messageRepository.values

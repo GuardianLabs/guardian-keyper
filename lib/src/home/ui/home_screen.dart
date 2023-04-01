@@ -37,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late final StreamSubscription<BoxEvent> _messageStreamSubscription;
 
   bool _isLocked = true;
+  bool _canShowMessage = false;
 
   @override
   void initState() {
@@ -45,11 +46,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
     _messageStreamSubscription =
         _repositoryRoot.messageRepository.watch().listen((event) {
-      if (ModalRoute.of(context)?.isCurrent != true) return;
+      if (!_canShowMessage) return;
       if (event.deleted) return;
       final message = event.value as MessageModel;
       if (message.isNotReceived) return;
-      MessageActionBottomSheet.show(context, message);
+      final routeName = ModalRoute.of(context)?.settings.name;
+      if (routeName == '/' || routeName == routeShowQrCode) {
+        _canShowMessage = false;
+        Navigator.of(context).popUntil((r) => r.isFirst);
+        MessageActionBottomSheet.show(context, message)
+            .then((_) => _canShowMessage = true);
+      }
     });
 
     Future.microtask(() async {
@@ -59,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       } else {
         await _demandPassCode(context);
       }
+      _canShowMessage = true;
       await _serviceRoot.networkService.start();
     });
   }
@@ -68,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       if (_isLocked) await _demandPassCode(context);
       await _serviceRoot.networkService.start();
-    } else if (state != AppLifecycleState.inactive) {
+    } else if (state == AppLifecycleState.detached) {
       _isLocked = true;
       await _serviceRoot.networkService.pause();
       await _repositoryRoot.vaultRepository.flush();
@@ -77,12 +85,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   @override
-  void dispose() async {
+  void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    await _serviceRoot.networkService.stop();
-    await _messageStreamSubscription.cancel();
-    await _repositoryRoot.vaultRepository.flush();
-    await _repositoryRoot.messageRepository.flush();
+    _serviceRoot.networkService.stop();
+    _messageStreamSubscription.cancel();
+    _repositoryRoot.vaultRepository.flush();
+    _repositoryRoot.messageRepository.flush();
     super.dispose();
   }
 
