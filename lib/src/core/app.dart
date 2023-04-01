@@ -35,12 +35,15 @@ class App extends StatelessWidget {
                 providers: [
                   ChangeNotifierProvider<SettingsPresenter>(
                     create: (_) => SettingsPresenter(),
+                    lazy: false,
                   ),
                   ChangeNotifierProvider<MessagesPresenter>(
                     create: (_) => MessagesPresenter(),
+                    lazy: false,
                   ),
                   ChangeNotifierProvider<HomePresenter>(
                     create: (_) => HomePresenter(pages: HomeScreen.pages),
+                    lazy: false,
                   ),
                 ],
                 child: MaterialApp(

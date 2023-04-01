@@ -12,6 +12,7 @@ import '/src/core/data/core_model.dart';
 part 'network_service_mdns_handler.dart';
 part 'network_service_connectivity_handler.dart';
 
+// TBD: update transports with NetworkInterface.list()
 class NetworkService with ConnectivityHandler, MdnsHandler {
   static const _initLimit = Duration(seconds: 5);
 
@@ -22,6 +23,9 @@ class NetworkService with ConnectivityHandler, MdnsHandler {
         )
           ..maxForwardsLimit = maxForwardsLimit
           ..maxStoredHeaders = maxStoredHeaders;
+
+  @override
+  int get defaultPort => p2p.TransportUdp.defaultPort;
 
   Duration get messageTTL => _router.messageTTL;
 
@@ -112,7 +116,7 @@ class NetworkService with ConnectivityHandler, MdnsHandler {
     final String ipV4 = '',
     final String ipV6 = '',
     final int? port,
-  }) {
+  }) async {
     final bsPeerId = p2p.PeerId(value: base64Decode(peerId));
     _bsServer = p2p.Route(
       peerId: bsPeerId,

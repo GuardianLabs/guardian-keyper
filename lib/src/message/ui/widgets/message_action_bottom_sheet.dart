@@ -21,11 +21,11 @@ class MessageActionBottomSheet extends StatefulWidget {
     MessageCode.takeGroup: ' asks you to approve a change of ownership for ',
   };
 
-  static Future<void> show(
+  static Future<bool?> show(
     final BuildContext context,
     final MessageModel message,
   ) =>
-      showModalBottomSheet(
+      showModalBottomSheet<bool>(
         context: context,
         useSafeArea: true,
         isScrollControlled: true,
@@ -207,7 +207,7 @@ class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
     setState(() => _isRequestActive = true);
     try {
       await _presenter.sendRespone(response);
-      if (mounted) Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop(true);
     } catch (_) {
       _animationController
           .forward()

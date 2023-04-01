@@ -191,6 +191,7 @@ class MessageModel extends Serializable {
     PeerId? peerId,
     MessageStatus? status,
     Serializable? payload,
+    bool? emptyPayload,
   }) =>
       MessageModel(
         version: version,
@@ -199,7 +200,7 @@ class MessageModel extends Serializable {
         timestamp: timestamp,
         code: code,
         status: status ?? this.status,
-        payload: payload ?? this.payload,
+        payload: emptyPayload == true ? null : payload ?? this.payload,
       );
 }
 
