@@ -1,4 +1,3 @@
-const routeHome = '/home';
 const routeIntro = '/intro';
 const routeSettings = '/settings';
 const routeShowQrCode = '/show_qrcode';
