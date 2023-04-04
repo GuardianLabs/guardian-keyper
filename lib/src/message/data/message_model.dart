@@ -122,8 +122,10 @@ class MessageModel extends Serializable {
 
   bool get isRequested => status == MessageStatus.created;
   bool get isNotRequested => status != MessageStatus.created;
+
   bool get isReceived => status == MessageStatus.received;
   bool get isNotReceived => status != MessageStatus.received;
+
   bool get isAccepted => status == MessageStatus.accepted;
   bool get isRejected => status == MessageStatus.rejected;
   bool get isFailed => status == MessageStatus.failed;
@@ -132,11 +134,12 @@ class MessageModel extends Serializable {
   bool get isResolved =>
       status == MessageStatus.accepted || status == MessageStatus.rejected;
 
+  bool get isNotResolved => !isResolved;
+
   bool get hasResponse =>
       status != MessageStatus.created && status != MessageStatus.received;
 
-  bool get hasNoResponse =>
-      status == MessageStatus.created || status == MessageStatus.received;
+  bool get hasNoResponse => !hasResponse;
 
   factory MessageModel.fromBase64(String value) =>
       MessageModel.fromBytes(base64Decode(value));
@@ -196,9 +199,9 @@ class MessageModel extends Serializable {
       MessageModel(
         version: version,
         id: id,
-        peerId: peerId ?? this.peerId,
-        timestamp: timestamp,
         code: code,
+        timestamp: timestamp,
+        peerId: peerId ?? this.peerId,
         status: status ?? this.status,
         payload: emptyPayload == true ? null : payload ?? this.payload,
       );

@@ -8,7 +8,7 @@ class SecretId extends IdBase {
   static const currentVersion = 1;
   static const size = 8;
 
-  SecretId({Uint8List? token, required super.name})
+  SecretId({Uint8List? token, super.name})
       : super(token: token ?? getRandomBytes(size));
 
   factory SecretId.fromBytes(List<int> token) {
