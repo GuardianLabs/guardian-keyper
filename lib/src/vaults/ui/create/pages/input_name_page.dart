@@ -27,7 +27,7 @@ class InputNamePage extends StatelessWidget {
               TextFormField(
                 autofocus: true,
                 keyboardType: TextInputType.text,
-                maxLength: IdWithNameBase.maxNameLength,
+                maxLength: IdBase.maxNameLength,
                 decoration: const InputDecoration(labelText: ' Vault name '),
                 onChanged: (value) => controller.groupName = value,
               ),

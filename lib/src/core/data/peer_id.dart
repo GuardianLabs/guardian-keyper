@@ -1,11 +1,8 @@
 part of 'core_model.dart';
 
-class PeerId extends IdWithNameBase {
+class PeerId extends IdBase {
   static const currentVersion = 1;
   static const size = 64;
-
-  @override
-  String get emoji => String.fromCharCode(emojiPeer[tokenEmojiByte]);
 
   PeerId({Uint8List? token, super.name}) : super(token: token ?? Uint8List(0));
 

@@ -1,4 +1,5 @@
 import '/src/core/ui/widgets/common.dart';
+import '/src/core/ui/widgets/emoji.dart';
 
 import '../home_presenter.dart';
 import 'shard_page.dart';

@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 
 import '/src/core/ui/widgets/common.dart';
+import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/data/core_model.dart';
 
 class RequestCard extends StatelessWidget {
@@ -70,13 +71,9 @@ class RequestCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('SHARD', style: textStyleSourceSansPro612Purple),
-                    RichText(
-                      text: TextSpan(
-                        children: buildTextWithId(
-                          id: message.secretShard.id,
-                          style: textStyleSourceSansPro616,
-                        ),
-                      ),
+                    Text(
+                      message.secretShard.id.name,
+                      style: textStyleSourceSansPro616,
                     ),
                   ],
                 ),

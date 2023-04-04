@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '/src/core/consts.dart';
 import '/src/core/data/core_model.dart';
+import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 
 import '../vault_add_guardian_presenter.dart';

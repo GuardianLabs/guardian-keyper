@@ -1,16 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:messagepack/messagepack.dart';
 
-import '/src/core/consts.dart';
 import '/src/core/data/core_model.dart';
 import '/src/core/utils/random_utils.dart';
 
-class SecretId extends IdWithNameBase {
+class SecretId extends IdBase {
   static const currentVersion = 1;
   static const size = 8;
-
-  @override
-  String get emoji => String.fromCharCode(emojiSecret[tokenEmojiByte]);
 
   SecretId({Uint8List? token, required super.name})
       : super(token: token ?? getRandomBytes(size));

@@ -1,4 +1,5 @@
 import '/src/core/consts.dart';
+import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 
@@ -81,11 +82,7 @@ class ShardPage extends StatelessWidget {
                 Padding(
                   padding: paddingV6,
                   child: ListTile(
-                    title: RichText(
-                      text: TextSpan(
-                        children: buildTextWithId(id: secretShard),
-                      ),
-                    ),
+                    title: Text(secretShard.name),
                   ),
                 )
             ],

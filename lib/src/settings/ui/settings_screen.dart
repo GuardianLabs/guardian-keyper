@@ -4,6 +4,7 @@ import '/src/core/ui/widgets/icon_of.dart';
 import '/src/core/ui/widgets/auth/auth.dart';
 
 import 'settings_presenter.dart';
+// import 'pages/emoji_list_page.dart';
 import 'pages/set_device_name_page.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -105,16 +106,45 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     // Toggle Bootstrap
                     Padding(
-                        padding: paddingV6,
-                        child: SwitchListTile.adaptive(
-                          secondary: const IconOf.splitAndShare(),
-                          title: const Text('Proxy connection'),
-                          subtitle: const Text(
-                            'Connect through Keyper-operated proxy server',
-                          ),
-                          value: provider.isBootstrapEnabled,
-                          onChanged: provider.setIsBootstrapEnabled,
-                        )),
+                      padding: paddingV6,
+                      child: SwitchListTile.adaptive(
+                        secondary: const IconOf.splitAndShare(),
+                        title: const Text('Proxy connection'),
+                        subtitle: const Text(
+                          'Connect through Keyper-operated proxy server',
+                        ),
+                        value: provider.isBootstrapEnabled,
+                        onChanged: provider.setIsBootstrapEnabled,
+                      ),
+                    ),
+                    // Emoji list
+                    // Padding(
+                    //   padding: paddingV6,
+                    //   child: OutlinedButton(
+                    //     onPressed: () => Navigator.of(context)
+                    //         .push(EmojiListPage.getPageRoute()),
+                    //     child: const Text('Emoji of Secret'),
+                    //   ),
+                    // ),
+                    // Emoji picker
+                    // Padding(
+                    //   padding: paddingV6,
+                    //   child: OutlinedButton(
+                    //     onPressed: () => Navigator.of(context).push(
+                    //         EmojiPage.getPageRoute(
+                    //             const RouteSettings(arguments: 'Vault'))),
+                    //     child: const Text('Emoji of Vault'),
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: paddingV6,
+                    //   child: OutlinedButton(
+                    //     onPressed: () => Navigator.of(context).push(
+                    //         EmojiPage.getPageRoute(
+                    //             const RouteSettings(arguments: 'Peer'))),
+                    //     child: const Text('Emoji of Peer'),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

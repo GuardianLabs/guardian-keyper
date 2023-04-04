@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '/src/core/consts.dart';
 import '/src/core/data/core_model.dart';
+import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 
