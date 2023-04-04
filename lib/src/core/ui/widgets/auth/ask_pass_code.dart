@@ -37,7 +37,10 @@ Future<void> showAskPassCode({
                     onUnlocked();
                   }
                 : null,
-            onUnlocked: onUnlocked,
+            onUnlocked: () {
+              if (context.mounted) Navigator.of(context).pop();
+              onUnlocked();
+            },
             onError: (_) {
               ScaffoldMessenger.of(context)
                   .showSnackBar(_wrongPassCodeSnackbar);

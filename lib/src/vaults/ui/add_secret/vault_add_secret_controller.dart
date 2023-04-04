@@ -26,7 +26,7 @@ class VaultAddSecretController extends VaultSecretPresenter {
   }
 
   VaultAddSecretController({required super.pages, required super.groupId})
-      : super(secretId: SecretId(name: ''));
+      : super(secretId: SecretId());
 
   void startRequest({
     required Callback onSuccess,
@@ -35,11 +35,10 @@ class VaultAddSecretController extends VaultSecretPresenter {
   }) {
     serviceRoot.analyticsService.logEvent(eventStartAddSecret);
     networkSubscription.onData(
-      (message) async {
-        if (message.code != MessageCode.setShard) return;
-        if (!message.hasResponse) return;
-        if (!messages.contains(message)) return;
-        updateMessage(message);
+      (final incomeMessage) async {
+        if (incomeMessage.code != MessageCode.setShard) return;
+        final message = checkAndUpdateMessage(incomeMessage);
+        if (message == null) return;
         if (message.isAccepted) {
           if (messages.where((m) => m.isAccepted).length == group.maxSize) {
             stopListenResponse();

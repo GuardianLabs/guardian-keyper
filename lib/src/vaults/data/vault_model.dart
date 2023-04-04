@@ -8,7 +8,7 @@ class VaultId extends IdBase {
   static const currentVersion = 1;
   static const size = 8;
 
-  VaultId({Uint8List? token, super.name = ''})
+  VaultId({Uint8List? token, super.name})
       : super(token: token ?? getRandomBytes(size));
 
   factory VaultId.fromBytes(List<int> token) {

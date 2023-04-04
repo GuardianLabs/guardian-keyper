@@ -15,10 +15,18 @@ class VaultSecretPresenter extends VaultPresenterBase {
     group = getVaultById(groupId)!;
   }
 
-  void updateMessage(MessageModel message) {
-    messages.remove(message);
-    messages.add(message);
+  MessageModel? checkAndUpdateMessage(final MessageModel incomeMessage) {
+    if (incomeMessage.hasNoResponse) return null;
+    final storedMessage = messages.lookup(incomeMessage);
+    if (storedMessage == null || storedMessage.hasResponse) return null;
+    messages.remove(incomeMessage);
+    final updatedMessage = storedMessage.copyWith(
+      status: incomeMessage.status,
+      payload: incomeMessage.payload,
+    );
+    messages.add(updatedMessage);
     notifyListeners();
+    return updatedMessage;
   }
 
   void requestShards([_]) {

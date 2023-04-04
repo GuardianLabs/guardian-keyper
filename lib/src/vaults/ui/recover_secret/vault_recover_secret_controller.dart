@@ -55,12 +55,10 @@ class VaultRecoverySecretController extends VaultSecretPresenter {
   void startRequest({required Callback onRejected}) {
     serviceRoot.analyticsService.logEvent(eventStartRestoreSecret);
     networkSubscription.onData(
-      (final message) async {
-        if (message.code != MessageCode.getShard) return;
-        if (message.hasNoResponse) return;
-        final stored = messages.lookup(message);
-        if (stored == null || stored.hasResponse) return;
-        updateMessage(message);
+      (final incomeMessage) async {
+        if (incomeMessage.code != MessageCode.getShard) return;
+        final message = checkAndUpdateMessage(incomeMessage);
+        if (message == null) return;
         if (messages.where((m) => m.isAccepted).length >= group.threshold) {
           stopListenResponse();
           serviceRoot.analyticsService.logEvent(eventFinishRestoreSecret);

@@ -29,11 +29,7 @@ abstract class IdBase extends Serializable {
   final String name;
   final Uint8List token;
 
-  IdBase({required this.token, this.name = '   '}) {
-    if (name.length < minNameLength || name.length > maxNameLength) {
-      throw const FormatException('Token name length wrong!');
-    }
-  }
+  const IdBase({required this.token, this.name = ''});
 
   @override
   List<Object> get props => [token];
