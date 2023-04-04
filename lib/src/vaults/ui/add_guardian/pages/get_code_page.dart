@@ -31,7 +31,7 @@ class _GetCodePageState extends State<GetCodePage> {
         children: [
           // Header
           HeaderBar(
-            captionSpans: buildTextWithId(id: _presenter.myPeerId),
+            captionSpans: buildTextWithId(id: _presenter.vaultId),
             closeButton: const HeaderBarCloseButton(),
           ),
           // Body
