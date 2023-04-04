@@ -27,11 +27,9 @@ class SecretsPanelList extends StatelessWidget {
                         padding: paddingH20 + paddingV12,
                         child: const IconOf.secret(),
                       ),
-                      RichText(
-                        text: TextSpan(
-                          style: textStyleSourceSansPro614,
-                          children: buildTextWithId(id: secretId),
-                        ),
+                      Text(
+                        secretId.name,
+                        style: textStyleSourceSansPro614,
                       ),
                     ],
                   )),

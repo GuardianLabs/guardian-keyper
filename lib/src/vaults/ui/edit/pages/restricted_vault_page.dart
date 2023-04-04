@@ -91,11 +91,9 @@ class RestrictedVaultPage extends StatelessWidget {
                   padding: paddingV6,
                   child: ListTile(
                     leading: const IconOf.secret(),
-                    title: RichText(
-                      text: TextSpan(
-                        style: textStyleSourceSansPro614,
-                        children: buildTextWithId(id: secretId),
-                      ),
+                    title: Text(
+                      secretId.name,
+                      style: textStyleSourceSansPro614,
                     ),
                   ),
                 ),

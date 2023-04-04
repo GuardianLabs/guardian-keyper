@@ -4,8 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:messagepack/messagepack.dart';
 
-import '/src/core/consts.dart';
-
 export '/src/vaults/data/vault_model.dart';
 export '/src/vaults/data/secret_shard_model.dart';
 export '/src/message/data/message_model.dart';
@@ -25,9 +23,17 @@ abstract class Serializable extends Equatable {
 }
 
 abstract class IdBase extends Serializable {
+  static const minNameLength = 3;
+  static const maxNameLength = 25;
+
+  final String name;
   final Uint8List token;
 
-  const IdBase({required this.token});
+  IdBase({required this.token, this.name = '   '}) {
+    if (name.length < minNameLength || name.length > maxNameLength) {
+      throw const FormatException('Token name length wrong!');
+    }
+  }
 
   @override
   List<Object> get props => [token];
@@ -62,17 +68,6 @@ abstract class IdBase extends Serializable {
         ? '0x${s.substring(0, count)}...${s.substring(s.length - count)}'
         : '0x$s';
   }
-}
-
-abstract class IdWithNameBase extends IdBase {
-  static const minNameLength = 3;
-  static const maxNameLength = 25;
-
-  final String name;
-
-  const IdWithNameBase({required super.token, this.name = ''});
-
-  String get emoji;
 }
 
 class PeerAddress extends Equatable {

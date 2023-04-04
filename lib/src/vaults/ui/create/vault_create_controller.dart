@@ -21,8 +21,7 @@ class VaultCreateController extends VaultPresenterBase {
 
   bool get isGroupMember => _isGroupMember;
 
-  bool get isGroupNameToolShort =>
-      _groupName.length < IdWithNameBase.minNameLength;
+  bool get isGroupNameToolShort => _groupName.length < IdBase.minNameLength;
 
   set groupSize(int size) {
     _groupSize = size;

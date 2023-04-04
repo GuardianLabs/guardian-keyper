@@ -21,11 +21,11 @@ class IntroPresenter extends PagePresenterBase {
 
   String get deviceName => _deviceName;
 
-  int get maxNameLength => IdWithNameBase.maxNameLength;
+  int get maxNameLength => IdBase.maxNameLength;
 
-  int get minNameLength => IdWithNameBase.minNameLength;
+  int get minNameLength => IdBase.minNameLength;
 
-  bool get canSaveName => _deviceName.length >= IdWithNameBase.minNameLength;
+  bool get canSaveName => _deviceName.length >= IdBase.minNameLength;
 
   bool get hasBiometrics => _settingsRepository.hasBiometrics;
 

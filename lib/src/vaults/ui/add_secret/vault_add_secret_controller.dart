@@ -13,7 +13,7 @@ class VaultAddSecretController extends VaultSecretPresenter {
 
   String get secret => _secret;
 
-  bool get isNameTooShort => _secretName.length < IdWithNameBase.minNameLength;
+  bool get isNameTooShort => _secretName.length < IdBase.minNameLength;
 
   set secret(String value) {
     _secret = value;

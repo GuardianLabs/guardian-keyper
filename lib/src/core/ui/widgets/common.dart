@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '/src/core/consts.dart';
 import '/src/core/ui/theme/theme.dart';
-import '/src/core/data/core_model.dart';
 
 export 'package:flutter/material.dart';
 
@@ -26,14 +25,14 @@ class HeaderBar extends StatelessWidget {
 
   final String? caption;
   final List<TextSpan>? captionSpans;
-  final Widget? backButton;
-  final Widget? closeButton;
+  final Widget? backButton, captionWidget, closeButton;
   final bool isTransparent;
 
   const HeaderBar({
     super.key,
     this.caption,
     this.captionSpans,
+    this.captionWidget,
     this.backButton,
     this.closeButton,
     this.isTransparent = false,
@@ -48,26 +47,30 @@ class HeaderBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // Left Button
             Container(
               height: sideSize,
               width: sideSize,
               alignment: Alignment.center,
               child: backButton,
             ),
+            // Caption
             Expanded(
                 child: Container(
               height: sideSize,
               alignment: Alignment.center,
-              child: RichText(
-                maxLines: 1,
-                softWrap: false,
-                text: TextSpan(
-                  text: caption,
-                  children: captionSpans,
-                  style: textStylePoppins616,
-                ),
-              ),
+              child: captionWidget ??
+                  RichText(
+                    maxLines: 1,
+                    softWrap: false,
+                    text: TextSpan(
+                      text: caption,
+                      children: captionSpans,
+                      style: textStylePoppins616,
+                    ),
+                  ),
             )),
+            // Right Button
             Container(
               height: sideSize,
               width: sideSize,
@@ -447,22 +450,3 @@ SnackBar buildSnackBar({
         ),
       ),
     );
-
-List<TextSpan> buildTextWithId({
-  required IdWithNameBase id,
-  bool isIdBold = false,
-  String? leadingText,
-  String? trailingText,
-  TextStyle? style,
-}) =>
-    [
-      if (leadingText != null) TextSpan(text: leadingText),
-      TextSpan(
-        text: '${id.name}  ',
-        style: isIdBold
-            ? style?.copyWith(fontWeight: FontWeight.w600) ?? textStyleBold
-            : style,
-      ),
-      TextSpan(text: id.emoji),
-      if (trailingText != null) TextSpan(text: trailingText),
-    ];

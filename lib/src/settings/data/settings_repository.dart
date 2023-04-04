@@ -40,7 +40,7 @@ class SettingsRepository {
     _deviceName = await _storage.getOr<String>(
       SettingsRepositoryKeys.deviceName,
       await _serviceRoot.platformService
-          .getDeviceName(maxNameLength: IdWithNameBase.maxNameLength),
+          .getDeviceName(maxNameLength: IdBase.maxNameLength),
     );
     _passCode = await _storage.getOr<String>(
       SettingsRepositoryKeys.passCode,

@@ -1,3 +1,4 @@
+import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 import '/src/core/data/core_model.dart';

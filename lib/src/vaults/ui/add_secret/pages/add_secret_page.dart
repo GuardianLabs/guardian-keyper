@@ -1,4 +1,5 @@
 import '/src/core/consts.dart';
+import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 
 import '../vault_add_secret_controller.dart';
@@ -33,12 +34,10 @@ class _AddSecretPageState extends State<AddSecretPage> {
             padding: paddingH20,
             children: [
               PageTitle(
-                titleSpans: [
-                  TextSpan(
-                    text: 'Add your Secret for ${controller.group.id.name} ',
-                  ),
-                  TextSpan(text: controller.group.id.emoji),
-                ],
+                titleSpans: buildTextWithId(
+                  leadingText: 'Add your Secret for ',
+                  id: controller.group.id,
+                ),
                 subtitle: 'Make sure no one can see your screen.',
               ),
               // Input
