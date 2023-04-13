@@ -13,9 +13,9 @@ dependencies:
     sdk: flutter
   double_back_to_close_app: ^2.1.0
   # logging_appenders: ^1.0.2
-  vector_graphics: ^1.1.4
+  vector_graphics: ^1.1.5
   google_fonts: ^4.0.3
-  flutter_svg: ^2.0.4
+  flutter_svg: ^2.0.5
   messagepack: ^0.2.1
   equatable: ^2.0.5
   provider: ^6.0.5
@@ -31,21 +31,21 @@ dependencies:
   # Platform dependent
   flutter_secure_storage: ^8.0.0
   flutter_screen_lock: ^9.0.1
-  connectivity_plus: ^3.0.3
-  device_info_plus: ^8.1.0
+  connectivity_plus: ^3.0.4
+  device_info_plus: ^8.2.0
   mobile_scanner: ^3.2.0
   url_launcher: ^6.1.10
   hive_flutter: ^1.1.0
   sodium_libs: ^2.1.0+1
   local_auth: ^2.1.5
-  share_plus: ^6.3.1
+  share_plus: ^6.3.2
   vibration: ^1.7.6
   wakelock: ^0.6.2
   sodium: ^2.1.0
   nsd: ^2.3.1
 
   # Analytics
-  sentry_flutter: ^7.4.1
+  sentry_flutter: ^7.4.2
   amplitude_flutter: ^3.13.0
 
 dev_dependencies:

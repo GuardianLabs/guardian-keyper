@@ -1,16 +1,16 @@
 import '/src/core/ui/widgets/common.dart';
 
-import '../vault_add_secret_controller.dart';
+import '../vault_add_secret_presenter.dart';
 import '../widgets/add_secret_close_button.dart';
-import '../../shared/widgets/guardian_self_list_tile.dart';
-import '../../shared/widgets/guardian_list_tile.dart';
+import '../../widgets/guardian_self_list_tile.dart';
+import '../../widgets/guardian_list_tile.dart';
 
 class SplitAndShareSecretPage extends StatelessWidget {
   const SplitAndShareSecretPage({super.key});
 
   @override
   Widget build(final BuildContext context) {
-    final controller = context.read<VaultAddSecretController>();
+    final controller = context.read<VaultAddSecretPresenter>();
     return Column(
       children: [
         // Header
@@ -35,7 +35,7 @@ class SplitAndShareSecretPage extends StatelessWidget {
                     text: 'You are about to split your Secret in ',
                   ),
                   TextSpan(
-                    text: '${controller.group.maxSize} encrypted Shards.',
+                    text: '${controller.vault.maxSize} encrypted Shards.',
                   ),
                   const TextSpan(
                     text: ' Each Guardian will receieve their own'
@@ -44,10 +44,10 @@ class SplitAndShareSecretPage extends StatelessWidget {
                 ],
               ),
               Column(children: [
-                for (final guardian in controller.group.guardians.keys)
+                for (final guardian in controller.vault.guardians.keys)
                   Padding(
                     padding: paddingV6,
-                    child: guardian == controller.group.ownerId
+                    child: guardian == controller.vault.ownerId
                         ? GuardianSelfListTile(guardian: guardian)
                         : GuardianListTile(guardian: guardian),
                   )

@@ -2,14 +2,14 @@ import '/src/core/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/data/core_model.dart';
 
-import '../vault_create_controller.dart';
+import '../vault_create_presenter.dart';
 
 class InputNamePage extends StatelessWidget {
   const InputNamePage({super.key});
 
   @override
   Widget build(final BuildContext context) {
-    final controller = context.read<VaultCreateController>();
+    final controller = context.read<VaultCreatePresenter>();
     return Column(
       children: [
         // Header
@@ -34,7 +34,7 @@ class InputNamePage extends StatelessWidget {
               // Footer
               Padding(
                 padding: paddingV32,
-                child: Selector<VaultCreateController, bool>(
+                child: Selector<VaultCreatePresenter, bool>(
                   selector: (_, controller) => controller.isGroupNameToolShort,
                   builder: (_, isGroupNameToolShort, __) => PrimaryButton(
                     text: 'Continue',

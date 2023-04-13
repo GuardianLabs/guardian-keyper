@@ -1,7 +1,7 @@
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/data/core_model.dart';
 
-import '../vault_add_secret_controller.dart';
+import '../vault_add_secret_presenter.dart';
 
 import '../widgets/add_secret_close_button.dart';
 
@@ -10,7 +10,7 @@ class AddNamePage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final controller = context.read<VaultAddSecretController>();
+    final controller = context.read<VaultAddSecretPresenter>();
     return ListView(
       shrinkWrap: true,
       children: [
@@ -40,7 +40,7 @@ class AddNamePage extends StatelessWidget {
         // Footer
         Padding(
           padding: paddingTop32 + paddingH20,
-          child: Selector<VaultAddSecretController, bool>(
+          child: Selector<VaultAddSecretPresenter, bool>(
             selector: (_, controller) => controller.isNameTooShort,
             builder: (_, isNameTooShort, __) => PrimaryButton(
               text: 'Continue',

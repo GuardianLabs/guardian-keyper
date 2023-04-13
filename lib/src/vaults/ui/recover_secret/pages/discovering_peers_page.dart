@@ -4,8 +4,8 @@ import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 
 import '../vault_recover_secret_presenter.dart';
-import '../../shared/widgets/guardian_list_tile.dart';
-import '../../shared/widgets/guardian_self_list_tile.dart';
+import '../../widgets/guardian_list_tile.dart';
+import '../../widgets/guardian_self_list_tile.dart';
 
 class DiscoveryPeersPage extends StatefulWidget {
   const DiscoveryPeersPage({super.key});
@@ -68,7 +68,7 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                         padding: paddingTop20,
                         child: Text(
                           'You need to get at least '
-                          '${_controller.group.threshold - (_controller.group.isSelfGuarded ? 1 : 0)}'
+                          '${_controller.vault.threshold - (_controller.vault.isSelfGuarded ? 1 : 0)}'
                           ' approvals from Guardians to recover your Secret.',
                           style: textStyleSourceSansPro414Purple,
                           textAlign: TextAlign.center,
@@ -78,10 +78,10 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                   ),
                 ),
                 // Guardians
-                for (final guardian in _controller.group.guardians.keys)
+                for (final guardian in _controller.vault.guardians.keys)
                   Padding(
                     padding: paddingV6,
-                    child: guardian == _controller.group.ownerId
+                    child: guardian == _controller.vault.ownerId
                         ? GuardianSelfListTile(guardian: guardian)
                         : Consumer<VaultRecoverySecretPresenter>(
                             builder: (_, controller, __) {

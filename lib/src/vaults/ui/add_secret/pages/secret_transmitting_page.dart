@@ -4,10 +4,10 @@ import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 import '/src/core/data/core_model.dart';
 
-import '../vault_add_secret_controller.dart';
+import '../vault_add_secret_presenter.dart';
 import '../widgets/add_secret_close_button.dart';
-import '../../shared/widgets/guardian_self_list_tile.dart';
-import '../../shared/widgets/guardian_list_tile.dart';
+import '../../widgets/guardian_self_list_tile.dart';
+import '../../widgets/guardian_list_tile.dart';
 
 class SecretTransmittingPage extends StatefulWidget {
   const SecretTransmittingPage({super.key});
@@ -17,7 +17,7 @@ class SecretTransmittingPage extends StatefulWidget {
 }
 
 class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
-  late final _controller = context.read<VaultAddSecretController>()
+  late final _controller = context.read<VaultAddSecretPresenter>()
     ..startRequest(
       onSuccess: _showSuccess,
       onReject: _showRejected,
@@ -60,7 +60,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                         padding: paddingV6,
                         child: guardian == _controller.myPeerId
                             ? GuardianSelfListTile(guardian: guardian)
-                            : Consumer<VaultAddSecretController>(
+                            : Consumer<VaultAddSecretPresenter>(
                                 builder: (_, controller, __) {
                                   final message =
                                       controller.messages.firstWhere(

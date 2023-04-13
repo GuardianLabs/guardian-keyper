@@ -6,7 +6,7 @@ import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/service/network/network_service.dart';
 
-import '../../shared/widgets/guardian_list_tile.dart';
+import '../../widgets/guardian_list_tile.dart';
 
 class GuardianWithPingTile extends StatefulWidget {
   const GuardianWithPingTile({super.key, required this.guardian});

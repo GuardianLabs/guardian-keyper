@@ -4,35 +4,34 @@ import 'package:sss256/sss256.dart';
 
 import '/src/core/data/core_model.dart';
 import '/src/core/ui/widgets/auth/auth.dart';
-import '/src/core/infrastructure/analytics_service.dart';
 
-import '../../vault_presenter.dart';
+import '../vault_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultRecoverySecretPresenter extends VaultSecretPresenter {
+class VaultRecoverySecretPresenter extends VaultSecretPresenterBase {
   String secret = '';
 
   VaultRecoverySecretPresenter({
     required super.pages,
-    required super.groupId,
+    required super.vaultId,
     required super.secretId,
   }) {
     // fill messages with request
-    for (final guardian in group.guardians.keys) {
+    for (final guardian in vault.guardians.keys) {
       messages.add(MessageModel(
         peerId: guardian,
         code: MessageCode.getShard,
-        status: guardian == group.ownerId
+        status: guardian == vault.ownerId
             ? MessageStatus.accepted
             : MessageStatus.created,
         payload: SecretShardModel(
           id: secretId,
           ownerId: myPeerId,
-          groupId: groupId,
-          groupSize: group.maxSize,
-          groupThreshold: group.threshold,
-          shard: guardian == group.ownerId ? group.secrets[secretId]! : '',
+          groupId: vaultId,
+          groupSize: vault.maxSize,
+          groupThreshold: vault.threshold,
+          shard: guardian == vault.ownerId ? vault.secrets[secretId]! : '',
         ),
       ));
     }
@@ -45,23 +44,22 @@ class VaultRecoverySecretPresenter extends VaultSecretPresenter {
       showAskPassCode(
         context: context,
         onUnlocked: onUnlocked,
-        onVibrate: platformManager.vibrate,
-        currentPassCode: settingsRepository.settings.passCode,
-        localAuthenticate: platformManager.localAuthenticate,
-        useBiometrics: platformManager.hasBiometrics &&
-            settingsRepository.settings.isBiometricsEnabled,
+        onVibrate: vibrate,
+        currentPassCode: passCode,
+        localAuthenticate: localAuthenticate,
+        useBiometrics: useBiometrics,
       );
 
   void startRequest({required Callback onRejected}) {
-    analyticsService.logEvent(eventStartRestoreSecret);
+    logStartRestoreSecret();
     networkSubscription.onData(
       (final incomeMessage) async {
         if (incomeMessage.code != MessageCode.getShard) return;
         final message = checkAndUpdateMessage(incomeMessage);
         if (message == null) return;
-        if (messages.where((m) => m.isAccepted).length >= group.threshold) {
+        if (messages.where((m) => m.isAccepted).length >= vault.threshold) {
           stopListenResponse();
-          analyticsService.logEvent(eventFinishRestoreSecret);
+          logFinishRestoreSecret();
           secret = await compute<List<String>, String>(
             (List<String> shares) => restoreSecret(shares: shares),
             messages
@@ -71,7 +69,7 @@ class VaultRecoverySecretPresenter extends VaultSecretPresenter {
           );
           nextScreen();
         } else if (messages.where((e) => e.isRejected).length >
-            group.redudancy) {
+            vault.redudancy) {
           stopListenResponse();
           onRejected(message);
         } else {

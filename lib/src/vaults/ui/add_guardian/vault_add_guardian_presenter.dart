@@ -1,12 +1,11 @@
 import '/src/core/consts.dart';
 import '/src/core/data/core_model.dart';
-import '/src/core/infrastructure/analytics_service.dart';
 
-import '../../vault_presenter.dart';
+import '../vault_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultAddGuardianPresenter extends VaultGuardianPresenter {
+class VaultAddGuardianPresenter extends VaultGuardianPresenterBase {
   final VaultId vaultId;
 
   VaultAddGuardianPresenter({required super.pages, required this.vaultId});
@@ -18,7 +17,7 @@ class VaultAddGuardianPresenter extends VaultGuardianPresenter {
     required Callback onDuplicate,
     required Callback onAppVersion,
   }) async {
-    await analyticsService.logEvent(eventStartAddGuardian);
+    logStartAddGuardian();
 
     if (qrCode == null ||
         qrCode!.timestamp.subtract(qrCodeExpires).isAfter(DateTime.now())) {
@@ -42,7 +41,7 @@ class VaultAddGuardianPresenter extends VaultGuardianPresenter {
         stopListenResponse();
         switch (message.status) {
           case MessageStatus.accepted:
-            analyticsService.logEvent(eventFinishAddGuardian);
+            logFinishAddGuardian();
             addGuardian(vaultId, message.peerId);
             onSuccess(message);
             break;

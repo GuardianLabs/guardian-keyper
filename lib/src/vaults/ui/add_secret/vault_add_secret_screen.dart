@@ -2,7 +2,7 @@ import '/src/core/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/data/core_model.dart';
 
-import 'vault_add_secret_controller.dart';
+import 'vault_add_secret_presenter.dart';
 
 import 'pages/add_name_page.dart';
 import 'pages/add_secret_page.dart';
@@ -24,22 +24,22 @@ class VaultAddSecretScreen extends StatelessWidget {
         fullscreenDialog: true,
         settings: settings,
         builder: (_) => VaultAddSecretScreen(
-          groupId: settings.arguments as VaultId,
+          vaultId: settings.arguments as VaultId,
         ),
       );
 
-  final VaultId groupId;
+  final VaultId vaultId;
 
-  const VaultAddSecretScreen({super.key, required this.groupId});
+  const VaultAddSecretScreen({super.key, required this.vaultId});
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => VaultAddSecretController(
+        create: (final BuildContext context) => VaultAddSecretPresenter(
           pages: _pages,
-          groupId: groupId,
+          vaultId: vaultId,
         ),
         child: ScaffoldSafe(
-          child: Selector<VaultAddSecretController, int>(
+          child: Selector<VaultAddSecretPresenter, int>(
             selector: (_, controller) => controller.currentPage,
             builder: (_, currentPage, __) => AnimatedSwitcher(
               duration: pageChangeDuration,

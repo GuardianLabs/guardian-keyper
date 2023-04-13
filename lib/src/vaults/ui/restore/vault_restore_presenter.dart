@@ -1,11 +1,10 @@
 import '/src/core/data/core_model.dart';
-import '/src/core/infrastructure/analytics_service.dart';
 
-import '../../vault_presenter.dart';
+import '../vault_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultRestorePresenter extends VaultGuardianPresenter {
+class VaultRestorePresenter extends VaultGuardianPresenterBase {
   // TBD: check if vaultId is same as provided
   final VaultId? vaultId;
 
@@ -17,7 +16,7 @@ class VaultRestorePresenter extends VaultGuardianPresenter {
     required Callback onDuplicate,
     required Callback onFail,
   }) async {
-    await analyticsService.logEvent(eventStartRestoreVault);
+    logStartRestoreVault();
     networkSubscription.onData(
       (message) {
         if (!isWaiting) return;
@@ -33,7 +32,7 @@ class VaultRestorePresenter extends VaultGuardianPresenter {
           final guardian = qrCode!.peerId;
           final existingGroup = getVaultById(message.groupId);
           if (existingGroup == null) {
-            analyticsService.logEvent(eventFinishRestoreVault);
+            logFinishRestoreVault();
             createGroup(message.recoveryGroup.copyWith(
               ownerId: myPeerId,
               guardians: {guardian: ''},
@@ -45,7 +44,7 @@ class VaultRestorePresenter extends VaultGuardianPresenter {
           } else if (existingGroup.guardians.containsKey(guardian)) {
             onDuplicate(message);
           } else if (existingGroup.isNotFull) {
-            analyticsService.logEvent(eventFinishRestoreVault);
+            logFinishRestoreVault();
             addGuardian(message.groupId, guardian).then(
               (group) => onSuccess(message.copyWith(payload: group)),
             );

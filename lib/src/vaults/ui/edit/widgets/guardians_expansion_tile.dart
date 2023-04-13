@@ -2,7 +2,7 @@ import '/src/core/ui/widgets/common.dart';
 import '/src/core/data/core_model.dart';
 
 import 'guardian_with_ping_tile.dart';
-import '../../shared/widgets/guardian_self_list_tile.dart';
+import '../../widgets/guardian_self_list_tile.dart';
 
 class GuardiansExpansionTile extends StatelessWidget {
   const GuardiansExpansionTile({super.key, required this.group});

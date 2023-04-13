@@ -2,7 +2,7 @@ import '/src/core/consts.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 
-import '../vault_add_secret_controller.dart';
+import '../vault_add_secret_presenter.dart';
 import '../widgets/add_secret_close_button.dart';
 
 class AddSecretPage extends StatefulWidget {
@@ -17,7 +17,7 @@ class _AddSecretPageState extends State<AddSecretPage> {
 
   @override
   Widget build(final BuildContext context) {
-    final controller = context.read<VaultAddSecretController>();
+    final controller = context.read<VaultAddSecretPresenter>();
     return Column(
       children: [
         // Header
@@ -36,7 +36,7 @@ class _AddSecretPageState extends State<AddSecretPage> {
               PageTitle(
                 titleSpans: buildTextWithId(
                   leadingText: 'Add your Secret for ',
-                  id: controller.group.id,
+                  id: controller.vault.id,
                 ),
                 subtitle: 'Make sure no one can see your screen.',
               ),
@@ -92,7 +92,7 @@ class _AddSecretPageState extends State<AddSecretPage> {
               // Footer
               Padding(
                 padding: paddingV32,
-                child: Selector<VaultAddSecretController, String>(
+                child: Selector<VaultAddSecretPresenter, String>(
                   selector: (_, controller) => controller.secret,
                   builder: (_, secret, __) => PrimaryButton(
                     text: 'Continue',

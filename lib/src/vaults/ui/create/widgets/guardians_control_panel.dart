@@ -1,6 +1,6 @@
 import '/src/core/ui/widgets/common.dart';
 
-import '../vault_create_controller.dart';
+import '../vault_create_presenter.dart';
 import 'guardian_count_radio.dart';
 
 class GuardiansControlPanel extends StatelessWidget {
@@ -8,7 +8,7 @@ class GuardiansControlPanel extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final controller = Provider.of<VaultCreateController>(context);
+    final controller = Provider.of<VaultCreatePresenter>(context);
     return Container(
       decoration: BoxDecoration(
         borderRadius: borderRadius,

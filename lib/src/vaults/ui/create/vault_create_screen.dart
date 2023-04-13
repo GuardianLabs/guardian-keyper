@@ -1,7 +1,7 @@
 import '/src/core/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 
-import 'vault_create_controller.dart';
+import 'vault_create_presenter.dart';
 import 'pages/choose_size_page.dart';
 import 'pages/choose_type_page.dart';
 import 'pages/input_name_page.dart';
@@ -26,11 +26,11 @@ class VaultCreateScreen extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => VaultCreateController(
+        create: (final BuildContext context) => VaultCreatePresenter(
           pages: _pages,
         ),
         child: ScaffoldSafe(
-          child: Selector<VaultCreateController, int>(
+          child: Selector<VaultCreatePresenter, int>(
             selector: (context, controller) => controller.currentPage,
             builder: (context, currentPage, __) => AnimatedSwitcher(
               duration: pageChangeDuration,

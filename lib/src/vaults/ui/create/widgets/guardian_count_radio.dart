@@ -1,6 +1,6 @@
 import '/src/core/ui/widgets/common.dart';
 
-import '../vault_create_controller.dart';
+import '../vault_create_presenter.dart';
 
 class GuardianCountRadio extends StatelessWidget {
   static final _boxDecorationSelected = BoxDecoration(
@@ -26,7 +26,7 @@ class GuardianCountRadio extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => InkWell(
         onTap: () {
-          final controller = context.read<VaultCreateController>();
+          final controller = context.read<VaultCreatePresenter>();
           controller.groupSize = groupSize;
           controller.groupThreshold = groupThreshold;
         },

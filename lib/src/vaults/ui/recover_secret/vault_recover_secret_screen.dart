@@ -19,24 +19,24 @@ class VaultRecoverSecretScreen extends StatelessWidget {
         fullscreenDialog: true,
         settings: settings,
         builder: (_) => VaultRecoverSecretScreen(
-          groupIdWithSecretId:
+          vaultIdWithSecretId:
               settings.arguments as MapEntry<VaultId, SecretId>,
         ),
       );
 
-  final MapEntry<VaultId, SecretId> groupIdWithSecretId;
+  final MapEntry<VaultId, SecretId> vaultIdWithSecretId;
 
   const VaultRecoverSecretScreen({
     super.key,
-    required this.groupIdWithSecretId,
+    required this.vaultIdWithSecretId,
   });
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
         create: (final BuildContext context) => VaultRecoverySecretPresenter(
           pages: _pages,
-          groupId: groupIdWithSecretId.key,
-          secretId: groupIdWithSecretId.value,
+          vaultId: vaultIdWithSecretId.key,
+          secretId: vaultIdWithSecretId.value,
         ),
         child: ScaffoldSafe(
           child: Selector<VaultRecoverySecretPresenter, int>(

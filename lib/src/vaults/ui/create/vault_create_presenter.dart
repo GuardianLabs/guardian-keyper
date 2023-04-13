@@ -1,18 +1,17 @@
 import '/src/core/data/core_model.dart';
-import '/src/core/infrastructure/analytics_service.dart';
 
-import '../../vault_presenter.dart';
+import '../vault_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultCreateController extends VaultPresenterBase {
+class VaultCreatePresenter extends VaultPresenterBase {
   var _groupSize = 3;
   var _groupThreshold = 2;
   var _isGroupMember = false;
   var _groupName = '';
 
-  VaultCreateController({required super.pages}) {
-    analyticsService.logEvent(eventStartCreateVault);
+  VaultCreatePresenter({required super.pages}) {
+    logStartCreateVault();
   }
 
   int get groupSize => _groupSize;
@@ -44,7 +43,7 @@ class VaultCreateController extends VaultPresenterBase {
   }
 
   Future<VaultModel> createVault() {
-    analyticsService.logEvent(eventFinishCreateVault);
+    logFinishCreateVault();
     return createGroup(VaultModel(
       id: VaultId(name: _groupName),
       maxSize: _groupSize,

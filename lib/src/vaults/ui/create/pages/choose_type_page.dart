@@ -1,7 +1,7 @@
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 
-import '../vault_create_controller.dart';
+import '../vault_create_presenter.dart';
 import '../widgets/selectable_card.dart';
 
 class ChooseTypePage extends StatelessWidget {
@@ -22,7 +22,7 @@ class ChooseTypePage extends StatelessWidget {
               children: [
                 // Your Devices
                 GestureDetector(
-                  onTap: context.read<VaultCreateController>().nextScreen,
+                  onTap: context.read<VaultCreatePresenter>().nextScreen,
                   child: SelectableCard(
                       isSelected: true,
                       child: Column(
