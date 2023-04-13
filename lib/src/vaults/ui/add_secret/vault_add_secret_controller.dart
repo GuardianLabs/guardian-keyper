@@ -1,7 +1,7 @@
 import 'package:sss256/sss256.dart';
 
 import '/src/core/data/core_model.dart';
-import '/src/core/service/analytics_service.dart';
+import '/src/core/infrastructure/analytics_service.dart';
 
 import '../../vault_presenter.dart';
 
@@ -33,7 +33,7 @@ class VaultAddSecretController extends VaultSecretPresenter {
     required Callback onReject,
     required Callback onFailed,
   }) {
-    serviceRoot.analyticsService.logEvent(eventStartAddSecret);
+    analyticsService.logEvent(eventStartAddSecret);
     networkSubscription.onData(
       (final incomeMessage) async {
         if (incomeMessage.code != MessageCode.setShard) return;
@@ -48,11 +48,11 @@ class VaultAddSecretController extends VaultSecretPresenter {
                     .secretShard
                     .shard
                 : '';
-            await repositoryRoot.vaultRepository.put(
+            await vaultRepository.put(
               group.aKey,
               group.copyWith(secrets: {...group.secrets, secretId: shardValue}),
             );
-            await serviceRoot.analyticsService.logEvent(eventFinishAddSecret);
+            await analyticsService.logEvent(eventFinishAddSecret);
             onSuccess(message);
           }
         } else {

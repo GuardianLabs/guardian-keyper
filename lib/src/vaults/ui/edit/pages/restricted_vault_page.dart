@@ -1,7 +1,7 @@
 import '/src/core/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
-import '/src/core/data/repository_root.dart';
+import '/src/vaults/data/vault_repository.dart';
 
 import '../widgets/guardians_expansion_tile.dart';
 import '../widgets/secrets_panel_list.dart';

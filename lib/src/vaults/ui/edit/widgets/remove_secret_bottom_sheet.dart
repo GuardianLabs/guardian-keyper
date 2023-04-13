@@ -1,6 +1,8 @@
+import 'package:get_it/get_it.dart';
+
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
-import '/src/core/data/repository_root.dart';
+import '/src/vaults/data/vault_repository.dart';
 
 class RemoveSecretBottomSheet extends StatelessWidget {
   final VaultModel group;
@@ -27,9 +29,7 @@ class RemoveSecretBottomSheet extends StatelessWidget {
             text: 'Yes, remove the Secret',
             onPressed: () async {
               group.secrets.remove(secretId);
-              await GetIt.I<RepositoryRoot>()
-                  .vaultRepository
-                  .put(group.aKey, group);
+              await GetIt.I<VaultRepository>().put(group.aKey, group);
               if (context.mounted) Navigator.of(context).pop();
             },
           ),

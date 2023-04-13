@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:typed_data';
 
-import '/src/core/data/core_model.dart';
-import '/src/core/service/service_root.dart';
-import '/src/core/storage/flutter_secure_storage.dart';
+import '/src/core/infrastructure/secure_storage.dart';
+
+import '../domain/settings_model.dart';
 
 enum SettingsRepositoryKeys {
   seed,
@@ -12,95 +13,98 @@ enum SettingsRepositoryKeys {
   isBiometricsEnabled,
 }
 
+class SettingsEvent {
+  final SettingsRepositoryKeys key;
+  final SettingsModel value;
+
+  const SettingsEvent({required this.key, required this.value});
+}
+
 class SettingsRepository {
   SettingsRepository({
+    required String defaultName,
     SecureStorage? storageService,
-    ServiceRoot? serviceRoot,
-  })  : _storage =
-            storageService ?? FlutterSecureStorage(storage: Storages.settings),
-        _serviceRoot = serviceRoot ?? GetIt.I<ServiceRoot>();
+  })  : _defaultName = defaultName,
+        _storage = storageService ?? SecureStorage(storage: Storages.settings);
 
-  String get passCode => _passCode;
-  String get deviceName => _deviceName;
-  bool get hasBiometrics => _hasBiometrics;
-  bool get isBootstrapEnabled => _isBootstrapEnabled;
-  bool get isBiometricsEnabled => _isBiometricsEnabled;
-  Stream<MapEntry> get stream => _updatesNotifier.stream;
+  SettingsModel get settings => _settings;
 
+  Stream<SettingsEvent> get stream => _updatesStreamController.stream;
+
+  final String _defaultName;
   final SecureStorage _storage;
-  final ServiceRoot _serviceRoot;
 
-  final _updatesNotifier = StreamController<MapEntry>.broadcast();
+  late SettingsModel _settings;
 
-  late bool _isBiometricsEnabled, _isBootstrapEnabled, _hasBiometrics;
-  late String _passCode, _deviceName;
+  final _updatesStreamController = StreamController<SettingsEvent>.broadcast();
 
-  Future<void> load() async {
-    _hasBiometrics = await _serviceRoot.platformService.getHasBiometrics();
-    _deviceName = await _storage.getOr<String>(
-      SettingsRepositoryKeys.deviceName,
-      await _serviceRoot.platformService
-          .getDeviceName(maxNameLength: IdBase.maxNameLength),
+  Future<SettingsModel> load() async {
+    // Ugly hack to fix first read returns null
+    await _storage.get<Uint8List>(SettingsRepositoryKeys.seed);
+    _settings = SettingsModel(
+      seed: await _storage.getOr<Uint8List>(
+        SettingsRepositoryKeys.seed,
+        Uint8List(0),
+      ),
+      passCode: await _storage.getOr<String>(
+        SettingsRepositoryKeys.passCode,
+        '',
+      ),
+      deviceName: await _storage.getOr<String>(
+        SettingsRepositoryKeys.deviceName,
+        _defaultName,
+      ),
+      isBootstrapEnabled: await _storage.getOr<bool>(
+        SettingsRepositoryKeys.isBootstrapEnabled,
+        true,
+      ),
+      isBiometricsEnabled: await _storage.getOr<bool>(
+        SettingsRepositoryKeys.isBiometricsEnabled,
+        true,
+      ),
     );
-    _passCode = await _storage.getOr<String>(
-      SettingsRepositoryKeys.passCode,
-      '',
-    );
-    _isBootstrapEnabled = await _storage.getOr<bool>(
-      SettingsRepositoryKeys.isBootstrapEnabled,
-      true,
-    );
-    _isBiometricsEnabled = await _storage.getOr<bool>(
-      SettingsRepositoryKeys.isBiometricsEnabled,
-      true,
-    );
+    return _settings;
   }
 
-  Future<String> setDeviceName(final String value) async {
-    _deviceName = (await _storage.set<String>(
-      SettingsRepositoryKeys.deviceName,
-      value,
-    ))!;
-    _updatesNotifier.add(MapEntry(
-      SettingsRepositoryKeys.deviceName,
-      value,
-    ));
-    return _deviceName;
+  Future<void> setSeed(final Uint8List value) async {
+    if (_settings.seed.isEmpty) {
+      await _storage.set<Uint8List>(SettingsRepositoryKeys.seed, value);
+    }
   }
 
-  Future<String> setPassCode(final String value) async {
-    _passCode = (await _storage.set<String>(
-      SettingsRepositoryKeys.passCode,
-      value,
-    ))!;
-    _updatesNotifier.add(MapEntry(
-      SettingsRepositoryKeys.passCode,
-      value,
+  Future<void> setDeviceName(final String value) async {
+    await _storage.set<String>(SettingsRepositoryKeys.deviceName, value);
+    _settings = _settings.copyWith(deviceName: value);
+    _updatesStreamController.add(SettingsEvent(
+      key: SettingsRepositoryKeys.deviceName,
+      value: _settings,
     ));
-    return _passCode;
   }
 
-  Future<bool> setIsBiometricsEnabled(final bool value) async {
-    _isBiometricsEnabled = (await _storage.set<bool>(
-      SettingsRepositoryKeys.isBiometricsEnabled,
-      value,
-    ))!;
-    _updatesNotifier.add(MapEntry(
-      SettingsRepositoryKeys.isBiometricsEnabled,
-      value,
+  Future<void> setPassCode(final String value) async {
+    await _storage.set<String>(SettingsRepositoryKeys.passCode, value);
+    _settings = _settings.copyWith(passCode: value);
+    _updatesStreamController.add(SettingsEvent(
+      key: SettingsRepositoryKeys.passCode,
+      value: _settings,
     ));
-    return _isBiometricsEnabled;
   }
 
-  Future<bool> setIsBootstrapEnabled(final bool value) async {
-    _isBootstrapEnabled = (await _storage.set<bool>(
-      SettingsRepositoryKeys.isBootstrapEnabled,
-      value,
-    ))!;
-    _updatesNotifier.add(MapEntry(
-      SettingsRepositoryKeys.isBootstrapEnabled,
-      value,
+  Future<void> setIsBootstrapEnabled(final bool value) async {
+    await _storage.set<bool>(SettingsRepositoryKeys.isBootstrapEnabled, value);
+    _settings = _settings.copyWith(isBootstrapEnabled: value);
+    _updatesStreamController.add(SettingsEvent(
+      key: SettingsRepositoryKeys.isBootstrapEnabled,
+      value: _settings,
     ));
-    return _isBootstrapEnabled;
+  }
+
+  Future<void> setIsBiometricsEnabled(final bool value) async {
+    await _storage.set<bool>(SettingsRepositoryKeys.isBiometricsEnabled, value);
+    _settings = _settings.copyWith(isBiometricsEnabled: value);
+    _updatesStreamController.add(SettingsEvent(
+      key: SettingsRepositoryKeys.isBiometricsEnabled,
+      value: _settings,
+    ));
   }
 }

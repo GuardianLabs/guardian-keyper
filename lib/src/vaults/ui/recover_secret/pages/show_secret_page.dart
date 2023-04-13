@@ -4,7 +4,7 @@ import 'package:vector_graphics/vector_graphics.dart';
 
 import '/src/core/ui/widgets/common.dart';
 
-import '../vault_recover_secret_controller.dart';
+import '../vault_recover_secret_presenter.dart';
 
 class ShowSecretPage extends StatefulWidget {
   const ShowSecretPage({super.key});
@@ -17,7 +17,7 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
   final _copiedSnackbar = buildSnackBar(
     text: 'Secret is copied to your clipboard.',
   );
-  late final _controller = context.read<VaultRecoverySecretController>();
+  late final _controller = context.read<VaultRecoverySecretPresenter>();
 
   bool _isObfuscated = true;
   bool _isAuthorized = false;

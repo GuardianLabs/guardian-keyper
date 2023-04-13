@@ -1,19 +1,20 @@
 import 'package:flutter/widgets.dart';
+import 'package:get_it/get_it.dart';
 
-import '/src/core/ui/page_presenter_base.dart';
-import '/src/core/data/repository_root.dart';
-import '/src/core/service/service_root.dart';
+import '/src/core/consts.dart';
+import '/src/core/data/platform_manager.dart';
 import '/src/core/ui/widgets/auth/auth.dart';
+import '/src/core/ui/page_presenter_base.dart';
+import '/src/settings/data/settings_repository.dart';
 
 export 'package:provider/provider.dart';
 
 class IntroPresenter extends PagePresenterBase {
   IntroPresenter({required super.pages});
 
-  final _serviceRoot = GetIt.I<ServiceRoot>();
-  final _settingsRepository = GetIt.I<RepositoryRoot>().settingsRepository;
+  final _settingsRepository = GetIt.I<SettingsRepository>();
 
-  late String _deviceName = _settingsRepository.deviceName;
+  late String _deviceName = _settingsRepository.settings.deviceName;
 
   int _introStep = 0;
 
@@ -21,13 +22,11 @@ class IntroPresenter extends PagePresenterBase {
 
   String get deviceName => _deviceName;
 
-  int get maxNameLength => IdBase.maxNameLength;
+  int get maxNameLength => maxTokenNameLength;
 
-  int get minNameLength => IdBase.minNameLength;
+  int get minNameLength => minTokenNameLength;
 
-  bool get canSaveName => _deviceName.length >= IdBase.minNameLength;
-
-  bool get hasBiometrics => _settingsRepository.hasBiometrics;
+  bool get canSaveName => _deviceName.length >= minTokenNameLength;
 
   set introStep(final int value) {
     _introStep = value;
@@ -52,11 +51,11 @@ class IntroPresenter extends PagePresenterBase {
   Future<void> createPassCode({required final BuildContext context}) =>
       showCreatePassCode(
         context: context,
-        onVibrate: _serviceRoot.platformService.vibrate,
+        onVibrate: GetIt.I<PlatformManager>().vibrate,
         onConfirmed: (final String passCode) async {
           await _settingsRepository.setPassCode(passCode);
           if (context.mounted) {
-            _settingsRepository.hasBiometrics
+            GetIt.I<PlatformManager>().hasBiometrics
                 ? nextScreen()
                 : Navigator.of(context).pop();
           }

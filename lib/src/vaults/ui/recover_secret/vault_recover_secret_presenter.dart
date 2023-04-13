@@ -3,17 +3,17 @@ import 'package:flutter/widgets.dart';
 import 'package:sss256/sss256.dart';
 
 import '/src/core/data/core_model.dart';
-import '/src/core/service/analytics_service.dart';
 import '/src/core/ui/widgets/auth/auth.dart';
+import '/src/core/infrastructure/analytics_service.dart';
 
 import '../../vault_presenter.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultRecoverySecretController extends VaultSecretPresenter {
+class VaultRecoverySecretPresenter extends VaultSecretPresenter {
   String secret = '';
 
-  VaultRecoverySecretController({
+  VaultRecoverySecretPresenter({
     required super.pages,
     required super.groupId,
     required super.secretId,
@@ -45,15 +45,15 @@ class VaultRecoverySecretController extends VaultSecretPresenter {
       showAskPassCode(
         context: context,
         onUnlocked: onUnlocked,
-        onVibrate: serviceRoot.platformService.vibrate,
-        currentPassCode: repositoryRoot.settingsRepository.passCode,
-        localAuthenticate: serviceRoot.platformService.localAuthenticate,
-        useBiometrics: repositoryRoot.settingsRepository.hasBiometrics &&
-            repositoryRoot.settingsRepository.isBiometricsEnabled,
+        onVibrate: platformManager.vibrate,
+        currentPassCode: settingsRepository.settings.passCode,
+        localAuthenticate: platformManager.localAuthenticate,
+        useBiometrics: platformManager.hasBiometrics &&
+            settingsRepository.settings.isBiometricsEnabled,
       );
 
   void startRequest({required Callback onRejected}) {
-    serviceRoot.analyticsService.logEvent(eventStartRestoreSecret);
+    analyticsService.logEvent(eventStartRestoreSecret);
     networkSubscription.onData(
       (final incomeMessage) async {
         if (incomeMessage.code != MessageCode.getShard) return;
@@ -61,7 +61,7 @@ class VaultRecoverySecretController extends VaultSecretPresenter {
         if (message == null) return;
         if (messages.where((m) => m.isAccepted).length >= group.threshold) {
           stopListenResponse();
-          serviceRoot.analyticsService.logEvent(eventFinishRestoreSecret);
+          analyticsService.logEvent(eventFinishRestoreSecret);
           secret = await compute<List<String>, String>(
             (List<String> shares) => restoreSecret(shares: shares),
             messages

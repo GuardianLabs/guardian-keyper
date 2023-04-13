@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 
+import '../data/message_repository.dart';
 import '../domain/messages_interactor.dart';
 
 export 'package:provider/provider.dart';

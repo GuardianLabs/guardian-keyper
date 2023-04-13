@@ -1,8 +1,13 @@
 import 'dart:async';
+import 'package:get_it/get_it.dart';
 
-import '/src/core/service/service_root.dart';
-import '/src/core/data/repository_root.dart';
+import '/src/core/data/platform_manager.dart';
 import '/src/core/ui/page_presenter_base.dart';
+import '/src/core/service/network/network_service.dart';
+import '/src/core/infrastructure/analytics_service.dart';
+import '/src/settings/data/settings_repository.dart';
+import '/src/message/data/message_repository.dart';
+import '/src/vaults/data/vault_repository.dart';
 
 part 'vault_secret_presenter.dart';
 part 'vault_guardian_presenter.dart';
@@ -10,14 +15,17 @@ part 'vault_guardian_presenter.dart';
 typedef Callback = void Function(MessageModel message);
 
 abstract class VaultPresenterBase extends PagePresenterBase {
-  final serviceRoot = GetIt.I<ServiceRoot>();
-  final repositoryRoot = GetIt.I<RepositoryRoot>();
+  final networkService = GetIt.I<NetworkService>();
+  final platformManager = GetIt.I<PlatformManager>();
+  final analyticsService = GetIt.I<AnalyticsService>();
+  final settingsRepository = GetIt.I<SettingsRepository>();
+  final messageRepository = GetIt.I<MessageRepository>();
+  final vaultRepository = GetIt.I<VaultRepository>();
 
-  late final myPeerId = serviceRoot.networkService.myPeerId.copyWith(
-    name: repositoryRoot.settingsRepository.deviceName,
+  late final myPeerId = networkService.myPeerId.copyWith(
+    name: settingsRepository.settings.deviceName,
   );
-  late final networkSubscription =
-      serviceRoot.networkService.messageStream.listen(null);
+  late final networkSubscription = networkService.messageStream.listen(null);
 
   Timer? timer;
 
@@ -29,20 +37,20 @@ abstract class VaultPresenterBase extends PagePresenterBase {
   void dispose() {
     timer?.cancel();
     networkSubscription.cancel();
-    serviceRoot.platformService.wakelockDisable();
+    platformManager.wakelockDisable();
     super.dispose();
   }
 
   void stopListenResponse() {
     timer?.cancel();
-    serviceRoot.platformService.wakelockDisable();
+    platformManager.wakelockDisable();
     notifyListeners();
   }
 
   void startNetworkRequest(void Function([Timer?]) callback) async {
-    await serviceRoot.platformService.wakelockEnable();
+    await platformManager.wakelockEnable();
     timer = Timer.periodic(
-      serviceRoot.networkService.messageTTL,
+      networkService.messageTTL,
       callback,
     );
     callback();
@@ -50,17 +58,17 @@ abstract class VaultPresenterBase extends PagePresenterBase {
   }
 
   Future<void> sendToGuardian(final MessageModel message) =>
-      serviceRoot.networkService.sendTo(
+      networkService.sendTo(
         isConfirmable: false,
         peerId: message.peerId,
         message: message.copyWith(peerId: myPeerId),
       );
 
   VaultModel? getVaultById(final VaultId groupId) =>
-      repositoryRoot.vaultRepository.get(groupId.asKey);
+      vaultRepository.get(groupId.asKey);
 
   Future<VaultModel> createGroup(final VaultModel group) async {
-    await repositoryRoot.vaultRepository.put(group.aKey, group);
+    await vaultRepository.put(group.aKey, group);
     notifyListeners();
     return group;
   }
@@ -69,11 +77,11 @@ abstract class VaultPresenterBase extends PagePresenterBase {
     final VaultId vaultId,
     final PeerId guardian,
   ) async {
-    var vault = repositoryRoot.vaultRepository.get(vaultId.asKey)!;
+    var vault = vaultRepository.get(vaultId.asKey)!;
     vault = vault.copyWith(
       guardians: {...vault.guardians, guardian: ''},
     );
-    await repositoryRoot.vaultRepository.put(vaultId.asKey, vault);
+    await vaultRepository.put(vaultId.asKey, vault);
     return vault;
   }
 }

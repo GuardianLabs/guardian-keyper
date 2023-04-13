@@ -20,6 +20,9 @@ const maxStoredHeaders = 10;
 const maxSecretLength = 256;
 const passCodeLength = 6;
 
+const minTokenNameLength = 3;
+const maxTokenNameLength = 25;
+
 const smallScreenHeight = 600;
 const mediumScreenHeight = 800;
 const bigScreenHeight = 1200;

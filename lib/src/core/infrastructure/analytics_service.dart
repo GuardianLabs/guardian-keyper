@@ -7,7 +7,7 @@ typedef EventLogger = Future<void> Function(
 });
 
 class AnalyticsService {
-  static Future<AnalyticsService> bootstrap(final String apiKey) async {
+  static Future<AnalyticsService> init(final String apiKey) async {
     final amplitude = Amplitude.getInstance();
     if (apiKey.isEmpty) return const AnalyticsService();
     await amplitude.init(apiKey);

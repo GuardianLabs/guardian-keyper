@@ -38,7 +38,6 @@ class VaultId extends IdBase {
 
 class VaultModel extends Serializable {
   static const currentVersion = 1;
-  static const boxName = 'vaults';
   static const typeId = 12;
 
   final int version;

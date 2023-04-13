@@ -1,7 +1,9 @@
+import 'package:get_it/get_it.dart';
+
 import '/src/core/consts.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
-import '/src/core/data/repository_root.dart';
+import '/src/vaults/data/vault_repository.dart';
 
 import 'pages/vault_page.dart';
 import 'pages/new_vault_page.dart';
@@ -25,7 +27,7 @@ class VaultEditScreen extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<VaultModel>>(
-        valueListenable: GetIt.I<RepositoryRoot>().vaultRepository.listenable(),
+        valueListenable: GetIt.I<VaultRepository>().listenable(),
         builder: (context, boxRecoveryGroup, __) {
           final group = boxRecoveryGroup.get(groupId.asKey);
           // For correct animation on group delete

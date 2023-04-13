@@ -16,13 +16,23 @@ part 'network_service_connectivity_handler.dart';
 class NetworkService with ConnectivityHandler, MdnsHandler {
   static const _initLimit = Duration(seconds: 5);
 
-  NetworkService()
+  NetworkService({final bool useBootstrapFromEnvs = true})
       : _router = p2p.RouterL2(
           logger: kDebugMode ? print : null,
           keepalivePeriod: keepalivePeriod,
-        )
-          ..maxForwardsLimit = maxForwardsLimit
-          ..maxStoredHeaders = maxStoredHeaders;
+        ) {
+    _router
+      ..maxForwardsLimit = maxForwardsLimit
+      ..maxStoredHeaders = maxStoredHeaders;
+    if (useBootstrapFromEnvs) {
+      addBootstrapServer(
+        Envs.bsPeerId,
+        ipV4: Envs.bsAddressV4,
+        ipV6: Envs.bsAddressV6,
+        port: Envs.bsPort,
+      );
+    }
+  }
 
   @override
   int get defaultPort => p2p.TransportUdp.defaultPort;

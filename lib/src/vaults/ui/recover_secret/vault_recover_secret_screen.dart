@@ -1,8 +1,8 @@
 import '/src/core/consts.dart';
-import '/src/core/ui/widgets/common.dart';
 import '/src/core/data/core_model.dart';
+import '/src/core/ui/widgets/common.dart';
 
-import 'vault_recover_secret_controller.dart';
+import 'vault_recover_secret_presenter.dart';
 import 'pages/discovering_peers_page.dart';
 import 'pages/show_secret_page.dart';
 
@@ -33,13 +33,13 @@ class VaultRecoverSecretScreen extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => VaultRecoverySecretController(
+        create: (final BuildContext context) => VaultRecoverySecretPresenter(
           pages: _pages,
           groupId: groupIdWithSecretId.key,
           secretId: groupIdWithSecretId.value,
         ),
         child: ScaffoldSafe(
-          child: Selector<VaultRecoverySecretController, int>(
+          child: Selector<VaultRecoverySecretPresenter, int>(
             selector: (_, controller) => controller.currentPage,
             builder: (_, currentPage, __) => AnimatedSwitcher(
               duration: pageChangeDuration,

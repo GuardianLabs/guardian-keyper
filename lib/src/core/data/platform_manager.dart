@@ -7,10 +7,20 @@ import 'package:local_auth/local_auth.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
-class PlatformService {
+import '/src/core/consts.dart';
+
+class PlatformManager {
+  static const _instance = PlatformManager();
   static final _localAuth = LocalAuthentication();
 
-  const PlatformService();
+  static bool _hasBiometrics = false;
+
+  static Future<PlatformManager> init() async {
+    _hasBiometrics = await _instance.getHasBiometrics();
+    return _instance;
+  }
+
+  const PlatformManager();
 
   final share = Share.share;
 
@@ -19,6 +29,8 @@ class PlatformService {
   final wakelockEnable = Wakelock.enable;
 
   final wakelockDisable = Wakelock.disable;
+
+  bool get hasBiometrics => _hasBiometrics;
 
   Future<bool> getHasBiometrics() =>
       _localAuth.getAvailableBiometrics().then((value) => value.isNotEmpty);
@@ -38,7 +50,7 @@ class PlatformService {
   }
 
   Future<String> getDeviceName({
-    required final int maxNameLength,
+    final int maxNameLength = maxTokenNameLength,
     final Uint8List? append,
   }) async {
     var result = 'Undefined';

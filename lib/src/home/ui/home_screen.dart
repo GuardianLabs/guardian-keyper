@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'package:get_it/get_it.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 import '/src/core/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 import '/src/core/ui/widgets/auth/auth.dart';
-import '/src/core/service/service_root.dart';
-import '/src/core/data/repository_root.dart';
+import '/src/vaults/data/vault_repository.dart';
+import '/src/message/data/message_repository.dart';
+import '/src/settings/data/settings_repository.dart';
 import '/src/message/ui/widgets/message_action_bottom_sheet.dart';
 
 import 'home_presenter.dart';
@@ -31,9 +33,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
-  final _serviceRoot = GetIt.I<ServiceRoot>();
-  final _repositoryRoot = GetIt.I<RepositoryRoot>();
+  final _settingsRepository = GetIt.I<SettingsRepository>();
+  final _messageRepository = GetIt.I<MessageRepository>();
+  final _vaultRepository = GetIt.I<VaultRepository>();
 
+  late final _presenter = context.read<HomePresenter>();
   late final StreamSubscription<BoxEvent> _messageStreamSubscription;
 
   // bool _isLocked = true;
@@ -44,8 +48,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    _messageStreamSubscription =
-        _repositoryRoot.messageRepository.watch().listen((event) {
+    _messageStreamSubscription = _messageRepository.watch().listen((event) {
       if (!_canShowMessage) return;
       if (event.deleted) return;
       final message = event.value as MessageModel;
@@ -60,14 +63,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     });
 
     Future.microtask(() async {
-      if (_repositoryRoot.settingsRepository.passCode.isEmpty) {
+      if (_settingsRepository.settings.passCode.isEmpty) {
         // _isLocked = false;
         await Navigator.of(context).pushNamed(routeIntro);
       } else {
         await _demandPassCode(context);
       }
       _canShowMessage = true;
-      await _serviceRoot.networkService.start();
+      await _presenter.startNetwork();
     });
   }
 
@@ -75,29 +78,29 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
       // if (_isLocked) await _demandPassCode(context);
-      await _serviceRoot.networkService.start();
+      await _presenter.startNetwork();
     } else {
       // _isLocked = true;
-      await _serviceRoot.networkService.pause();
-      await _repositoryRoot.vaultRepository.flush();
-      await _repositoryRoot.messageRepository.flush();
+      await _presenter.pauseNetwork();
+      await _vaultRepository.flush();
+      await _messageRepository.flush();
     }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _serviceRoot.networkService.stop();
+    _presenter.stopNetwork();
     _messageStreamSubscription.cancel();
-    _repositoryRoot.vaultRepository.flush();
-    _repositoryRoot.messageRepository.flush();
+    _vaultRepository.flush();
+    _messageRepository.flush();
     super.dispose();
   }
 
   @override
   Widget build(final BuildContext context) => Selector<HomePresenter, int>(
-        selector: (_, controller) => controller.currentPage,
-        builder: (context, currentPage, _) => Scaffold(
+        selector: (_, presenter) => presenter.currentPage,
+        builder: (_, final currentPage, __) => Scaffold(
           primary: true,
           resizeToAvoidBottomInset: true,
           bottomNavigationBar: BottomNavigationBar(
@@ -124,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 label: 'Messages',
               ),
             ],
-            onTap: (value) => context.read<HomePresenter>().gotoScreen(value),
+            onTap: (value) => _presenter.gotoScreen(value),
           ),
           body: DoubleBackToCloseApp(
             snackBar: const SnackBar(
@@ -138,10 +141,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Future<void> _demandPassCode(final BuildContext context) =>
       showDemandPassCode(
         context: context,
-        onVibrate: _serviceRoot.platformService.vibrate,
-        currentPassCode: _repositoryRoot.settingsRepository.passCode,
-        localAuthenticate: _serviceRoot.platformService.localAuthenticate,
-        useBiometrics: _repositoryRoot.settingsRepository.hasBiometrics &&
-            _repositoryRoot.settingsRepository.isBiometricsEnabled,
+        onVibrate: _presenter.vibrate,
+        currentPassCode: _settingsRepository.settings.passCode,
+        localAuthenticate: _presenter.localAuthenticate,
+        useBiometrics: _presenter.hasBiometrics &&
+            _settingsRepository.settings.isBiometricsEnabled,
       );
 }

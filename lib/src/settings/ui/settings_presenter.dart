@@ -1,42 +1,29 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 
-import '/src/core/service/service_root.dart';
-import '/src/core/data/repository_root.dart';
-
-export 'package:provider/provider.dart';
+import '../domain/settings_interactor.dart';
 
 class SettingsPresenter extends ChangeNotifier {
-  SettingsPresenter({
-    ServiceRoot? serviceRoot,
-    RepositoryRoot? repositoryRoot,
-  })  : _serviceRoot = serviceRoot ?? GetIt.I<ServiceRoot>(),
-        _repositoryRoot = repositoryRoot ?? GetIt.I<RepositoryRoot>() {
-    _updatesSubsrciption = _repositoryRoot.settingsRepository.stream
-        .listen((_) => notifyListeners());
+  SettingsPresenter({SettingsInteractor? settingsInteractor})
+      : _settingsInteractor = settingsInteractor ?? SettingsInteractor() {
+    _updatesSubsrciption =
+        _settingsInteractor.settingsChanges.listen((_) => notifyListeners());
   }
 
-  String get passCode => _repositoryRoot.settingsRepository.passCode;
-  String get deviceName => _repositoryRoot.settingsRepository.deviceName;
-  bool get hasBiometrics => _repositoryRoot.settingsRepository.hasBiometrics;
-  bool get isBootstrapEnabled =>
-      _repositoryRoot.settingsRepository.isBootstrapEnabled;
-  bool get isBiometricsEnabled =>
-      _repositoryRoot.settingsRepository.isBiometricsEnabled;
-  PeerId get myPeerId => _serviceRoot.networkService.myPeerId.copyWith(
-        name: _repositoryRoot.settingsRepository.deviceName,
-      );
+  String get passCode => _settingsInteractor.passCode;
+  String get deviceName => _settingsInteractor.deviceName;
+  bool get hasBiometrics => _settingsInteractor.hasBiometrics;
+  bool get isBootstrapEnabled => _settingsInteractor.isBootstrapEnabled;
+  bool get isBiometricsEnabled => _settingsInteractor.isBiometricsEnabled;
 
-  late final vibrate = _serviceRoot.platformService.vibrate;
-  late final setPassCode = _repositoryRoot.settingsRepository.setPassCode;
-  late final setDeviceName = _repositoryRoot.settingsRepository.setDeviceName;
-  late final setIsBootstrapEnabled =
-      _repositoryRoot.settingsRepository.setIsBootstrapEnabled;
+  late final vibrate = _settingsInteractor.vibrate;
+  late final setPassCode = _settingsInteractor.setPassCode;
+  late final setDeviceName = _settingsInteractor.setDeviceName;
+  late final setIsBootstrapEnabled = _settingsInteractor.setIsBootstrapEnabled;
   late final setIsBiometricsEnabled =
-      _repositoryRoot.settingsRepository.setIsBiometricsEnabled;
+      _settingsInteractor.setIsBiometricsEnabled;
 
-  final ServiceRoot _serviceRoot;
-  final RepositoryRoot _repositoryRoot;
+  final SettingsInteractor _settingsInteractor;
 
   late final StreamSubscription<void> _updatesSubsrciption;
 

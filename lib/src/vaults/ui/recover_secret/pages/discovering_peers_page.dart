@@ -3,7 +3,7 @@ import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 
-import '../vault_recover_secret_controller.dart';
+import '../vault_recover_secret_presenter.dart';
 import '../../shared/widgets/guardian_list_tile.dart';
 import '../../shared/widgets/guardian_self_list_tile.dart';
 
@@ -15,7 +15,7 @@ class DiscoveryPeersPage extends StatefulWidget {
 }
 
 class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
-  late final _controller = context.read<VaultRecoverySecretController>()
+  late final _controller = context.read<VaultRecoverySecretPresenter>()
     ..startRequest(onRejected: _showTerminated);
 
   @override
@@ -83,7 +83,7 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                     padding: paddingV6,
                     child: guardian == _controller.group.ownerId
                         ? GuardianSelfListTile(guardian: guardian)
-                        : Consumer<VaultRecoverySecretController>(
+                        : Consumer<VaultRecoverySecretPresenter>(
                             builder: (_, controller, __) {
                               final message = controller.messages.firstWhere(
                                 (message) => message.peerId == guardian,

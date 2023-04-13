@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:messagepack/messagepack.dart';
 
+import '/src/core/consts.dart';
+
 export '/src/vaults/data/vault_model.dart';
 export '/src/vaults/data/secret_shard_model.dart';
 export '/src/message/data/message_model.dart';
@@ -23,8 +25,8 @@ abstract class Serializable extends Equatable {
 }
 
 abstract class IdBase extends Serializable {
-  static const minNameLength = 3;
-  static const maxNameLength = 25;
+  static const minNameLength = minTokenNameLength;
+  static const maxNameLength = maxTokenNameLength;
 
   final String name;
   final Uint8List token;

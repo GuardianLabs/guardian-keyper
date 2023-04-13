@@ -1,10 +1,11 @@
+import 'package:provider/provider.dart';
+
 import '/src/core/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 import '/src/core/ui/widgets/auth/auth.dart';
 
 import 'settings_presenter.dart';
-// import 'pages/emoji_list_page.dart';
 import 'pages/set_device_name_page.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -31,7 +32,7 @@ class SettingsScreen extends StatelessWidget {
             // Body
             Expanded(
               child: Consumer<SettingsPresenter>(
-                builder: (context, provider, _) => ListView(
+                builder: (final context, final provider, _) => ListView(
                   padding: paddingAll20,
                   children: [
                     // Change Device Name
@@ -117,34 +118,6 @@ class SettingsScreen extends StatelessWidget {
                         onChanged: provider.setIsBootstrapEnabled,
                       ),
                     ),
-                    // Emoji list
-                    // Padding(
-                    //   padding: paddingV6,
-                    //   child: OutlinedButton(
-                    //     onPressed: () => Navigator.of(context)
-                    //         .push(EmojiListPage.getPageRoute()),
-                    //     child: const Text('Emoji of Secret'),
-                    //   ),
-                    // ),
-                    // Emoji picker
-                    // Padding(
-                    //   padding: paddingV6,
-                    //   child: OutlinedButton(
-                    //     onPressed: () => Navigator.of(context).push(
-                    //         EmojiPage.getPageRoute(
-                    //             const RouteSettings(arguments: 'Vault'))),
-                    //     child: const Text('Emoji of Vault'),
-                    //   ),
-                    // ),
-                    // Padding(
-                    //   padding: paddingV6,
-                    //   child: OutlinedButton(
-                    //     onPressed: () => Navigator.of(context).push(
-                    //         EmojiPage.getPageRoute(
-                    //             const RouteSettings(arguments: 'Peer'))),
-                    //     child: const Text('Emoji of Peer'),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

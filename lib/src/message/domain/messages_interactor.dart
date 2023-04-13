@@ -1,39 +1,45 @@
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 
 import '/src/core/consts.dart';
-import '/src/core/service/service_root.dart';
-import '/src/core/data/repository_root.dart';
-
-export '/src/core/data/repository_root.dart';
+import '/src/vaults/data/vault_repository.dart';
+import '/src/message/data/message_repository.dart';
+import '/src/settings/data/settings_repository.dart';
+import '/src/core/service/network/network_service.dart';
 
 class MessagesInteractor {
-  late final pingPeer = _serviceRoot.networkService.pingPeer;
-  late final getPeerStatus = _serviceRoot.networkService.getPeerStatus;
-  late final messageTTL = _serviceRoot.networkService.messageTTL;
+  late final pingPeer = _networkService.pingPeer;
+  late final getPeerStatus = _networkService.getPeerStatus;
+  late final messageTTL = _networkService.messageTTL;
 
-  PeerId get myPeerId => _serviceRoot.networkService.myPeerId.copyWith(
-        name: _repositoryRoot.settingsRepository.deviceName,
+  PeerId get myPeerId => _networkService.myPeerId.copyWith(
+        name: _settingsRepository.settings.deviceName,
       );
 
-  Box<MessageModel> get messageRepository => _repositoryRoot.messageRepository;
+  Box<MessageModel> get messageRepository => _messageRepository; // TBD: remove?
 
   MessagesInteractor({
-    ServiceRoot? serviceRoot,
-    RepositoryRoot? repositoryRoot,
-  })  : _serviceRoot = serviceRoot ?? GetIt.I<ServiceRoot>(),
-        _repositoryRoot = repositoryRoot ?? GetIt.I<RepositoryRoot>() {
+    NetworkService? networkService,
+    VaultRepository? vaultRepository,
+    MessageRepository? messageRepository,
+    SettingsRepository? settingsRepository,
+  })  : _networkService = networkService ?? GetIt.I<NetworkService>(),
+        _vaultRepository = vaultRepository ?? GetIt.I<VaultRepository>(),
+        _messageRepository = messageRepository ?? GetIt.I<MessageRepository>(),
+        _settingsRepository =
+            settingsRepository ?? GetIt.I<SettingsRepository>() {
     Future.delayed(const Duration(seconds: 1), _pruneMessages);
-    _serviceRoot.networkService.messageStream.listen(onMessage);
-    _repositoryRoot.settingsRepository.stream.listen(_onSettingsChange);
+    _networkService.messageStream.listen(onMessage);
+    _settingsRepository.stream.listen(_onSettingsChange);
   }
 
-  final ServiceRoot _serviceRoot;
-  final RepositoryRoot _repositoryRoot;
-
-  late final _vaultRepository = _repositoryRoot.vaultRepository;
+  final NetworkService _networkService;
+  final VaultRepository _vaultRepository;
+  final MessageRepository _messageRepository;
+  final SettingsRepository _settingsRepository;
 
   void onMessage(MessageModel message) {
-    final ticket = _repositoryRoot.messageRepository.get(message.aKey);
+    final ticket = _messageRepository.get(message.aKey);
     if (kDebugMode) print('$message\n$ticket');
 
     switch (message.code) {
@@ -83,7 +89,7 @@ class MessagesInteractor {
         if (!recoveryGroup.secrets.containsKey(message.secretShard.id)) return;
         break;
     }
-    _repositoryRoot.messageRepository.put(
+    _messageRepository.put(
       message.aKey,
       message.copyWith(status: MessageStatus.received),
     );
@@ -158,36 +164,36 @@ class MessagesInteractor {
   }
 
   Future<void> archivateMessage(final MessageModel message) async {
-    await _repositoryRoot.messageRepository.delete(message.aKey);
-    await _repositoryRoot.messageRepository.put(
+    await _messageRepository.delete(message.aKey);
+    await _messageRepository.put(
       message.timestamp.millisecondsSinceEpoch.toString(),
       message,
     );
   }
 
   Future<void> _sendResponse(final MessageModel message) =>
-      _serviceRoot.networkService.sendTo(
+      _networkService.sendTo(
         isConfirmable: true,
         peerId: message.peerId,
         message: message.copyWith(peerId: myPeerId),
       );
 
-  void _onSettingsChange(final MapEntry event) {
+  void _onSettingsChange(final SettingsEvent event) {
     if (event.key == SettingsRepositoryKeys.isBootstrapEnabled) {
-      event.value == true
-          ? _serviceRoot.networkService.addBootstrapServer(
+      event.value.isBootstrapEnabled
+          ? _networkService.addBootstrapServer(
               Envs.bsPeerId,
               ipV4: Envs.bsAddressV4,
               ipV6: Envs.bsAddressV6,
               port: Envs.bsPort,
             )
-          : _serviceRoot.networkService.removeBootstrapServer(Envs.bsPeerId);
+          : _networkService.removeBootstrapServer(Envs.bsPeerId);
     }
   }
 
   Future<void> _pruneMessages() async {
-    if (_repositoryRoot.messageRepository.isEmpty) return;
-    final expired = _repositoryRoot.messageRepository.values
+    if (_messageRepository.isEmpty) return;
+    final expired = _messageRepository.values
         .where((e) =>
             e.isRequested &&
             (e.code == MessageCode.createGroup ||
@@ -195,8 +201,7 @@ class MessagesInteractor {
             e.timestamp
                 .isBefore(DateTime.now().subtract(const Duration(days: 1))))
         .toList(growable: false);
-    await _repositoryRoot.messageRepository
-        .deleteAll(expired.map((e) => e.aKey));
-    await _repositoryRoot.messageRepository.compact();
+    await _messageRepository.deleteAll(expired.map((e) => e.aKey));
+    await _messageRepository.compact();
   }
 }

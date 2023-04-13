@@ -1,9 +1,12 @@
-import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 
 import '/src/core/consts.dart';
-import '/src/core/service/service_root.dart';
-import '/src/core/data/repository_root.dart';
-import '/src/core/storage/flutter_secure_storage.dart';
+import '/src/core/data/platform_manager.dart';
+import '/src/core/service/network/network_service.dart';
+import '/src/core/infrastructure/analytics_service.dart';
+import '/src/settings/data/settings_repository.dart';
+import '/src/message/data/message_repository.dart';
+import '/src/vaults/data/vault_repository.dart';
 
 abstract class DI {
   static const _initLimit = Duration(seconds: 5);
@@ -11,38 +14,42 @@ abstract class DI {
 
   static Future<bool> init() async {
     if (_isInited) return true;
-    final serviceRoot = await ServiceRoot.bootstrap().timeout(_initLimit);
-    GetIt.I.registerSingleton<ServiceRoot>(serviceRoot);
 
-    // Init network service and save seed
-    final settingsStorage = FlutterSecureStorage(storage: Storages.settings);
-    // Ugly hack to fix first read returns null
-    await settingsStorage.get<Uint8List>(SettingsRepositoryKeys.seed);
+    GetIt.I.registerSingleton<AnalyticsService>(
+      await AnalyticsService.init(Envs.amplitudeKey),
+    );
 
-    // Get seed from storage
-    final seed =
-        await settingsStorage.get<Uint8List>(SettingsRepositoryKeys.seed);
+    final platformManager = await PlatformManager.init();
+    GetIt.I.registerSingleton<PlatformManager>(platformManager);
 
-    // Init network service
-    final aesKey =
-        await serviceRoot.networkService.init(seed).timeout(_initLimit);
+    final settingsRepository = SettingsRepository(
+      defaultName: await platformManager.getDeviceName(),
+    );
+    await settingsRepository.load();
+    GetIt.I.registerSingleton<SettingsRepository>(settingsRepository);
 
-    // Saving the seed if just generated
-    if (seed == null) {
-      await settingsStorage.set<Uint8List>(SettingsRepositoryKeys.seed, aesKey);
-    }
+    // Init network service with given seed (generates if empty)
+    // Returns given or generated seed
+    final networkService = NetworkService(
+      useBootstrapFromEnvs: settingsRepository.settings.isBootstrapEnabled,
+    );
+    final aesKey = await networkService
+        .init(settingsRepository.settings.seed)
+        .timeout(_initLimit);
+    // save seed (saves only if it was empty)
+    await settingsRepository.setSeed(aesKey);
+    GetIt.I.registerSingleton<NetworkService>(networkService);
 
-    final repositoryRoot = await RepositoryRoot.bootstrap(aesKey: aesKey);
-    GetIt.I.registerSingleton<RepositoryRoot>(repositoryRoot);
+    // Register Hive Boxes
+    await Hive.initFlutter('data_v1');
+    final cipher = HiveAesCipher(aesKey);
+    GetIt.I.registerSingleton<MessageRepository>(
+      await getMessageRepository(cipher: cipher),
+    );
+    GetIt.I.registerSingleton<VaultRepository>(
+      await getVaultRepository(cipher: cipher),
+    );
 
-    if (repositoryRoot.settingsRepository.isBootstrapEnabled) {
-      serviceRoot.networkService.addBootstrapServer(
-        Envs.bsPeerId,
-        ipV4: Envs.bsAddressV4,
-        ipV6: Envs.bsAddressV6,
-        port: Envs.bsPort,
-      );
-    }
     return _isInited = true;
   }
 }

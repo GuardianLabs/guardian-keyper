@@ -1,6 +1,8 @@
+import 'package:get_it/get_it.dart';
+
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
-import '/src/core/data/repository_root.dart';
+import '/src/vaults/data/vault_repository.dart';
 
 class RemoveVaultBottomSheet extends StatelessWidget {
   const RemoveVaultBottomSheet({super.key, required this.group});
@@ -34,9 +36,7 @@ class RemoveVaultBottomSheet extends StatelessWidget {
                   child: PrimaryButton(
                     text: 'Yes, remove the Vault',
                     onPressed: () async {
-                      await GetIt.I<RepositoryRoot>()
-                          .vaultRepository
-                          .delete(group.aKey);
+                      await GetIt.I<VaultRepository>().delete(group.aKey);
                       if (context.mounted) {
                         Navigator.of(context).popUntil((r) => r.isFirst);
                       }

@@ -1,48 +1,60 @@
 import 'dart:async';
+import 'package:get_it/get_it.dart';
 
-import '/src/core/data/repository_root.dart';
-import '/src/core/service/service_root.dart';
+import '/src/core/data/platform_manager.dart';
 import '/src/core/ui/page_presenter_base.dart';
+import '/src/core/service/network/network_service.dart';
+import '/src/settings/data/settings_repository.dart';
+import '/src/message/data/message_repository.dart';
+import '/src/vaults/data/vault_repository.dart';
 
 export 'package:provider/provider.dart';
 
-export '/src/core/data/core_model.dart';
-
 class HomePresenter extends PagePresenterBase {
-  late final share = _serviceRoot.platformService.share;
-  late final wakelockEnable = _serviceRoot.platformService.wakelockEnable;
-  late final wakelockDisable = _serviceRoot.platformService.wakelockDisable;
+  late final share = _platformManager.share;
+  late final vibrate = _platformManager.vibrate;
+  late final wakelockEnable = _platformManager.wakelockEnable;
+  late final wakelockDisable = _platformManager.wakelockDisable;
+  late final localAuthenticate = _platformManager.localAuthenticate;
+  late final startNetwork = _networkService.start;
+  late final pauseNetwork = _networkService.pause;
+  late final stopNetwork = _networkService.stop;
 
   PeerId get myPeerId => _myPeerId;
+
+  bool get hasBiometrics => _platformManager.hasBiometrics;
 
   Map<VaultId, VaultModel> get myVaults => _myVaults;
   Map<VaultId, VaultModel> get guardedVaults => _guardedVaults;
 
   HomePresenter({required super.pages}) {
     // cache Vaults
-    for (final vault in _repositoryRoot.vaultRepository.values) {
+    for (final vault in _vaultRepository.values) {
       vault.ownerId == _myPeerId
           ? _myVaults[vault.id] = vault
           : _guardedVaults[vault.id] = vault;
     }
     // subscribe to updates
     _vaultsUpdatesSubscription =
-        _repositoryRoot.vaultRepository.watch().listen(_onVaultsUpdate);
+        _vaultRepository.watch().listen(_onVaultsUpdate);
     _settingsUpdatesSubscription =
-        _repositoryRoot.settingsRepository.stream.listen(_onSettingsUpdate);
+        _settingsRepository.stream.listen(_onSettingsUpdate);
   }
 
-  final _serviceRoot = GetIt.I<ServiceRoot>();
-  final _repositoryRoot = GetIt.I<RepositoryRoot>();
+  final _networkService = GetIt.I<NetworkService>();
+  final _platformManager = GetIt.I<PlatformManager>();
+  final _vaultRepository = GetIt.I<VaultRepository>();
+  final _messageRepository = GetIt.I<MessageRepository>();
+  final _settingsRepository = GetIt.I<SettingsRepository>();
 
   late final StreamSubscription<BoxEvent> _vaultsUpdatesSubscription;
-  late final StreamSubscription<MapEntry> _settingsUpdatesSubscription;
+  late final StreamSubscription<SettingsEvent> _settingsUpdatesSubscription;
 
   final _myVaults = <VaultId, VaultModel>{};
   final _guardedVaults = <VaultId, VaultModel>{};
 
-  late var _myPeerId = _serviceRoot.networkService.myPeerId.copyWith(
-    name: _repositoryRoot.settingsRepository.deviceName,
+  late var _myPeerId = _networkService.myPeerId.copyWith(
+    name: _settingsRepository.settings.deviceName,
   );
 
   @override
@@ -58,23 +70,23 @@ class HomePresenter extends PagePresenterBase {
       code: MessageCode.createGroup,
       peerId: myPeerId,
     );
-    await _repositoryRoot.messageRepository.put(message.aKey, message);
+    await _messageRepository.put(message.aKey, message);
     return message;
   }
 
   /// Create ticket to take vault
   Future<MessageModel> createTakeVaultCode(final VaultId? groupId) async {
     final message = MessageModel(code: MessageCode.takeGroup, peerId: myPeerId);
-    await _repositoryRoot.messageRepository.put(
+    await _messageRepository.put(
       message.aKey,
       message.copyWith(payload: VaultModel(id: groupId)),
     );
     return message;
   }
 
-  void _onSettingsUpdate(final MapEntry event) {
+  void _onSettingsUpdate(final SettingsEvent event) {
     if (event.key == SettingsRepositoryKeys.deviceName) {
-      _myPeerId = _myPeerId.copyWith(name: event.value as String);
+      _myPeerId = _myPeerId.copyWith(name: event.value.deviceName);
       notifyListeners();
     }
   }

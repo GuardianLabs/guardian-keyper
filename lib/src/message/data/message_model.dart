@@ -40,7 +40,6 @@ class MessageId extends IdBase {
 
 class MessageModel extends Serializable {
   static const currentVersion = 1;
-  static const boxName = 'messages';
   static const typeId = 10;
 
   static MessageModel? tryFromBase64(String? value) {
