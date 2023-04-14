@@ -83,7 +83,13 @@ class MessageModel extends Serializable {
         id = id ?? MessageId();
 
   @override
-  List<Object> get props => [id];
+  int get hashCode => Object.hash(runtimeType, id.hashCode);
+
+  @override
+  bool operator ==(Object other) =>
+      other is MessageModel &&
+      runtimeType == other.runtimeType &&
+      id.hashCode == other.id.hashCode;
 
   @override
   bool get isEmpty => payload == null;

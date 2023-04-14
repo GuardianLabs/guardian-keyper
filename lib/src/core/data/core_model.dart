@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:equatable/equatable.dart';
+import 'package:collection/collection.dart';
 import 'package:messagepack/messagepack.dart';
 
 import '/src/core/consts.dart';
@@ -12,7 +12,7 @@ export '/src/message/data/message_model.dart';
 
 part 'peer_id.dart';
 
-abstract class Serializable extends Equatable {
+abstract class Serializable {
   const Serializable();
 
   bool get isEmpty;
@@ -25,6 +25,8 @@ abstract class Serializable extends Equatable {
 }
 
 abstract class IdBase extends Serializable {
+  static const _listEq = ListEquality<int>();
+
   static const minNameLength = minTokenNameLength;
   static const maxNameLength = maxTokenNameLength;
 
@@ -34,7 +36,13 @@ abstract class IdBase extends Serializable {
   const IdBase({required this.token, this.name = ''});
 
   @override
-  List<Object> get props => [token];
+  int get hashCode => Object.hash(runtimeType, _listEq.hash(token));
+
+  @override
+  bool operator ==(Object other) =>
+      other is IdBase &&
+      runtimeType == other.runtimeType &&
+      _listEq.equals(token, other.token);
 
   @override
   bool get isEmpty => token.isEmpty;
@@ -68,14 +76,24 @@ abstract class IdBase extends Serializable {
   }
 }
 
-class PeerAddress extends Equatable {
+class PeerAddress {
+  static const _listEq = ListEquality<int>();
+
   final InternetAddress address;
   final int port;
 
   const PeerAddress({required this.address, required this.port});
 
   @override
-  List<Object> get props => [address, port];
+  int get hashCode =>
+      Object.hash(runtimeType, port, _listEq.hash(address.rawAddress));
+
+  @override
+  bool operator ==(Object other) =>
+      other is PeerAddress &&
+      runtimeType == other.runtimeType &&
+      port == other.port &&
+      _listEq.equals(address.rawAddress, other.address.rawAddress);
 
   bool get isIPv4 => address.type == InternetAddressType.IPv4;
 

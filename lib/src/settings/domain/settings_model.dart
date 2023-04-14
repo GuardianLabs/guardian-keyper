@@ -1,7 +1,21 @@
 import 'dart:typed_data';
-import 'package:equatable/equatable.dart';
 
-class SettingsModel extends Equatable {
+enum SettingsKeys {
+  seed,
+  passCode,
+  deviceName,
+  isBootstrapEnabled,
+  isBiometricsEnabled,
+}
+
+class SettingsEvent {
+  final SettingsKeys key;
+  final SettingsModel value;
+
+  const SettingsEvent({required this.key, required this.value});
+}
+
+class SettingsModel {
   const SettingsModel({
     required this.seed,
     required this.passCode,
@@ -11,13 +25,23 @@ class SettingsModel extends Equatable {
   });
 
   @override
-  List<Object> get props => [
-        seed,
+  bool operator ==(Object other) =>
+      other is SettingsModel &&
+      runtimeType == other.runtimeType &&
+      seed == other.seed &&
+      passCode == other.passCode &&
+      deviceName == other.deviceName &&
+      isBootstrapEnabled == other.isBootstrapEnabled &&
+      isBiometricsEnabled == other.isBiometricsEnabled;
+
+  @override
+  int get hashCode => Object.hash(
+        runtimeType,
         passCode,
         deviceName,
         isBootstrapEnabled,
         isBiometricsEnabled,
-      ];
+      );
 
   final Uint8List seed;
   final String passCode, deviceName;

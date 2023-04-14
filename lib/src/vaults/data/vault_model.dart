@@ -60,7 +60,13 @@ class VaultModel extends Serializable {
         ownerId = ownerId ?? PeerId();
 
   @override
-  List<Object> get props => [id];
+  int get hashCode => Object.hash(runtimeType, id.hashCode);
+
+  @override
+  bool operator ==(Object other) =>
+      other is VaultModel &&
+      runtimeType == other.runtimeType &&
+      id.hashCode == other.id.hashCode;
 
   @override
   bool get isEmpty => guardians.isEmpty;
