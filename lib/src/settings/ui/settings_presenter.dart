@@ -4,8 +4,9 @@ import 'package:flutter/widgets.dart';
 import '../domain/settings_interactor.dart';
 
 class SettingsPresenter extends ChangeNotifier {
-  SettingsPresenter({SettingsInteractor? settingsInteractor})
-      : _settingsInteractor = settingsInteractor ?? SettingsInteractor() {
+  SettingsPresenter({
+    SettingsInteractor? settingsInteractor,
+  }) : _settingsInteractor = settingsInteractor ?? SettingsInteractor() {
     _updatesSubsrciption =
         _settingsInteractor.settingsChanges.listen((_) => notifyListeners());
   }

@@ -1,6 +1,6 @@
-import '/src/core/consts.dart';
-import '/src/core/ui/widgets/common.dart';
+import '/src/core/app/consts.dart';
 import '/src/core/data/core_model.dart';
+import '/src/core/ui/widgets/common.dart';
 
 import '../vault_create_presenter.dart';
 

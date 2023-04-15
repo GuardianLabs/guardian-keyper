@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import '/src/core/consts.dart';
+import '/src/core/app/consts.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/vaults/data/vault_repository.dart';

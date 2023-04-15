@@ -1,7 +1,7 @@
-import '/src/core/consts.dart';
+import '/src/core/app/consts.dart';
+import '/src/core/data/core_model.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
-import '/src/core/data/core_model.dart';
 
 import 'remove_secret_bottom_sheet.dart';
 

@@ -6,33 +6,23 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
 import 'package:nsd/nsd.dart';
 
-import '/src/core/consts.dart';
+import '../app/consts.dart';
 import '/src/core/data/core_model.dart';
-
-part 'network_service_mdns_handler.dart';
-part 'network_service_connectivity_handler.dart';
+import '/src/core/infrastructure/secure_storage.dart';
 
 // TBD: update transports with NetworkInterface.list()
-class NetworkService with ConnectivityHandler, MdnsHandler {
+class NetworkManager with ConnectivityHandler, MdnsHandler {
   static const _initLimit = Duration(seconds: 5);
 
-  NetworkService({final bool useBootstrapFromEnvs = true})
-      : _router = p2p.RouterL2(
+  NetworkManager({final SecureStorage? secureStorage})
+      : _secureStorage =
+            secureStorage ?? SecureStorage(storage: Storages.settings),
+        _router = p2p.RouterL2(
           logger: kDebugMode ? print : null,
           keepalivePeriod: keepalivePeriod,
-        ) {
-    _router
-      ..maxForwardsLimit = maxForwardsLimit
-      ..maxStoredHeaders = maxStoredHeaders;
-    if (useBootstrapFromEnvs) {
-      addBootstrapServer(
-        Envs.bsPeerId,
-        ipV4: Envs.bsAddressV4,
-        ipV6: Envs.bsAddressV6,
-        port: Envs.bsPort,
-      );
-    }
-  }
+        )
+          ..maxForwardsLimit = maxForwardsLimit
+          ..maxStoredHeaders = maxStoredHeaders;
 
   @override
   int get defaultPort => p2p.TransportUdp.defaultPort;
@@ -50,18 +40,33 @@ class NetworkService with ConnectivityHandler, MdnsHandler {
   @override
   final p2p.RouterL2 _router;
 
+  final SecureStorage _secureStorage;
+
   final _messagesController = StreamController<MessageModel>.broadcast();
 
   p2p.Route? _bsServer;
 
-  Future<Uint8List> init(Uint8List? seed) async {
+  /// Return 32byte seed
+  Future<Uint8List> init() async {
+    final seed = await _secureStorage.get<Uint8List>(keySeed) ?? Uint8List(0);
     final cryptoKeys = await _router
-        .init(seed == null ? null : (p2p.CryptoKeys.empty()..seed = seed))
+        .init(p2p.CryptoKeys.empty()..seed = seed)
         .timeout(_initLimit);
+    if (seed.isEmpty) {
+      await _secureStorage.set<Uint8List>(keySeed, cryptoKeys.seed);
+    }
     _router.messageStream.listen(onMessage);
     await _connectivityInit().timeout(_initLimit);
     await _initMdns().timeout(_initLimit);
     if (kDebugMode) print(_router.selfId);
+    if (await _secureStorage.get(keyIsBootstrapEnabled) ?? false) {
+      addBootstrapServer(
+        Envs.bsPeerId,
+        port: Envs.bsPort,
+        ipV4: Envs.bsAddressV4,
+        ipV6: Envs.bsAddressV6,
+      );
+    }
     return cryptoKeys.seed;
   }
 
@@ -148,5 +153,104 @@ class NetworkService with ConnectivityHandler, MdnsHandler {
       print('Bootstrap addresses: ${_router.routes[bsPeerId]?.addresses}');
     }
     if (_router.isRun) _router.sendMessage(dstPeerId: bsPeerId);
+  }
+}
+
+// TBD: separate to independent repository
+mixin ConnectivityHandler {
+  final _connectivity = Connectivity();
+  final _connectivityController = StreamController<bool>.broadcast();
+
+  late ConnectivityResult _connectivityType;
+
+  bool get hasConnectivity => _connectivityType != ConnectivityResult.none;
+
+  Future<bool> get checkConnectivity => _connectivity
+      .checkConnectivity()
+      .then((result) => result != ConnectivityResult.none);
+
+  Stream<bool> get connectivityStream => _connectivityController.stream;
+
+  Future<void> _connectivityInit() async {
+    _connectivityType = await _connectivity.checkConnectivity();
+    _connectivity.onConnectivityChanged.listen((result) {
+      if (kDebugMode) print(result);
+      _connectivityType = result;
+      _connectivityController.add(result != ConnectivityResult.none);
+    });
+  }
+}
+
+mixin MdnsHandler {
+  static const _utf8Encoder = Utf8Encoder();
+  static const _utf8Decoder = Utf8Decoder();
+
+  p2p.RouterL2 get _router;
+
+  int get defaultPort;
+
+  final _mdnsType = '_dartshare._udp';
+  final _mdnsPeerId = 'peer_id';
+
+  late final Registration _registration;
+  late final _service = Service(
+    name: 'Guardian Keyper',
+    type: _mdnsType,
+    port: defaultPort,
+    txt: {
+      _mdnsPeerId: _utf8Encoder.convert(base64Encode(_router.selfId.value))
+    },
+  );
+
+  Discovery? _discovery;
+
+  Future<void> _initMdns() async {
+    try {
+      _registration = await register(_service).timeout(
+        const Duration(seconds: 3),
+      );
+    } on NsdError catch (e) {
+      if (kDebugMode) print(e);
+    } on TimeoutException catch (e) {
+      if (kDebugMode) print(e);
+    }
+  }
+
+  Future<void> _startMdns() async {
+    _discovery ??= await startDiscovery(
+      _mdnsType,
+      ipLookupType: IpLookupType.any,
+    ).timeout(const Duration(seconds: 3))
+      ..addServiceListener(_onEvent);
+  }
+
+  Future<void> _pauseMdns() async {
+    if (_discovery == null) return;
+    await stopDiscovery(_discovery!);
+    _discovery?.dispose();
+    _discovery = null;
+  }
+
+  Future<void> _stopMdns() async {
+    await _pauseMdns();
+    await unregister(_registration);
+  }
+
+  void _onEvent(Service service, ServiceStatus status) {
+    if (kDebugMode) print('mDNS $status: ${service.addresses}');
+    if (service.type != _mdnsType) return;
+    final peerIdBytes = service.txt?[_mdnsPeerId];
+    if (peerIdBytes == null) return;
+    if (status == ServiceStatus.found) {
+      for (final address in service.addresses!) {
+        _router.addPeerAddress(
+          peerId: p2p.PeerId(
+            value: base64Decode(_utf8Decoder.convert(peerIdBytes)),
+          ),
+          address: p2p.FullAddress(address: address, port: service.port!),
+          properties: p2p.AddressProperties(isStatic: true, isLocal: true),
+        );
+      }
+    }
   }
 }

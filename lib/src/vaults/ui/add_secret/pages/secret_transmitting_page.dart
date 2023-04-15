@@ -1,8 +1,8 @@
-import '/src/core/consts.dart';
+import '/src/core/app/consts.dart';
+import '/src/core/data/core_model.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
-import '/src/core/data/core_model.dart';
 
 import '../vault_add_secret_presenter.dart';
 import '../widgets/add_secret_close_button.dart';

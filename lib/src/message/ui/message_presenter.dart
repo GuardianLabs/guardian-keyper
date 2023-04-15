@@ -18,7 +18,7 @@ class MessagesPresenter extends ChangeNotifier {
   MessagesPresenter({MessagesInteractor? messagesInteractor})
       : _messagesInteractor = messagesInteractor ?? MessagesInteractor() {
     // cache and sort messages
-    for (final message in _messagesInteractor.messageRepository.values) {
+    for (final message in _messagesInteractor.messages) {
       if (message.peerId == _messagesInteractor.myPeerId) continue;
       message.isReceived
           ? _activeMessages.add(message)
@@ -26,9 +26,8 @@ class MessagesPresenter extends ChangeNotifier {
     }
     _activeMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     _resolvedMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    _messagesUpdatesSubscription = _messagesInteractor.messageRepository
-        .watch()
-        .listen(_onMessagesUpdates);
+    _messagesUpdatesSubscription =
+        _messagesInteractor.watchMessages().listen(_onMessagesUpdates);
   }
 
   final _activeMessages = <MessageModel>[];

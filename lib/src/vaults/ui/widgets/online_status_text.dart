@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '/src/core/ui/theme/theme.dart';
 import '/src/core/data/core_model.dart';
-import '/src/core/service/network/network_service.dart';
+import '/src/core/data/network_manager.dart';
 
 class OnlineStatusText extends StatefulWidget {
   final PeerId peerId;
@@ -16,7 +16,7 @@ class OnlineStatusText extends StatefulWidget {
 }
 
 class _OnlineStatusTextState extends State<OnlineStatusText> {
-  final _networkService = GetIt.I<NetworkService>();
+  final _networkService = GetIt.I<NetworkManager>();
   late Timer _timer;
 
   @override

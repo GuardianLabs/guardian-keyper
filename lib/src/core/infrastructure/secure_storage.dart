@@ -45,12 +45,6 @@ class SecureStorage {
     }
   }
 
-  Future<T> getOr<T extends Object>(
-    final Object key,
-    final T defaultValue,
-  ) async =>
-      (await get<T>(key)) ?? defaultValue;
-
   Future<T?> set<T extends Object>(final Object key, final T? value) async {
     switch (T) {
       case Null:

@@ -1,42 +1,43 @@
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
-import '/src/core/consts.dart';
+import '/src/core/app/consts.dart';
+import '/src/core/data/network_manager.dart';
+
 import '/src/vaults/data/vault_repository.dart';
+import '/src/settings/domain/settings_interactor.dart';
 import '/src/message/data/message_repository.dart';
-import '/src/settings/data/settings_repository.dart';
-import '/src/core/service/network/network_service.dart';
 
 class MessagesInteractor {
-  late final pingPeer = _networkService.pingPeer;
-  late final getPeerStatus = _networkService.getPeerStatus;
   late final messageTTL = _networkService.messageTTL;
+  late final pingPeer = _networkService.pingPeer;
+  late final watchMessages = _messageRepository.watch;
+  late final getPeerStatus = _networkService.getPeerStatus;
 
   PeerId get myPeerId => _networkService.myPeerId.copyWith(
-        name: _settingsRepository.settings.deviceName,
+        name: _settingsInteractor.deviceName,
       );
 
-  Box<MessageModel> get messageRepository => _messageRepository; // TBD: remove?
+  Iterable<MessageModel> get messages => _messageRepository.values;
 
   MessagesInteractor({
-    NetworkService? networkService,
+    NetworkManager? networkService,
     VaultRepository? vaultRepository,
     MessageRepository? messageRepository,
-    SettingsRepository? settingsRepository,
-  })  : _networkService = networkService ?? GetIt.I<NetworkService>(),
+    SettingsInteractor? settingsInteractor,
+  })  : _networkService = networkService ?? GetIt.I<NetworkManager>(),
         _vaultRepository = vaultRepository ?? GetIt.I<VaultRepository>(),
         _messageRepository = messageRepository ?? GetIt.I<MessageRepository>(),
-        _settingsRepository =
-            settingsRepository ?? GetIt.I<SettingsRepository>() {
+        _settingsInteractor = settingsInteractor ?? SettingsInteractor() {
     Future.delayed(const Duration(seconds: 1), _pruneMessages);
     _networkService.messageStream.listen(onMessage);
-    _settingsRepository.stream.listen(_onSettingsChange);
+    _settingsInteractor.settingsChanges.listen(_onSettingsChange);
   }
 
-  final NetworkService _networkService;
+  final NetworkManager _networkService;
   final VaultRepository _vaultRepository;
   final MessageRepository _messageRepository;
-  final SettingsRepository _settingsRepository;
+  final SettingsInteractor _settingsInteractor;
 
   void onMessage(MessageModel message) {
     final ticket = _messageRepository.get(message.aKey);
@@ -178,9 +179,9 @@ class MessagesInteractor {
         message: message.copyWith(peerId: myPeerId),
       );
 
-  void _onSettingsChange(final SettingsEvent event) {
-    if (event.key == SettingsRepositoryKeys.isBootstrapEnabled) {
-      event.value.isBootstrapEnabled
+  void _onSettingsChange(final MapEntry<String, Object> event) {
+    if (event.key == keyIsBootstrapEnabled) {
+      event.value as bool
           ? _networkService.addBootstrapServer(
               Envs.bsPeerId,
               ipV4: Envs.bsAddressV4,

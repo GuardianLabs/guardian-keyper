@@ -1,10 +1,10 @@
 import 'package:get_it/get_it.dart';
 
-import '/src/core/consts.dart';
+import '/src/core/app/consts.dart';
 import '/src/core/data/core_model.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
-import '/src/core/service/network/network_service.dart';
+import '/src/core/data/network_manager.dart';
 
 import '../../widgets/guardian_list_tile.dart';
 
@@ -25,7 +25,7 @@ class _GuardianWithPingTileState extends State<GuardianWithPingTile> {
         onLongPress: _isWaiting
             ? null
             : () async {
-                final networkService = GetIt.I<NetworkService>();
+                final networkService = GetIt.I<NetworkManager>();
                 if (widget.guardian == networkService.myPeerId) return;
                 setState(() => _isWaiting = true);
                 final startedAt = DateTime.now();

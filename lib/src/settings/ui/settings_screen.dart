@@ -1,6 +1,6 @@
 import 'package:provider/provider.dart';
 
-import '/src/core/consts.dart';
+import '/src/core/app/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 import '/src/core/ui/widgets/auth/auth.dart';

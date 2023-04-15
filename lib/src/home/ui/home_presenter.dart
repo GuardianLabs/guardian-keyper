@@ -1,67 +1,95 @@
 import 'dart:async';
 import 'package:get_it/get_it.dart';
+import 'package:flutter/widgets.dart';
 
-import '/src/core/data/platform_manager.dart';
+import '/src/core/app/consts.dart';
+import '/src/core/data/network_manager.dart';
+import '/src/core/ui/widgets/auth/auth.dart';
 import '/src/core/ui/page_presenter_base.dart';
-import '/src/core/service/network/network_service.dart';
-import '/src/settings/data/settings_repository.dart';
+import '/src/core/infrastructure/platform_gateway.dart';
+
+import '/src/settings/domain/settings_interactor.dart';
 import '/src/message/data/message_repository.dart';
 import '/src/vaults/data/vault_repository.dart';
 
 export 'package:provider/provider.dart';
 
-class HomePresenter extends PagePresenterBase {
-  late final share = _platformManager.share;
-  late final vibrate = _platformManager.vibrate;
-  late final wakelockEnable = _platformManager.wakelockEnable;
-  late final wakelockDisable = _platformManager.wakelockDisable;
-  late final localAuthenticate = _platformManager.localAuthenticate;
-  late final startNetwork = _networkService.start;
-  late final pauseNetwork = _networkService.pause;
-  late final stopNetwork = _networkService.stop;
-
-  PeerId get myPeerId => _myPeerId;
-
-  bool get hasBiometrics => _platformManager.hasBiometrics;
-
-  Map<VaultId, VaultModel> get myVaults => _myVaults;
-  Map<VaultId, VaultModel> get guardedVaults => _guardedVaults;
-
-  HomePresenter({required super.pages}) {
-    // cache Vaults
-    for (final vault in _vaultRepository.values) {
-      vault.ownerId == _myPeerId
-          ? _myVaults[vault.id] = vault
-          : _guardedVaults[vault.id] = vault;
-    }
+class HomePresenter extends PagePresenterBase with WidgetsBindingObserver {
+  HomePresenter({
+    required super.pages,
+    SettingsInteractor? settingsInteractor,
+  }) : _settingsInteractor = settingsInteractor ?? SettingsInteractor() {
+    WidgetsBinding.instance.addObserver(this);
+    _cacheVaults();
     // subscribe to updates
     _vaultsUpdatesSubscription =
         _vaultRepository.watch().listen(_onVaultsUpdate);
     _settingsUpdatesSubscription =
-        _settingsRepository.stream.listen(_onSettingsUpdate);
+        _settingsInteractor.settingsChanges.listen(_onSettingsUpdate);
   }
 
-  final _networkService = GetIt.I<NetworkService>();
-  final _platformManager = GetIt.I<PlatformManager>();
+  bool canShowMessage = false;
+
+  late final share = _platformGateway.share;
+
+  bool get canNotShowMessage => !canShowMessage;
+
+  PeerId get myPeerId => _myPeerId;
+
+  bool get isFirstStart => _settingsInteractor.passCode.isEmpty;
+
+  Map<VaultId, VaultModel> get myVaults => _myVaults;
+  Map<VaultId, VaultModel> get guardedVaults => _guardedVaults;
+
+  void Function(void Function(BoxEvent)) get onMessage =>
+      _messageStreamSubscription.onData;
+
+  final _networkService = GetIt.I<NetworkManager>();
+  final _platformGateway = GetIt.I<PlatformGateway>();
   final _vaultRepository = GetIt.I<VaultRepository>();
   final _messageRepository = GetIt.I<MessageRepository>();
-  final _settingsRepository = GetIt.I<SettingsRepository>();
+  final SettingsInteractor _settingsInteractor;
 
   late final StreamSubscription<BoxEvent> _vaultsUpdatesSubscription;
-  late final StreamSubscription<SettingsEvent> _settingsUpdatesSubscription;
+  late final StreamSubscription<MapEntry<String, Object>>
+      _settingsUpdatesSubscription;
+  late final _messageStreamSubscription =
+      _messageRepository.watch().listen(null);
 
   final _myVaults = <VaultId, VaultModel>{};
   final _guardedVaults = <VaultId, VaultModel>{};
 
   late var _myPeerId = _networkService.myPeerId.copyWith(
-    name: _settingsRepository.settings.deviceName,
+    name: _settingsInteractor.deviceName,
   );
 
   @override
+  void didChangeAppLifecycleState(final AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      await _networkService.start();
+    } else {
+      await _networkService.pause();
+      await _vaultRepository.flush();
+      await _messageRepository.flush();
+    }
+  }
+
+  @override
   void dispose() async {
-    await _vaultsUpdatesSubscription.cancel();
-    await _settingsUpdatesSubscription.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    Future.wait([
+      _settingsUpdatesSubscription.cancel(),
+      _vaultsUpdatesSubscription.cancel(),
+      _messageStreamSubscription.cancel(),
+    ]);
+    await _networkService.stop();
+    await _vaultRepository.flush();
+    await _messageRepository.flush();
     super.dispose();
+  }
+
+  Future<void> start() async {
+    await _networkService.start();
   }
 
   /// Create ticket to join vault
@@ -84,9 +112,25 @@ class HomePresenter extends PagePresenterBase {
     return message;
   }
 
-  void _onSettingsUpdate(final SettingsEvent event) {
-    if (event.key == SettingsRepositoryKeys.deviceName) {
-      _myPeerId = _myPeerId.copyWith(name: event.value.deviceName);
+  Future<void> demandPassCode(final BuildContext context) => showDemandPassCode(
+        context: context,
+        onVibrate: _platformGateway.vibrate,
+        currentPassCode: _settingsInteractor.passCode,
+        useBiometrics: _settingsInteractor.useBiometrics,
+        localAuthenticate: _platformGateway.localAuthenticate,
+      );
+
+  void _cacheVaults() {
+    for (final vault in _vaultRepository.values) {
+      vault.ownerId == _myPeerId
+          ? _myVaults[vault.id] = vault
+          : _guardedVaults[vault.id] = vault;
+    }
+  }
+
+  void _onSettingsUpdate(final MapEntry<String, Object> event) {
+    if (event.key == keyDeviceName) {
+      _myPeerId = _myPeerId.copyWith(name: event.value as String);
       notifyListeners();
     }
   }

@@ -2,15 +2,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import '/src/core/di.dart';
-import '/src/core/routes.dart';
 import '/src/core/ui/theme/theme.dart';
-import 'ui/widgets/init_loader.dart';
+import '/src/core/ui/widgets/init_loader.dart';
 
 import '/src/home/ui/home_screen.dart';
 import '/src/home/ui/home_presenter.dart';
 import '/src/message/ui/message_presenter.dart';
 import '/src/settings/ui/settings_presenter.dart';
+
+import 'di.dart';
+import 'routes.dart';
 
 class App extends StatelessWidget {
   static Future<void> init() async {
@@ -24,7 +25,7 @@ class App extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => FutureBuilder<bool>(
         future: DI.init(),
-        builder: (context, snapshot) => snapshot.data == null
+        builder: (final context, final snapshot) => snapshot.data == null
             ? MaterialApp(
                 home: const InitLoader(),
                 theme: themeLight,

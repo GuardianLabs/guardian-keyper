@@ -1,6 +1,7 @@
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 
-import '/src/core/consts.dart';
+import '/src/core/app/consts.dart';
+
 import '../common.dart';
 import '../icon_of.dart';
 

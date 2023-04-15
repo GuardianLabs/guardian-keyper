@@ -1,43 +1,41 @@
 import 'package:get_it/get_it.dart';
 
-import '/src/core/data/platform_manager.dart';
+import '/src/core/infrastructure/platform_gateway.dart';
 
-import '../data/settings_repository.dart';
+import '../data/settings_manager.dart';
 
 class SettingsInteractor {
   SettingsInteractor({
-    PlatformManager? platformManager,
-    SettingsRepository? settingsRepository,
-  })  : _platformManager = platformManager ?? GetIt.I<PlatformManager>(),
-        _settingsRepository =
-            settingsRepository ?? GetIt.I<SettingsRepository>();
+    SettingsManager? settingsManager,
+    PlatformGateway? platformGateway,
+  })  : _platformGateway = platformGateway ?? GetIt.I<PlatformGateway>(),
+        _settingsManager = settingsManager ?? GetIt.I<SettingsManager>();
 
-  bool get hasBiometrics => _platformManager.hasBiometrics;
+  String get passCode => _settingsManager.passCode;
 
-  String get passCode => _settingsRepository.settings.passCode;
+  String get deviceName => _settingsManager.deviceName;
 
-  String get deviceName => _settingsRepository.settings.deviceName;
+  bool get isBootstrapEnabled => _settingsManager.isBootstrapEnabled;
 
-  bool get isBootstrapEnabled =>
-      _settingsRepository.settings.isBootstrapEnabled;
+  bool get isBiometricsEnabled => _settingsManager.isBiometricsEnabled;
 
-  bool get isBiometricsEnabled =>
-      _settingsRepository.settings.isBiometricsEnabled;
+  bool get useBiometrics => hasBiometrics && isBiometricsEnabled;
 
-  Stream<SettingsEvent> get settingsChanges => _settingsRepository.stream;
+  bool get hasBiometrics => _settingsManager.hasBiometrics;
 
-  late final vibrate = _platformManager.vibrate;
+  Stream<MapEntry<String, Object>> get settingsChanges =>
+      _settingsManager.changes;
 
-  late final setPassCode = _settingsRepository.setPassCode;
+  late final vibrate = _platformGateway.vibrate;
 
-  late final setDeviceName = _settingsRepository.setDeviceName;
+  late final setPassCode = _settingsManager.setPassCode;
 
-  late final setIsBootstrapEnabled = _settingsRepository.setIsBootstrapEnabled;
+  late final setDeviceName = _settingsManager.setDeviceName;
 
-  late final setIsBiometricsEnabled =
-      _settingsRepository.setIsBiometricsEnabled;
+  late final setIsBootstrapEnabled = _settingsManager.setIsBootstrapEnabled;
 
-  final PlatformManager _platformManager;
+  late final setIsBiometricsEnabled = _settingsManager.setIsBiometricsEnabled;
 
-  final SettingsRepository _settingsRepository;
+  final SettingsManager _settingsManager;
+  final PlatformGateway _platformGateway;
 }

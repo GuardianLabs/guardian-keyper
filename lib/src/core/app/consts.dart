@@ -34,3 +34,9 @@ abstract class Envs {
   static const bsAddressV6 = String.fromEnvironment('BS_V6');
   static const bsPort = int.fromEnvironment('BS_PORT', defaultValue: 2022);
 }
+
+const keySeed = 'seed';
+const keyPassCode = 'pass_code';
+const keyDeviceName = 'deviceName';
+const keyIsBootstrapEnabled = 'isBootstrapEnabled';
+const keyIsBiometricsEnabled = 'isBiometricsEnabled';
