@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 import '/src/core/ui/theme/theme.dart';
-import '/src/core/data/core_model.dart';
+import '../../../core/domain/core_model.dart';
 import '/src/core/data/network_manager.dart';
 
 class OnlineStatusText extends StatefulWidget {

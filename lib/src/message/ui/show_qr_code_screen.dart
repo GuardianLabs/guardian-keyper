@@ -5,9 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '/src/core/app/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
-import '/src/core/infrastructure/platform_gateway.dart';
+import '/src/core/data/platform_gateway.dart';
 
-import '/src/message/data/message_repository.dart';
+import '../data/message_repository.dart';
 
 class ShowQRCodeScreen extends StatefulWidget {
   static const routeName = routeShowQrCode;

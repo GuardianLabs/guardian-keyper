@@ -1,7 +1,7 @@
 import '/src/core/app/consts.dart';
 import '/src/core/ui/widgets/common.dart';
-import '/src/vaults/data/vault_repository.dart';
 
+import '../../../domain/vault_model.dart';
 import '../widgets/guardian_with_ping_tile.dart';
 
 class NewVaultPage extends StatelessWidget {

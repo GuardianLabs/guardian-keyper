@@ -4,6 +4,8 @@ import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 import '/src/vaults/data/vault_repository.dart';
 
+import '../../../domain/vault_model.dart';
+
 class RemoveVaultBottomSheet extends StatelessWidget {
   const RemoveVaultBottomSheet({super.key, required this.group});
 

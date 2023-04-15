@@ -1,9 +1,12 @@
 import 'package:get_it/get_it.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '/src/core/app/consts.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
-import '/src/vaults/data/vault_repository.dart';
+
+import '../../domain/vault_model.dart';
+import '../../data/vault_repository.dart';
 
 import 'pages/vault_page.dart';
 import 'pages/new_vault_page.dart';

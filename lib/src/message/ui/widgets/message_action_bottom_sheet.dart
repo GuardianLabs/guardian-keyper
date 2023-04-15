@@ -5,7 +5,7 @@ import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 
 import '../message_presenter.dart';
-import '../../data/message_model.dart';
+import '../../domain/message_model.dart';
 
 class MessageActionBottomSheet extends StatefulWidget {
   static const titles = {

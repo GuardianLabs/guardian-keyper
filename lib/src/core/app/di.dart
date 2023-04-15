@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
 
 import 'consts.dart';
-import '/src/core/data/network_manager.dart';
-import '/src/core/infrastructure/platform_gateway.dart';
-import '/src/core/infrastructure/analytics_gateway.dart';
+import '../data/network_manager.dart';
+import '../data/platform_gateway.dart';
+import '../data/analytics_gateway.dart';
 
 import '/src/message/data/message_repository.dart';
 import '/src/settings/data/settings_manager.dart';

@@ -1,5 +1,5 @@
 import '/src/core/app/consts.dart';
-import '/src/core/data/core_model.dart';
+import '../../../core/domain/core_model.dart';
 import '/src/core/ui/widgets/common.dart';
 
 import 'vault_restore_presenter.dart';

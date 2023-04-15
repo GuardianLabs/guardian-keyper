@@ -1,10 +1,12 @@
 import 'package:get_it/get_it.dart';
 
-import '/src/core/data/network_manager.dart';
-import '/src/core/infrastructure/platform_gateway.dart';
-import '/src/core/infrastructure/analytics_gateway.dart';
-import '/src/settings/data/settings_manager.dart';
-import '/src/vaults/data/vault_repository.dart';
+import 'package:guardian_keyper/src/core/domain/core_model.dart';
+import 'package:guardian_keyper/src/core/data/network_manager.dart';
+import 'package:guardian_keyper/src/core/data/platform_gateway.dart';
+import 'package:guardian_keyper/src/core/data/analytics_gateway.dart';
+import 'package:guardian_keyper/src/settings/data/settings_manager.dart';
+
+import '../data/vault_repository.dart';
 
 class VaultInteractor {
   VaultInteractor({

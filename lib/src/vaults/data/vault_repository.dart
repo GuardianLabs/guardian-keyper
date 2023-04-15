@@ -1,12 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'vault_model.dart';
-
-export 'package:hive_flutter/hive_flutter.dart';
-
-export '/src/core/data/core_model.dart';
-
-export 'vault_model.dart';
+import '../domain/vault_model.dart';
 
 typedef VaultRepository = Box<VaultModel>;
 

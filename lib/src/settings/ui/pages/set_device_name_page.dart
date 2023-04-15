@@ -1,5 +1,5 @@
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/data/core_model.dart';
+import 'package:guardian_keyper/src/core/app/consts.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
 class SetDeviceNamePage extends StatefulWidget {
   final String deviceName;
@@ -40,13 +40,12 @@ class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
                     child: TextFormField(
                       autofocus: true,
                       keyboardType: TextInputType.text,
-                      maxLength: IdBase.maxNameLength,
+                      maxLength: maxTokenNameLength,
                       initialValue: _deviceName,
                       onChanged: (value) => setState(() => _deviceName = value),
                       decoration: const InputDecoration(
                         labelText: ' Device name ',
-                        helperText:
-                            'Minimum ${IdBase.minNameLength} characters',
+                        helperText: 'Minimum $minTokenNameLength characters',
                       ),
                     ),
                   ),
@@ -55,7 +54,7 @@ class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
                     padding: paddingV20,
                     child: PrimaryButton(
                       text: 'Proceed',
-                      onPressed: _deviceName.length < IdBase.minNameLength
+                      onPressed: _deviceName.length < minTokenNameLength
                           ? null
                           : () => Navigator.of(context).pop(_deviceName),
                     ),

@@ -7,8 +7,8 @@ import 'package:p2plib/p2plib.dart' as p2p;
 import 'package:nsd/nsd.dart';
 
 import '../app/consts.dart';
-import '/src/core/data/core_model.dart';
-import '/src/core/infrastructure/secure_storage.dart';
+import '../domain/core_model.dart';
+import 'secure_storage.dart';
 
 // TBD: update transports with NetworkInterface.list()
 class NetworkManager with ConnectivityHandler, MdnsHandler {

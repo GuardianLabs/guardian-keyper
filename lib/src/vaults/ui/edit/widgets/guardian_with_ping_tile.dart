@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 
 import '/src/core/app/consts.dart';
-import '/src/core/data/core_model.dart';
+import '../../../../core/domain/core_model.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/data/network_manager.dart';

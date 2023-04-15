@@ -1,15 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:messagepack/messagepack.dart';
 
-import '/src/core/data/core_model.dart';
-import '/src/core/utils/random_utils.dart';
+import 'package:guardian_keyper/src/core/domain/core_model.dart';
 
 class SecretId extends IdBase {
   static const currentVersion = 1;
-  static const size = 8;
 
-  SecretId({Uint8List? token, super.name})
-      : super(token: token ?? getRandomBytes(size));
+  const SecretId({required super.token, super.name});
+
+  SecretId.aNew({super.name}) : super(token: IdBase.getNew(length: 8));
 
   factory SecretId.fromBytes(List<int> token) {
     final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));
@@ -69,9 +68,6 @@ class SecretShardModel extends Serializable {
 
   @override
   bool get isEmpty => shard.isEmpty;
-
-  @override
-  bool get isNotEmpty => shard.isNotEmpty;
 
   String get aKey => id.asKey;
 

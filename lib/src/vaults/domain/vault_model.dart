@@ -1,15 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:messagepack/messagepack.dart';
 
-import '/src/core/data/core_model.dart';
-import '/src/core/utils/random_utils.dart';
+import 'package:guardian_keyper/src/core/domain/core_model.dart';
 
 class VaultId extends IdBase {
   static const currentVersion = 1;
-  static const size = 8;
 
-  VaultId({Uint8List? token, super.name})
-      : super(token: token ?? getRandomBytes(size));
+  const VaultId({required super.token, super.name});
+
+  VaultId.aNew({super.name}) : super(token: IdBase.getNew(length: 8));
 
   factory VaultId.fromBytes(List<int> token) {
     final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));
@@ -51,13 +50,12 @@ class VaultModel extends Serializable {
   VaultModel({
     this.version = currentVersion,
     VaultId? id,
-    PeerId? ownerId,
+    required this.ownerId,
     this.maxSize = 0,
     this.threshold = 0,
     this.guardians = const {},
     this.secrets = const {},
-  })  : id = id ?? VaultId(),
-        ownerId = ownerId ?? PeerId();
+  }) : id = id ?? VaultId.aNew();
 
   @override
   int get hashCode => Object.hash(runtimeType, id.hashCode);
@@ -70,9 +68,6 @@ class VaultModel extends Serializable {
 
   @override
   bool get isEmpty => guardians.isEmpty;
-
-  @override
-  bool get isNotEmpty => guardians.isNotEmpty;
 
   String get aKey => id.asKey;
 

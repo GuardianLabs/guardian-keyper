@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:messagepack/messagepack.dart';
 
-import '/src/core/data/core_model.dart';
-import '/src/core/utils/random_utils.dart';
+import 'package:guardian_keyper/src/core/domain/core_model.dart';
 
 enum MessageStatus {
   created,
@@ -18,9 +17,10 @@ enum MessageCode { createGroup, getShard, setShard, takeGroup }
 
 class MessageId extends IdBase {
   static const currentVersion = 1;
-  static const size = 16;
 
-  MessageId({Uint8List? token}) : super(token: token ?? getRandomBytes(size));
+  const MessageId({required super.token});
+
+  MessageId.aNew({super.name}) : super(token: IdBase.getNew(length: 16));
 
   factory MessageId.fromBytes(List<int> token) {
     final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));
@@ -72,15 +72,14 @@ class MessageModel extends Serializable {
   MessageModel({
     this.version = currentVersion,
     MessageId? id,
-    PeerId? peerId,
+    required this.peerId,
     DateTime? timestamp,
     required this.code,
     this.status = MessageStatus.created,
     this.payload,
-  })  : peerId = peerId ?? PeerId(),
+  })  : id = id ?? MessageId.aNew(),
         timestamp = timestamp ?? DateTime.now(),
-        payloadTypeId = type2TypeId[payload.runtimeType],
-        id = id ?? MessageId();
+        payloadTypeId = type2TypeId[payload.runtimeType];
 
   @override
   int get hashCode => Object.hash(runtimeType, id.hashCode);
@@ -93,9 +92,6 @@ class MessageModel extends Serializable {
 
   @override
   bool get isEmpty => payload == null;
-
-  @override
-  bool get isNotEmpty => payload != null;
 
   String get aKey => id.asKey;
 

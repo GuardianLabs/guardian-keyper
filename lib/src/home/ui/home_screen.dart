@@ -5,7 +5,7 @@ import '/src/core/app/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 
-import '/src/message/data/message_model.dart';
+import '/src/message/domain/message_model.dart';
 import '/src/message/ui/widgets/message_action_bottom_sheet.dart';
 
 import 'home_presenter.dart';

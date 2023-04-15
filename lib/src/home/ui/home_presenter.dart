@@ -6,7 +6,7 @@ import '/src/core/app/consts.dart';
 import '/src/core/data/network_manager.dart';
 import '/src/core/ui/widgets/auth/auth.dart';
 import '/src/core/ui/page_presenter_base.dart';
-import '/src/core/infrastructure/platform_gateway.dart';
+import '/src/core/data/platform_gateway.dart';
 
 import '/src/settings/domain/settings_interactor.dart';
 import '/src/message/data/message_repository.dart';
@@ -107,7 +107,9 @@ class HomePresenter extends PagePresenterBase with WidgetsBindingObserver {
     final message = MessageModel(code: MessageCode.takeGroup, peerId: myPeerId);
     await _messageRepository.put(
       message.aKey,
-      message.copyWith(payload: VaultModel(id: groupId)),
+      message.copyWith(
+        payload: VaultModel(id: groupId, ownerId: PeerId.empty),
+      ),
     );
     return message;
   }

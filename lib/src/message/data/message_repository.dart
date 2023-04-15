@@ -1,12 +1,10 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'message_model.dart';
+import '../domain/message_model.dart';
 
 export 'package:hive_flutter/hive_flutter.dart';
 
-export '/src/core/data/core_model.dart';
-
-export 'message_model.dart';
+export '/src/core/domain/core_model.dart';
 
 typedef MessageRepository = Box<MessageModel>;
 

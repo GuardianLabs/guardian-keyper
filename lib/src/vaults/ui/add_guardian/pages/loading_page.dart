@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 
 import '/src/core/app/consts.dart';
-import '/src/core/data/core_model.dart';
+import '../../../../core/domain/core_model.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';

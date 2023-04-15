@@ -1,6 +1,7 @@
-import '/src/core/data/core_model.dart';
+import 'package:guardian_keyper/src/core/app/consts.dart';
 
 import '../vault_presenter_base.dart';
+import '../../domain/vault_model.dart';
 
 export 'package:provider/provider.dart';
 
@@ -20,7 +21,7 @@ class VaultCreatePresenter extends VaultPresenterBase {
 
   bool get isGroupMember => _isGroupMember;
 
-  bool get isGroupNameToolShort => _groupName.length < IdBase.minNameLength;
+  bool get isGroupNameToolShort => _groupName.length < minTokenNameLength;
 
   set groupSize(int size) {
     _groupSize = size;
@@ -45,7 +46,7 @@ class VaultCreatePresenter extends VaultPresenterBase {
   Future<VaultModel> createVault() {
     logFinishCreateVault();
     return createGroup(VaultModel(
-      id: VaultId(name: _groupName),
+      id: VaultId.aNew(name: _groupName),
       maxSize: _groupSize,
       threshold: _groupThreshold,
       ownerId: myPeerId,

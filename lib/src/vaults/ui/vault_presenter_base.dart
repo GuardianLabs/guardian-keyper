@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '/src/core/data/core_model.dart';
+import '../../core/domain/core_model.dart';
 import '/src/core/ui/page_presenter_base.dart';
 
 import '../domain/vault_interactor.dart';

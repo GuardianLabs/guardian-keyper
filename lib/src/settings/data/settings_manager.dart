@@ -4,8 +4,8 @@ import 'dart:typed_data';
 import 'package:local_auth/local_auth.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
-import '/src/core/app/consts.dart';
-import '/src/core/infrastructure/secure_storage.dart';
+import 'package:guardian_keyper/src/core/app/consts.dart';
+import 'package:guardian_keyper/src/core/data/secure_storage.dart';
 
 class SettingsManager {
   SettingsManager({

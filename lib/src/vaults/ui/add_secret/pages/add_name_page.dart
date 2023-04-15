@@ -1,8 +1,7 @@
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/data/core_model.dart';
+import 'package:guardian_keyper/src/core/app/consts.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
 import '../vault_add_secret_presenter.dart';
-
 import '../widgets/add_secret_close_button.dart';
 
 class AddNamePage extends StatelessWidget {
@@ -10,7 +9,7 @@ class AddNamePage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final controller = context.read<VaultAddSecretPresenter>();
+    final presenter = context.read<VaultAddSecretPresenter>();
     return ListView(
       shrinkWrap: true,
       children: [
@@ -27,14 +26,14 @@ class AddNamePage extends StatelessWidget {
           child: TextFormField(
             keyboardType: TextInputType.name,
             maxLines: 1,
-            maxLength: IdBase.maxNameLength,
+            maxLength: maxTokenNameLength,
             style: textStyleSourceSansPro416,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,
               labelText: ' Secret name ',
               counterStyle: textStyleSourceSansPro414Purple,
             ),
-            onChanged: (value) => controller.secretName = value,
+            onChanged: (value) => presenter.secretName = value,
           ),
         ),
         // Footer
@@ -44,7 +43,7 @@ class AddNamePage extends StatelessWidget {
             selector: (_, controller) => controller.isNameTooShort,
             builder: (_, isNameTooShort, __) => PrimaryButton(
               text: 'Continue',
-              onPressed: isNameTooShort ? null : controller.nextScreen,
+              onPressed: isNameTooShort ? null : presenter.nextScreen,
             ),
           ),
         ),

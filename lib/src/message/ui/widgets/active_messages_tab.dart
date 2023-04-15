@@ -1,6 +1,6 @@
 import '/src/core/ui/widgets/common.dart';
 
-import '../../data/message_model.dart';
+import '../../domain/message_model.dart';
 import '../message_presenter.dart';
 import 'message_list_tile.dart';
 

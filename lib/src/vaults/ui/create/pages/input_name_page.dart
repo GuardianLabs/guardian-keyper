@@ -1,5 +1,4 @@
 import '/src/core/app/consts.dart';
-import '/src/core/data/core_model.dart';
 import '/src/core/ui/widgets/common.dart';
 
 import '../vault_create_presenter.dart';
@@ -27,7 +26,7 @@ class InputNamePage extends StatelessWidget {
               TextFormField(
                 autofocus: true,
                 keyboardType: TextInputType.text,
-                maxLength: IdBase.maxNameLength,
+                maxLength: maxTokenNameLength,
                 decoration: const InputDecoration(labelText: ' Vault name '),
                 onChanged: (value) => controller.groupName = value,
               ),

@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import '/src/core/infrastructure/platform_gateway.dart';
+import 'package:guardian_keyper/src/core/data/platform_gateway.dart';
 
 import '../data/settings_manager.dart';
 

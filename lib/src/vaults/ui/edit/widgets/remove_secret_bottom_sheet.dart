@@ -1,8 +1,11 @@
 import 'package:get_it/get_it.dart';
 
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/ui/widgets/icon_of.dart';
-import '/src/vaults/data/vault_repository.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/vaults/domain/secret_shard_model.dart';
+
+import '../../../domain/vault_model.dart';
+import '../../../data/vault_repository.dart';
 
 class RemoveSecretBottomSheet extends StatelessWidget {
   final VaultModel group;

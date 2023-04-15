@@ -1,10 +1,10 @@
 import '/src/core/app/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
-import '/src/vaults/data/vault_repository.dart';
 
-import '../widgets/guardians_expansion_tile.dart';
+import '../../../domain/vault_model.dart';
 import '../widgets/secrets_panel_list.dart';
+import '../widgets/guardians_expansion_tile.dart';
 
 class RestrictedVaultPage extends StatelessWidget {
   final VaultModel group;

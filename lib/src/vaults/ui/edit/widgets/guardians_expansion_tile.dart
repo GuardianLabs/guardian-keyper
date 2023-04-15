@@ -1,5 +1,5 @@
 import '/src/core/ui/widgets/common.dart';
-import '/src/core/data/core_model.dart';
+import '../../../../core/domain/core_model.dart';
 
 import 'guardian_with_ping_tile.dart';
 import '../../widgets/guardian_self_list_tile.dart';

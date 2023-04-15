@@ -1,4 +1,4 @@
-import '/src/core/data/core_model.dart';
+import '../../../core/domain/core_model.dart';
 
 import '../vault_presenter_base.dart';
 

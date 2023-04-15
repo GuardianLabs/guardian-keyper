@@ -2,9 +2,10 @@ part of 'core_model.dart';
 
 class PeerId extends IdBase {
   static const currentVersion = 1;
-  static const size = 64;
 
-  PeerId({Uint8List? token, super.name}) : super(token: token ?? Uint8List(0));
+  static final empty = PeerId(token: Uint8List(0));
+
+  const PeerId({required super.token, super.name});
 
   factory PeerId.fromBytes(List<int> token) {
     final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));

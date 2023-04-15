@@ -1,7 +1,7 @@
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
-import '/src/core/data/core_model.dart';
+import '../../../core/domain/core_model.dart';
 
 import 'message_action_bottom_sheet.dart';
 import 'request_card.dart';
