@@ -2,20 +2,24 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:get_it/get_it.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
 import 'package:nsd/nsd.dart';
 
 import '../app/consts.dart';
 import '../domain/core_model.dart';
+import 'platform_gateway.dart';
 import 'secure_storage.dart';
 
 // TBD: update transports with NetworkInterface.list()
-class NetworkManager with ConnectivityHandler, MdnsHandler {
+class NetworkManager with MdnsHandler {
   static const _initLimit = Duration(seconds: 5);
 
-  NetworkManager({final SecureStorage? secureStorage})
-      : _secureStorage =
+  NetworkManager({
+    final SecureStorage? secureStorage,
+    final PlatformGateway? platformGateway,
+  })  : _platformGateway = platformGateway ?? GetIt.I<PlatformGateway>(),
+        _secureStorage =
             secureStorage ?? SecureStorage(storage: Storages.settings),
         _router = p2p.RouterL2(
           logger: kDebugMode ? print : null,
@@ -41,6 +45,7 @@ class NetworkManager with ConnectivityHandler, MdnsHandler {
   final p2p.RouterL2 _router;
 
   final SecureStorage _secureStorage;
+  final PlatformGateway _platformGateway;
 
   final _messagesController = StreamController<MessageModel>.broadcast();
 
@@ -55,8 +60,14 @@ class NetworkManager with ConnectivityHandler, MdnsHandler {
     if (seed.isEmpty) {
       await _secureStorage.set<Uint8List>(keySeed, cryptoKeys.seed);
     }
-    _router.messageStream.listen(onMessage);
-    await _connectivityInit().timeout(_initLimit);
+
+    _router.messageStream.listen((final p2p.Message p2pMessage) {
+      final message = MessageModel.tryFromBytes(p2pMessage.payload);
+      if (message != null && message.version == MessageModel.currentVersion) {
+        _messagesController.add(message);
+      }
+    });
+
     await _initMdns().timeout(_initLimit);
     if (kDebugMode) print(_router.selfId);
     if (await _secureStorage.get(keyIsBootstrapEnabled) ?? false) {
@@ -71,10 +82,9 @@ class NetworkManager with ConnectivityHandler, MdnsHandler {
   }
 
   Future<void> start([void _]) async {
-    _connectivityType = await _connectivity.checkConnectivity();
-    if (kDebugMode) print(_connectivityType);
-    if (_connectivityType == ConnectivityResult.none) return;
-    await _startMdns();
+    await _platformGateway.checkConnectivity();
+    if (_platformGateway.hasNoConnectivity) return;
+    if (_platformGateway.hasWiFi) await _startMdns();
     await _router.start();
     if (_bsServer != null) {
       _router.sendMessage(
@@ -92,13 +102,6 @@ class NetworkManager with ConnectivityHandler, MdnsHandler {
   Future<void> stop([void _]) async {
     _router.stop();
     await _stopMdns();
-  }
-
-  void onMessage(final p2p.Message p2pMessage) {
-    final message = MessageModel.tryFromBytes(p2pMessage.payload);
-    if (message == null) return;
-    if (message.version != MessageModel.currentVersion) return;
-    _messagesController.add(message);
   }
 
   bool getPeerStatus(final PeerId peerId) =>
@@ -153,31 +156,6 @@ class NetworkManager with ConnectivityHandler, MdnsHandler {
       print('Bootstrap addresses: ${_router.routes[bsPeerId]?.addresses}');
     }
     if (_router.isRun) _router.sendMessage(dstPeerId: bsPeerId);
-  }
-}
-
-// TBD: separate to independent repository
-mixin ConnectivityHandler {
-  final _connectivity = Connectivity();
-  final _connectivityController = StreamController<bool>.broadcast();
-
-  late ConnectivityResult _connectivityType;
-
-  bool get hasConnectivity => _connectivityType != ConnectivityResult.none;
-
-  Future<bool> get checkConnectivity => _connectivity
-      .checkConnectivity()
-      .then((result) => result != ConnectivityResult.none);
-
-  Stream<bool> get connectivityStream => _connectivityController.stream;
-
-  Future<void> _connectivityInit() async {
-    _connectivityType = await _connectivity.checkConnectivity();
-    _connectivity.onConnectivityChanged.listen((result) {
-      if (kDebugMode) print(result);
-      _connectivityType = result;
-      _connectivityController.add(result != ConnectivityResult.none);
-    });
   }
 }
 

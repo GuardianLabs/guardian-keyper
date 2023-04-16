@@ -18,7 +18,7 @@ abstract class DI {
     GetIt.I.registerSingleton<AnalyticsGateway>(
         await AnalyticsGateway.init(Envs.amplitudeKey));
 
-    GetIt.I.registerSingleton<PlatformGateway>(const PlatformGateway());
+    GetIt.I.registerSingleton<PlatformGateway>(PlatformGateway());
 
     final settingsManager = SettingsManager();
     await settingsManager.init();
