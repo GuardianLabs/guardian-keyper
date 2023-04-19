@@ -5,10 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:collection/collection.dart';
 import 'package:messagepack/messagepack.dart';
 
+import '../../app/consts.dart';
+
 export '/src/vaults/domain/vault_model.dart';
 export '/src/vaults/domain/secret_shard_model.dart';
 export '/src/message/domain/message_model.dart';
 
+part 'env.dart';
 part 'id_base.dart';
 part 'peer_id.dart';
 

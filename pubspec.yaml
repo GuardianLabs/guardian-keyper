@@ -6,7 +6,7 @@ version: 2.0.3
 
 environment:
   sdk: ">=2.19.2 <3.0.0"
-  flutter: ^3.7.10
+  flutter: ^3.7.11
 
 dependencies:
   flutter:
@@ -21,7 +21,7 @@ dependencies:
   provider: ^6.0.5
   # logging: ^1.1.1
   get_it: ^7.2.0
-  p2plib: ^1.1.2
+  p2plib: ^1.1.5
   sss256: ^1.0.0
   intl: ^0.18.0
   qr_flutter:

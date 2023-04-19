@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/emoji.dart';
-import '../../../core/domain/core_model.dart';
+import '../../../core/domain/entity/core_model.dart';
 
 class RequestCard extends StatelessWidget {
   final MessageModel message;

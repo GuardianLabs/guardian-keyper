@@ -13,30 +13,17 @@ const pageChangeDuration = Duration(milliseconds: 250);
 const retryNetworkTimeout = Duration(seconds: 3);
 const keepalivePeriod = Duration(seconds: 10);
 const snackBarDuration = Duration(seconds: 2);
+const initTimeout = Duration(seconds: 5);
 const qrCodeExpires = Duration(days: 1);
 
+const defaultPort = 2022;
 const maxForwardsLimit = 3;
 const maxStoredHeaders = 10;
 const maxSecretLength = 256;
 const passCodeLength = 6;
-
-const minTokenNameLength = 3;
-const maxTokenNameLength = 25;
+const maxNameLength = 25;
+const minNameLength = 3;
 
 const smallScreenHeight = 600;
 const mediumScreenHeight = 800;
 const bigScreenHeight = 1200;
-
-abstract class Envs {
-  static const amplitudeKey = String.fromEnvironment('AMPLITUDE_KEY');
-  static const bsPeerId = String.fromEnvironment('BS_ID');
-  static const bsAddressV4 = String.fromEnvironment('BS_V4');
-  static const bsAddressV6 = String.fromEnvironment('BS_V6');
-  static const bsPort = int.fromEnvironment('BS_PORT', defaultValue: 2022);
-}
-
-const keySeed = 'seed';
-const keyPassCode = 'pass_code';
-const keyDeviceName = 'deviceName';
-const keyIsBootstrapEnabled = 'isBootstrapEnabled';
-const keyIsBiometricsEnabled = 'isBiometricsEnabled';

@@ -26,7 +26,7 @@ class AddNamePage extends StatelessWidget {
           child: TextFormField(
             keyboardType: TextInputType.name,
             maxLines: 1,
-            maxLength: maxTokenNameLength,
+            maxLength: maxNameLength,
             style: textStyleSourceSansPro416,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.always,

@@ -10,10 +10,8 @@
 		<string>To increase security and facilitate off-the-grid workflows Keyper establishes direct connections with other Keyper instances in the same local network.</string>
 		<key>NSBonjourServices</key>
 		<array>
-			<string>_dartshare._udp</string>
+			<string>_guardianKeyper._udp</string>
 		</array>
-		<!-- <key>NSPhotoLibraryUsageDescription</key>
-    		<string>This app stores and loads QR codes</string> -->
 		<key>NSCameraUsageDescription</key>
 		<string>Keyper uses QR codes to link guardian devices to the main device</string>
 		<key>NSLocationWhenInUseUsageDescription</key>

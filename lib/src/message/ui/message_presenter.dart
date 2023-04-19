@@ -19,10 +19,11 @@ class MessagesPresenter extends ChangeNotifier {
       : _messagesInteractor = messagesInteractor ?? MessagesInteractor() {
     // cache and sort messages
     for (final message in _messagesInteractor.messages) {
-      if (message.peerId == _messagesInteractor.myPeerId) continue;
-      message.isReceived
-          ? _activeMessages.add(message)
-          : _resolvedMessages.add(message);
+      if (message.peerId != _messagesInteractor.myPeerId) {
+        message.isReceived
+            ? _activeMessages.add(message)
+            : _resolvedMessages.add(message);
+      }
     }
     _activeMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     _resolvedMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
@@ -56,7 +57,6 @@ class MessagesPresenter extends ChangeNotifier {
     }
   }
 
-  // TBD: refactor!
   void _onMessagesUpdates(final BoxEvent event) {
     if (event.deleted) {
       final key = event.key as String;
@@ -64,6 +64,7 @@ class MessagesPresenter extends ChangeNotifier {
       _resolvedMessages.removeWhere((e) => e.aKey == key);
     } else {
       final message = event.value as MessageModel;
+      if (message.peerId == _messagesInteractor.myPeerId) return;
       if (message.isReceived) {
         final index = _activeMessages.indexOf(message);
         index < 0

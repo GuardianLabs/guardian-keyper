@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
-import '/src/core/app/consts.dart';
 import '/src/core/data/network_manager.dart';
+import '../../core/data/preferences_manager.dart';
 
 import '/src/vaults/data/vault_repository.dart';
 import '/src/settings/domain/settings_interactor.dart';
@@ -181,14 +181,7 @@ class MessagesInteractor {
 
   void _onSettingsChange(final MapEntry<String, Object> event) {
     if (event.key == keyIsBootstrapEnabled) {
-      event.value as bool
-          ? _networkService.addBootstrapServer(
-              Envs.bsPeerId,
-              ipV4: Envs.bsAddressV4,
-              ipV6: Envs.bsAddressV6,
-              port: Envs.bsPort,
-            )
-          : _networkService.removeBootstrapServer(Envs.bsPeerId);
+      _networkService.toggleBootstrap(event.value as bool);
     }
   }
 

@@ -1,4 +1,4 @@
-import '../../domain/core_model.dart';
+import '../../domain/entity/core_model.dart';
 
 import 'common.dart';
 

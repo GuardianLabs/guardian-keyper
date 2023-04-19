@@ -24,11 +24,7 @@ class IntroPresenter extends PagePresenterBase {
 
   String get deviceName => _deviceName;
 
-  int get maxNameLength => maxTokenNameLength;
-
-  int get minNameLength => minTokenNameLength;
-
-  bool get canSaveName => _deviceName.length >= minTokenNameLength;
+  bool get canSaveName => _deviceName.length >= minNameLength;
 
   set introStep(final int value) {
     _introStep = value;

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:messagepack/messagepack.dart';
 
-import 'package:guardian_keyper/src/core/domain/core_model.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
 enum MessageStatus {
   created,

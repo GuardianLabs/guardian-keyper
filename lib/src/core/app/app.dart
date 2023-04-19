@@ -20,42 +20,48 @@ class App extends StatelessWidget {
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
-  const App({super.key});
+  const App({super.key, this.di = const DI()});
+
+  final DI di;
 
   @override
   Widget build(final BuildContext context) => FutureBuilder<bool>(
-        future: DI.init(),
-        builder: (final context, final snapshot) => snapshot.data == null
-            ? MaterialApp(
-                home: const InitLoader(),
-                theme: themeLight,
-                darkTheme: themeDark,
-                themeMode: ThemeMode.dark,
-              )
-            : MultiProvider(
-                providers: [
-                  ChangeNotifierProvider<SettingsPresenter>(
-                    create: (_) => SettingsPresenter(),
-                    lazy: false,
+        future: di.init(),
+        builder: (
+          final BuildContext context,
+          final AsyncSnapshot<bool> snapshot,
+        ) =>
+            snapshot.data == null
+                ? MaterialApp(
+                    home: const InitLoader(),
+                    theme: themeLight,
+                    darkTheme: themeDark,
+                    themeMode: ThemeMode.dark,
+                  )
+                : MultiProvider(
+                    providers: [
+                      ChangeNotifierProvider<SettingsPresenter>(
+                        create: (_) => SettingsPresenter(),
+                        lazy: false,
+                      ),
+                      ChangeNotifierProvider<MessagesPresenter>(
+                        create: (_) => MessagesPresenter(),
+                        lazy: false,
+                      ),
+                      ChangeNotifierProvider<HomePresenter>(
+                        create: (_) => HomePresenter(pages: HomeScreen.pages),
+                        lazy: false,
+                      ),
+                    ],
+                    child: MaterialApp(
+                      title: 'Guardian Keyper',
+                      theme: themeLight,
+                      darkTheme: themeDark,
+                      themeMode: ThemeMode.dark,
+                      onGenerateRoute: onGenerateRoute,
+                      navigatorObservers: [SentryNavigatorObserver()],
+                      home: const HomeScreen(),
+                    ),
                   ),
-                  ChangeNotifierProvider<MessagesPresenter>(
-                    create: (_) => MessagesPresenter(),
-                    lazy: false,
-                  ),
-                  ChangeNotifierProvider<HomePresenter>(
-                    create: (_) => HomePresenter(pages: HomeScreen.pages),
-                    lazy: false,
-                  ),
-                ],
-                child: MaterialApp(
-                  title: 'Guardian Keyper',
-                  theme: themeLight,
-                  darkTheme: themeDark,
-                  themeMode: ThemeMode.dark,
-                  onGenerateRoute: onGenerateRoute,
-                  navigatorObservers: [SentryNavigatorObserver()],
-                  home: const HomeScreen(),
-                ),
-              ),
       );
 }

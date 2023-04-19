@@ -1,3 +1,4 @@
+import '/src/core/app/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 
@@ -31,10 +32,10 @@ class SetDeviceNamePage extends StatelessWidget {
               initialValue: controller.deviceName,
               onChanged: controller.setDeviceName,
               keyboardType: TextInputType.text,
-              maxLength: controller.maxNameLength,
-              decoration: InputDecoration(
+              maxLength: maxNameLength,
+              decoration: const InputDecoration(
                 labelText: ' Guardian name ',
-                helperText: 'Minimum ${controller.minNameLength} characters',
+                helperText: 'Minimum $minNameLength characters',
               ),
             )),
         Padding(

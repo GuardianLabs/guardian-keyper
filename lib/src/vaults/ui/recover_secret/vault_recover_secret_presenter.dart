@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sss256/sss256.dart';
 
-import '../../../core/domain/core_model.dart';
+import '../../../core/domain/entity/core_model.dart';
 import '/src/core/ui/widgets/auth/auth.dart';
 
 import '../vault_presenter_base.dart';

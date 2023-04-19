@@ -1,5 +1,5 @@
 import '/src/core/app/consts.dart';
-import '../../../core/domain/core_model.dart';
+import '../../../core/domain/entity/core_model.dart';
 import '/src/core/ui/widgets/common.dart';
 
 import 'vault_recover_secret_presenter.dart';

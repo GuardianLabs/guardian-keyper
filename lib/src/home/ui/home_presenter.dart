@@ -2,15 +2,16 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/widgets.dart';
 
-import '/src/core/app/consts.dart';
-import '/src/core/data/network_manager.dart';
-import '/src/core/ui/widgets/auth/auth.dart';
-import '/src/core/ui/page_presenter_base.dart';
-import '/src/core/data/platform_gateway.dart';
+import 'package:guardian_keyper/src/core/data/mdns_manager.dart';
+import 'package:guardian_keyper/src/core/data/network_manager.dart';
+import 'package:guardian_keyper/src/core/data/platform_manager.dart';
+import 'package:guardian_keyper/src/core/data/preferences_manager.dart';
+import 'package:guardian_keyper/src/core/ui/page_presenter_base.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/auth/auth.dart';
 
-import '/src/settings/domain/settings_interactor.dart';
-import '/src/message/data/message_repository.dart';
-import '/src/vaults/data/vault_repository.dart';
+import 'package:guardian_keyper/src/settings/domain/settings_interactor.dart';
+import 'package:guardian_keyper/src/message/data/message_repository.dart';
+import 'package:guardian_keyper/src/vaults/data/vault_repository.dart';
 
 export 'package:provider/provider.dart';
 
@@ -30,7 +31,7 @@ class HomePresenter extends PagePresenterBase with WidgetsBindingObserver {
 
   bool canShowMessage = false;
 
-  late final share = _platformGateway.share;
+  late final share = _platformManager.share;
 
   bool get canNotShowMessage => !canShowMessage;
 
@@ -44,11 +45,12 @@ class HomePresenter extends PagePresenterBase with WidgetsBindingObserver {
   void Function(void Function(BoxEvent)) get onMessage =>
       _messageStreamSubscription.onData;
 
-  final _networkService = GetIt.I<NetworkManager>();
-  final _platformGateway = GetIt.I<PlatformGateway>();
+  final SettingsInteractor _settingsInteractor;
+  final _mdnsManager = GetIt.I<MdnsManager>();
+  final _networkManager = GetIt.I<NetworkManager>();
+  final _platformManager = GetIt.I<PlatformManager>();
   final _vaultRepository = GetIt.I<VaultRepository>();
   final _messageRepository = GetIt.I<MessageRepository>();
-  final SettingsInteractor _settingsInteractor;
 
   late final StreamSubscription<BoxEvent> _vaultsUpdatesSubscription;
   late final StreamSubscription<MapEntry<String, Object>>
@@ -59,37 +61,38 @@ class HomePresenter extends PagePresenterBase with WidgetsBindingObserver {
   final _myVaults = <VaultId, VaultModel>{};
   final _guardedVaults = <VaultId, VaultModel>{};
 
-  late var _myPeerId = _networkService.myPeerId.copyWith(
+  late var _myPeerId = _networkManager.myPeerId.copyWith(
     name: _settingsInteractor.deviceName,
   );
 
   @override
   void didChangeAppLifecycleState(final AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      await _networkService.start();
+      await _networkManager.start();
     } else {
-      await _networkService.pause();
+      _networkManager.pause();
       await _vaultRepository.flush();
       await _messageRepository.flush();
+      await _mdnsManager.stopDiscovery();
     }
   }
 
   @override
-  void dispose() async {
+  void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _networkManager.stop();
     Future.wait([
       _settingsUpdatesSubscription.cancel(),
       _vaultsUpdatesSubscription.cancel(),
       _messageStreamSubscription.cancel(),
+      _mdnsManager.dispose(),
     ]);
-    await _networkService.stop();
-    await _vaultRepository.flush();
-    await _messageRepository.flush();
     super.dispose();
   }
 
   Future<void> start() async {
-    await _networkService.start();
+    await _networkManager.start();
+    await _mdnsManager.startDiscovery();
   }
 
   /// Create ticket to join vault
@@ -116,10 +119,10 @@ class HomePresenter extends PagePresenterBase with WidgetsBindingObserver {
 
   Future<void> demandPassCode(final BuildContext context) => showDemandPassCode(
         context: context,
-        onVibrate: _platformGateway.vibrate,
+        onVibrate: _platformManager.vibrate,
         currentPassCode: _settingsInteractor.passCode,
         useBiometrics: _settingsInteractor.useBiometrics,
-        localAuthenticate: _platformGateway.localAuthenticate,
+        localAuthenticate: _platformManager.localAuthenticate,
       );
 
   void _cacheVaults() {

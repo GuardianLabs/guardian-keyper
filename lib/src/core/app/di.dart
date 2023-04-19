@@ -1,42 +1,41 @@
 import 'package:get_it/get_it.dart';
 
-import 'consts.dart';
+import '../data/mdns_manager.dart';
 import '../data/network_manager.dart';
-import '../data/platform_gateway.dart';
-import '../data/analytics_gateway.dart';
+import '../data/platform_manager.dart';
+import '../data/analytics_manager.dart';
+import '../data/preferences_manager.dart';
 
 import '/src/message/data/message_repository.dart';
 import '/src/settings/data/settings_manager.dart';
 import '/src/vaults/data/vault_repository.dart';
 
-abstract class DI {
+class DI {
   static bool _isInited = false;
 
-  static Future<bool> init() async {
+  const DI();
+
+  Future<bool> init() async {
     if (_isInited) return true;
 
-    GetIt.I.registerSingleton<AnalyticsGateway>(
-        await AnalyticsGateway.init(Envs.amplitudeKey));
+    GetIt.I.registerSingleton<Env>(const Env());
+    GetIt.I.registerSingleton<PlatformManager>(PlatformManager());
+    GetIt.I.registerSingleton<PreferencesManager>(const PreferencesManager());
+    GetIt.I.registerSingleton<AnalyticsManager>(await AnalyticsManager.init());
 
-    GetIt.I.registerSingleton<PlatformGateway>(PlatformGateway());
+    GetIt.I.registerSingleton<SettingsManager>(
+      await SettingsManager().init(),
+    );
+    GetIt.I.registerSingleton<NetworkManager>(
+      await NetworkManager().init(),
+    );
+    GetIt.I.registerSingleton<MdnsManager>(
+      await MdnsManager(router: GetIt.I<NetworkManager>().router).init(),
+    );
 
-    final settingsManager = SettingsManager();
-    await settingsManager.init();
-    GetIt.I.registerSingleton<SettingsManager>(settingsManager);
-
-    final networkManager = NetworkManager();
-    final aesKey = await networkManager.init();
-    GetIt.I.registerSingleton<NetworkManager>(networkManager);
-
-    // Register Hive Boxes
     await Hive.initFlutter('data_v1');
-    final cipher = HiveAesCipher(aesKey);
-    GetIt.I.registerSingleton<MessageRepository>(
-      await getMessageRepository(cipher: cipher),
-    );
-    GetIt.I.registerSingleton<VaultRepository>(
-      await getVaultRepository(cipher: cipher),
-    );
+    GetIt.I.registerSingleton<MessageRepository>(await getMessageRepository());
+    GetIt.I.registerSingleton<VaultRepository>(await getVaultRepository());
 
     return _isInited = true;
   }

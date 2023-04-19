@@ -1,16 +1,10 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/src/core/data/platform_gateway.dart';
+import 'package:guardian_keyper/src/core/data/platform_manager.dart';
 
 import '../data/settings_manager.dart';
 
 class SettingsInteractor {
-  SettingsInteractor({
-    SettingsManager? settingsManager,
-    PlatformGateway? platformGateway,
-  })  : _platformGateway = platformGateway ?? GetIt.I<PlatformGateway>(),
-        _settingsManager = settingsManager ?? GetIt.I<SettingsManager>();
-
   String get passCode => _settingsManager.passCode;
 
   String get deviceName => _settingsManager.deviceName;
@@ -26,7 +20,7 @@ class SettingsInteractor {
   Stream<MapEntry<String, Object>> get settingsChanges =>
       _settingsManager.changes;
 
-  late final vibrate = _platformGateway.vibrate;
+  late final vibrate = _platformManager.vibrate;
 
   late final setPassCode = _settingsManager.setPassCode;
 
@@ -36,6 +30,6 @@ class SettingsInteractor {
 
   late final setIsBiometricsEnabled = _settingsManager.setIsBiometricsEnabled;
 
-  final SettingsManager _settingsManager;
-  final PlatformGateway _platformGateway;
+  final _settingsManager = GetIt.I<SettingsManager>();
+  final _platformManager = GetIt.I<PlatformManager>();
 }

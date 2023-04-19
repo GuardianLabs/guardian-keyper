@@ -21,7 +21,7 @@ class VaultCreatePresenter extends VaultPresenterBase {
 
   bool get isGroupMember => _isGroupMember;
 
-  bool get isGroupNameToolShort => _groupName.length < minTokenNameLength;
+  bool get isGroupNameToolShort => _groupName.length < minNameLength;
 
   set groupSize(int size) {
     _groupSize = size;

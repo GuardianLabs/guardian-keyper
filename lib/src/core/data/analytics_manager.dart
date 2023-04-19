@@ -1,4 +1,7 @@
+import 'package:get_it/get_it.dart';
 import 'package:amplitude_flutter/amplitude.dart';
+
+import '../domain/entity/core_model.dart';
 
 typedef EventLogger = Future<void> Function(
   String eventType, {
@@ -6,16 +9,17 @@ typedef EventLogger = Future<void> Function(
   bool? outOfSession,
 });
 
-class AnalyticsGateway {
-  static Future<AnalyticsGateway> init(final String apiKey) async {
+class AnalyticsManager {
+  static Future<AnalyticsManager> init() async {
     final amplitude = Amplitude.getInstance();
-    if (apiKey.isEmpty) return const AnalyticsGateway();
+    final apiKey = GetIt.I<Env>().amplitudeKey;
+    if (apiKey.isEmpty) return const AnalyticsManager();
     await amplitude.init(apiKey);
     await amplitude.trackingSessionEvents(true);
     // Enable COPPA privacy guard.
     // This is useful when you choose not to report sensitive user information.
     await amplitude.enableCoppaControl();
-    return AnalyticsGateway(logEvent: amplitude.logEvent);
+    return AnalyticsManager(logEvent: amplitude.logEvent);
   }
 
   static Future<void> _logEvent(
@@ -26,7 +30,7 @@ class AnalyticsGateway {
 
   final EventLogger logEvent;
 
-  const AnalyticsGateway({this.logEvent = _logEvent});
+  const AnalyticsManager({this.logEvent = _logEvent});
 }
 
 const eventStartCreateVault = 'Start CreateVault';

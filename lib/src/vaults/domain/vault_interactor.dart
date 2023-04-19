@@ -1,48 +1,36 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/src/core/domain/core_model.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 import 'package:guardian_keyper/src/core/data/network_manager.dart';
-import 'package:guardian_keyper/src/core/data/platform_gateway.dart';
-import 'package:guardian_keyper/src/core/data/analytics_gateway.dart';
+import 'package:guardian_keyper/src/core/data/platform_manager.dart';
+import 'package:guardian_keyper/src/core/data/analytics_manager.dart';
 import 'package:guardian_keyper/src/settings/data/settings_manager.dart';
 
 import '../data/vault_repository.dart';
 
 class VaultInteractor {
-  VaultInteractor({
-    NetworkManager? networkService,
-    PlatformGateway? platformGateway,
-    AnalyticsGateway? analyticsGateway,
-    SettingsManager? settingsManager,
-    VaultRepository? vaultRepository,
-  })  : _networkService = networkService ?? GetIt.I<NetworkManager>(),
-        _platformGateway = platformGateway ?? GetIt.I<PlatformGateway>(),
-        _analyticsGateway = analyticsGateway ?? GetIt.I<AnalyticsGateway>(),
-        _vaultRepository = vaultRepository ?? GetIt.I<VaultRepository>(),
-        _settingsManager = settingsManager ?? GetIt.I<SettingsManager>();
-
-  late final myPeerId = _networkService.myPeerId.copyWith(
+  late final myPeerId = _networkManager.myPeerId.copyWith(
     name: _settingsManager.deviceName,
   );
-  late final requestRetryPeriod = _networkService.messageTTL;
+  late final requestRetryPeriod = _networkManager.messageTTL;
 
-  late final vibrate = _platformGateway.vibrate;
-  late final wakelockEnable = _platformGateway.wakelockEnable;
-  late final wakelockDisable = _platformGateway.wakelockDisable;
-  late final localAuthenticate = _platformGateway.localAuthenticate;
+  late final vibrate = _platformManager.vibrate;
+  late final wakelockEnable = _platformManager.wakelockEnable;
+  late final wakelockDisable = _platformManager.wakelockDisable;
+  late final localAuthenticate = _platformManager.localAuthenticate;
 
-  Stream<MessageModel> get messageStream => _networkService.messageStream;
+  Stream<MessageModel> get messageStream => _networkManager.messageStream;
 
   String get passCode => _settingsManager.passCode;
 
   bool get useBiometrics =>
       _settingsManager.hasBiometrics && _settingsManager.isBiometricsEnabled;
 
-  final NetworkManager _networkService;
-  final PlatformGateway _platformGateway;
-  final AnalyticsGateway _analyticsGateway;
-  final SettingsManager _settingsManager;
-  final VaultRepository _vaultRepository;
+  final _networkManager = GetIt.I<NetworkManager>();
+  final _platformManager = GetIt.I<PlatformManager>();
+  final _settingsManager = GetIt.I<SettingsManager>();
+  final _analyticsManager = GetIt.I<AnalyticsManager>();
+  final _vaultRepository = GetIt.I<VaultRepository>();
 
   VaultModel? getVaultById(final VaultId vaultId) =>
       _vaultRepository.get(vaultId.asKey);
@@ -75,39 +63,39 @@ class VaultInteractor {
       );
 
   Future<void> sendToGuardian(final MessageModel message) =>
-      _networkService.sendTo(
+      _networkManager.sendTo(
         isConfirmable: false,
         peerId: message.peerId,
         message: message.copyWith(peerId: myPeerId),
       );
 
   Future<void> logStartCreateVault() =>
-      _analyticsGateway.logEvent(eventStartCreateVault);
+      _analyticsManager.logEvent(eventStartCreateVault);
 
   Future<void> logFinishCreateVault() =>
-      _analyticsGateway.logEvent(eventFinishCreateVault);
+      _analyticsManager.logEvent(eventFinishCreateVault);
 
   Future<void> logStartAddGuardian() =>
-      _analyticsGateway.logEvent(eventStartAddGuardian);
+      _analyticsManager.logEvent(eventStartAddGuardian);
 
   Future<void> logFinishAddGuardian() =>
-      _analyticsGateway.logEvent(eventFinishAddGuardian);
+      _analyticsManager.logEvent(eventFinishAddGuardian);
 
   Future<void> logStartRestoreVault() =>
-      _analyticsGateway.logEvent(eventStartRestoreVault);
+      _analyticsManager.logEvent(eventStartRestoreVault);
 
   Future<void> logFinishRestoreVault() =>
-      _analyticsGateway.logEvent(eventFinishRestoreVault);
+      _analyticsManager.logEvent(eventFinishRestoreVault);
 
   Future<void> logStartAddSecret() =>
-      _analyticsGateway.logEvent(eventStartAddSecret);
+      _analyticsManager.logEvent(eventStartAddSecret);
 
   Future<void> logFinishAddSecret() =>
-      _analyticsGateway.logEvent(eventFinishAddSecret);
+      _analyticsManager.logEvent(eventFinishAddSecret);
 
   Future<void> logStartRestoreSecret() =>
-      _analyticsGateway.logEvent(eventStartRestoreSecret);
+      _analyticsManager.logEvent(eventStartRestoreSecret);
 
   Future<void> logFinishRestoreSecret() =>
-      _analyticsGateway.logEvent(eventFinishRestoreSecret);
+      _analyticsManager.logEvent(eventFinishRestoreSecret);
 }

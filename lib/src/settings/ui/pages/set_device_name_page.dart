@@ -40,12 +40,12 @@ class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
                     child: TextFormField(
                       autofocus: true,
                       keyboardType: TextInputType.text,
-                      maxLength: maxTokenNameLength,
+                      maxLength: maxNameLength,
                       initialValue: _deviceName,
                       onChanged: (value) => setState(() => _deviceName = value),
                       decoration: const InputDecoration(
                         labelText: ' Device name ',
-                        helperText: 'Minimum $minTokenNameLength characters',
+                        helperText: 'Minimum $minNameLength characters',
                       ),
                     ),
                   ),
@@ -54,7 +54,7 @@ class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
                     padding: paddingV20,
                     child: PrimaryButton(
                       text: 'Proceed',
-                      onPressed: _deviceName.length < minTokenNameLength
+                      onPressed: _deviceName.length < minNameLength
                           ? null
                           : () => Navigator.of(context).pop(_deviceName),
                     ),

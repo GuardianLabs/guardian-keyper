@@ -14,7 +14,7 @@ class VaultAddSecretPresenter extends VaultSecretPresenterBase {
 
   String get secret => _secret;
 
-  bool get isNameTooShort => _secretName.length < minTokenNameLength;
+  bool get isNameTooShort => _secretName.length < minNameLength;
 
   set secret(String value) {
     _secret = value;

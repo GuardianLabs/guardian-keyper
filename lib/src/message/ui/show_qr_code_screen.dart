@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '/src/core/app/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
-import '/src/core/data/platform_gateway.dart';
+import '../../core/data/platform_manager.dart';
 
 import '../data/message_repository.dart';
 
@@ -47,19 +47,19 @@ class _ShowQRCodeScreenState extends State<ShowQRCodeScreen> {
             'or Share as a Text via any messenger.',
   };
 
-  final _platformGateway = GetIt.I<PlatformGateway>();
+  final _platformManager = GetIt.I<PlatformManager>();
 
   late final _qrCode = widget.message.toBase64url();
 
   @override
   void initState() {
     super.initState();
-    _platformGateway.wakelockEnable();
+    _platformManager.wakelockEnable();
   }
 
   @override
   void dispose() {
-    _platformGateway.wakelockDisable();
+    _platformManager.wakelockDisable();
     super.dispose();
   }
 
@@ -143,7 +143,7 @@ class _ShowQRCodeScreenState extends State<ShowQRCodeScreen> {
                   label: const Text('Share Code'),
                   onPressed: () {
                     final box = context.findRenderObject() as RenderBox?;
-                    _platformGateway.share(
+                    _platformManager.share(
                       'This is a SINGLE-USE authentication token for '
                       'Guardian Keyper. DO NOT REUSE IT! \n $_qrCode',
                       subject: 'Guardian Code',

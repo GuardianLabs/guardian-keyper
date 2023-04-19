@@ -21,9 +21,8 @@ abstract class IdBase extends Serializable {
 
   @override
   bool operator ==(Object other) =>
-      other is IdBase &&
       runtimeType == other.runtimeType &&
-      _listEq.equals(token, other.token);
+      _listEq.equals(token, (other as IdBase).token);
 
   @override
   bool get isEmpty => token.isEmpty;
@@ -44,7 +43,7 @@ abstract class IdBase extends Serializable {
   Uint8List toBytes() => token;
 
   @override
-  String toString() => asHex;
+  String toString() => asKey;
 
   String toHexShort([int count = 12]) {
     final s = asHex;

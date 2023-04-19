@@ -3,30 +3,26 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-enum Storages { settings }
+const keySeed = 'seed';
+const keyPassCode = 'pass_code';
+const keyDeviceName = 'deviceName';
+const keyIsBootstrapEnabled = 'isBootstrapEnabled';
+const keyIsBiometricsEnabled = 'isBiometricsEnabled';
 
-class SecureStorage {
-  static final Map<String, SecureStorage> _cache = {};
+class PreferencesManager {
+  static const _storageName = 'settings';
+  static const _storage = FlutterSecureStorage(
+    iOptions: IOSOptions(accountName: _storageName),
+    aOptions: AndroidOptions(
+      encryptedSharedPreferences: true,
+      sharedPreferencesName: _storageName,
+      storageCipherAlgorithm: StorageCipherAlgorithm.AES_GCM_NoPadding,
+      keyCipherAlgorithm:
+          KeyCipherAlgorithm.RSA_ECB_OAEPwithSHA_256andMGF1Padding,
+    ),
+  );
 
-  SecureStorage._(this._storage);
-
-  factory SecureStorage({required final Storages storage}) =>
-      _cache.putIfAbsent(
-        storage.name,
-        () => SecureStorage._(FlutterSecureStorage(
-          aOptions: AndroidOptions(
-            encryptedSharedPreferences: true,
-            sharedPreferencesName: storage.name,
-            preferencesKeyPrefix: 'guardian_keyper',
-            storageCipherAlgorithm: StorageCipherAlgorithm.AES_GCM_NoPadding,
-            keyCipherAlgorithm:
-                KeyCipherAlgorithm.RSA_ECB_OAEPwithSHA_256andMGF1Padding,
-          ),
-          iOptions: IOSOptions(accountName: storage.name),
-        )),
-      );
-
-  final FlutterSecureStorage _storage;
+  const PreferencesManager();
 
   Future<T?> get<T extends Object>(final Object key) async {
     final value = await _storage.read(key: key.toString());
@@ -45,11 +41,8 @@ class SecureStorage {
     }
   }
 
-  Future<T?> set<T extends Object>(final Object key, final T? value) async {
+  Future<T> set<T extends Object>(final Object key, final T value) async {
     switch (T) {
-      case Null:
-        await _storage.write(key: key.toString(), value: null);
-        break;
       case bool:
         await _storage.write(key: key.toString(), value: value.toString());
         break;
