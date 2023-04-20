@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 
 import '../domain/settings_interactor.dart';
 
+export 'package:provider/provider.dart';
+
 class SettingsPresenter extends ChangeNotifier {
   SettingsPresenter({
     SettingsInteractor? settingsInteractor,

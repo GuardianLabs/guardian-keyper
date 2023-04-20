@@ -8,7 +8,6 @@ import '/src/core/ui/widgets/init_loader.dart';
 import '/src/home/ui/home_screen.dart';
 import '/src/home/ui/home_presenter.dart';
 import '/src/message/ui/message_presenter.dart';
-import '/src/settings/ui/settings_presenter.dart';
 
 import 'di.dart';
 import 'routes.dart';
@@ -40,10 +39,6 @@ class App extends StatelessWidget {
                   )
                 : MultiProvider(
                     providers: [
-                      ChangeNotifierProvider<SettingsPresenter>(
-                        create: (_) => SettingsPresenter(),
-                        lazy: false,
-                      ),
                       ChangeNotifierProvider<MessagesPresenter>(
                         create: (_) => MessagesPresenter(),
                         lazy: false,

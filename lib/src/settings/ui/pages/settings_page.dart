@@ -1,24 +1,12 @@
-import 'package:provider/provider.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/auth/auth.dart';
 
-import '/src/core/app/consts.dart';
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/ui/widgets/icon_of.dart';
-import '/src/core/ui/widgets/auth/auth.dart';
+import '../settings_presenter.dart';
+import 'set_device_name_page.dart';
 
-import 'settings_presenter.dart';
-import 'pages/set_device_name_page.dart';
-
-class SettingsScreen extends StatelessWidget {
-  static const routeName = routeSettings;
-
-  static MaterialPageRoute<void> getPageRoute(final RouteSettings settings) =>
-      MaterialPageRoute<void>(
-        fullscreenDialog: true,
-        settings: settings,
-        builder: (_) => const SettingsScreen(),
-      );
-
-  const SettingsScreen({super.key});
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
 
   @override
   Widget build(final BuildContext context) => ScaffoldSafe(
@@ -32,7 +20,12 @@ class SettingsScreen extends StatelessWidget {
             // Body
             Expanded(
               child: Consumer<SettingsPresenter>(
-                builder: (final context, final provider, _) => ListView(
+                builder: (
+                  final BuildContext context,
+                  final SettingsPresenter presenter,
+                  final Widget? _,
+                ) =>
+                    ListView(
                   padding: paddingAll20,
                   children: [
                     // Change Device Name
@@ -42,7 +35,7 @@ class SettingsScreen extends StatelessWidget {
                         leading: const IconOf.shardOwner(),
                         title: const Text('Change Guardian name'),
                         subtitle: Text(
-                          provider.deviceName,
+                          presenter.deviceName,
                           style: textStyleSourceSansPro414Purple,
                         ),
                         trailing: const Icon(Icons.arrow_forward_ios_rounded),
@@ -51,12 +44,12 @@ class SettingsScreen extends StatelessWidget {
                             MaterialPageRoute<String>(
                               fullscreenDialog: true,
                               builder: (_) => SetDeviceNamePage(
-                                deviceName: provider.deviceName,
+                                deviceName: presenter.deviceName,
                               ),
                             ),
                           );
                           if (newName == null) return;
-                          await provider.setDeviceName(newName);
+                          await presenter.setDeviceName(newName);
                           if (context.mounted) {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(buildSnackBar(
@@ -77,22 +70,22 @@ class SettingsScreen extends StatelessWidget {
                           style: textStyleSourceSansPro414Purple,
                         ),
                         trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                        onTap: () => provider.passCode.isEmpty
+                        onTap: () => presenter.passCode.isEmpty
                             ? showCreatePassCode(
                                 context: context,
-                                onConfirmed: provider.setPassCode,
-                                onVibrate: provider.vibrate,
+                                onConfirmed: presenter.setPassCode,
+                                onVibrate: presenter.vibrate,
                               )
                             : showChangePassCode(
                                 context: context,
-                                onConfirmed: provider.setPassCode,
-                                currentPassCode: provider.passCode,
-                                onVibrate: provider.vibrate,
+                                onConfirmed: presenter.setPassCode,
+                                currentPassCode: presenter.passCode,
+                                onVibrate: presenter.vibrate,
                               ),
                       ),
                     ),
                     // Toggle Biometrics
-                    if (provider.hasBiometrics)
+                    if (presenter.hasBiometrics)
                       Padding(
                         padding: paddingV6,
                         child: SwitchListTile.adaptive(
@@ -101,8 +94,8 @@ class SettingsScreen extends StatelessWidget {
                           subtitle: const Text(
                             'Easier, faster authentication with biometry',
                           ),
-                          value: provider.isBiometricsEnabled,
-                          onChanged: provider.setIsBiometricsEnabled,
+                          value: presenter.isBiometricsEnabled,
+                          onChanged: presenter.setIsBiometricsEnabled,
                         ),
                       ),
                     // Toggle Bootstrap
@@ -114,8 +107,8 @@ class SettingsScreen extends StatelessWidget {
                         subtitle: const Text(
                           'Connect through Keyper-operated proxy server',
                         ),
-                        value: provider.isBootstrapEnabled,
-                        onChanged: provider.setIsBootstrapEnabled,
+                        value: presenter.isBootstrapEnabled,
+                        onChanged: presenter.setIsBootstrapEnabled,
                       ),
                     ),
                   ],

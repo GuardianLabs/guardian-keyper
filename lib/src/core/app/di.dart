@@ -1,14 +1,14 @@
 import 'package:get_it/get_it.dart';
 
+import 'package:guardian_keyper/src/vaults/data/vault_repository.dart';
+import 'package:guardian_keyper/src/settings/data/settings_manager.dart';
+import 'package:guardian_keyper/src/message/data/message_repository.dart';
+
 import '../data/mdns_manager.dart';
 import '../data/network_manager.dart';
 import '../data/platform_manager.dart';
 import '../data/analytics_manager.dart';
 import '../data/preferences_manager.dart';
-
-import '/src/message/data/message_repository.dart';
-import '/src/settings/data/settings_manager.dart';
-import '/src/vaults/data/vault_repository.dart';
 
 class DI {
   static bool _isInited = false;
@@ -18,11 +18,13 @@ class DI {
   Future<bool> init() async {
     if (_isInited) return true;
 
+    // Independent
     GetIt.I.registerSingleton<Env>(const Env());
     GetIt.I.registerSingleton<PlatformManager>(PlatformManager());
     GetIt.I.registerSingleton<PreferencesManager>(const PreferencesManager());
     GetIt.I.registerSingleton<AnalyticsManager>(await AnalyticsManager.init());
 
+    // Depends on ^
     GetIt.I.registerSingleton<SettingsManager>(
       await SettingsManager().init(),
     );
