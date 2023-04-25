@@ -1,4 +1,4 @@
-import '/src/core/app/consts.dart';
+import '../../../../core/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 
 import '../vault_create_presenter.dart';
@@ -14,7 +14,7 @@ class InputNamePage extends StatelessWidget {
         // Header
         HeaderBar(
           caption: 'Name the Vault',
-          backButton: HeaderBarBackButton(onPressed: controller.previousScreen),
+          backButton: HeaderBarBackButton(onPressed: controller.previousPage),
           closeButton: const HeaderBarCloseButton(),
         ),
         // Body

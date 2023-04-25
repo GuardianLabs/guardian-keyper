@@ -42,7 +42,7 @@ class SecretShardModel extends Serializable {
   final int version;
   final SecretId id;
   final PeerId ownerId;
-  final VaultId groupId;
+  final VaultId vaultId;
   final int groupSize;
   final int groupThreshold;
   final String shard;
@@ -51,7 +51,7 @@ class SecretShardModel extends Serializable {
     this.version = currentVersion,
     required this.id,
     required this.ownerId,
-    required this.groupId,
+    required this.vaultId,
     required this.groupSize,
     required this.groupThreshold,
     required this.shard,
@@ -80,7 +80,7 @@ class SecretShardModel extends Serializable {
           version: version,
           id: SecretId.fromBytes(u.unpackBinary()),
           ownerId: PeerId.fromBytes(u.unpackBinary()),
-          groupId: VaultId.fromBytes(u.unpackBinary()),
+          vaultId: VaultId.fromBytes(u.unpackBinary()),
           groupSize: u.unpackInt()!,
           groupThreshold: u.unpackInt()!,
           shard: u.unpackString()!,
@@ -97,7 +97,7 @@ class SecretShardModel extends Serializable {
       ..packInt(currentVersion)
       ..packBinary(id.toBytes())
       ..packBinary(ownerId.toBytes())
-      ..packBinary(groupId.toBytes())
+      ..packBinary(vaultId.toBytes())
       ..packInt(groupSize)
       ..packInt(groupThreshold)
       ..packString(shard);
@@ -111,12 +111,12 @@ class SecretShardModel extends Serializable {
       SecretShardModel(
         id: id,
         ownerId: ownerId ?? this.ownerId,
-        groupId: groupId,
+        vaultId: vaultId,
         groupSize: groupSize,
         groupThreshold: groupThreshold,
         shard: shard ?? this.shard,
       );
 
   @override
-  String toString() => '${groupId.name} of ${ownerId.name}';
+  String toString() => '${vaultId.name} of ${ownerId.name}';
 }

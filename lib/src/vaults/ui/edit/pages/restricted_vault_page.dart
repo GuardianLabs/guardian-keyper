@@ -1,4 +1,4 @@
-import '/src/core/app/consts.dart';
+import '../../../../core/consts.dart';
 import '/src/core/ui/widgets/common.dart';
 import '/src/core/ui/widgets/icon_of.dart';
 

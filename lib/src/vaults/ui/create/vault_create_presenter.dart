@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/src/core/app/consts.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
 
 import '../vault_presenter_base.dart';
 import '../../domain/vault_model.dart';

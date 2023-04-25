@@ -1,4 +1,4 @@
-import '/src/core/app/consts.dart';
+import '../../../../core/consts.dart';
 import '../../../../core/domain/entity/core_model.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
@@ -83,54 +83,53 @@ class _LoadingPageState extends State<LoadingPage> {
         ],
       );
 
-  void _showSuccess(final MessageModel message) =>
-      message.recoveryGroup.missed == 0
-          ? showModalBottomSheet(
-              context: context,
-              isDismissible: false,
-              isScrollControlled: true,
-              builder: (final BuildContext context) => BottomSheetWidget(
-                icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
-                titleString: 'Ownership Changed',
-                textSpan: buildTextWithId(
-                  leadingText: 'The ownership of the Vault ',
-                  id: message.groupId,
-                  trailingText: ' has been transferred to your device.',
-                ),
-                footer: PrimaryButton(
-                  text: 'Done',
-                  onPressed: Navigator.of(context).pop,
-                ),
+  void _showSuccess(final MessageModel message) => message.vault.missed == 0
+      ? showModalBottomSheet(
+          context: context,
+          isDismissible: false,
+          isScrollControlled: true,
+          builder: (final BuildContext context) => BottomSheetWidget(
+            icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
+            titleString: 'Ownership Changed',
+            textSpan: buildTextWithId(
+              leadingText: 'The ownership of the Vault ',
+              id: message.vaultId,
+              trailingText: ' has been transferred to your device.',
+            ),
+            footer: PrimaryButton(
+              text: 'Done',
+              onPressed: Navigator.of(context).pop,
+            ),
+          ),
+        ).then(Navigator.of(context).pop)
+      : showModalBottomSheet(
+          context: context,
+          isDismissible: false,
+          isScrollControlled: true,
+          useRootNavigator: true,
+          builder: (final BuildContext context) => BottomSheetWidget(
+            icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
+            titleString: 'Ownership Transfer Approved',
+            textSpan: [
+              ...buildTextWithId(
+                id: message.peerId,
+                trailingText:
+                    ' approved the transfer of ownership for the Vault ',
               ),
-            ).then(Navigator.of(context).pop)
-          : showModalBottomSheet(
-              context: context,
-              isDismissible: false,
-              isScrollControlled: true,
-              useRootNavigator: true,
-              builder: (final BuildContext context) => BottomSheetWidget(
-                icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
-                titleString: 'Ownership Transfer Approved',
-                textSpan: [
-                  ...buildTextWithId(
-                    id: message.peerId,
-                    trailingText:
-                        ' approved the transfer of ownership for the Vault ',
-                  ),
-                  ...buildTextWithId(id: message.groupId),
-                ],
-                footer: PrimaryButton(
-                  text: 'Add another Guardian',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushReplacementNamed(
-                      routeVaultRestore,
-                      arguments: message.groupId,
-                    );
-                  },
-                ),
-              ),
-            );
+              ...buildTextWithId(id: message.vaultId),
+            ],
+            footer: PrimaryButton(
+              text: 'Add another Guardian',
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacementNamed(
+                  routeVaultRestore,
+                  arguments: message.vaultId,
+                );
+              },
+            ),
+          ),
+        );
 
   void _showRejected(final MessageModel message) => showModalBottomSheet(
         context: context,
@@ -145,7 +144,7 @@ class _LoadingPageState extends State<LoadingPage> {
               trailingText:
                   ' rejected the transfer of ownership for the Vault ',
             ),
-            ...buildTextWithId(id: message.groupId),
+            ...buildTextWithId(id: message.vaultId),
           ],
           body: Padding(
             padding: paddingV20,

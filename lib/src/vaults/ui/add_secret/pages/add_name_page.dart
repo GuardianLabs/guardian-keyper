@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/src/core/app/consts.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
 import '../vault_add_secret_presenter.dart';
@@ -43,7 +43,7 @@ class AddNamePage extends StatelessWidget {
             selector: (_, controller) => controller.isNameTooShort,
             builder: (_, isNameTooShort, __) => PrimaryButton(
               text: 'Continue',
-              onPressed: isNameTooShort ? null : presenter.nextScreen,
+              onPressed: isNameTooShort ? null : presenter.nextPage,
             ),
           ),
         ),

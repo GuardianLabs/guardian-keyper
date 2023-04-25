@@ -41,7 +41,7 @@ class IntrosPage extends StatelessWidget {
       onHorizontalDragEnd: (details) {
         if (details.velocity.pixelsPerSecond.dx < -5) {
           if (controller.introStep == _titles.length - 1) {
-            controller.nextScreen();
+            controller.nextPage();
           } else if (controller.introStep < _titles.length - 1) {
             controller.introStep++;
           }
@@ -86,7 +86,7 @@ class IntrosPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                  onPressed: controller.nextScreen,
+                  onPressed: controller.nextPage,
                   child: Text('Skip', style: textStylePoppins616),
                 ),
                 Row(
@@ -104,7 +104,7 @@ class IntrosPage extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () => controller.introStep == _titles.length - 1
-                      ? controller.nextScreen()
+                      ? controller.nextPage()
                       : controller.introStep++,
                   child: Text('Next', style: textStylePoppins616),
                 ),

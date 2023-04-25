@@ -28,7 +28,7 @@ class VaultRecoverySecretPresenter extends VaultSecretPresenterBase {
         payload: SecretShardModel(
           id: secretId,
           ownerId: myPeerId,
-          groupId: vaultId,
+          vaultId: vaultId,
           groupSize: vault.maxSize,
           groupThreshold: vault.threshold,
           shard: guardian == vault.ownerId ? vault.secrets[secretId]! : '',
@@ -67,7 +67,7 @@ class VaultRecoverySecretPresenter extends VaultSecretPresenterBase {
                 .map((e) => e.secretShard.shard)
                 .toList(),
           );
-          nextScreen();
+          nextPage();
         } else if (messages.where((e) => e.isRejected).length >
             vault.redudancy) {
           stopListenResponse();

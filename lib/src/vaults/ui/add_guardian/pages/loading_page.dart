@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 
-import '/src/core/app/consts.dart';
+import '../../../../core/consts.dart';
 import '../../../../core/domain/entity/core_model.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
@@ -94,7 +94,7 @@ class _LoadingPageState extends State<LoadingPage> {
             leadingText: 'You have successfully added ',
           ),
           ...buildTextWithId(
-            id: message.groupId,
+            id: message.vaultId,
             leadingText: 'as a Guardian for ',
           ),
         ],

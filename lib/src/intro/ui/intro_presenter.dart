@@ -1,6 +1,7 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/widgets.dart';
 
-import '/src/core/app/consts.dart';
+import '../../core/consts.dart';
 import '/src/core/ui/widgets/auth/auth.dart';
 import '/src/core/ui/page_presenter_base.dart';
 
@@ -9,12 +10,9 @@ import '/src/settings/domain/settings_interactor.dart';
 export 'package:provider/provider.dart';
 
 class IntroPresenter extends PagePresenterBase {
-  IntroPresenter({
-    required super.pages,
-    SettingsInteractor? settingsInteractor,
-  }) : _settingsInteractor = settingsInteractor ?? SettingsInteractor();
+  IntroPresenter({required super.pages});
 
-  final SettingsInteractor _settingsInteractor;
+  final _settingsInteractor = GetIt.I<SettingsInteractor>();
 
   late String _deviceName = _settingsInteractor.deviceName;
 
@@ -38,7 +36,7 @@ class IntroPresenter extends PagePresenterBase {
 
   Future<void> saveDeviceName() async {
     await _settingsInteractor.setDeviceName(_deviceName);
-    nextScreen();
+    nextPage();
   }
 
   Future<void> setIsBiometricsEnabled(final bool value) async {
@@ -54,7 +52,7 @@ class IntroPresenter extends PagePresenterBase {
           await _settingsInteractor.setPassCode(passCode);
           if (context.mounted) {
             _settingsInteractor.hasBiometrics
-                ? nextScreen()
+                ? nextPage()
                 : Navigator.of(context).pop();
           }
         },

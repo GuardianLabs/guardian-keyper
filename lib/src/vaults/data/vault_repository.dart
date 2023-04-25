@@ -10,10 +10,12 @@ typedef VaultRepository = Box<VaultModel>;
 
 Future<VaultRepository> getVaultRepository() async {
   Hive.registerAdapter<VaultModel>(VaultModelAdapter());
-  final cipher = HiveAesCipher(
-      await GetIt.I<PreferencesManager>().get<Uint8List>(keySeed) ??
-          Uint8List(0));
-  return Hive.openBox<VaultModel>('vaults', encryptionCipher: cipher);
+  return Hive.openBox<VaultModel>(
+    'vaults',
+    encryptionCipher: HiveAesCipher(
+        await GetIt.I<PreferencesManager>().get<Uint8List>(keySeed) ??
+            Uint8List(0)),
+  );
 }
 
 class VaultModelAdapter extends TypeAdapter<VaultModel> {

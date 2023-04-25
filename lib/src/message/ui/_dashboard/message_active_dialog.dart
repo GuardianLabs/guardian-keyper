@@ -1,58 +1,38 @@
 import 'dart:async';
+import 'package:get_it/get_it.dart';
 
-import '/src/core/ui/widgets/emoji.dart';
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
 
-import '../message_presenter.dart';
 import '../../domain/message_model.dart';
+import '../../domain/messages_interactor.dart';
+import 'message_titles_mixin.dart';
 
-class MessageActionBottomSheet extends StatefulWidget {
-  static const titles = {
-    MessageCode.createGroup: 'Guardian Approval Request',
-    MessageCode.setShard: 'Accept the Secret Shard',
-    MessageCode.getShard: 'Secret Recovery Request',
-    MessageCode.takeGroup: 'Ownership Change Request',
-  };
-
-  static const subtitles = {
-    MessageCode.createGroup: ' asks you to become a Guardian for ',
-    MessageCode.setShard: ' asks you to accept the Secret Shard for ',
-    MessageCode.getShard: ' asks you to approve a recovery of Secret for ',
-    MessageCode.takeGroup: ' asks you to approve a change of ownership for ',
-  };
-
-  static Future<bool?> show(
-    final BuildContext context,
-    final MessageModel message,
-  ) =>
+class MessageActiveDialog extends StatefulWidget with MessageTitlesMixin {
+  static Future<bool?> show({
+    required final BuildContext context,
+    required final MessageModel message,
+  }) =>
       showModalBottomSheet<bool>(
         context: context,
         useSafeArea: true,
         isScrollControlled: true,
-        builder: (_) => MessageActionBottomSheet(
-          title: titles[message.code]!,
-          message: message,
-        ),
+        builder: (final BuildContext context) =>
+            MessageActiveDialog(message: message),
       );
 
-  final String title;
   final MessageModel message;
 
-  const MessageActionBottomSheet({
-    super.key,
-    required this.title,
-    required this.message,
-  });
+  const MessageActiveDialog({super.key, required this.message});
 
   @override
-  State<MessageActionBottomSheet> createState() =>
-      _MessageActionBottomSheetState();
+  State<MessageActiveDialog> createState() => _MessageActiveDialogState();
 }
 
-class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
+class _MessageActiveDialogState extends State<MessageActiveDialog>
     with TickerProviderStateMixin {
-  late final _presenter = context.read<MessagesPresenter>();
+  final _messagesInteractor = GetIt.I<MessagesInteractor>();
 
   late final _animationController = AnimationController(
     vsync: this,
@@ -60,9 +40,9 @@ class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
   );
 
   late final _timer = Timer.periodic(
-    _presenter.messageTTL,
+    _messagesInteractor.messageTTL,
     (_) {
-      _presenter.pingPeer(widget.message.peerId).then(
+      _messagesInteractor.pingPeer(widget.message.peerId).then(
         (isOnline) {
           if (mounted) setState(() => _isPeerOnline = isOnline);
         },
@@ -70,7 +50,8 @@ class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
     },
   );
 
-  late bool _isPeerOnline = _presenter.getPeerStatus(widget.message.peerId);
+  late bool _isPeerOnline =
+      _messagesInteractor.getPeerStatus(widget.message.peerId);
 
   bool _isRequestError = false;
   bool _isRequestActive = false;
@@ -93,13 +74,13 @@ class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
 
   @override
   Widget build(final BuildContext context) => BottomSheetWidget(
-        titleString: widget.title,
+        titleString: widget.getTitle(widget.message),
         textSpan: [
           ...buildTextWithId(id: widget.message.peerId),
           TextSpan(
-            text: MessageActionBottomSheet.subtitles[widget.message.code]!,
+            text: widget.getSubtitle(widget.message),
           ),
-          ...buildTextWithId(id: widget.message.groupId),
+          ...buildTextWithId(id: widget.message.vaultId),
         ],
         body: Padding(
           padding: paddingV20,
@@ -207,7 +188,8 @@ class _MessageActionBottomSheetState extends State<MessageActionBottomSheet>
     final response = widget.message.copyWith(status: status);
     setState(() => _isRequestActive = true);
     try {
-      await _presenter.sendRespone(response);
+      // TBD: move to presenter
+      await GetIt.I<MessagesInteractor>().sendRespone(response);
       if (mounted) Navigator.of(context).pop(true);
     } catch (_) {
       _animationController

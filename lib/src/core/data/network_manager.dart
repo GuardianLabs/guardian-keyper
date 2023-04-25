@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
 
-import '../app/consts.dart';
+import '../consts.dart';
 import '../domain/entity/core_model.dart';
 import 'preferences_manager.dart';
 import 'platform_manager.dart';
@@ -27,9 +27,9 @@ class NetworkManager {
   final int port;
   final p2p.RouterL2 router;
 
-  Duration get messageTTL => router.messageTTL;
+  Uint8List get selfId => router.selfId.value;
 
-  PeerId get myPeerId => PeerId(token: router.selfId.value);
+  Duration get messageTTL => router.messageTTL;
 
   Stream<MessageModel> get messageStream => _messagesController.stream;
 

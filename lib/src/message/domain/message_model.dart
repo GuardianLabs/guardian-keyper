@@ -82,22 +82,24 @@ class MessageModel extends Serializable {
         payloadTypeId = type2TypeId[payload.runtimeType];
 
   @override
-  int get hashCode => Object.hash(runtimeType, id.hashCode);
-
-  @override
   bool operator ==(Object other) =>
       other is MessageModel &&
       runtimeType == other.runtimeType &&
       id.hashCode == other.id.hashCode;
 
   @override
+  int get hashCode => Object.hash(runtimeType, id.hashCode);
+
+  @override
   bool get isEmpty => payload == null;
 
   String get aKey => id.asKey;
 
-  SecretShardModel get secretShard => payload as SecretShardModel;
+  bool get haveVault => payload is VaultModel;
+  VaultModel get vault => payload as VaultModel;
 
-  VaultModel get recoveryGroup => payload as VaultModel;
+  bool get haveSecretShard => payload is SecretShardModel;
+  SecretShardModel get secretShard => payload as SecretShardModel;
 
   PeerId get ownerId {
     switch (payload.runtimeType) {
@@ -110,10 +112,10 @@ class MessageModel extends Serializable {
     }
   }
 
-  VaultId get groupId {
+  VaultId get vaultId {
     switch (payload.runtimeType) {
       case SecretShardModel:
-        return (payload as SecretShardModel).groupId;
+        return (payload as SecretShardModel).vaultId;
       case VaultModel:
         return (payload as VaultModel).id;
       default:

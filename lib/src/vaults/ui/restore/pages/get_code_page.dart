@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 
-import '/src/core/app/consts.dart';
+import '../../../../core/consts.dart';
 import '../../../../core/domain/entity/core_model.dart';
 import '/src/core/ui/widgets/common.dart';
 

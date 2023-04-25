@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:collection/collection.dart';
 import 'package:messagepack/messagepack.dart';
 
-import '../../app/consts.dart';
+import '../../consts.dart';
 
 export '/src/vaults/domain/vault_model.dart';
 export '/src/vaults/domain/secret_shard_model.dart';

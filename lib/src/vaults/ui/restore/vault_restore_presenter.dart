@@ -30,10 +30,10 @@ class VaultRestorePresenter extends VaultGuardianPresenterBase {
 
         if (message.isAccepted) {
           final guardian = qrCode!.peerId;
-          final existingGroup = getVaultById(message.groupId);
+          final existingGroup = getVaultById(message.vaultId);
           if (existingGroup == null) {
             logFinishRestoreVault();
-            createGroup(message.recoveryGroup.copyWith(
+            createGroup(message.vault.copyWith(
               ownerId: myPeerId,
               guardians: {guardian: ''},
             )).then(
@@ -45,7 +45,7 @@ class VaultRestorePresenter extends VaultGuardianPresenterBase {
             onDuplicate(message);
           } else if (existingGroup.isNotFull) {
             logFinishRestoreVault();
-            addGuardian(message.groupId, guardian).then(
+            addGuardian(message.vaultId, guardian).then(
               (group) => onSuccess(message.copyWith(payload: group)),
             );
           }

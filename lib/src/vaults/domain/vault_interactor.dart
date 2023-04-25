@@ -1,17 +1,20 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 import 'package:guardian_keyper/src/core/data/network_manager.dart';
 import 'package:guardian_keyper/src/core/data/platform_manager.dart';
 import 'package:guardian_keyper/src/core/data/analytics_manager.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 import 'package:guardian_keyper/src/settings/data/settings_manager.dart';
 
 import '../data/vault_repository.dart';
 
 class VaultInteractor {
-  late final myPeerId = _networkManager.myPeerId.copyWith(
-    name: _settingsManager.deviceName,
-  );
+  late final flush = _vaultRepository.flush;
+  late final watch = _vaultRepository.watch;
+
+  late final selfId = _settingsManager.selfId;
+
+  late final pingPeer = _networkManager.pingPeer;
   late final requestRetryPeriod = _networkManager.messageTTL;
 
   late final vibrate = _platformManager.vibrate;
@@ -19,18 +22,14 @@ class VaultInteractor {
   late final wakelockDisable = _platformManager.wakelockDisable;
   late final localAuthenticate = _platformManager.localAuthenticate;
 
-  Stream<MessageModel> get messageStream => _networkManager.messageStream;
-
   String get passCode => _settingsManager.passCode;
+
+  Iterable<VaultModel> get vaults => _vaultRepository.values;
+
+  Stream<MessageModel> get messageStream => _networkManager.messageStream;
 
   bool get useBiometrics =>
       _settingsManager.hasBiometrics && _settingsManager.isBiometricsEnabled;
-
-  final _networkManager = GetIt.I<NetworkManager>();
-  final _platformManager = GetIt.I<PlatformManager>();
-  final _settingsManager = GetIt.I<SettingsManager>();
-  final _analyticsManager = GetIt.I<AnalyticsManager>();
-  final _vaultRepository = GetIt.I<VaultRepository>();
 
   VaultModel? getVaultById(final VaultId vaultId) =>
       _vaultRepository.get(vaultId.asKey);
@@ -66,7 +65,7 @@ class VaultInteractor {
       _networkManager.sendTo(
         isConfirmable: false,
         peerId: message.peerId,
-        message: message.copyWith(peerId: myPeerId),
+        message: message.copyWith(peerId: selfId),
       );
 
   Future<void> logStartCreateVault() =>
@@ -98,4 +97,10 @@ class VaultInteractor {
 
   Future<void> logFinishRestoreSecret() =>
       _analyticsManager.logEvent(eventFinishRestoreSecret);
+
+  final _networkManager = GetIt.I<NetworkManager>();
+  final _platformManager = GetIt.I<PlatformManager>();
+  final _settingsManager = GetIt.I<SettingsManager>();
+  final _analyticsManager = GetIt.I<AnalyticsManager>();
+  final _vaultRepository = GetIt.I<VaultRepository>();
 }

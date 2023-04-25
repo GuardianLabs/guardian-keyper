@@ -1,6 +1,6 @@
 import 'package:sss256/sss256.dart';
 
-import 'package:guardian_keyper/src/core/app/consts.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
 import 'package:guardian_keyper/src/message/domain/message_model.dart';
 
 import '../vault_presenter_base.dart';
@@ -89,7 +89,7 @@ class VaultAddSecretPresenter extends VaultSecretPresenterBase {
           payload: SecretShardModel(
             id: secretId,
             ownerId: myPeerId,
-            groupId: vault.id,
+            vaultId: vault.id,
             groupSize: vault.size,
             groupThreshold: vault.threshold,
             shard: shardsIterator.current,

@@ -1,25 +1,23 @@
 import 'dart:async';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-import '../data/message_repository.dart';
-import '../domain/messages_interactor.dart';
+import '../../../domain/message_model.dart';
+import '../../../domain/messages_interactor.dart';
 
 export 'package:provider/provider.dart';
 
 class MessagesPresenter extends ChangeNotifier {
-  late final messageTTL = _messagesInteractor.messageTTL;
   late final archivateMessage = _messagesInteractor.archivateMessage;
-  late final getPeerStatus = _messagesInteractor.getPeerStatus;
-  late final pingPeer = _messagesInteractor.pingPeer;
 
   List<MessageModel> get activeMessages => _activeMessages;
   List<MessageModel> get resolvedMessages => _resolvedMessages;
 
-  MessagesPresenter({MessagesInteractor? messagesInteractor})
-      : _messagesInteractor = messagesInteractor ?? MessagesInteractor() {
+  MessagesPresenter() {
     // cache and sort messages
     for (final message in _messagesInteractor.messages) {
-      if (message.peerId != _messagesInteractor.myPeerId) {
+      if (message.peerId != _messagesInteractor.selfId) {
         message.isReceived
             ? _activeMessages.add(message)
             : _resolvedMessages.add(message);
@@ -33,8 +31,7 @@ class MessagesPresenter extends ChangeNotifier {
 
   final _activeMessages = <MessageModel>[];
   final _resolvedMessages = <MessageModel>[];
-
-  final MessagesInteractor _messagesInteractor;
+  final _messagesInteractor = GetIt.I<MessagesInteractor>();
 
   late final StreamSubscription<BoxEvent> _messagesUpdatesSubscription;
 
@@ -44,19 +41,6 @@ class MessagesPresenter extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> sendRespone(final MessageModel response) {
-    switch (response.code) {
-      case MessageCode.createGroup:
-        return _messagesInteractor.sendCreateGroupResponse(response);
-      case MessageCode.setShard:
-        return _messagesInteractor.sendSetShardResponse(response);
-      case MessageCode.getShard:
-        return _messagesInteractor.sendGetShardResponse(response);
-      case MessageCode.takeGroup:
-        return _messagesInteractor.sendTakeGroupResponse(response);
-    }
-  }
-
   void _onMessagesUpdates(final BoxEvent event) {
     if (event.deleted) {
       final key = event.key as String;
@@ -64,7 +48,7 @@ class MessagesPresenter extends ChangeNotifier {
       _resolvedMessages.removeWhere((e) => e.aKey == key);
     } else {
       final message = event.value as MessageModel;
-      if (message.peerId == _messagesInteractor.myPeerId) return;
+      if (message.peerId == _messagesInteractor.selfId) return;
       if (message.isReceived) {
         final index = _activeMessages.indexOf(message);
         index < 0

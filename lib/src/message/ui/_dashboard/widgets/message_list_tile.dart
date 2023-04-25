@@ -1,12 +1,13 @@
-import '/src/core/ui/widgets/emoji.dart';
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/ui/widgets/icon_of.dart';
-import '../../../core/domain/entity/core_model.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
 
-import 'message_action_bottom_sheet.dart';
-import 'request_card.dart';
+import '../../../domain/message_model.dart';
+import '../message_resolved_dialog.dart';
+import '../message_active_dialog.dart';
+import '../message_titles_mixin.dart';
 
-class MessageListTile extends StatelessWidget {
+class MessageListTile extends StatelessWidget with MessageTitlesMixin {
   static const _icons = {
     MessageCode.createGroup: IconOf.shield(color: clWhite),
     MessageCode.setShard: IconOf.splitAndShare(),
@@ -39,7 +40,7 @@ class MessageListTile extends StatelessWidget {
         title: Row(
           children: [
             Text(
-              MessageActionBottomSheet.titles[message.code]!,
+              getTitle(message),
               style: textStyleSourceSansPro614,
             ),
             if (message.isReceived)
@@ -58,21 +59,8 @@ class MessageListTile extends StatelessWidget {
             ),
           ),
         ),
-        onTap: message.isReceived
-            ? () => MessageActionBottomSheet.show(
-                  context,
-                  message,
-                )
-            : () => showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (_) => BottomSheetWidget(
-                    titleString: MessageActionBottomSheet.titles[message.code]!,
-                    body: Padding(
-                      padding: paddingV20,
-                      child: RequestCard(message: message),
-                    ),
-                  ),
-                ),
+        onTap: () => message.isReceived
+            ? MessageActiveDialog.show(context: context, message: message)
+            : MessageResolvedDialog.show(context: context, message: message),
       );
 }

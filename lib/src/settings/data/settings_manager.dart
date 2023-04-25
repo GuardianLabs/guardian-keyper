@@ -3,8 +3,11 @@ import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/src/core/data/preferences_manager.dart';
 import 'package:guardian_keyper/src/core/data/platform_manager.dart';
+import 'package:guardian_keyper/src/core/data/network_manager.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
 class SettingsManager {
+  PeerId get selfId => _selfId;
   String get passCode => _passCode;
   String get deviceName => _deviceName;
   bool get hasBiometrics => _hasBiometrics;
@@ -18,6 +21,7 @@ class SettingsManager {
   final _updatesStreamController =
       StreamController<MapEntry<String, Object>>.broadcast();
 
+  late PeerId _selfId;
   late String _passCode, _deviceName;
   late bool _isBiometricsEnabled, _isBootstrapEnabled, _hasBiometrics;
 
@@ -29,6 +33,10 @@ class SettingsManager {
         await _preferencesManager.get<bool>(keyIsBiometricsEnabled) ?? true;
     _deviceName = await _preferencesManager.get<String>(keyDeviceName) ??
         await _platformManager.getDeviceName();
+    _selfId = PeerId(
+      token: GetIt.I<NetworkManager>().selfId,
+      name: _deviceName,
+    );
 
     await getHasBiometrics();
     return this;
@@ -40,6 +48,7 @@ class SettingsManager {
 
   Future<void> setDeviceName(final String value) async {
     _deviceName = value;
+    _selfId = _selfId.copyWith(name: value);
     await _preferencesManager.set<String>(keyDeviceName, value);
     _updatesStreamController.add(MapEntry(keyDeviceName, value));
   }

@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'package:get_it/get_it.dart';
 
-import '../../core/domain/entity/core_model.dart';
-import '/src/core/ui/page_presenter_base.dart';
+import 'package:guardian_keyper/src/core/ui/page_presenter_base.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
 import '../domain/vault_interactor.dart';
 
@@ -25,17 +26,11 @@ abstract class VaultPresenterBase extends PagePresenterBase {
 
   Timer? timer;
 
-  VaultPresenterBase({
-    required super.pages,
-    super.currentPage,
-    VaultInteractor? vaultInteractor,
-  }) : _vaultInteractor = vaultInteractor ?? VaultInteractor();
+  VaultPresenterBase({required super.pages, super.currentPage});
 
   bool get isWaiting => timer?.isActive == true;
 
-  PeerId get myPeerId => _vaultInteractor.myPeerId;
-
-  final VaultInteractor _vaultInteractor;
+  PeerId get myPeerId => _vaultInteractor.selfId;
 
   @override
   void dispose() {
@@ -66,4 +61,6 @@ abstract class VaultPresenterBase extends PagePresenterBase {
     notifyListeners();
     return newVault;
   }
+
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
 }

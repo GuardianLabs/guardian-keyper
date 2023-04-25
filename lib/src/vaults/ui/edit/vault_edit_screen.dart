@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '/src/core/app/consts.dart';
+import '../../../core/consts.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 

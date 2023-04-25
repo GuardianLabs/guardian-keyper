@@ -22,7 +22,7 @@ class ChooseTypePage extends StatelessWidget {
               children: [
                 // Your Devices
                 GestureDetector(
-                  onTap: context.read<VaultCreatePresenter>().nextScreen,
+                  onTap: context.read<VaultCreatePresenter>().nextPage,
                   child: SelectableCard(
                       isSelected: true,
                       child: Column(

@@ -1,45 +1,76 @@
-import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter/foundation.dart';
 
-import '/src/core/data/network_manager.dart';
-import '../../core/data/preferences_manager.dart';
+import 'package:guardian_keyper/src/core/data/network_manager.dart';
+import 'package:guardian_keyper/src/vaults/data/vault_repository.dart';
+import 'package:guardian_keyper/src/settings/data/settings_manager.dart';
 
-import '/src/vaults/data/vault_repository.dart';
-import '/src/settings/domain/settings_interactor.dart';
-import '/src/message/data/message_repository.dart';
+import '../data/message_repository.dart';
 
 class MessagesInteractor {
-  late final messageTTL = _networkService.messageTTL;
-  late final pingPeer = _networkService.pingPeer;
-  late final watchMessages = _messageRepository.watch;
-  late final getPeerStatus = _networkService.getPeerStatus;
+  late final messageTTL = _networkManager.messageTTL;
 
-  PeerId get myPeerId => _networkService.myPeerId.copyWith(
-        name: _settingsInteractor.deviceName,
-      );
+  late final pingPeer = _networkManager.pingPeer;
+  late final getPeerStatus = _networkManager.getPeerStatus;
+
+  late final flush = _messageRepository.flush;
+  late final watchMessages = _messageRepository.watch;
+
+  PeerId get selfId => _settingsManager.selfId;
 
   Iterable<MessageModel> get messages => _messageRepository.values;
 
-  MessagesInteractor({
-    NetworkManager? networkService,
-    VaultRepository? vaultRepository,
-    MessageRepository? messageRepository,
-    SettingsInteractor? settingsInteractor,
-  })  : _networkService = networkService ?? GetIt.I<NetworkManager>(),
-        _vaultRepository = vaultRepository ?? GetIt.I<VaultRepository>(),
-        _messageRepository = messageRepository ?? GetIt.I<MessageRepository>(),
-        _settingsInteractor = settingsInteractor ?? SettingsInteractor() {
-    Future.delayed(const Duration(seconds: 1), _pruneMessages);
-    _networkService.messageStream.listen(onMessage);
-    _settingsInteractor.settingsChanges.listen(_onSettingsChange);
+  final _settingsManager = GetIt.I<SettingsManager>();
+  final _vaultRepository = GetIt.I<VaultRepository>();
+  final _messageRepository = GetIt.I<MessageRepository>();
+
+  late final _networkManager = GetIt.I<NetworkManager>()
+    ..messageStream.listen(_onMessage);
+
+  /// Create ticket to join vault
+  Future<MessageModel> createJoinVaultCode() async {
+    final message = MessageModel(
+      code: MessageCode.createGroup,
+      peerId: _settingsManager.selfId,
+    );
+    await _messageRepository.put(message.aKey, message);
+    return message;
   }
 
-  final NetworkManager _networkService;
-  final VaultRepository _vaultRepository;
-  final MessageRepository _messageRepository;
-  final SettingsInteractor _settingsInteractor;
+  /// Create ticket to take vault
+  Future<MessageModel> createTakeVaultCode(final VaultId? groupId) async {
+    final message = MessageModel(code: MessageCode.takeGroup, peerId: selfId);
+    await _messageRepository.put(
+      message.aKey,
+      message.copyWith(
+        payload: VaultModel(id: groupId, ownerId: PeerId.empty),
+      ),
+    );
+    return message;
+  }
 
-  void onMessage(MessageModel message) {
+  Future<void> sendRespone(final MessageModel response) {
+    switch (response.code) {
+      case MessageCode.createGroup:
+        return _sendCreateGroupResponse(response);
+      case MessageCode.setShard:
+        return _sendSetShardResponse(response);
+      case MessageCode.getShard:
+        return _sendGetShardResponse(response);
+      case MessageCode.takeGroup:
+        return _sendTakeGroupResponse(response);
+    }
+  }
+
+  Future<void> archivateMessage(final MessageModel message) async {
+    await _messageRepository.delete(message.aKey);
+    await _messageRepository.put(
+      message.timestamp.millisecondsSinceEpoch.toString(),
+      message,
+    );
+  }
+
+  void _onMessage(MessageModel message) {
     final ticket = _messageRepository.get(message.aKey);
     if (kDebugMode) print('$message\n$ticket');
 
@@ -52,7 +83,7 @@ class MessagesInteractor {
         if (message.isNotRequested) return;
         if (message.code != ticket.code) return;
         // group already exists
-        if (_vaultRepository.containsKey(message.groupId.asKey)) return;
+        if (_vaultRepository.containsKey(message.vaultId.asKey)) return;
         break;
 
       case MessageCode.takeGroup:
@@ -68,7 +99,7 @@ class MessagesInteractor {
         if (message.isEmpty) return;
         // request already processed
         if (ticket != null) return;
-        final recoveryGroup = _vaultRepository.get(message.groupId.asKey);
+        final recoveryGroup = _vaultRepository.get(message.vaultId.asKey);
         // group does not exists
         if (recoveryGroup == null) return;
         // not owner
@@ -81,7 +112,7 @@ class MessagesInteractor {
         if (message.isEmpty) return;
         // request already processed
         if (ticket != null) return;
-        final recoveryGroup = _vaultRepository.get(message.groupId.asKey);
+        final recoveryGroup = _vaultRepository.get(message.vaultId.asKey);
         // group does not exists
         if (recoveryGroup == null) return;
         // not owner
@@ -96,24 +127,24 @@ class MessagesInteractor {
     );
   }
 
-  Future<void> sendCreateGroupResponse(final MessageModel request) async {
+  Future<void> _sendCreateGroupResponse(final MessageModel request) async {
     await _sendResponse(request);
     if (request.isAccepted) {
       final vault = VaultModel(
-        id: request.recoveryGroup.id,
+        id: request.vault.id,
         ownerId: request.peerId,
-        maxSize: request.recoveryGroup.maxSize,
-        threshold: request.recoveryGroup.threshold,
+        maxSize: request.vault.maxSize,
+        threshold: request.vault.threshold,
       );
       await _vaultRepository.put(vault.aKey, vault);
     }
     await archivateMessage(request);
   }
 
-  Future<void> sendTakeGroupResponse(final MessageModel request) async {
+  Future<void> _sendTakeGroupResponse(final MessageModel request) async {
     if (request.isAccepted) {
       final vault = _vaultRepository
-          .get(request.recoveryGroup.aKey)!
+          .get(request.vault.aKey)!
           .copyWith(ownerId: request.peerId);
       await _sendResponse(request.copyWith(
         payload: vault.copyWith(
@@ -127,11 +158,11 @@ class MessagesInteractor {
     await archivateMessage(request);
   }
 
-  Future<void> sendSetShardResponse(final MessageModel request) async {
+  Future<void> _sendSetShardResponse(final MessageModel request) async {
     if (request.isAccepted) {
-      final vault = _vaultRepository.get(request.groupId.asKey)!;
+      final vault = _vaultRepository.get(request.vaultId.asKey)!;
       await _vaultRepository.put(
-        request.groupId.asKey,
+        request.vaultId.asKey,
         vault.copyWith(secrets: {
           ...vault.secrets,
           request.secretShard.id: request.secretShard.shard,
@@ -144,15 +175,15 @@ class MessagesInteractor {
     ));
   }
 
-  Future<void> sendGetShardResponse(final MessageModel request) async {
+  Future<void> _sendGetShardResponse(final MessageModel request) async {
     if (request.isAccepted) {
-      final vault = _vaultRepository.get(request.groupId.asKey)!;
+      final vault = _vaultRepository.get(request.vaultId.asKey)!;
       await _sendResponse(
         request.copyWith(
             payload: SecretShardModel(
           id: request.secretShard.id,
           ownerId: vault.ownerId,
-          groupId: vault.id,
+          vaultId: vault.id,
           groupSize: vault.maxSize,
           groupThreshold: vault.threshold,
           shard: vault.secrets[request.secretShard.id]!,
@@ -164,38 +195,10 @@ class MessagesInteractor {
     await archivateMessage(request);
   }
 
-  Future<void> archivateMessage(final MessageModel message) async {
-    await _messageRepository.delete(message.aKey);
-    await _messageRepository.put(
-      message.timestamp.millisecondsSinceEpoch.toString(),
-      message,
-    );
-  }
-
   Future<void> _sendResponse(final MessageModel message) =>
-      _networkService.sendTo(
+      _networkManager.sendTo(
         isConfirmable: true,
         peerId: message.peerId,
-        message: message.copyWith(peerId: myPeerId),
+        message: message.copyWith(peerId: selfId),
       );
-
-  void _onSettingsChange(final MapEntry<String, Object> event) {
-    if (event.key == keyIsBootstrapEnabled) {
-      _networkService.toggleBootstrap(event.value as bool);
-    }
-  }
-
-  Future<void> _pruneMessages() async {
-    if (_messageRepository.isEmpty) return;
-    final expired = _messageRepository.values
-        .where((e) =>
-            e.isRequested &&
-            (e.code == MessageCode.createGroup ||
-                e.code == MessageCode.takeGroup) &&
-            e.timestamp
-                .isBefore(DateTime.now().subtract(const Duration(days: 1))))
-        .toList(growable: false);
-    await _messageRepository.deleteAll(expired.map((e) => e.aKey));
-    await _messageRepository.compact();
-  }
 }

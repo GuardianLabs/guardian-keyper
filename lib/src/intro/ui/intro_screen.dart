@@ -1,11 +1,11 @@
-import '/src/core/app/consts.dart';
-import '/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
 import 'intro_presenter.dart';
 import 'pages/intros_page.dart';
-import 'pages/set_device_name_page.dart';
 import 'pages/set_passcode_page.dart';
 import 'pages/set_biometric_page.dart';
+import 'pages/set_device_name_page.dart';
 
 class IntroScreen extends StatelessWidget {
   static const routeName = routeIntro;

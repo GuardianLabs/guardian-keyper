@@ -13,7 +13,7 @@ class ChooseSizePage extends StatelessWidget {
         HeaderBar(
           caption: 'Vault Size',
           backButton: HeaderBarBackButton(
-            onPressed: context.read<VaultCreatePresenter>().previousScreen,
+            onPressed: context.read<VaultCreatePresenter>().previousPage,
           ),
           closeButton: const HeaderBarCloseButton(),
         ),
@@ -61,7 +61,7 @@ class ChooseSizePage extends StatelessWidget {
                 padding: paddingV32,
                 child: PrimaryButton(
                   text: 'Continue',
-                  onPressed: context.read<VaultCreatePresenter>().nextScreen,
+                  onPressed: context.read<VaultCreatePresenter>().nextPage,
                 ),
               ),
             ],

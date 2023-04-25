@@ -1,4 +1,4 @@
-import '/src/core/app/consts.dart';
+import '../../../../core/consts.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
 
@@ -23,7 +23,7 @@ class _AddSecretPageState extends State<AddSecretPage> {
         // Header
         HeaderBar(
           caption: 'Add your Secret',
-          backButton: HeaderBarBackButton(onPressed: controller.previousScreen),
+          backButton: HeaderBarBackButton(onPressed: controller.previousPage),
           closeButton: const AddSecretCloseButton(),
         ),
         // Body
@@ -96,7 +96,7 @@ class _AddSecretPageState extends State<AddSecretPage> {
                   selector: (_, controller) => controller.secret,
                   builder: (_, secret, __) => PrimaryButton(
                     text: 'Continue',
-                    onPressed: secret.isEmpty ? null : controller.nextScreen,
+                    onPressed: secret.isEmpty ? null : controller.nextPage,
                   ),
                 ),
               ),

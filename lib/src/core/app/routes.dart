@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:guardian_keyper/src/intro/ui/intro_screen.dart';
-import 'package:guardian_keyper/src/settings/ui/settings_route.dart';
+import 'package:guardian_keyper/src/settings/ui/settings_screen.dart';
 import 'package:guardian_keyper/src/message/ui/show_qr_code_screen.dart';
 import 'package:guardian_keyper/src/message/ui/scan_qr_code_screen.dart';
+import 'package:guardian_keyper/src/vaults/ui/_dashboard/shard_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/edit/vault_edit_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/create/vault_create_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/restore/vault_restore_screen.dart';
@@ -16,7 +17,9 @@ Route? onGenerateRoute(final RouteSettings routeSettings) =>
 
 const routes = {
   IntroScreen.routeName: IntroScreen.getPageRoute,
-  SettingsRoute.routeName: SettingsRoute.getPageRoute,
+  SettingsScreen.routeName: SettingsScreen.getPageRoute,
+  // Shard
+  ShardScreen.routeName: ShardScreen.getPageRoute,
   // QRCodes
   ShowQRCodeScreen.routeName: ShowQRCodeScreen.getPageRoute,
   ScanQRCodeScreen.routeName: ScanQRCodeScreen.getPageRoute,

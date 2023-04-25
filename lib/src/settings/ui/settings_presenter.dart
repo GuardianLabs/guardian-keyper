@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/widgets.dart';
 
 import '../domain/settings_interactor.dart';
@@ -6,9 +7,7 @@ import '../domain/settings_interactor.dart';
 export 'package:provider/provider.dart';
 
 class SettingsPresenter extends ChangeNotifier {
-  SettingsPresenter({
-    SettingsInteractor? settingsInteractor,
-  }) : _settingsInteractor = settingsInteractor ?? SettingsInteractor() {
+  SettingsPresenter() {
     _updatesSubsrciption =
         _settingsInteractor.settingsChanges.listen((_) => notifyListeners());
   }
@@ -26,13 +25,13 @@ class SettingsPresenter extends ChangeNotifier {
   late final setIsBiometricsEnabled =
       _settingsInteractor.setIsBiometricsEnabled;
 
-  final SettingsInteractor _settingsInteractor;
+  final _settingsInteractor = GetIt.I<SettingsInteractor>();
 
   late final StreamSubscription<void> _updatesSubsrciption;
 
   @override
-  void dispose() async {
-    await _updatesSubsrciption.cancel();
+  void dispose() {
+    _updatesSubsrciption.cancel();
     super.dispose();
   }
 }

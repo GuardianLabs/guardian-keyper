@@ -1,7 +1,7 @@
-import '/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
-import '../../domain/message_model.dart';
-import '../message_presenter.dart';
+import '../../../domain/message_model.dart';
+import '../presenters/messages_presenter.dart';
 import 'message_list_tile.dart';
 
 class ActiveMessagesTab extends StatelessWidget {

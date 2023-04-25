@@ -17,7 +17,7 @@ class SplitAndShareSecretPage extends StatelessWidget {
         HeaderBar(
           caption: 'Split Secret',
           backButton: HeaderBarBackButton(
-            onPressed: controller.previousScreen,
+            onPressed: controller.previousPage,
           ),
           closeButton: const AddSecretCloseButton(),
         ),
@@ -57,7 +57,7 @@ class SplitAndShareSecretPage extends StatelessWidget {
                 padding: paddingV32,
                 child: PrimaryButton(
                   text: 'Continue',
-                  onPressed: controller.nextScreen,
+                  onPressed: controller.nextPage,
                 ),
               ),
             ],

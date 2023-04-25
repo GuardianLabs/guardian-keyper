@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '/src/core/app/consts.dart';
-import '/src/core/ui/theme/theme.dart';
+import 'package:guardian_keyper/src/core/ui/theme/theme.dart';
 
-import '../home_presenter.dart';
-import '../pages/shards_page.dart';
-import '../pages/vaults_page.dart';
+import 'restore_vault_button.dart';
 import 'shards_count_button.dart';
 import 'vaults_count_button.dart';
 
@@ -37,56 +34,11 @@ class VaultsPanel extends StatelessWidget {
               ),
             ),
             // My Vaults
-            Padding(
-              padding: paddingV6,
-              child: GestureDetector(
-                onTap: () =>
-                    context.read<HomePresenter>().gotoScreen<VaultsPage>(),
-                child: const VaultsCountButton(),
-              ),
-            ),
+            const Padding(padding: paddingV6, child: VaultsCountButton()),
             // Stored Shards
-            Padding(
-              padding: paddingV6,
-              child: GestureDetector(
-                onTap: () =>
-                    context.read<HomePresenter>().gotoScreen<ShardsPage>(),
-                child: const ShardsCountButton(),
-              ),
-            ),
+            const Padding(padding: paddingV6, child: ShardsCountButton()),
             // Restore Vault
-            Padding(
-              padding: paddingV6,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).pushNamed(routeVaultRestore),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: borderRadius,
-                    color: clIndigo500,
-                  ),
-                  padding: paddingAll8,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Recovery',
-                            style: textStyleSourceSansPro612,
-                          ),
-                          Text(
-                            'Restore a Vault',
-                            style: textStylePoppins616,
-                          ),
-                        ],
-                      ),
-                      const Icon(Icons.arrow_forward_ios_outlined),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            const Padding(padding: paddingV6, child: RestoreVaultButton()),
           ],
         ),
       );

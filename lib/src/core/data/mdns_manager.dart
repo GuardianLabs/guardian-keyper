@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
 
-import '../app/consts.dart';
+import '../consts.dart';
 import 'platform_manager.dart';
 
 class MdnsManager {

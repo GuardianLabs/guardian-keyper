@@ -1,4 +1,4 @@
-import '/src/core/app/consts.dart';
+import '../../../core/consts.dart';
 import '../../../core/domain/entity/core_model.dart';
 
 import '../vault_presenter_base.dart';
@@ -37,7 +37,7 @@ class VaultAddGuardianPresenter extends VaultGuardianPresenterBase {
         if (message.hasNoResponse) return;
         if (message.code != MessageCode.createGroup) return;
         if (message.peerId != qrCode!.peerId) return;
-        if (message.groupId != vaultId) return;
+        if (message.vaultId != vaultId) return;
         stopListenResponse();
         switch (message.status) {
           case MessageStatus.accepted:

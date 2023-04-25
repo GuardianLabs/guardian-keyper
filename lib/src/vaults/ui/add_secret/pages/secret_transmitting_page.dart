@@ -1,4 +1,4 @@
-import '/src/core/app/consts.dart';
+import '../../../../core/consts.dart';
 import '../../../../core/domain/entity/core_model.dart';
 import '/src/core/ui/widgets/emoji.dart';
 import '/src/core/ui/widgets/common.dart';
@@ -96,7 +96,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           titleString: 'Your Secret has been split',
           textSpan: [
             const TextSpan(text: 'Now you can restore your '),
-            ...buildTextWithId(id: message.groupId, style: textStyleBold),
+            ...buildTextWithId(id: message.vaultId, style: textStyleBold),
             const TextSpan(text: ' Secret with the help of Guardians.'),
           ],
           footer: Padding(
@@ -119,7 +119,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
               'Guardian rejected your Secret. The Secret will be removed.',
           textSpan: [
             const TextSpan(text: 'Sharding process for '),
-            ...buildTextWithId(id: message.groupId, style: textStyleBold),
+            ...buildTextWithId(id: message.vaultId, style: textStyleBold),
             const TextSpan(
               text: ' has been terminated by one of your Guardians.',
             ),
@@ -144,7 +144,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           titleString: 'Something went wrong!',
           textSpan: [
             const TextSpan(text: 'Sharding process for '),
-            ...buildTextWithId(id: message.groupId, style: textStyleBold),
+            ...buildTextWithId(id: message.vaultId, style: textStyleBold),
             const TextSpan(text: ' has been terminated.'),
           ],
           footer: Padding(

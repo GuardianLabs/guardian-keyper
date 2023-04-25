@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/src/core/app/consts.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
 class SetDeviceNamePage extends StatefulWidget {

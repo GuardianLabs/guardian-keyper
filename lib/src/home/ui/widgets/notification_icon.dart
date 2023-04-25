@@ -1,21 +1,23 @@
 import 'package:get_it/get_it.dart';
 
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/ui/widgets/icon_of.dart';
-import '/src/message/data/message_repository.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/message/data/message_repository.dart';
 
 class MessagesIcon extends StatelessWidget {
   final bool isSelected;
 
-  const MessagesIcon({super.key, this.isSelected = false});
-
-  const MessagesIcon.selected({super.key}) : isSelected = true;
+  const MessagesIcon({super.key, required this.isSelected});
 
   @override
   Widget build(final BuildContext context) =>
       ValueListenableBuilder<Box<MessageModel>>(
         valueListenable: GetIt.I<MessageRepository>().listenable(),
-        builder: (_, boxMessages, __) {
+        builder: (
+          final BuildContext context,
+          Box<MessageModel> boxMessages,
+          Widget? widget,
+        ) {
           final count = boxMessages.values.where((e) => e.isReceived).length;
           return Stack(
             clipBehavior: Clip.none,

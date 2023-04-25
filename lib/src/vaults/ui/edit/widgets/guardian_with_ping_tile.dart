@@ -1,11 +1,11 @@
 import 'package:get_it/get_it.dart';
 
-import '/src/core/app/consts.dart';
-import '../../../../core/domain/entity/core_model.dart';
-import '/src/core/ui/widgets/emoji.dart';
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/data/network_manager.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
+import '../../../domain/vault_interactor.dart';
 import '../../widgets/guardian_list_tile.dart';
 
 class GuardianWithPingTile extends StatefulWidget {
@@ -18,6 +18,8 @@ class GuardianWithPingTile extends StatefulWidget {
 }
 
 class _GuardianWithPingTileState extends State<GuardianWithPingTile> {
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
+
   bool _isWaiting = false;
 
   @override
@@ -25,11 +27,11 @@ class _GuardianWithPingTileState extends State<GuardianWithPingTile> {
         onLongPress: _isWaiting
             ? null
             : () async {
-                final networkService = GetIt.I<NetworkManager>();
-                if (widget.guardian == networkService.myPeerId) return;
+                if (widget.guardian == _vaultInteractor.selfId) return;
                 setState(() => _isWaiting = true);
                 final startedAt = DateTime.now();
-                final hasPong = await networkService.pingPeer(widget.guardian);
+                final hasPong =
+                    await _vaultInteractor.pingPeer(widget.guardian);
                 if (!mounted) return;
                 final msElapsed =
                     DateTime.now().difference(startedAt).inMilliseconds;

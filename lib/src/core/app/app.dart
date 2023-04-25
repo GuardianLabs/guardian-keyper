@@ -2,15 +2,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import '/src/core/ui/theme/theme.dart';
-import '/src/core/ui/widgets/init_loader.dart';
+import 'package:guardian_keyper/src/home/ui/home_screen.dart';
 
-import '/src/home/ui/home_screen.dart';
-import '/src/home/ui/home_presenter.dart';
-import '/src/message/ui/message_presenter.dart';
-
-import 'di.dart';
+import '../ui/theme/theme.dart';
+import '../ui/widgets/init_loader.dart';
+import 'app_lifecycle_observer.dart';
 import 'routes.dart';
+import 'di.dart';
 
 class App extends StatelessWidget {
   static Future<void> init() async {
@@ -37,26 +35,14 @@ class App extends StatelessWidget {
                     darkTheme: themeDark,
                     themeMode: ThemeMode.dark,
                   )
-                : MultiProvider(
-                    providers: [
-                      ChangeNotifierProvider<MessagesPresenter>(
-                        create: (_) => MessagesPresenter(),
-                        lazy: false,
-                      ),
-                      ChangeNotifierProvider<HomePresenter>(
-                        create: (_) => HomePresenter(pages: HomeScreen.pages),
-                        lazy: false,
-                      ),
-                    ],
-                    child: MaterialApp(
-                      title: 'Guardian Keyper',
-                      theme: themeLight,
-                      darkTheme: themeDark,
-                      themeMode: ThemeMode.dark,
-                      onGenerateRoute: onGenerateRoute,
-                      navigatorObservers: [SentryNavigatorObserver()],
-                      home: const HomeScreen(),
-                    ),
+                : MaterialApp(
+                    title: 'Guardian Keyper',
+                    theme: themeLight,
+                    darkTheme: themeDark,
+                    themeMode: ThemeMode.dark,
+                    onGenerateRoute: onGenerateRoute,
+                    navigatorObservers: [SentryNavigatorObserver()],
+                    home: const AppLifecycleObserver(child: HomeScreen()),
                   ),
       );
 }

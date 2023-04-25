@@ -1,7 +1,7 @@
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import '/src/core/app/consts.dart';
-import '/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
 class ScanQRCodeScreen extends StatefulWidget {
   static const routeName = routeScanQrCode;

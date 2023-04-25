@@ -15,7 +15,7 @@ abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
   set qrCode(MessageModel? value) {
     if (_qrCode != value) {
       _qrCode = value;
-      if (_qrCode != null) nextScreen();
+      if (_qrCode != null) nextPage();
     }
   }
 }

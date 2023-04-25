@@ -1,25 +1,26 @@
-import '/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
-import '/src/message/ui/widgets/active_messages_tab.dart';
-import '/src/message/ui/widgets/resolved_messages_tab.dart';
+import '../presenters/messages_presenter.dart';
+import '../widgets/resolved_messages_tab.dart';
+import '../widgets/active_messages_tab.dart';
 
 class MessagesPage extends StatelessWidget {
-  static const _tabs = [Tab(text: 'Active'), Tab(text: 'Resolved')];
-
   const MessagesPage({super.key});
 
   @override
-  Widget build(final BuildContext context) => Padding(
-        padding: paddingH20,
+  Widget build(final BuildContext context) => ChangeNotifierProvider(
+        create: (final BuildContext context) => MessagesPresenter(),
         child: DefaultTabController(
-          length: _tabs.length,
+          length: 2,
           child: Scaffold(
             // Header
             appBar: AppBar(
               title: const Text('Messages'),
               bottom: const TabBar(
-                tabs: _tabs,
-                splashBorderRadius: borderRadiusTop10,
+                tabs: [
+                  Tab(text: 'Active'),
+                  Tab(text: 'Resolved'),
+                ],
               ),
             ),
             // Body

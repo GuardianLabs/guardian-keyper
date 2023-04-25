@@ -119,7 +119,7 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
           titleString: 'Guardian rejected the recovery of your Secret',
           textSpan: buildTextWithId(
             leadingText: 'Secret Recovery process for ',
-            id: message.groupId,
+            id: message.vaultId,
             trailingText: ' has been terminated by your Guardians.',
           ),
           footer: Padding(

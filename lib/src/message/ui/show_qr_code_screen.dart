@@ -2,21 +2,36 @@ import 'package:get_it/get_it.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '/src/core/app/consts.dart';
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/ui/widgets/icon_of.dart';
-import '../../core/data/platform_manager.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/core/data/platform_manager.dart';
 
-import '../data/message_repository.dart';
+import '../domain/message_model.dart';
 
 class ShowQRCodeScreen extends StatefulWidget {
   static const routeName = routeShowQrCode;
+
+  static const _caption = {
+    MessageCode.createGroup: 'Become a Guardian',
+    MessageCode.takeGroup: 'Change owner',
+  };
+  static const _subtitle = {
+    MessageCode.createGroup:
+        'This is a one-time for joining a Vault as a Guardian. '
+            'You can either show it directly as a QR Code '
+            'or Share as a Text via any messenger.',
+    MessageCode.takeGroup:
+        'This is a one-time for changing the owner of the Vault. '
+            'You can either show it directly as a QR Code '
+            'or Share as a Text via any messenger.',
+  };
 
   static MaterialPageRoute<void> getPageRoute(final RouteSettings settings) =>
       MaterialPageRoute<void>(
         fullscreenDialog: true,
         settings: settings,
-        builder: (context) {
+        builder: (final BuildContext context) {
           final message = settings.arguments as MessageModel;
           return ShowQRCodeScreen(key: Key(message.aKey), message: message);
         },
@@ -31,22 +46,6 @@ class ShowQRCodeScreen extends StatefulWidget {
 }
 
 class _ShowQRCodeScreenState extends State<ShowQRCodeScreen> {
-  static const _caption = {
-    MessageCode.createGroup: 'Become a Guardian',
-    MessageCode.takeGroup: 'Change owner',
-  };
-
-  static const _subtitle = {
-    MessageCode.createGroup:
-        'This is a one-time for joining a Vault as a Guardian. '
-            'You can either show it directly as a QR Code '
-            'or Share as a Text via any messenger.',
-    MessageCode.takeGroup:
-        'This is a one-time for changing the owner of the Vault. '
-            'You can either show it directly as a QR Code '
-            'or Share as a Text via any messenger.',
-  };
-
   final _platformManager = GetIt.I<PlatformManager>();
 
   late final _qrCode = widget.message.toBase64url();
@@ -70,13 +69,13 @@ class _ShowQRCodeScreenState extends State<ShowQRCodeScreen> {
           children: [
             // Header
             HeaderBar(
-              caption: _caption[widget.message.code],
+              caption: ShowQRCodeScreen._caption[widget.message.code],
               closeButton: const HeaderBarCloseButton(),
             ),
             // Body
             PageTitle(
               title: 'Your one-time Code',
-              subtitle: _subtitle[widget.message.code],
+              subtitle: ShowQRCodeScreen._subtitle[widget.message.code],
             ),
             // QR Code
             Expanded(
@@ -107,7 +106,10 @@ class _ShowQRCodeScreenState extends State<ShowQRCodeScreen> {
                           data: _qrCode,
                         ),
                       ),
-                      LayoutBuilder(builder: (context, constraints) {
+                      LayoutBuilder(builder: (
+                        final BuildContext context,
+                        final BoxConstraints constraints,
+                      ) {
                         final logoSize = constraints.biggest.shortestSide / 4;
                         return Container(
                           constraints: BoxConstraints.expand(
