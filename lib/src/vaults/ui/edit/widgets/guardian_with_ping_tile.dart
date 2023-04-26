@@ -40,18 +40,12 @@ class _GuardianWithPingTileState extends State<GuardianWithPingTile> {
                   isError: !hasPong,
                   textSpans: hasPong
                       ? [
-                          ...buildTextWithId(
-                            id: widget.guardian,
-                            style: textStyleBold,
-                          ),
+                          ...buildTextWithId(id: widget.guardian),
                           TextSpan(text: ' is online.\nPing $msElapsed ms.'),
                         ]
                       : [
                           const TextSpan(text: 'Couldn’t reach out to '),
-                          ...buildTextWithId(
-                            id: widget.guardian,
-                            style: textStyleBold,
-                          ),
+                          ...buildTextWithId(id: widget.guardian),
                           const TextSpan(text: '. Connection timeout.'),
                         ],
                   duration: snackBarDuration,

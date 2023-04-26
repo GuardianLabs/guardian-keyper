@@ -125,7 +125,7 @@ class _LoadingPageState extends State<LoadingPage> {
           titleString: 'You can’t add the same Guardian twice',
           textSpan: [
             const TextSpan(text: 'Seems like you’ve already added '),
-            ...buildTextWithId(id: qrCode.peerId, style: textStyleBold),
+            ...buildTextWithId(id: qrCode.peerId),
             const TextSpan(
               text: ' to this Vault. Try adding a different Guardian.',
             ),

@@ -6,14 +6,11 @@ List<TextSpan> buildTextWithId({
   required IdBase id,
   String? leadingText,
   String? trailingText,
-  TextStyle? style,
+  TextStyle style = const TextStyle(fontWeight: FontWeight.w600),
 }) =>
     [
       if (leadingText != null) TextSpan(text: leadingText),
-      TextSpan(
-        text: '${id.name}  ',
-        style: style?.copyWith(fontWeight: FontWeight.w600) ?? textStyleBold,
-      ),
+      TextSpan(text: '${id.name}  ', style: style),
       TextSpan(
         text: id is PeerId
             ? String.fromCharCode(emojiPeer[id.tokenEmojiByte])

@@ -48,7 +48,9 @@ class GuardiansControlPanel extends StatelessWidget {
                     'Keep one Shard (encrypted part of a Secret) on my device '
                     'every time I create a new Secret.',
                     softWrap: true,
-                    style: textStyleSourceSansPro412Purple,
+                    style: textStyleSourceSansPro412.copyWith(
+                      color: clPurpleLight,
+                    ),
                   ),
                 ),
                 Switch.adaptive(
