@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
@@ -34,6 +35,7 @@ class _AppLifecycleObserverState extends State<AppLifecycleObserver>
               useBiometrics: _settingsInteractor.useBiometrics,
               localAuthenticate: _platformManager.localAuthenticate,
             );
+      _messagesInteractor.start();
       await _networkManager.start();
       await _mdnsManager.startDiscovery();
     });
@@ -41,12 +43,13 @@ class _AppLifecycleObserverState extends State<AppLifecycleObserver>
 
   @override
   void didChangeAppLifecycleState(final AppLifecycleState state) async {
+    if (kDebugMode) print(state);
     if (state == AppLifecycleState.resumed) {
       await _networkManager.start();
     } else {
       _networkManager.pause();
       await _vaultInteractor.flush();
-      await _messagesInteractor.flush();
+      await _messagesInteractor.pause();
       await _mdnsManager.stopDiscovery();
     }
   }
@@ -57,6 +60,7 @@ class _AppLifecycleObserverState extends State<AppLifecycleObserver>
     _networkManager.stop();
     Future.wait([
       _mdnsManager.dispose(),
+      _messagesInteractor.stop(),
     ]);
     super.dispose();
   }

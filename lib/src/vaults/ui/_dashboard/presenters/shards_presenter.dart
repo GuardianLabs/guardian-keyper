@@ -13,7 +13,7 @@ class ShardsPresenter extends ChangeNotifier {
       if (vault.ownerId != _vaultInteractor.selfId) _shards[vault.id] = vault;
     }
     // init subscription
-    _vaultsUpdatesSubscription.isPaused;
+    _vaultsUpdatesSubscription.resume();
   }
 
   Map<VaultId, VaultModel> get shards => _shards;

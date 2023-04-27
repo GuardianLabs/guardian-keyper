@@ -126,7 +126,7 @@ class ShardScreen extends StatelessWidget {
                   final message = await GetIt.I<MessagesInteractor>()
                       .createTakeVaultCode(vault.id);
                   if (context.mounted) {
-                    Navigator.of(context).pushNamed(
+                    Navigator.of(context).pushReplacementNamed(
                       routeShowQrCode,
                       arguments: message,
                     );

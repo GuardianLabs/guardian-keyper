@@ -13,19 +13,30 @@ class MessagesInteractor {
   late final pingPeer = _networkManager.pingPeer;
   late final getPeerStatus = _networkManager.getPeerStatus;
 
-  late final flush = _messageRepository.flush;
   late final watchMessages = _messageRepository.watch;
 
   PeerId get selfId => _settingsManager.selfId;
 
   Iterable<MessageModel> get messages => _messageRepository.values;
 
+  final _networkManager = GetIt.I<NetworkManager>();
   final _settingsManager = GetIt.I<SettingsManager>();
   final _vaultRepository = GetIt.I<VaultRepository>();
   final _messageRepository = GetIt.I<MessageRepository>();
 
-  late final _networkManager = GetIt.I<NetworkManager>()
-    ..messageStream.listen(_onMessage);
+  late final _subscription = _networkManager.messageStream.listen(_onMessage);
+
+  Future<void> start() async {
+    _subscription.resume();
+  }
+
+  Future<void> pause() {
+    return _messageRepository.flush();
+  }
+
+  Future<void> stop() {
+    return _subscription.cancel();
+  }
 
   /// Create ticket to join vault
   Future<MessageModel> createJoinVaultCode() async {
@@ -39,7 +50,10 @@ class MessagesInteractor {
 
   /// Create ticket to take vault
   Future<MessageModel> createTakeVaultCode(final VaultId? groupId) async {
-    final message = MessageModel(code: MessageCode.takeGroup, peerId: selfId);
+    final message = MessageModel(
+      code: MessageCode.takeGroup,
+      peerId: _settingsManager.selfId,
+    );
     await _messageRepository.put(
       message.aKey,
       message.copyWith(
@@ -199,6 +213,6 @@ class MessagesInteractor {
       _networkManager.sendTo(
         isConfirmable: true,
         peerId: message.peerId,
-        message: message.copyWith(peerId: selfId),
+        message: message.copyWith(peerId: _settingsManager.selfId),
       );
 }

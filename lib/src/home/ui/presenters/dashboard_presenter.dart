@@ -19,8 +19,8 @@ class DashboardPresenter extends ChangeNotifier {
           : _shards.add(vault.id);
     }
     // init subscriptions
-    _vaultsUpdatesSubscription.isPaused;
-    _settingsUpdatesSubscription.isPaused;
+    _vaultsUpdatesSubscription.resume();
+    _settingsUpdatesSubscription.resume();
   }
 
   late final share = _platformManager.share;

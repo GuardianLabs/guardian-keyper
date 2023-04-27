@@ -13,7 +13,7 @@ class VaultsPresenter extends ChangeNotifier {
       if (vault.ownerId == _vaultInteractor.selfId) _myVaults[vault.id] = vault;
     }
     // init subscription
-    _vaultsUpdatesSubscription.isPaused;
+    _vaultsUpdatesSubscription.resume();
   }
 
   Map<VaultId, VaultModel> get myVaults => _myVaults;
