@@ -18,9 +18,6 @@ abstract class VaultPresenterBase extends PagePresenterBase {
 
   late final networkSubscription = _vaultInteractor.messageStream.listen(null);
 
-  late final logStartCreateVault = _vaultInteractor.logStartCreateVault;
-  late final logFinishCreateVault = _vaultInteractor.logFinishCreateVault;
-
   late final logStartRestoreVault = _vaultInteractor.logStartRestoreVault;
   late final logFinishRestoreVault = _vaultInteractor.logFinishRestoreVault;
 
@@ -57,7 +54,7 @@ abstract class VaultPresenterBase extends PagePresenterBase {
   }
 
   Future<VaultModel> createGroup(final VaultModel vault) async {
-    final newVault = await _vaultInteractor.createGroup(vault);
+    final newVault = await _vaultInteractor.createVault(vault);
     notifyListeners();
     return newVault;
   }

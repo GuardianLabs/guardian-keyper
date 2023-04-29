@@ -37,7 +37,7 @@ class VaultInteractor {
   VaultModel? getVaultById(final VaultId vaultId) =>
       _vaultRepository.get(vaultId.asKey);
 
-  Future<VaultModel> createGroup(final VaultModel vault) async {
+  Future<VaultModel> createVault(final VaultModel vault) async {
     await _vaultRepository.put(vault.aKey, vault);
     return vault;
   }

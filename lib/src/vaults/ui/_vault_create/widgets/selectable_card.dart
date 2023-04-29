@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/src/core/ui/theme/theme.dart';
+import 'package:guardian_keyper/src/core/ui/theme/theme.dart';
 
 class SelectableCard extends StatelessWidget {
   final Widget child;
@@ -67,7 +67,10 @@ class SelectableCard extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(padding: paddingAll20, child: child),
+            Padding(
+              padding: paddingAll20,
+              child: child,
+            ),
           ],
         ),
       );

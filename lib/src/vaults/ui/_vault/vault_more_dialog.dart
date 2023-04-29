@@ -58,6 +58,7 @@ class VaultMoreDialog extends StatelessWidget {
           child: PrimaryButton(
             text: 'Yes, remove the Vault',
             onPressed: () async {
+              Navigator.of(context).pop();
               await GetIt.I<VaultInteractor>().removeVault(vaultId);
               if (context.mounted) Navigator.of(context).pop();
             },

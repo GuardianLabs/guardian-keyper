@@ -1,7 +1,7 @@
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
 
-import '../vault_create_presenter.dart';
+import '../presenters/vault_create_presenter.dart';
 import '../widgets/selectable_card.dart';
 
 class ChooseTypePage extends StatelessWidget {

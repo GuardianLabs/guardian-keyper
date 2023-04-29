@@ -1,6 +1,6 @@
 import '/src/core/ui/widgets/common.dart';
 
-import '../vault_create_presenter.dart';
+import '../presenters/vault_create_presenter.dart';
 import '../widgets/vault_size_info_panel.dart';
 import '../widgets/guardians_control_panel.dart';
 
@@ -42,19 +42,9 @@ class ChooseSizePage extends StatelessWidget {
               // Control
               const GuardiansControlPanel(),
               // Info
-              Padding(
+              const Padding(
                 padding: paddingTop32,
-                child: Consumer<VaultCreatePresenter>(
-                  builder: (_, controller, __) => VaultSizeInfoPanel(
-                    key: Key(DateTime.now().toIso8601String()),
-                    atLeast: controller.isGroupMember
-                        ? controller.groupSize - 1
-                        : controller.groupSize,
-                    ofAmount: controller.isGroupMember
-                        ? controller.groupThreshold - 1
-                        : controller.groupThreshold,
-                  ),
-                ),
+                child: VaultSizeInfoPanel(),
               ),
               // Footer
               Padding(

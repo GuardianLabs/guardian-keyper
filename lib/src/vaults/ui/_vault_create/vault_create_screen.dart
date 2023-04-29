@@ -1,7 +1,7 @@
-import '../../../core/consts.dart';
-import '/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
-import 'vault_create_presenter.dart';
+import 'presenters/vault_create_presenter.dart';
 import 'pages/choose_size_page.dart';
 import 'pages/choose_type_page.dart';
 import 'pages/input_name_page.dart';
@@ -19,7 +19,7 @@ class VaultCreateScreen extends StatelessWidget {
       MaterialPageRoute<void>(
         fullscreenDialog: true,
         settings: settings,
-        builder: (_) => const VaultCreateScreen(),
+        builder: (final BuildContext context) => const VaultCreateScreen(),
       );
 
   const VaultCreateScreen({super.key});
@@ -31,8 +31,17 @@ class VaultCreateScreen extends StatelessWidget {
         ),
         child: ScaffoldSafe(
           child: Selector<VaultCreatePresenter, int>(
-            selector: (context, controller) => controller.currentPage,
-            builder: (context, currentPage, __) => AnimatedSwitcher(
+            selector: (
+              final BuildContext context,
+              final VaultCreatePresenter presenter,
+            ) =>
+                presenter.currentPage,
+            builder: (
+              final BuildContext context,
+              final int currentPage,
+              final Widget? widget,
+            ) =>
+                AnimatedSwitcher(
               duration: pageChangeDuration,
               child: _pages[currentPage],
             ),
