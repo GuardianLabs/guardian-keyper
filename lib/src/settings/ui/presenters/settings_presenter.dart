@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/widgets.dart';
 
-import '../domain/settings_interactor.dart';
+import '../../domain/settings_interactor.dart';
 
 export 'package:provider/provider.dart';
 

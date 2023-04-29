@@ -3,7 +3,7 @@ import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/auth/auth.dart';
 
-import 'settings_presenter.dart';
+import 'presenters/settings_presenter.dart';
 import 'pages/set_device_name_page.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -13,7 +13,7 @@ class SettingsScreen extends StatelessWidget {
       MaterialPageRoute<void>(
         fullscreenDialog: true,
         settings: settings,
-        builder: (_) => const SettingsScreen(),
+        builder: (final BuildContext context) => const SettingsScreen(),
       );
 
   const SettingsScreen({super.key});
@@ -35,7 +35,7 @@ class SettingsScreen extends StatelessWidget {
                   builder: (
                     final BuildContext context,
                     final SettingsPresenter presenter,
-                    final Widget? _,
+                    final Widget? widget,
                   ) =>
                       ListView(
                     padding: paddingAll20,
@@ -55,7 +55,8 @@ class SettingsScreen extends StatelessWidget {
                             final newName = await Navigator.of(context).push(
                               MaterialPageRoute<String>(
                                 fullscreenDialog: true,
-                                builder: (_) => SetDeviceNamePage(
+                                builder: (final BuildContext context) =>
+                                    SetDeviceNamePage(
                                   deviceName: presenter.deviceName,
                                 ),
                               ),

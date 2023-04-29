@@ -5,7 +5,7 @@ abstract class IdBase extends Serializable {
 
   static final _random = Random.secure();
 
-  static Uint8List getNew({int length = 8}) =>
+  static Uint8List getNewToken({int length = 8}) =>
       Uint8List.fromList(Iterable.generate(
         length,
         (x) => _random.nextInt(255),

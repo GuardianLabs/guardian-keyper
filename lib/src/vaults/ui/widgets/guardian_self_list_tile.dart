@@ -1,6 +1,6 @@
-import '../../../core/domain/entity/core_model.dart';
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
 class GuardianSelfListTile extends StatelessWidget {
   final PeerId guardian;

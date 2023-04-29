@@ -20,7 +20,7 @@ class MessageId extends IdBase {
 
   const MessageId({required super.token});
 
-  MessageId.aNew({super.name}) : super(token: IdBase.getNew(length: 16));
+  MessageId.aNew({super.name}) : super(token: IdBase.getNewToken(length: 16));
 
   factory MessageId.fromBytes(List<int> token) {
     final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));

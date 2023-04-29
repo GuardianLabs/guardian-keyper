@@ -8,7 +8,7 @@ class SecretId extends IdBase {
 
   const SecretId({required super.token, super.name});
 
-  SecretId.aNew({super.name}) : super(token: IdBase.getNew(length: 8));
+  SecretId.aNew({super.name}) : super(token: IdBase.getNewToken(length: 8));
 
   factory SecretId.fromBytes(List<int> token) {
     final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));

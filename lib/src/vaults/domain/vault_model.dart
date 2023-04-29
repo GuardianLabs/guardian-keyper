@@ -6,9 +6,8 @@ import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 class VaultId extends IdBase {
   static const currentVersion = 1;
 
-  const VaultId({required super.token, super.name});
-
-  VaultId.aNew({super.name}) : super(token: IdBase.getNew(length: 8));
+  VaultId({super.name, Uint8List? token})
+      : super(token: token ?? IdBase.getNewToken(length: 8));
 
   factory VaultId.fromBytes(List<int> token) {
     final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));
@@ -55,16 +54,16 @@ class VaultModel extends Serializable {
     this.threshold = 0,
     this.guardians = const {},
     this.secrets = const {},
-  }) : id = id ?? VaultId.aNew();
-
-  @override
-  int get hashCode => Object.hash(runtimeType, id.hashCode);
+  }) : id = id ?? VaultId();
 
   @override
   bool operator ==(Object other) =>
       other is VaultModel &&
       runtimeType == other.runtimeType &&
       id.hashCode == other.id.hashCode;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, id.hashCode);
 
   @override
   bool get isEmpty => guardians.isEmpty;
@@ -81,10 +80,7 @@ class VaultModel extends Serializable {
   bool get hasQuorum => size >= threshold;
   bool get hasNoQuorum => size < threshold;
 
-  bool get isRestoring => isNotFull && secrets.isNotEmpty;
-  bool get isNotRestoring => !isRestoring;
-
-  bool get isRestricted => isRestoring && isNotFull;
+  bool get isRestricted => isNotFull && secrets.isNotEmpty;
   bool get isNotRestricted => !isRestricted;
 
   bool get hasSecrets => secrets.isNotEmpty;

@@ -39,7 +39,7 @@ class VaultRestorePresenter extends VaultGuardianPresenterBase {
             )).then(
               (group) => onSuccess(message.copyWith(payload: group)),
             );
-          } else if (existingGroup.isNotRestoring) {
+          } else if (existingGroup.isNotRestricted) {
             onFail(message);
           } else if (existingGroup.guardians.containsKey(guardian)) {
             onDuplicate(message);

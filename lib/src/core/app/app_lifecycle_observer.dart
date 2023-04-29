@@ -46,9 +46,9 @@ class _AppLifecycleObserverState extends State<AppLifecycleObserver>
     if (kDebugMode) print(state);
     if (state == AppLifecycleState.resumed) {
       await _networkManager.start();
-    } else {
+    } else if (state != AppLifecycleState.inactive) {
       _networkManager.pause();
-      await _vaultInteractor.flush();
+      await _vaultInteractor.pause();
       await _messagesInteractor.pause();
       await _mdnsManager.stopDiscovery();
     }

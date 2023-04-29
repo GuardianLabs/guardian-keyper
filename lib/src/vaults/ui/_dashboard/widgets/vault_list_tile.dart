@@ -30,7 +30,7 @@ class VaultListTile extends StatelessWidget {
 
   Text _buildSubtitle(final VaultModel vault) {
     final styleRed = textStyleSourceSansPro414.copyWith(color: clRed);
-    if (vault.isRestoring) {
+    if (vault.isRestricted) {
       return vault.isRestricted
           ? Text('Restricted usage', style: styleRed)
           : Text('Complete the Recovery', style: styleRed);

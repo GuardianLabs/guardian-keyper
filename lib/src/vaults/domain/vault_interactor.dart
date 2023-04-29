@@ -9,10 +9,7 @@ import 'package:guardian_keyper/src/settings/data/settings_manager.dart';
 import '../data/vault_repository.dart';
 
 class VaultInteractor {
-  late final flush = _vaultRepository.flush;
   late final watch = _vaultRepository.watch;
-
-  late final selfId = _settingsManager.selfId;
 
   late final pingPeer = _networkManager.pingPeer;
   late final requestRetryPeriod = _networkManager.messageTTL;
@@ -21,6 +18,8 @@ class VaultInteractor {
   late final wakelockEnable = _platformManager.wakelockEnable;
   late final wakelockDisable = _platformManager.wakelockDisable;
   late final localAuthenticate = _platformManager.localAuthenticate;
+
+  PeerId get selfId => _settingsManager.selfId;
 
   String get passCode => _settingsManager.passCode;
 
@@ -31,12 +30,21 @@ class VaultInteractor {
   bool get useBiometrics =>
       _settingsManager.hasBiometrics && _settingsManager.isBiometricsEnabled;
 
+  Future<void> pause() async {
+    await _vaultRepository.flush();
+  }
+
   VaultModel? getVaultById(final VaultId vaultId) =>
       _vaultRepository.get(vaultId.asKey);
 
   Future<VaultModel> createGroup(final VaultModel vault) async {
     await _vaultRepository.put(vault.aKey, vault);
     return vault;
+  }
+
+  Future<VaultId> removeVault(final VaultId vaultId) async {
+    await GetIt.I<VaultRepository>().delete(vaultId.asKey);
+    return vaultId;
   }
 
   Future<VaultModel> addGuardian(
@@ -61,11 +69,19 @@ class VaultInteractor {
         vault.copyWith(secrets: {...vault.secrets, secretId: secretValue}),
       );
 
+  Future<void> removeSecret({
+    required final VaultModel vault,
+    required final SecretId secretId,
+  }) async {
+    vault.secrets.remove(secretId);
+    await _vaultRepository.put(vault.aKey, vault);
+  }
+
   Future<void> sendToGuardian(final MessageModel message) =>
       _networkManager.sendTo(
         isConfirmable: false,
         peerId: message.peerId,
-        message: message.copyWith(peerId: selfId),
+        message: message.copyWith(peerId: _settingsManager.selfId),
       );
 
   Future<void> logStartCreateVault() =>

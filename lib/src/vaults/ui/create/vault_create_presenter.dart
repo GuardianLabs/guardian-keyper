@@ -46,7 +46,7 @@ class VaultCreatePresenter extends VaultPresenterBase {
   Future<VaultModel> createVault() {
     logFinishCreateVault();
     return createGroup(VaultModel(
-      id: VaultId.aNew(name: _groupName),
+      id: VaultId(name: _groupName),
       maxSize: _groupSize,
       threshold: _groupThreshold,
       ownerId: myPeerId,
