@@ -7,7 +7,7 @@ import 'package:guardian_keyper/src/message/ui/scan_qr_code_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_vault/vault_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_dashboard/shard_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_vault_create/vault_create_screen.dart';
-import 'package:guardian_keyper/src/vaults/ui/restore/vault_restore_screen.dart';
+import 'package:guardian_keyper/src/vaults/ui/_vault_restore/vault_restore_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/add_secret/vault_add_secret_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/add_guardian/vault_add_guardian_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/recover_secret/vault_recover_secret_screen.dart';

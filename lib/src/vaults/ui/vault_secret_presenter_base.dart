@@ -7,7 +7,7 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
     required this.vaultId,
     required this.secretId,
   }) {
-    vault = getVaultById(vaultId)!;
+    vault = _vaultInteractor.getVaultById(vaultId)!;
   }
 
   SecretId secretId;
@@ -25,6 +25,8 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
 
   late final logStartRestoreSecret = _vaultInteractor.logStartRestoreSecret;
   late final logFinishRestoreSecret = _vaultInteractor.logFinishRestoreSecret;
+
+  PeerId get myPeerId => _vaultInteractor.selfId;
 
   String get passCode => _vaultInteractor.passCode;
 
@@ -49,7 +51,7 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
       stopListenResponse();
     } else {
       for (final message in messages.where((m) => m.hasNoResponse)) {
-        sendToGuardian(message);
+        _vaultInteractor.sendToGuardian(message);
       }
     }
   }

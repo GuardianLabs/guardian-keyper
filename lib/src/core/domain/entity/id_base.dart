@@ -17,12 +17,12 @@ abstract class IdBase extends Serializable {
   const IdBase({required this.token, this.name = ''});
 
   @override
-  int get hashCode => Object.hash(runtimeType, _listEq.hash(token));
-
-  @override
   bool operator ==(Object other) =>
       runtimeType == other.runtimeType &&
       _listEq.equals(token, (other as IdBase).token);
+
+  @override
+  int get hashCode => Object.hash(runtimeType, _listEq.hash(token));
 
   @override
   bool get isEmpty => token.isEmpty;

@@ -1,7 +1,7 @@
-import '../../../core/domain/entity/core_model.dart';
-import '/src/core/ui/widgets/emoji.dart';
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
 import 'online_status_text.dart';
 

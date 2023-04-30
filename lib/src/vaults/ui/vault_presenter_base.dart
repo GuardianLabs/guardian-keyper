@@ -12,22 +12,11 @@ part 'vault_guardian_presenter_base.dart';
 typedef Callback = void Function(MessageModel message);
 
 abstract class VaultPresenterBase extends PagePresenterBase {
-  late final getVaultById = _vaultInteractor.getVaultById;
-
-  late final sendToGuardian = _vaultInteractor.sendToGuardian;
+  VaultPresenterBase({required super.pages, super.currentPage});
 
   late final networkSubscription = _vaultInteractor.messageStream.listen(null);
 
-  late final logStartRestoreVault = _vaultInteractor.logStartRestoreVault;
-  late final logFinishRestoreVault = _vaultInteractor.logFinishRestoreVault;
-
-  Timer? timer;
-
-  VaultPresenterBase({required super.pages, super.currentPage});
-
-  bool get isWaiting => timer?.isActive == true;
-
-  PeerId get myPeerId => _vaultInteractor.selfId;
+  bool get isWaiting => _timer?.isActive == true;
 
   @override
   void dispose() {
@@ -36,16 +25,9 @@ abstract class VaultPresenterBase extends PagePresenterBase {
     super.dispose();
   }
 
-  void stopListenResponse({final bool shouldNotify = true}) {
-    timer?.cancel();
-    networkSubscription.onData(null);
-    _vaultInteractor.wakelockDisable();
-    if (shouldNotify) notifyListeners();
-  }
-
-  void startNetworkRequest(void Function([Timer?]) callback) async {
+  Future<void> startNetworkRequest(void Function([Timer?]) callback) async {
     await _vaultInteractor.wakelockEnable();
-    timer = Timer.periodic(
+    _timer = Timer.periodic(
       _vaultInteractor.requestRetryPeriod,
       callback,
     );
@@ -53,11 +35,14 @@ abstract class VaultPresenterBase extends PagePresenterBase {
     notifyListeners();
   }
 
-  Future<VaultModel> createGroup(final VaultModel vault) async {
-    final newVault = await _vaultInteractor.createVault(vault);
-    notifyListeners();
-    return newVault;
+  void stopListenResponse({final bool shouldNotify = true}) {
+    _timer?.cancel();
+    networkSubscription.onData(null);
+    _vaultInteractor.wakelockDisable();
+    if (shouldNotify) notifyListeners();
   }
 
   final _vaultInteractor = GetIt.I<VaultInteractor>();
+
+  Timer? _timer;
 }

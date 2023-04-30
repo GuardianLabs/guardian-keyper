@@ -1,8 +1,8 @@
-import '../../../core/consts.dart';
-import '../../../core/domain/entity/core_model.dart';
-import '/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
-import 'vault_restore_presenter.dart';
+import 'presenters/vault_restore_presenter.dart';
 import 'pages/get_code_page.dart';
 import 'pages/loading_page.dart';
 
@@ -18,7 +18,7 @@ class VaultRestoreScreen extends StatelessWidget {
       MaterialPageRoute<void>(
         fullscreenDialog: true,
         settings: settings,
-        builder: (_) => VaultRestoreScreen(
+        builder: (final BuildContext context) => VaultRestoreScreen(
           vaultId: settings.arguments as VaultId?,
         ),
       );
@@ -29,15 +29,24 @@ class VaultRestoreScreen extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (_) => VaultRestorePresenter(
+        create: (final BuildContext context) => VaultRestorePresenter(
           pages: _pages,
           vaultId: vaultId,
         ),
         lazy: false,
         child: ScaffoldSafe(
           child: Selector<VaultRestorePresenter, int>(
-            selector: (_, controller) => controller.currentPage,
-            builder: (_, currentPage, __) => AnimatedSwitcher(
+            selector: (
+              final BuildContext context,
+              final VaultRestorePresenter presenter,
+            ) =>
+                presenter.currentPage,
+            builder: (
+              final BuildContext context,
+              final int currentPage,
+              final Widget? widget,
+            ) =>
+                AnimatedSwitcher(
               duration: pageChangeDuration,
               child: _pages[currentPage],
             ),

@@ -1,10 +1,10 @@
-import '../../../../core/consts.dart';
-import '../../../../core/domain/entity/core_model.dart';
-import '/src/core/ui/widgets/emoji.dart';
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
-import '../vault_restore_presenter.dart';
+import '../presenters/vault_restore_presenter.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -14,12 +14,12 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  late final _controller = context.read<VaultRestorePresenter>();
+  late final _presenter = context.read<VaultRestorePresenter>();
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => _controller.startRequest(
+    Future.microtask(() => _presenter.startRequest(
           onDuplicate: _showDuplicated,
           onSuccess: _showSuccess,
           onReject: _showRejected,
@@ -29,7 +29,7 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   void dispose() {
-    _controller.stopListenResponse();
+    _presenter.stopListenResponse(shouldNotify: false);
     super.dispose();
   }
 
@@ -52,8 +52,17 @@ class _LoadingPageState extends State<LoadingPage> {
                   Padding(
                     padding: paddingTop20,
                     child: Selector<VaultRestorePresenter, bool>(
-                      selector: (_, controller) => controller.isWaiting,
-                      builder: (_, isWaiting, indicator) => Visibility(
+                      selector: (
+                        final BuildContext context,
+                        final VaultRestorePresenter presenter,
+                      ) =>
+                          presenter.isWaiting,
+                      builder: (
+                        final BuildContext context,
+                        final bool isWaiting,
+                        final Widget? indicator,
+                      ) =>
+                          Visibility(
                         visible: isWaiting,
                         child: indicator!,
                       ),

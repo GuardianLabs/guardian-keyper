@@ -12,6 +12,7 @@ class VaultInteractor {
   late final watch = _vaultRepository.watch;
 
   late final pingPeer = _networkManager.pingPeer;
+  late final getPeerStatus = _networkManager.getPeerStatus;
   late final requestRetryPeriod = _networkManager.messageTTL;
 
   late final vibrate = _platformManager.vibrate;
@@ -26,6 +27,9 @@ class VaultInteractor {
   Iterable<VaultModel> get vaults => _vaultRepository.values;
 
   Stream<MessageModel> get messageStream => _networkManager.messageStream;
+
+  Stream<MapEntry<PeerId, bool>> get peerStatusChangeStream =>
+      _networkManager.peerStatusChangeStream;
 
   bool get useBiometrics =>
       _settingsManager.hasBiometrics && _settingsManager.isBiometricsEnabled;

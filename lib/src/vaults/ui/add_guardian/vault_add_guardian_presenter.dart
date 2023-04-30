@@ -1,6 +1,9 @@
+import 'package:get_it/get_it.dart';
+
 import '../../../core/consts.dart';
 import '../../../core/domain/entity/core_model.dart';
 
+import '../../domain/vault_interactor.dart';
 import '../vault_presenter_base.dart';
 
 export 'package:provider/provider.dart';
@@ -26,12 +29,16 @@ class VaultAddGuardianPresenter extends VaultGuardianPresenterBase {
     if (qrCode!.version != MessageModel.currentVersion) {
       return onAppVersion(qrCode!);
     }
-    if (getVaultById(vaultId)?.guardians.containsKey(qrCode?.peerId) ?? false) {
+    if (_vaultInteractor
+            .getVaultById(vaultId)
+            ?.guardians
+            .containsKey(qrCode?.peerId) ??
+        false) {
       return onDuplicate(qrCode!);
     }
 
     networkSubscription.onData(
-      (message) {
+      (final MessageModel message) {
         if (!isWaiting) return;
         if (qrCode == null) return;
         if (message.hasNoResponse) return;
@@ -57,7 +64,11 @@ class VaultAddGuardianPresenter extends VaultGuardianPresenterBase {
     );
 
     startNetworkRequest(([_]) {
-      sendToGuardian(qrCode!.copyWith(payload: getVaultById(vaultId)));
+      _vaultInteractor.sendToGuardian(qrCode!.copyWith(
+        payload: _vaultInteractor.getVaultById(vaultId),
+      ));
     });
   }
+
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
 }

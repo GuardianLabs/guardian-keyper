@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 
-import '../../../../core/consts.dart';
-import '../../../../core/domain/entity/core_model.dart';
-import '/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
-import '../vault_restore_presenter.dart';
+import '../presenters/vault_restore_presenter.dart';
 
 class GetCodePage extends StatefulWidget {
   const GetCodePage({super.key});

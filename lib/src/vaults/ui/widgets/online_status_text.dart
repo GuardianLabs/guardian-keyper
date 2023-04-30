@@ -2,9 +2,10 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
-import '/src/core/ui/theme/theme.dart';
-import '../../../core/domain/entity/core_model.dart';
-import '/src/core/data/network_manager.dart';
+import 'package:guardian_keyper/src/core/ui/theme/theme.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
+
+import '../../domain/vault_interactor.dart';
 
 class OnlineStatusText extends StatefulWidget {
   final PeerId peerId;
@@ -16,15 +17,15 @@ class OnlineStatusText extends StatefulWidget {
 }
 
 class _OnlineStatusTextState extends State<OnlineStatusText> {
-  final _networkService = GetIt.I<NetworkManager>();
-  late Timer _timer;
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
+  late final Timer _timer;
 
   @override
   void initState() {
     super.initState();
     _timer = Timer.periodic(
-      _networkService.messageTTL,
-      (_) => _networkService.pingPeer(widget.peerId),
+      _vaultInteractor.requestRetryPeriod,
+      (_) => _vaultInteractor.pingPeer(widget.peerId),
     );
   }
 
@@ -36,18 +37,22 @@ class _OnlineStatusTextState extends State<OnlineStatusText> {
 
   @override
   Widget build(final BuildContext context) => StreamBuilder<bool>(
-        initialData: _networkService.getPeerStatus(widget.peerId),
-        stream: _networkService.peerStatusChangeStream
+        initialData: _vaultInteractor.getPeerStatus(widget.peerId),
+        stream: _vaultInteractor.peerStatusChangeStream
             .where((e) => e.key == widget.peerId)
             .map((e) => e.value),
-        builder: (_, s) => s.data == true
-            ? Text(
-                'Online',
-                style: textStyleSourceSansPro412.copyWith(color: clGreen),
-              )
-            : Text(
-                'Offline',
-                style: textStyleSourceSansPro412.copyWith(color: clRed),
-              ),
+        builder: (
+          final BuildContext context,
+          final AsyncSnapshot<bool> snapshot,
+        ) =>
+            snapshot.data == true
+                ? Text(
+                    'Online',
+                    style: textStyleSourceSansPro412.copyWith(color: clGreen),
+                  )
+                : Text(
+                    'Offline',
+                    style: textStyleSourceSansPro412.copyWith(color: clRed),
+                  ),
       );
 }
