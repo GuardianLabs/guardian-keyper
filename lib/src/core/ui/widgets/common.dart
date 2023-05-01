@@ -433,9 +433,9 @@ class DotColored extends StatelessWidget {
 SnackBar buildSnackBar({
   String? text,
   List<TextSpan>? textSpans,
+  Duration duration = snackBarDuration,
   bool isFloating = false,
   bool isError = false,
-  Duration duration = const Duration(seconds: 4),
 }) =>
     SnackBar(
       duration: duration,

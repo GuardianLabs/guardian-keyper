@@ -33,7 +33,6 @@ class VaultRestoreScreen extends StatelessWidget {
           pages: _pages,
           vaultId: vaultId,
         ),
-        lazy: false,
         child: ScaffoldSafe(
           child: Selector<VaultRestorePresenter, int>(
             selector: (

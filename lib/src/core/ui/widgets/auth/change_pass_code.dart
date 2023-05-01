@@ -56,7 +56,6 @@ Future<void> showChangePassCode({
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
               text: 'Your login passcode was changed successfully!',
-              duration: snackBarDuration,
               isFloating: true,
               isError: false,
             ));

@@ -1,26 +1,23 @@
+import 'dart:async';
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
-import '../../../domain/vault_interactor.dart';
 import '../../vault_presenter_base.dart';
+import '../../presenters/qr_code_mixin.dart';
+import '../../../domain/vault_interactor.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultRestorePresenter extends VaultPresenterBase {
+class VaultRestorePresenter extends VaultPresenterBase with QrCodeMixin {
   VaultRestorePresenter({required super.pages, this.vaultId});
 
   // TBD: check if vaultId is same as provided
+  // should accept code only for given VaultId
   final VaultId? vaultId;
 
-  MessageModel? get qrCode => _qrCode;
-
-  set qrCode(MessageModel? value) {
-    if (_qrCode != value) {
-      _qrCode = value;
-      if (_qrCode != null) nextPage();
-    }
-  }
+  @override
+  MessageCode get messageCode => MessageCode.takeGroup;
 
   Future<void> startRequest({
     required Callback onSuccess,
@@ -71,6 +68,4 @@ class VaultRestorePresenter extends VaultPresenterBase {
   }
 
   final _vaultInteractor = GetIt.I<VaultInteractor>();
-
-  MessageModel? _qrCode;
 }

@@ -1,10 +1,12 @@
 import 'package:guardian_keyper/src/core/consts.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
-import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
 import '../presenters/vault_restore_presenter.dart';
+import '../dialogs/on_duplicate_dialog.dart';
+import '../dialogs/on_success_dialog.dart';
+import '../dialogs/on_reject_dialog.dart';
+import '../dialogs/on_error_dialog.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -14,23 +16,34 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  late final _presenter = context.read<VaultRestorePresenter>();
-
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => _presenter.startRequest(
-          onDuplicate: _showDuplicated,
-          onSuccess: _showSuccess,
-          onReject: _showRejected,
-          onFail: _showError,
+    Future.microtask(() => context.read<VaultRestorePresenter>().startRequest(
+          onSuccess: (final message) async {
+            await OnSuccessDialog.show(context, message);
+            if (context.mounted) {
+              message.vault.isFull
+                  ? Navigator.of(context).pop()
+                  : Navigator.of(context).pushReplacementNamed(
+                      routeVaultRestore,
+                      arguments: message.vaultId,
+                    );
+            }
+          },
+          onDuplicate: (final message) async {
+            await OnDuplicateDialog.show(context);
+            if (context.mounted) Navigator.of(context).pop();
+          },
+          onReject: (final message) async {
+            await OnRejectDialog.show(context, message);
+            if (context.mounted) Navigator.of(context).pop();
+          },
+          onFail: (final message) async {
+            await OnErrorDialog.show(context);
+            if (context.mounted) Navigator.of(context).pop();
+          },
         ));
-  }
-
-  @override
-  void dispose() {
-    _presenter.stopListenResponse(shouldNotify: false);
-    super.dispose();
   }
 
   @override
@@ -60,13 +73,12 @@ class _LoadingPageState extends State<LoadingPage> {
                       builder: (
                         final BuildContext context,
                         final bool isWaiting,
-                        final Widget? indicator,
+                        final Widget? widget,
                       ) =>
                           Visibility(
                         visible: isWaiting,
-                        child: indicator!,
+                        child: const CircularProgressIndicator.adaptive(),
                       ),
-                      child: const CircularProgressIndicator.adaptive(),
                     ),
                   ),
                   Padding(
@@ -91,119 +103,4 @@ class _LoadingPageState extends State<LoadingPage> {
           ),
         ],
       );
-
-  void _showSuccess(final MessageModel message) => message.vault.missed == 0
-      ? showModalBottomSheet(
-          context: context,
-          isDismissible: false,
-          isScrollControlled: true,
-          builder: (final BuildContext context) => BottomSheetWidget(
-            icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
-            titleString: 'Ownership Changed',
-            textSpan: buildTextWithId(
-              leadingText: 'The ownership of the Vault ',
-              id: message.vaultId,
-              trailingText: ' has been transferred to your device.',
-            ),
-            footer: PrimaryButton(
-              text: 'Done',
-              onPressed: Navigator.of(context).pop,
-            ),
-          ),
-        ).then(Navigator.of(context).pop)
-      : showModalBottomSheet(
-          context: context,
-          isDismissible: false,
-          isScrollControlled: true,
-          useRootNavigator: true,
-          builder: (final BuildContext context) => BottomSheetWidget(
-            icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
-            titleString: 'Ownership Transfer Approved',
-            textSpan: [
-              ...buildTextWithId(
-                id: message.peerId,
-                trailingText:
-                    ' approved the transfer of ownership for the Vault ',
-              ),
-              ...buildTextWithId(id: message.vaultId),
-            ],
-            footer: PrimaryButton(
-              text: 'Add another Guardian',
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushReplacementNamed(
-                  routeVaultRestore,
-                  arguments: message.vaultId,
-                );
-              },
-            ),
-          ),
-        );
-
-  void _showRejected(final MessageModel message) => showModalBottomSheet(
-        context: context,
-        isDismissible: false,
-        isScrollControlled: true,
-        builder: (final BuildContext context) => BottomSheetWidget(
-          icon: const IconOf.secrets(isBig: true, bage: BageType.error),
-          titleString: 'Ownership Transfer Rejected',
-          textSpan: [
-            ...buildTextWithId(
-              id: message.peerId,
-              trailingText:
-                  ' rejected the transfer of ownership for the Vault ',
-            ),
-            ...buildTextWithId(id: message.vaultId),
-          ],
-          body: Padding(
-            padding: paddingV20,
-            child: Container(
-              decoration: boxDecoration,
-              padding: paddingAll20,
-              child: Text(
-                'Since Guardian rejected ownership transfer, '
-                'it is impossible to restore the Vault.',
-                style: textStyleSourceSansPro416Purple,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          footer: PrimaryButton(
-            text: 'Close',
-            onPressed: Navigator.of(context).pop,
-          ),
-        ),
-      ).then(Navigator.of(context).pop);
-
-  void _showDuplicated(final MessageModel message) => showModalBottomSheet(
-        context: context,
-        isDismissible: false,
-        isScrollControlled: true,
-        builder: (final BuildContext context) => BottomSheetWidget(
-          icon: const IconOf.owner(isBig: true),
-          titleString: 'The Vault is yours',
-          textString: 'Seems like you are the owner of the Vault already. '
-              'No recovery required here.',
-          footer: PrimaryButton(
-            text: 'Close',
-            onPressed: Navigator.of(context).pop,
-          ),
-        ),
-      ).then(Navigator.of(context).pop);
-
-  void _showError(final MessageModel message) => showModalBottomSheet(
-        context: context,
-        isDismissible: false,
-        isScrollControlled: true,
-        builder: (final BuildContext context) => BottomSheetWidget(
-          icon: const IconOf.secrets(isBig: true, bage: BageType.error),
-          titleString: 'Ownership Transfer Failed',
-          textString:
-              'We couldn’t finish scanning the QR Code.\nPlease try again.',
-          footer: PrimaryButton(
-            text: 'Close',
-            onPressed: Navigator.of(context).pop,
-          ),
-        ),
-      ).then(Navigator.of(context).pop);
 }

@@ -23,7 +23,9 @@ class AppLifecycleObserver extends StatefulWidget {
 
 class _AppLifecycleObserverState extends State<AppLifecycleObserver>
     with WidgetsBindingObserver {
-  _AppLifecycleObserverState() {
+  @override
+  void initState() {
+    super.initState();
     WidgetsBinding.instance.addObserver(this);
     Future.microtask(() async {
       _settingsInteractor.passCode.isEmpty

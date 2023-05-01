@@ -44,7 +44,6 @@ class _GuardianWithPingTileState extends State<GuardianWithPingTile> {
                           ...buildTextWithId(id: widget.guardian),
                           const TextSpan(text: '. Connection timeout.'),
                         ],
-                  duration: snackBarDuration,
                 ));
                 await Future.delayed(
                   snackBarDuration,

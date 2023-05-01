@@ -67,7 +67,6 @@ final _screenLockConfig = ScreenLockConfig(
 
 final _wrongPassCodeSnackbar = buildSnackBar(
   text: 'Wrong passcode!',
-  duration: snackBarDuration,
   isFloating: true,
   isError: true,
 );
