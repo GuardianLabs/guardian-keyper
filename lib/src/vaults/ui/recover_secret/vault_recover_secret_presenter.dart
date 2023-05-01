@@ -5,7 +5,7 @@ import 'package:sss256/sss256.dart';
 import '../../../core/domain/entity/core_model.dart';
 import '/src/core/ui/widgets/auth/auth.dart';
 
-import '../vault_presenter_base.dart';
+import '../presenters/vault_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 

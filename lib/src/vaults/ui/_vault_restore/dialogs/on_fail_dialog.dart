@@ -1,15 +1,15 @@
 import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
 
-class OnErrorDialog extends StatelessWidget {
+class OnFailDialog extends StatelessWidget {
   static Future<void> show(final BuildContext context) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (final BuildContext context) => const OnErrorDialog(),
+        builder: (final BuildContext context) => const OnFailDialog(),
       );
 
-  const OnErrorDialog({super.key});
+  const OnFailDialog({super.key});
 
   @override
   Widget build(final BuildContext context) => BottomSheetWidget(

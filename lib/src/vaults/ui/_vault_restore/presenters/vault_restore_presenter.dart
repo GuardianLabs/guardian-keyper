@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
-import '../../vault_presenter_base.dart';
+import '../../presenters/vault_presenter_base.dart';
 import '../../presenters/qr_code_mixin.dart';
 import '../../../domain/vault_interactor.dart';
 
@@ -29,7 +29,7 @@ class VaultRestorePresenter extends VaultPresenterBase with QrCodeMixin {
       (final MessageModel message) async {
         if (!isWaiting) return;
         if (!message.hasResponse) return;
-        if (message.code != MessageCode.takeGroup) return;
+        if (message.code != messageCode) return;
         if (qrCode == null || message.peerId != qrCode!.peerId) return;
 
         stopListenResponse();

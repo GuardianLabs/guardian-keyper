@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
-import '../vault_presenter_base.dart';
+import 'vault_presenter_base.dart';
 
 mixin QrCodeMixin on VaultPresenterBase {
   MessageModel? get qrCode => _qrCode;

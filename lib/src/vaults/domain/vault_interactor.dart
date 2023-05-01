@@ -16,6 +16,7 @@ class VaultInteractor {
   late final requestRetryPeriod = _networkManager.messageTTL;
 
   late final vibrate = _platformManager.vibrate;
+  late final openMarket = _platformManager.openMarket;
   late final wakelockEnable = _platformManager.wakelockEnable;
   late final wakelockDisable = _platformManager.wakelockDisable;
   late final localAuthenticate = _platformManager.localAuthenticate;

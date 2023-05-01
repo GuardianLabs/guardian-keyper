@@ -1,30 +1,34 @@
 import 'package:get_it/get_it.dart';
 
-import '../../../core/consts.dart';
-import '../../../core/domain/entity/core_model.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
-import '../../domain/vault_interactor.dart';
-import '../vault_presenter_base.dart';
+import '../../presenters/vault_presenter_base.dart';
+import '../../presenters/qr_code_mixin.dart';
+import '../../../domain/vault_interactor.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultAddGuardianPresenter extends VaultGuardianPresenterBase {
+class VaultGuardianAddPresenter extends VaultPresenterBase with QrCodeMixin {
+  VaultGuardianAddPresenter({required super.pages, required this.vaultId});
+
   final VaultId vaultId;
 
-  VaultAddGuardianPresenter({required super.pages, required this.vaultId});
+  @override
+  MessageCode get messageCode => MessageCode.createGroup;
 
   Future<void> startRequest({
     required Callback onSuccess,
-    required Callback onRejected,
-    required Callback onFailed,
+    required Callback onReject,
+    required Callback onFail,
     required Callback onDuplicate,
     required Callback onAppVersion,
   }) async {
-    logStartAddGuardian();
+    _vaultInteractor.logStartAddGuardian();
 
     if (qrCode == null ||
         qrCode!.timestamp.subtract(qrCodeExpires).isAfter(DateTime.now())) {
-      return onFailed(qrCode!);
+      return onFail(qrCode!);
     }
     if (qrCode!.version != MessageModel.currentVersion) {
       return onAppVersion(qrCode!);
@@ -42,21 +46,21 @@ class VaultAddGuardianPresenter extends VaultGuardianPresenterBase {
         if (!isWaiting) return;
         if (qrCode == null) return;
         if (message.hasNoResponse) return;
-        if (message.code != MessageCode.createGroup) return;
+        if (message.code != messageCode) return;
         if (message.peerId != qrCode!.peerId) return;
         if (message.vaultId != vaultId) return;
         stopListenResponse();
         switch (message.status) {
           case MessageStatus.accepted:
-            logFinishAddGuardian();
-            addGuardian(vaultId, message.peerId);
+            _vaultInteractor.logFinishAddGuardian();
+            _vaultInteractor.addGuardian(vaultId, message.peerId);
             onSuccess(message);
             break;
           case MessageStatus.rejected:
-            onRejected(message);
+            onReject(message);
             break;
           case MessageStatus.failed:
-            onFailed(message);
+            onFail(message);
             break;
           default:
         }

@@ -3,7 +3,7 @@ import 'package:sss256/sss256.dart';
 import 'package:guardian_keyper/src/core/consts.dart';
 import 'package:guardian_keyper/src/message/domain/message_model.dart';
 
-import '../vault_presenter_base.dart';
+import '../presenters/vault_presenter_base.dart';
 import '../../domain/secret_shard_model.dart';
 
 export 'package:provider/provider.dart';
