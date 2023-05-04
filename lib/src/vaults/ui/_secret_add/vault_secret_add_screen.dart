@@ -1,46 +1,49 @@
-import '../../../core/consts.dart';
-import '../../../core/domain/entity/core_model.dart';
-import '/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
-import 'vault_add_secret_presenter.dart';
+import '../../domain/vault_model.dart';
+import 'presenters/vault_secret_add_presenter.dart';
 
 import 'pages/add_name_page.dart';
 import 'pages/add_secret_page.dart';
-import 'pages/split_and_share_page.dart';
+import 'pages/share_page.dart';
 import 'pages/secret_transmitting_page.dart';
 
-class VaultAddSecretScreen extends StatelessWidget {
+class VaultSecretAddScreen extends StatelessWidget {
   static const routeName = routeVaultAddSecret;
 
   static const _pages = [
     AddNamePage(),
     AddSecretPage(),
-    SplitAndShareSecretPage(),
+    ShareSecretPage(),
     SecretTransmittingPage(),
   ];
 
   static MaterialPageRoute<void> getPageRoute(final RouteSettings settings) =>
       MaterialPageRoute<void>(
-        fullscreenDialog: true,
         settings: settings,
-        builder: (_) => VaultAddSecretScreen(
+        fullscreenDialog: true,
+        builder: (_) => VaultSecretAddScreen(
           vaultId: settings.arguments as VaultId,
         ),
       );
 
-  final VaultId vaultId;
+  const VaultSecretAddScreen({
+    super.key,
+    required this.vaultId,
+  });
 
-  const VaultAddSecretScreen({super.key, required this.vaultId});
+  final VaultId vaultId;
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => VaultAddSecretPresenter(
+        create: (final BuildContext context) => VaultSecretAddPresenter(
           pages: _pages,
           vaultId: vaultId,
         ),
         child: ScaffoldSafe(
-          child: Selector<VaultAddSecretPresenter, int>(
-            selector: (_, controller) => controller.currentPage,
+          child: Selector<VaultSecretAddPresenter, int>(
+            selector: (_, presenter) => presenter.currentPage,
             builder: (_, currentPage, __) => AnimatedSwitcher(
               duration: pageChangeDuration,
               child: _pages[currentPage],

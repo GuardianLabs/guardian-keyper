@@ -6,9 +6,8 @@ import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 class SecretId extends IdBase {
   static const currentVersion = 1;
 
-  const SecretId({required super.token, super.name});
-
-  SecretId.aNew({super.name}) : super(token: IdBase.getNewToken(length: 8));
+  SecretId({Uint8List? token, super.name})
+      : super(token: token ?? IdBase.getNewToken(length: 8));
 
   factory SecretId.fromBytes(List<int> token) {
     final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));
@@ -58,13 +57,13 @@ class SecretShardModel extends Serializable {
   });
 
   @override
-  int get hashCode => Object.hash(runtimeType, id.hashCode);
-
-  @override
   bool operator ==(Object other) =>
       other is SecretShardModel &&
       runtimeType == other.runtimeType &&
       id.hashCode == other.id.hashCode;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, id.hashCode);
 
   @override
   bool get isEmpty => shard.isEmpty;

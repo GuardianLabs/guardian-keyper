@@ -32,7 +32,7 @@ class OnDuplicateDialog extends StatelessWidget {
         ],
         icon: const IconOf.shield(isBig: true, bage: BageType.error),
         footer: PrimaryButton(
-          text: 'Add another Guardian',
+          text: 'Close',
           onPressed: Navigator.of(context).pop,
         ),
       );

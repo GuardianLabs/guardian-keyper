@@ -1,22 +1,22 @@
 import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
 
-class OnFailDialog extends StatelessWidget {
+class OnVersionHighDialog extends StatelessWidget {
   static Future<void> show(final BuildContext context) => showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (final BuildContext context) => const OnFailDialog(),
+        builder: (final BuildContext context) => const OnVersionHighDialog(),
       );
 
-  const OnFailDialog({super.key});
+  const OnVersionHighDialog({super.key});
 
   @override
   Widget build(final BuildContext context) => BottomSheetWidget(
-        titleString: 'Invalid Code',
-        textString: 'Seems like the Code you’ve just used is not valid. '
-            'Ask Guardian to share a new code.',
         icon: const IconOf.shield(isBig: true, bage: BageType.error),
+        titleString: 'Guardian’s app is outdated',
+        textString: 'Seems like your Guardian is using the older '
+            'version of the Guardian Keyper. Ask them to update the app.',
         footer: PrimaryButton(
           text: 'Close',
           onPressed: Navigator.of(context).pop,

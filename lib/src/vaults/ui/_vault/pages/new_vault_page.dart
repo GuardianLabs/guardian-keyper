@@ -1,6 +1,7 @@
 import 'package:guardian_keyper/src/core/consts.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
+import '../../widgets/guardian_self_list_tile.dart';
 import '../presenters/vault_presenter.dart';
 import '../widgets/guardian_with_ping_tile.dart';
 
@@ -43,7 +44,9 @@ class NewVaultPage extends StatelessWidget {
         for (final guardian in vault.guardians.keys)
           Padding(
             padding: paddingV6,
-            child: GuardianWithPingTile(guardian: guardian),
+            child: guardian == vault.ownerId
+                ? GuardianSelfListTile(guardian: guardian)
+                : GuardianWithPingTile(guardian: guardian),
           ),
       ],
     );

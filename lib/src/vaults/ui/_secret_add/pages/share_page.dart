@@ -1,31 +1,28 @@
-import '/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
-import '../vault_add_secret_presenter.dart';
-import '../widgets/add_secret_close_button.dart';
+import '../presenters/vault_secret_add_presenter.dart';
 import '../../widgets/guardian_self_list_tile.dart';
 import '../../widgets/guardian_list_tile.dart';
+import '../widgets/abort_header_button.dart';
 
-class SplitAndShareSecretPage extends StatelessWidget {
-  const SplitAndShareSecretPage({super.key});
+class ShareSecretPage extends StatelessWidget {
+  const ShareSecretPage({super.key});
 
   @override
   Widget build(final BuildContext context) {
-    final controller = context.read<VaultAddSecretPresenter>();
+    final presenter = context.read<VaultSecretAddPresenter>();
     return Column(
       children: [
         // Header
         HeaderBar(
           caption: 'Split Secret',
-          backButton: HeaderBarBackButton(
-            onPressed: controller.previousPage,
-          ),
-          closeButton: const AddSecretCloseButton(),
+          backButton: HeaderBarBackButton(onPressed: presenter.previousPage),
+          closeButton: const AbortHeaderButton(),
         ),
         // Body
         Expanded(
           child: ListView(
             padding: paddingH20,
-            primary: true,
             shrinkWrap: true,
             children: [
               PageTitle(
@@ -35,7 +32,7 @@ class SplitAndShareSecretPage extends StatelessWidget {
                     text: 'You are about to split your Secret in ',
                   ),
                   TextSpan(
-                    text: '${controller.vault.maxSize} encrypted Shards.',
+                    text: '${presenter.vault.maxSize} encrypted Shards.',
                   ),
                   const TextSpan(
                     text: ' Each Guardian will receieve their own'
@@ -44,10 +41,10 @@ class SplitAndShareSecretPage extends StatelessWidget {
                 ],
               ),
               Column(children: [
-                for (final guardian in controller.vault.guardians.keys)
+                for (final guardian in presenter.vault.guardians.keys)
                   Padding(
                     padding: paddingV6,
-                    child: guardian == controller.vault.ownerId
+                    child: guardian == presenter.vault.ownerId
                         ? GuardianSelfListTile(guardian: guardian)
                         : GuardianListTile(guardian: guardian),
                   )
@@ -57,7 +54,7 @@ class SplitAndShareSecretPage extends StatelessWidget {
                 padding: paddingV32,
                 child: PrimaryButton(
                   text: 'Continue',
-                  onPressed: controller.nextPage,
+                  onPressed: presenter.nextPage,
                 ),
               ),
             ],

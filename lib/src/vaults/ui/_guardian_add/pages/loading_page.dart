@@ -1,12 +1,8 @@
-import 'package:guardian_keyper/src/core/consts.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
-import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
 import '../presenters/vault_guardian_add_presenter.dart';
-import '../dialogs/on_duplicate_dialog.dart';
 import '../dialogs/on_fail_dialog.dart';
-import '../dialogs/on_version.dart';
 import '../dialogs/on_reject.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -22,46 +18,7 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => _presenter.startRequest(
-          onSuccess: (MessageModel message) {
-            Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).showSnackBar(
-              buildSnackBar(
-                textSpans: [
-                  ...buildTextWithId(
-                    id: message.peerId,
-                    leadingText: 'You have successfully added ',
-                  ),
-                  ...buildTextWithId(
-                    id: message.vaultId,
-                    leadingText: 'as a Guardian for ',
-                  ),
-                ],
-              ),
-            );
-          },
-          onDuplicate: (final message) async {
-            await OnDuplicateDialog.show(context, message);
-            if (context.mounted) {
-              Navigator.of(context).popAndPushNamed(
-                routeVaultAddGuardian,
-                arguments: _presenter.vaultId,
-              );
-            }
-          },
-          onFail: (final message) async {
-            await OnFailDialog.show(context);
-            if (context.mounted) Navigator.of(context).pop();
-          },
-          onReject: (final message) async {
-            await OnRejectDialog.show(context);
-            if (context.mounted) Navigator.of(context).pop();
-          },
-          onAppVersion: (final message) async {
-            await OnVersionDialog.show(context, message);
-            if (context.mounted) Navigator.of(context).pop();
-          },
-        ));
+    _presenter.startRequest().then(_handleResponse);
   }
 
   @override
@@ -118,4 +75,28 @@ class _LoadingPageState extends State<LoadingPage> {
           ),
         ],
       );
+
+  void _handleResponse(final MessageModel message) async {
+    if (message.isAccepted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        buildSnackBar(
+          textSpans: [
+            ...buildTextWithId(
+              id: message.peerId,
+              leadingText: 'You have successfully added ',
+            ),
+            ...buildTextWithId(
+              id: _presenter.vaultId,
+              leadingText: 'as a Guardian for ',
+            ),
+          ],
+        ),
+      );
+    } else if (message.isRejected) {
+      await OnRejectDialog.show(context);
+    } else {
+      await OnFailDialog.show(context);
+    }
+    if (context.mounted) Navigator.of(context).pop();
+  }
 }

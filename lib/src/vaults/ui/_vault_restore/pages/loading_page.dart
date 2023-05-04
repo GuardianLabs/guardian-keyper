@@ -3,7 +3,6 @@ import 'package:guardian_keyper/src/core/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
 import '../presenters/vault_restore_presenter.dart';
-import '../dialogs/on_duplicate_dialog.dart';
 import '../dialogs/on_success_dialog.dart';
 import '../dialogs/on_reject_dialog.dart';
 import '../dialogs/on_fail_dialog.dart';
@@ -19,31 +18,7 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => context.read<VaultRestorePresenter>().startRequest(
-          onSuccess: (final message) async {
-            await OnSuccessDialog.show(context, message);
-            if (context.mounted) {
-              message.vault.isFull
-                  ? Navigator.of(context).pop()
-                  : Navigator.of(context).pushReplacementNamed(
-                      routeVaultRestore,
-                      arguments: message.vaultId,
-                    );
-            }
-          },
-          onDuplicate: (final message) async {
-            await OnDuplicateDialog.show(context);
-            if (context.mounted) Navigator.of(context).pop();
-          },
-          onReject: (final message) async {
-            await OnRejectDialog.show(context, message);
-            if (context.mounted) Navigator.of(context).pop();
-          },
-          onFail: (final message) async {
-            await OnFailDialog.show(context);
-            if (context.mounted) Navigator.of(context).pop();
-          },
-        ));
+    context.read<VaultRestorePresenter>().startRequest().then(_handleResponse);
   }
 
   @override
@@ -103,4 +78,23 @@ class _LoadingPageState extends State<LoadingPage> {
           ),
         ],
       );
+
+  void _handleResponse(final MessageModel message) async {
+    if (message.isAccepted) {
+      await OnSuccessDialog.show(context, message);
+      if (context.mounted) {
+        message.vault.isFull
+            ? Navigator.of(context).pop()
+            : Navigator.of(context).pushReplacementNamed(
+                routeVaultRestore,
+                arguments: message.vaultId,
+              );
+      }
+    } else if (message.isRejected) {
+      await OnRejectDialog.show(context, message);
+    } else {
+      await OnFailDialog.show(context);
+    }
+    if (context.mounted) Navigator.of(context).pop();
+  }
 }

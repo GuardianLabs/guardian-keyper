@@ -7,7 +7,7 @@ import 'package:guardian_keyper/src/message/ui/scan_qr_code_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_vault/vault_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_dashboard/shard_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_vault_create/vault_create_screen.dart';
-import 'package:guardian_keyper/src/vaults/ui/add_secret/vault_add_secret_screen.dart';
+import 'package:guardian_keyper/src/vaults/ui/_secret_add/vault_secret_add_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_vault_restore/vault_restore_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_guardian_add/vault_guardian_add_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/recover_secret/vault_recover_secret_screen.dart';
@@ -29,6 +29,6 @@ const routes = {
   VaultRestoreScreen.routeName: VaultRestoreScreen.getPageRoute,
   VaultGuardianAddScreen.routeName: VaultGuardianAddScreen.getPageRoute,
   // Secrets
-  VaultAddSecretScreen.routeName: VaultAddSecretScreen.getPageRoute,
+  VaultSecretAddScreen.routeName: VaultSecretAddScreen.getPageRoute,
   VaultRecoverSecretScreen.routeName: VaultRecoverSecretScreen.getPageRoute,
 };
