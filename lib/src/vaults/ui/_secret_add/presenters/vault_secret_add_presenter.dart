@@ -2,9 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'package:sss256/sss256.dart';
 
 import 'package:guardian_keyper/src/core/consts.dart';
-import 'package:guardian_keyper/src/message/domain/message_model.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
-import '../../../domain/secret_shard_model.dart';
 import '../../../domain/vault_interactor.dart';
 import '../../presenters/vault_secret_presenter_base.dart';
 
@@ -43,6 +42,8 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
     notifyListeners();
   }
 
+  bool isMyself(final PeerId peerId) => peerId == _vaultInteractor.selfId;
+
   Future<MessageModel> startRequest() async {
     _splitSecret();
     networkSubscription.resume();
@@ -57,12 +58,12 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
     if (message.isAccepted) {
       if (messages.where((m) => m.isAccepted).length == vault.maxSize) {
         stopListenResponse();
-        await addSecret(
+        await _vaultInteractor.addSecret(
           vault: vault,
           secretId: secretId,
           secretValue: vault.isSelfGuarded
               ? messages
-                  .firstWhere((m) => m.ownerId == selfId)
+                  .firstWhere((m) => m.ownerId == _vaultInteractor.selfId)
                   .secretShard
                   .shard
               : '',
@@ -93,12 +94,12 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
         messages.add(MessageModel(
           peerId: guardian,
           code: MessageCode.setShard,
-          status: guardian == selfId
+          status: guardian == _vaultInteractor.selfId
               ? MessageStatus.accepted
               : MessageStatus.created,
           payload: SecretShardModel(
             id: secretId,
-            ownerId: selfId,
+            ownerId: _vaultInteractor.selfId,
             vaultId: vault.id,
             groupSize: vault.size,
             groupThreshold: vault.threshold,

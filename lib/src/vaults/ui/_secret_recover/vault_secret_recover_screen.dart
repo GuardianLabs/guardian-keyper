@@ -1,12 +1,13 @@
-import '../../../core/consts.dart';
-import '../../../core/domain/entity/core_model.dart';
-import '/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
-import 'vault_recover_secret_presenter.dart';
+import '../../domain/vault_model.dart';
+import '../../domain/secret_shard_model.dart';
+import 'presenters/vault_secret_recover_presenter.dart';
 import 'pages/discovering_peers_page.dart';
 import 'pages/show_secret_page.dart';
 
-class VaultRecoverSecretScreen extends StatelessWidget {
+class VaultSecretRecoverScreen extends StatelessWidget {
   static const routeName = routeVaultRecoverSecret;
 
   static const _pages = [
@@ -16,31 +17,29 @@ class VaultRecoverSecretScreen extends StatelessWidget {
 
   static MaterialPageRoute<void> getPageRoute(final RouteSettings settings) =>
       MaterialPageRoute<void>(
-        fullscreenDialog: true,
         settings: settings,
-        builder: (_) => VaultRecoverSecretScreen(
+        fullscreenDialog: true,
+        builder: (_) => VaultSecretRecoverScreen(
           vaultIdWithSecretId:
               settings.arguments as MapEntry<VaultId, SecretId>,
         ),
       );
 
-  final MapEntry<VaultId, SecretId> vaultIdWithSecretId;
+  const VaultSecretRecoverScreen(
+      {super.key, required this.vaultIdWithSecretId});
 
-  const VaultRecoverSecretScreen({
-    super.key,
-    required this.vaultIdWithSecretId,
-  });
+  final MapEntry<VaultId, SecretId> vaultIdWithSecretId;
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => VaultRecoverySecretPresenter(
+        create: (final BuildContext context) => VaultSecretRecoverPresenter(
           pages: _pages,
           vaultId: vaultIdWithSecretId.key,
           secretId: vaultIdWithSecretId.value,
         ),
         child: ScaffoldSafe(
-          child: Selector<VaultRecoverySecretPresenter, int>(
-            selector: (_, controller) => controller.currentPage,
+          child: Selector<VaultSecretRecoverPresenter, int>(
+            selector: (_, presenter) => presenter.currentPage,
             builder: (_, currentPage, __) => AnimatedSwitcher(
               duration: pageChangeDuration,
               child: _pages[currentPage],

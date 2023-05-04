@@ -59,7 +59,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                         in _presenter.messages.map((e) => e.peerId))
                       Padding(
                         padding: paddingV6,
-                        child: guardian == _presenter.selfId
+                        child: _presenter.isMyself(guardian)
                             ? GuardianSelfListTile(guardian: guardian)
                             : Consumer<VaultSecretAddPresenter>(
                                 builder: (_, presenter, __) {

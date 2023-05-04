@@ -1,11 +1,10 @@
-import '../../../../core/domain/entity/core_model.dart';
-import '/src/core/ui/widgets/emoji.dart';
-import '/src/core/ui/widgets/common.dart';
-import '/src/core/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/message/domain/message_model.dart';
 
-import '../vault_recover_secret_presenter.dart';
-import '../../widgets/guardian_list_tile.dart';
+import '../presenters/vault_secret_recover_presenter.dart';
 import '../../widgets/guardian_self_list_tile.dart';
+import '../../widgets/guardian_list_tile.dart';
+import '../dialogs/on_reject_dialog.dart';
 
 class DiscoveryPeersPage extends StatefulWidget {
   const DiscoveryPeersPage({super.key});
@@ -15,8 +14,20 @@ class DiscoveryPeersPage extends StatefulWidget {
 }
 
 class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
-  late final _controller = context.read<VaultRecoverySecretPresenter>()
-    ..startRequest(onRejected: _showTerminated);
+  late final _presenter = context.read<VaultSecretRecoverPresenter>();
+
+  @override
+  void initState() {
+    super.initState();
+    _presenter.startRequest().then(_handleResponse);
+  }
+
+  void _handleResponse(final MessageModel message) async {
+    if (message.isRejected) {
+      await OnRejectDialog.show(context, message);
+      if (context.mounted) Navigator.of(context).pop();
+    }
+  }
 
   @override
   Widget build(final BuildContext context) => Column(
@@ -68,7 +79,7 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                         padding: paddingTop20,
                         child: Text(
                           'You need to get at least '
-                          '${_controller.vault.threshold - (_controller.vault.isSelfGuarded ? 1 : 0)}'
+                          '${_presenter.vault.threshold - (_presenter.vault.isSelfGuarded ? 1 : 0)}'
                           ' approvals from Guardians to recover your Secret.',
                           style: textStyleSourceSansPro414Purple,
                           textAlign: TextAlign.center,
@@ -78,12 +89,12 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                   ),
                 ),
                 // Guardians
-                for (final guardian in _controller.vault.guardians.keys)
+                for (final guardian in _presenter.vault.guardians.keys)
                   Padding(
                     padding: paddingV6,
-                    child: guardian == _controller.vault.ownerId
+                    child: guardian == _presenter.vault.ownerId
                         ? GuardianSelfListTile(guardian: guardian)
-                        : Consumer<VaultRecoverySecretPresenter>(
+                        : Consumer<VaultSecretRecoverPresenter>(
                             builder: (_, controller, __) {
                               final message = controller.messages.firstWhere(
                                 (message) => message.peerId == guardian,
@@ -106,29 +117,4 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
           ),
         ],
       );
-
-  void _showTerminated(final MessageModel message) => showModalBottomSheet(
-        context: context,
-        isDismissible: false,
-        isScrollControlled: true,
-        builder: (final BuildContext context) => BottomSheetWidget(
-          icon: const IconOf.secretRestoration(
-            isBig: true,
-            bage: BageType.error,
-          ),
-          titleString: 'Guardian rejected the recovery of your Secret',
-          textSpan: buildTextWithId(
-            leadingText: 'Secret Recovery process for ',
-            id: message.vaultId,
-            trailingText: ' has been terminated by your Guardians.',
-          ),
-          footer: Padding(
-            padding: paddingV20,
-            child: PrimaryButton(
-              text: 'Done',
-              onPressed: Navigator.of(context).pop,
-            ),
-          ),
-        ),
-      ).then(Navigator.of(context).pop);
 }

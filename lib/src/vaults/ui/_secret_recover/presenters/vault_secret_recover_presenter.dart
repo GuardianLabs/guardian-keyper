@@ -6,14 +6,14 @@ import 'package:flutter/foundation.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/auth/auth.dart';
 import 'package:guardian_keyper/src/message/domain/message_model.dart';
 
-import '../../domain/secret_shard_model.dart';
-import '../../domain/vault_interactor.dart';
-import '../presenters/vault_secret_presenter_base.dart';
+import '../../../domain/secret_shard_model.dart';
+import '../../../domain/vault_interactor.dart';
+import '../../presenters/vault_secret_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 
-class VaultRecoverySecretPresenter extends VaultSecretPresenterBase {
-  VaultRecoverySecretPresenter({
+class VaultSecretRecoverPresenter extends VaultSecretPresenterBase {
+  VaultSecretRecoverPresenter({
     required super.pages,
     required super.vaultId,
     required super.secretId,
@@ -28,7 +28,7 @@ class VaultRecoverySecretPresenter extends VaultSecretPresenterBase {
             : MessageStatus.created,
         payload: SecretShardModel(
           id: secretId,
-          ownerId: selfId,
+          ownerId: _vaultInteractor.selfId,
           vaultId: vaultId,
           groupSize: vault.maxSize,
           groupThreshold: vault.threshold,
@@ -43,6 +43,10 @@ class VaultRecoverySecretPresenter extends VaultSecretPresenterBase {
   late final networkSubscription =
       _vaultInteractor.messageStream.listen(_onMessage);
 
+  String get secret => _secret;
+  bool get isObfuscated => _isObfuscated;
+  bool get isAuthorized => _isAuthorized;
+
   Future<void> checkPassCode({
     required final BuildContext context,
     required final void Function() onUnlocked,
@@ -50,16 +54,16 @@ class VaultRecoverySecretPresenter extends VaultSecretPresenterBase {
       showAskPassCode(
         context: context,
         onUnlocked: onUnlocked,
-        onVibrate: vibrate,
-        currentPassCode: passCode,
-        localAuthenticate: localAuthenticate,
-        useBiometrics: useBiometrics,
+        onVibrate: _vaultInteractor.vibrate,
+        currentPassCode: _vaultInteractor.passCode,
+        useBiometrics: _vaultInteractor.useBiometrics,
+        localAuthenticate: _vaultInteractor.localAuthenticate,
       );
 
-  void startRequest({required Callback onRejected}) {
-    _onRejected = onRejected;
+  Future<MessageModel> startRequest() async {
     networkSubscription.resume();
-    startNetworkRequest();
+    await startNetworkRequest();
+    return requestCompleter.future;
   }
 
   void _onMessage(final MessageModel incomeMessage) async {
@@ -69,25 +73,28 @@ class VaultRecoverySecretPresenter extends VaultSecretPresenterBase {
     if (messages.where((m) => m.isAccepted).length >= vault.threshold) {
       stopListenResponse();
       _vaultInteractor.logFinishRestoreSecret();
-      secret = await compute<List<String>, String>(
+      _secret = await compute<List<String>, String>(
         (List<String> shares) => restoreSecret(shares: shares),
         messages
             .where((e) => e.secretShard.shard.isNotEmpty)
             .map((e) => e.secretShard.shard)
             .toList(),
       );
+      requestCompleter.complete(message);
       nextPage();
     } else if (messages.where((e) => e.isRejected).length > vault.redudancy) {
       stopListenResponse();
-      _onRejected(message);
+      requestCompleter.complete(message.copyWith(
+        status: MessageStatus.rejected,
+      ));
     } else {
       notifyListeners();
     }
   }
 
-  late final Callback _onRejected;
-
   final _vaultInteractor = GetIt.I<VaultInteractor>();
 
-  String secret = '';
+  String _secret = '';
+  bool _isObfuscated = true;
+  bool _isAuthorized = false;
 }

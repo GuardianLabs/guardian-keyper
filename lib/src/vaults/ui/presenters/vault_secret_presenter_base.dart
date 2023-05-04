@@ -5,8 +5,6 @@ import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 import '../../domain/vault_interactor.dart';
 import 'vault_presenter_base.dart';
 
-typedef Callback = void Function(MessageModel message);
-
 abstract class VaultSecretPresenterBase extends VaultPresenterBase {
   VaultSecretPresenterBase({
     super.currentPage,
@@ -21,17 +19,6 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
   final VaultId vaultId;
   late final VaultModel vault;
   final Set<MessageModel> messages = {};
-
-  late final addSecret = _vaultInteractor.addSecret;
-
-  late final vibrate = _vaultInteractor.vibrate;
-  late final localAuthenticate = _vaultInteractor.localAuthenticate;
-
-  PeerId get selfId => _vaultInteractor.selfId;
-
-  String get passCode => _vaultInteractor.passCode;
-
-  bool get useBiometrics => _vaultInteractor.useBiometrics;
 
   @override
   void callback([_]) {

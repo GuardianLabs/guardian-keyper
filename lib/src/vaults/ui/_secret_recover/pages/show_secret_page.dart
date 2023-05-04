@@ -2,9 +2,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
-import '/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
-import '../vault_recover_secret_presenter.dart';
+import '../presenters/vault_secret_recover_presenter.dart';
 
 class ShowSecretPage extends StatefulWidget {
   const ShowSecretPage({super.key});
@@ -17,7 +17,7 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
   final _copiedSnackbar = buildSnackBar(
     text: 'Secret is copied to your clipboard.',
   );
-  late final _controller = context.read<VaultRecoverySecretPresenter>();
+  late final _presenter = context.read<VaultSecretRecoverPresenter>();
 
   bool _isObfuscated = true;
   bool _isAuthorized = false;
@@ -56,7 +56,7 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
                                   'assets/images/secret_mask.svg.vec',
                                 ))
                               : Text(
-                                  _controller.secret,
+                                  _presenter.secret,
                                   style: textStyleSourceSansPro414Purple,
                                 ),
                         ),
@@ -95,7 +95,7 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
         ? setState(() {
             _isObfuscated = false;
           })
-        : _controller.checkPassCode(
+        : _presenter.checkPassCode(
             context: context,
             onUnlocked: () => setState(
               () {
@@ -113,17 +113,17 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
   void _onPressedCopy() async {
     if (_isAuthorized) {
       await Clipboard.setData(
-        ClipboardData(text: _controller.secret),
+        ClipboardData(text: _presenter.secret),
       );
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(_copiedSnackbar);
       }
     } else {
-      _controller.checkPassCode(
+      _presenter.checkPassCode(
         context: context,
         onUnlocked: () async {
           _isAuthorized = true;
-          await Clipboard.setData(ClipboardData(text: _controller.secret));
+          await Clipboard.setData(ClipboardData(text: _presenter.secret));
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(_copiedSnackbar);
           }

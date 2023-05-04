@@ -10,7 +10,7 @@ import 'package:guardian_keyper/src/vaults/ui/_vault_create/vault_create_screen.
 import 'package:guardian_keyper/src/vaults/ui/_secret_add/vault_secret_add_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_vault_restore/vault_restore_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_guardian_add/vault_guardian_add_screen.dart';
-import 'package:guardian_keyper/src/vaults/ui/recover_secret/vault_recover_secret_screen.dart';
+import 'package:guardian_keyper/src/vaults/ui/_secret_recover/vault_secret_recover_screen.dart';
 
 Route? onGenerateRoute(final RouteSettings routeSettings) =>
     routes[routeSettings.name]?.call(routeSettings);
@@ -30,5 +30,5 @@ const routes = {
   VaultGuardianAddScreen.routeName: VaultGuardianAddScreen.getPageRoute,
   // Secrets
   VaultSecretAddScreen.routeName: VaultSecretAddScreen.getPageRoute,
-  VaultRecoverSecretScreen.routeName: VaultRecoverSecretScreen.getPageRoute,
+  VaultSecretRecoverScreen.routeName: VaultSecretRecoverScreen.getPageRoute,
 };
