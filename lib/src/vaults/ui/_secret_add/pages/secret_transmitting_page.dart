@@ -63,9 +63,8 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                             ? GuardianSelfListTile(guardian: guardian)
                             : Consumer<VaultSecretAddPresenter>(
                                 builder: (_, presenter, __) {
-                                  final message = presenter.messages.firstWhere(
-                                    (e) => e.peerId == guardian,
-                                  );
+                                  final message =
+                                      presenter.getMessageOf(guardian);
                                   return GuardianListTile(
                                     guardian: guardian,
                                     isSuccess: message.isAccepted

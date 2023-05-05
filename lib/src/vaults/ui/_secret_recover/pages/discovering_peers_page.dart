@@ -22,13 +22,6 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
     _presenter.startRequest().then(_handleResponse);
   }
 
-  void _handleResponse(final MessageModel message) async {
-    if (message.isRejected) {
-      await OnRejectDialog.show(context, message);
-      if (context.mounted) Navigator.of(context).pop();
-    }
-  }
-
   @override
   Widget build(final BuildContext context) => Column(
         children: [
@@ -78,8 +71,7 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                       Padding(
                         padding: paddingTop20,
                         child: Text(
-                          'You need to get at least '
-                          '${_presenter.vault.threshold - (_presenter.vault.isSelfGuarded ? 1 : 0)}'
+                          'You need to get at least ${_presenter.needAtLeast}'
                           ' approvals from Guardians to recover your Secret.',
                           style: textStyleSourceSansPro414Purple,
                           textAlign: TextAlign.center,
@@ -95,10 +87,8 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
                     child: guardian == _presenter.vault.ownerId
                         ? GuardianSelfListTile(guardian: guardian)
                         : Consumer<VaultSecretRecoverPresenter>(
-                            builder: (_, controller, __) {
-                              final message = controller.messages.firstWhere(
-                                (message) => message.peerId == guardian,
-                              );
+                            builder: (_, presenter, __) {
+                              final message = presenter.getMessageOf(guardian);
                               return GuardianListTile(
                                 guardian: guardian,
                                 isSuccess: message.isAccepted
@@ -117,4 +107,11 @@ class _DiscoveryPeersPageState extends State<DiscoveryPeersPage> {
           ),
         ],
       );
+
+  void _handleResponse(final MessageModel message) async {
+    if (message.isRejected) {
+      await OnRejectDialog.show(context, message);
+      if (context.mounted) Navigator.of(context).pop();
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:sss256/sss256.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/src/core/ui/widgets/auth/auth.dart';
@@ -39,15 +40,92 @@ class VaultSecretRecoverPresenter extends VaultSecretPresenterBase {
     _vaultInteractor.logStartRestoreSecret();
   }
 
-  @override
-  late final networkSubscription =
-      _vaultInteractor.messageStream.listen(_onMessage);
-
   String get secret => _secret;
-  bool get isObfuscated => _isObfuscated;
-  bool get isAuthorized => _isAuthorized;
 
-  Future<void> checkPassCode({
+  bool get isObfuscated => _isObfuscated;
+
+  int get needAtLeast => vault.threshold - (vault.isSelfGuarded ? 1 : 0);
+
+  @override
+  void responseHandler(final MessageModel message) async {
+    if (message.code != MessageCode.getShard) return;
+    final updatedMessage = checkAndUpdateMessage(message);
+    if (updatedMessage == null) return;
+    if (messages.where((m) => m.isAccepted).length >= vault.threshold) {
+      stopListenResponse();
+      _vaultInteractor.logFinishRestoreSecret();
+      _secret = await compute<List<String>, String>(
+        (List<String> shares) => restoreSecret(shares: shares),
+        messages
+            .where((e) => e.secretShard.shard.isNotEmpty)
+            .map((e) => e.secretShard.shard)
+            .toList(),
+      );
+      requestCompleter.complete(updatedMessage);
+      nextPage();
+    } else if (messages.where((e) => e.isRejected).length > vault.redudancy) {
+      stopListenResponse();
+      requestCompleter.complete(updatedMessage.copyWith(
+        status: MessageStatus.rejected,
+      ));
+    } else {
+      notifyListeners();
+    }
+  }
+
+  void onPressedHide() {
+    _isObfuscated = true;
+    notifyListeners();
+  }
+
+  void onPressedShow({required final BuildContext context}) {
+    if (_isAuthorized) {
+      _isObfuscated = false;
+      notifyListeners();
+    } else {
+      _checkPassCode(
+        context: context,
+        onUnlocked: () {
+          _isObfuscated = false;
+          _isAuthorized = true;
+          notifyListeners();
+        },
+      );
+    }
+  }
+
+  void onPressedCopy({
+    required final BuildContext context,
+    required final SnackBar snackBar,
+  }) async {
+    if (_isAuthorized) {
+      await Clipboard.setData(ClipboardData(text: secret));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    } else {
+      _checkPassCode(
+        context: context,
+        onUnlocked: () async {
+          _isAuthorized = true;
+          notifyListeners();
+          await Clipboard.setData(ClipboardData(text: secret));
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+        },
+      );
+    }
+  }
+
+  // Private
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
+
+  String _secret = '';
+  bool _isObfuscated = true;
+  bool _isAuthorized = false;
+
+  Future<void> _checkPassCode({
     required final BuildContext context,
     required final void Function() onUnlocked,
   }) =>
@@ -59,42 +137,4 @@ class VaultSecretRecoverPresenter extends VaultSecretPresenterBase {
         useBiometrics: _vaultInteractor.useBiometrics,
         localAuthenticate: _vaultInteractor.localAuthenticate,
       );
-
-  Future<MessageModel> startRequest() async {
-    networkSubscription.resume();
-    await startNetworkRequest();
-    return requestCompleter.future;
-  }
-
-  void _onMessage(final MessageModel incomeMessage) async {
-    if (incomeMessage.code != MessageCode.getShard) return;
-    final message = checkAndUpdateMessage(incomeMessage);
-    if (message == null) return;
-    if (messages.where((m) => m.isAccepted).length >= vault.threshold) {
-      stopListenResponse();
-      _vaultInteractor.logFinishRestoreSecret();
-      _secret = await compute<List<String>, String>(
-        (List<String> shares) => restoreSecret(shares: shares),
-        messages
-            .where((e) => e.secretShard.shard.isNotEmpty)
-            .map((e) => e.secretShard.shard)
-            .toList(),
-      );
-      requestCompleter.complete(message);
-      nextPage();
-    } else if (messages.where((e) => e.isRejected).length > vault.redudancy) {
-      stopListenResponse();
-      requestCompleter.complete(message.copyWith(
-        status: MessageStatus.rejected,
-      ));
-    } else {
-      notifyListeners();
-    }
-  }
-
-  final _vaultInteractor = GetIt.I<VaultInteractor>();
-
-  String _secret = '';
-  bool _isObfuscated = true;
-  bool _isAuthorized = false;
 }

@@ -21,7 +21,7 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
   final Set<MessageModel> messages = {};
 
   @override
-  void callback([_]) {
+  void requestWorker([timer]) {
     if (messages.where((m) => m.hasResponse).length == vault.maxSize) {
       stopListenResponse();
     } else {
@@ -30,6 +30,10 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
       }
     }
   }
+
+  MessageModel getMessageOf(final PeerId guardian) => messages.firstWhere(
+        (e) => e.peerId == guardian,
+      );
 
   MessageModel? checkAndUpdateMessage(final MessageModel message) {
     if (message.hasNoResponse) return null;
@@ -45,5 +49,6 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
     return updatedMessage;
   }
 
+  // Private
   final _vaultInteractor = GetIt.I<VaultInteractor>();
 }

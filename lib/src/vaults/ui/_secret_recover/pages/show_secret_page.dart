@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
@@ -6,21 +5,8 @@ import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 
 import '../presenters/vault_secret_recover_presenter.dart';
 
-class ShowSecretPage extends StatefulWidget {
+class ShowSecretPage extends StatelessWidget {
   const ShowSecretPage({super.key});
-
-  @override
-  State<ShowSecretPage> createState() => _ShowSecretPageState();
-}
-
-class _ShowSecretPageState extends State<ShowSecretPage> {
-  final _copiedSnackbar = buildSnackBar(
-    text: 'Secret is copied to your clipboard.',
-  );
-  late final _presenter = context.read<VaultSecretRecoverPresenter>();
-
-  bool _isObfuscated = true;
-  bool _isAuthorized = false;
 
   @override
   Widget build(final BuildContext context) => Column(
@@ -44,43 +30,57 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
                 Card(
                   child: Padding(
                     padding: paddingAll20,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Container(
-                          height: 160,
-                          padding: paddingBottom20,
-                          child: _isObfuscated
-                              ? const SvgPicture(AssetBytesLoader(
-                                  'assets/images/secret_mask.svg.vec',
-                                ))
-                              : Text(
-                                  _presenter.secret,
-                                  style: textStyleSourceSansPro414Purple,
-                                ),
-                        ),
-                        Row(children: [
-                          Expanded(
-                            child: _isObfuscated
-                                ? ElevatedButton(
-                                    onPressed: onPressedShow,
-                                    child: const Text('Show'),
-                                  )
-                                : ElevatedButton(
-                                    onPressed: onPressedHide,
-                                    child: const Text('Hide'),
+                    child: Consumer<VaultSecretRecoverPresenter>(
+                      builder: (
+                        final BuildContext context,
+                        final VaultSecretRecoverPresenter presenter,
+                        final Widget? widget,
+                      ) =>
+                          Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Container(
+                            height: 160,
+                            padding: paddingBottom20,
+                            child: presenter.isObfuscated
+                                ? const SvgPicture(AssetBytesLoader(
+                                    'assets/images/secret_mask.svg.vec',
+                                  ))
+                                : Text(
+                                    presenter.secret,
+                                    style: textStyleSourceSansPro414Purple,
                                   ),
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: PrimaryButton(
-                              text: 'Copy',
-                              onPressed: _onPressedCopy,
+                          Row(children: [
+                            Expanded(
+                              child: presenter.isObfuscated
+                                  ? ElevatedButton(
+                                      onPressed: () => presenter.onPressedShow(
+                                        context: context,
+                                      ),
+                                      child: const Text('Show'),
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: presenter.onPressedHide,
+                                      child: const Text('Hide'),
+                                    ),
                             ),
-                          ),
-                        ]),
-                      ],
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: PrimaryButton(
+                                text: 'Copy',
+                                onPressed: () => presenter.onPressedCopy(
+                                  context: context,
+                                  snackBar: buildSnackBar(
+                                    text: 'Secret is copied to your clipboard.',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ]),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -89,46 +89,4 @@ class _ShowSecretPageState extends State<ShowSecretPage> {
           ),
         ],
       );
-
-  void onPressedShow() {
-    _isAuthorized
-        ? setState(() {
-            _isObfuscated = false;
-          })
-        : _presenter.checkPassCode(
-            context: context,
-            onUnlocked: () => setState(
-              () {
-                _isObfuscated = false;
-                _isAuthorized = true;
-              },
-            ),
-          );
-  }
-
-  void onPressedHide() => setState(() {
-        _isObfuscated = true;
-      });
-
-  void _onPressedCopy() async {
-    if (_isAuthorized) {
-      await Clipboard.setData(
-        ClipboardData(text: _presenter.secret),
-      );
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(_copiedSnackbar);
-      }
-    } else {
-      _presenter.checkPassCode(
-        context: context,
-        onUnlocked: () async {
-          _isAuthorized = true;
-          await Clipboard.setData(ClipboardData(text: _presenter.secret));
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(_copiedSnackbar);
-          }
-        },
-      );
-    }
-  }
 }

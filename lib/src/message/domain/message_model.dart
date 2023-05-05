@@ -18,9 +18,8 @@ enum MessageCode { createGroup, getShard, setShard, takeGroup }
 class MessageId extends IdBase {
   static const currentVersion = 1;
 
-  const MessageId({required super.token});
-
-  MessageId.aNew({super.name}) : super(token: IdBase.getNewToken(length: 16));
+  MessageId({super.name, Uint8List? token})
+      : super(token: IdBase.getNewToken(length: 16));
 
   factory MessageId.fromBytes(List<int> token) {
     final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));
@@ -77,7 +76,7 @@ class MessageModel extends Serializable {
     required this.code,
     this.status = MessageStatus.created,
     this.payload,
-  })  : id = id ?? MessageId.aNew(),
+  })  : id = id ?? MessageId(),
         timestamp = timestamp ?? DateTime.now(),
         payloadTypeId = type2TypeId[payload.runtimeType];
 

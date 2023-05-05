@@ -17,15 +17,44 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
     _vaultInteractor.logStartAddSecret();
   }
 
-  @override
-  late final networkSubscription =
-      _vaultInteractor.messageStream.listen(_onMessage);
-
   String get secret => _secret;
 
   bool get isSecretObscure => _isSecretObscure;
 
   bool get isNameTooShort => _secretName.length < minNameLength;
+
+  @override
+  Future<MessageModel> startRequest() {
+    _splitSecret();
+    return super.startRequest();
+  }
+
+  @override
+  void responseHandler(final MessageModel message) async {
+    if (message.code != MessageCode.setShard) return;
+    final updatedMessage = checkAndUpdateMessage(message);
+    if (updatedMessage == null) return;
+    if (updatedMessage.isAccepted) {
+      if (messages.where((m) => m.isAccepted).length == vault.maxSize) {
+        stopListenResponse();
+        await _vaultInteractor.addSecret(
+          vault: vault,
+          secretId: secretId,
+          secretValue: vault.isSelfGuarded
+              ? messages
+                  .firstWhere((m) => m.ownerId == _vaultInteractor.selfId)
+                  .secretShard
+                  .shard
+              : '',
+        );
+        _vaultInteractor.logFinishAddSecret();
+        requestCompleter.complete(updatedMessage);
+      }
+    } else {
+      stopListenResponse();
+      requestCompleter.complete(updatedMessage);
+    }
+  }
 
   void setSecret(final String value) {
     _secret = value;
@@ -44,38 +73,12 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
 
   bool isMyself(final PeerId peerId) => peerId == _vaultInteractor.selfId;
 
-  Future<MessageModel> startRequest() async {
-    _splitSecret();
-    networkSubscription.resume();
-    await startNetworkRequest();
-    return requestCompleter.future;
-  }
+  // Private
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
 
-  void _onMessage(final MessageModel incomeMessage) async {
-    if (incomeMessage.code != MessageCode.setShard) return;
-    final message = checkAndUpdateMessage(incomeMessage);
-    if (message == null) return;
-    if (message.isAccepted) {
-      if (messages.where((m) => m.isAccepted).length == vault.maxSize) {
-        stopListenResponse();
-        await _vaultInteractor.addSecret(
-          vault: vault,
-          secretId: secretId,
-          secretValue: vault.isSelfGuarded
-              ? messages
-                  .firstWhere((m) => m.ownerId == _vaultInteractor.selfId)
-                  .secretShard
-                  .shard
-              : '',
-        );
-        _vaultInteractor.logFinishAddSecret();
-        requestCompleter.complete(message);
-      }
-    } else {
-      stopListenResponse();
-      requestCompleter.complete(message);
-    }
-  }
+  String _secretName = '', _secret = '';
+
+  bool _isSecretObscure = true;
 
   /// fill messages with request
   void _splitSecret() {
@@ -109,10 +112,4 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
       }
     }
   }
-
-  final _vaultInteractor = GetIt.I<VaultInteractor>();
-
-  String _secretName = '', _secret = '';
-
-  bool _isSecretObscure = true;
 }

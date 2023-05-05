@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/src/message/domain/message_model.dart';
@@ -25,22 +24,14 @@ class VaultGuardianAddPresenter extends VaultGuardianPresenterBase {
   final VaultId vaultId;
 
   @override
-  late final networkSubscription =
-      _vaultInteractor.messageStream.listen(_onMessage);
-
-  @override
   MessageCode get messageCode => MessageCode.createGroup;
 
   @override
-  void callback([_]) => _vaultInteractor.sendToGuardian(_messageToSend);
+  void requestWorker([timer]) =>
+      _vaultInteractor.sendToGuardian(_messageToSend);
 
-  Future<MessageModel> startRequest() async {
-    networkSubscription.resume();
-    await startNetworkRequest();
-    return requestCompleter.future;
-  }
-
-  void _onMessage(final MessageModel message) async {
+  @override
+  void responseHandler(final MessageModel message) async {
     if (isNotWaiting) return;
     if (qrCode == null) return;
     if (message.hasNoResponse) return;
@@ -56,6 +47,7 @@ class VaultGuardianAddPresenter extends VaultGuardianPresenterBase {
     requestCompleter.complete(message);
   }
 
+  // Private
   final _vaultInteractor = GetIt.I<VaultInteractor>();
 
   late final _messageToSend = qrCode!.copyWith(

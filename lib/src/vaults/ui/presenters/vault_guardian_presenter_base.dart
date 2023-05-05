@@ -75,6 +75,7 @@ abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
     nextPage();
   }
 
+  // Private
   final _vaultInteractor = GetIt.I<VaultInteractor>();
 
   bool _canUseClipboard = false;

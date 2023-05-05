@@ -7,11 +7,12 @@ import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 import '../../domain/vault_interactor.dart';
 
 abstract class VaultPresenterBase extends PagePresenterBase {
-  VaultPresenterBase({required super.pages, super.currentPage});
+  VaultPresenterBase({
+    required super.pages,
+    super.currentPage,
+  });
 
   final requestCompleter = Completer<MessageModel>();
-
-  StreamSubscription<MessageModel> get networkSubscription;
 
   bool get isWaiting => _timer?.isActive == true;
 
@@ -20,30 +21,37 @@ abstract class VaultPresenterBase extends PagePresenterBase {
   @override
   void dispose() {
     stopListenResponse(shouldNotify: false);
-    networkSubscription.cancel();
     super.dispose();
   }
 
-  void callback([Timer? _]);
+  void requestWorker([Timer? timer]);
 
-  Future<void> startNetworkRequest() async {
+  void responseHandler(final MessageModel message);
+
+  Future<MessageModel> startRequest() async {
+    _networkSubscription.resume();
     await _vaultInteractor.wakelockEnable();
     _timer = Timer.periodic(
       _vaultInteractor.requestRetryPeriod,
-      callback,
+      requestWorker,
     );
-    callback();
+    requestWorker();
     notifyListeners();
+    return requestCompleter.future;
   }
 
   void stopListenResponse({final bool shouldNotify = true}) {
     _timer?.cancel();
-    networkSubscription.onData(null);
+    _networkSubscription.cancel();
     _vaultInteractor.wakelockDisable();
     if (shouldNotify) notifyListeners();
   }
 
+  // Private
   final _vaultInteractor = GetIt.I<VaultInteractor>();
+
+  late final _networkSubscription =
+      _vaultInteractor.messageStream.listen(responseHandler);
 
   Timer? _timer;
 }

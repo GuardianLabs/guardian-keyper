@@ -1,11 +1,10 @@
-import 'dart:async';
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/src/message/domain/message_model.dart';
 
-import '../../presenters/vault_guardian_presenter_base.dart';
-import '../../../domain/vault_interactor.dart';
 import '../../../domain/vault_model.dart';
+import '../../../domain/vault_interactor.dart';
+import '../../presenters/vault_guardian_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 
@@ -27,22 +26,13 @@ class VaultRestorePresenter extends VaultGuardianPresenterBase {
   final VaultId? vaultId;
 
   @override
-  late final networkSubscription =
-      _vaultInteractor.messageStream.listen(_onMessage);
-
-  @override
   MessageCode get messageCode => MessageCode.takeGroup;
 
   @override
-  void callback([_]) => _vaultInteractor.sendToGuardian(qrCode!);
+  void requestWorker([timer]) => _vaultInteractor.sendToGuardian(qrCode!);
 
-  Future<MessageModel> startRequest() async {
-    networkSubscription.resume();
-    await startNetworkRequest();
-    return requestCompleter.future;
-  }
-
-  void _onMessage(final MessageModel message) async {
+  @override
+  void responseHandler(final MessageModel message) async {
     if (isNotWaiting) return;
     if (qrCode == null) return;
     if (!message.hasResponse) return;
@@ -83,5 +73,6 @@ class VaultRestorePresenter extends VaultGuardianPresenterBase {
     requestCompleter.complete(message);
   }
 
+  // Private
   final _vaultInteractor = GetIt.I<VaultInteractor>();
 }
