@@ -18,8 +18,8 @@ enum MessageCode { createGroup, getShard, setShard, takeGroup }
 class MessageId extends IdBase {
   static const currentVersion = 1;
 
-  MessageId({super.name, Uint8List? token})
-      : super(token: IdBase.getNewToken(length: 16));
+  MessageId({Uint8List? token})
+      : super(token: token ?? IdBase.getNewToken(length: 16));
 
   factory MessageId.fromBytes(List<int> token) {
     final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));

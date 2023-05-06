@@ -6,7 +6,6 @@ import 'package:guardian_keyper/src/home/ui/home_screen.dart';
 
 import '../ui/theme/theme.dart';
 import '../ui/widgets/init_loader.dart';
-import 'app_lifecycle_observer.dart';
 import 'routes.dart';
 import 'di.dart';
 
@@ -42,7 +41,7 @@ class App extends StatelessWidget {
                     themeMode: ThemeMode.dark,
                     onGenerateRoute: onGenerateRoute,
                     navigatorObservers: [SentryNavigatorObserver()],
-                    home: const AppLifecycleObserver(child: HomeScreen()),
+                    home: const HomeScreen(),
                   ),
       );
 }

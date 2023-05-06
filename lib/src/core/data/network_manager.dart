@@ -68,8 +68,8 @@ class NetworkManager {
         bindAddress: p2p.FullAddress(address: address, port: port),
       ));
     }
-    await router.start();
     toggleBootstrap(await _preferencesManager.get<bool>(keyIsBootstrapEnabled));
+    await router.start();
   }
 
   void pause([void _]) {
