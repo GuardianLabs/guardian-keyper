@@ -102,7 +102,7 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
     } on SetCodeVersionHighException {
       OnVersionHighDialog.show(context);
     } on SetCodeDuplicateException catch (e) {
-      OnDuplicateDialog.show(context, e as MessageModel);
+      OnDuplicateDialog.show(context, e.message);
     }
   }
 }

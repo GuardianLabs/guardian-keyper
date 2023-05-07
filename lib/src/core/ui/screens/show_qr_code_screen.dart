@@ -1,13 +1,13 @@
 import 'package:get_it/get_it.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 
 import 'package:guardian_keyper/src/core/consts.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/src/core/data/platform_manager.dart';
-
-import '../domain/message_model.dart';
+import 'package:guardian_keyper/src/core/domain/entity/core_model.dart';
 
 class ShowQRCodeScreen extends StatefulWidget {
   static const routeName = routeShowQrCode;
@@ -121,8 +121,8 @@ class _ShowQRCodeScreenState extends State<ShowQRCodeScreen> {
                             color: clSurface,
                           ),
                           padding: paddingAll8,
-                          child: SvgPicture.asset(
-                            'assets/icons/logo.svg',
+                          child: const SvgPicture(
+                            AssetBytesLoader('assets/images/logo.svg.vec'),
                             fit: BoxFit.cover,
                           ),
                         );

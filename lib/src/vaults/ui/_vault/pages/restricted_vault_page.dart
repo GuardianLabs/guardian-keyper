@@ -11,7 +11,7 @@ class RestrictedVaultPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final vault = context.read<VaultPresenter>().vault;
+    final vault = context.watch<VaultPresenter>().vault;
     return ListView(
       padding: paddingAll20,
       primary: true,

@@ -1,5 +1,6 @@
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
+import 'package:guardian_keyper/src/core/ui/utils.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
 import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/src/vaults/ui/_dashboard/pages/shards_page.dart';
@@ -66,7 +67,7 @@ class HomeScreen extends StatelessWidget {
               onTap: (value) => context.read<HomePresenter>().gotoPage(value),
             ),
             body: DoubleBackToCloseApp(
-              snackBar: const SnackBar(content: Text('Tap back again to exit')),
+              snackBar: buildSnackBar(text: 'Tap back again to exit'),
               child: SafeArea(
                 child: Padding(
                   padding: paddingH20,

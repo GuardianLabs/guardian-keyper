@@ -27,4 +27,4 @@ const minNameLength = 3;
 
 const smallScreenHeight = 600;
 const mediumScreenHeight = 800;
-const bigScreenHeight = 1200;
+const largeScreenHeight = 1200;

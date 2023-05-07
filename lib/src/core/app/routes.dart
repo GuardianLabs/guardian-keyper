@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:guardian_keyper/src/intro/ui/intro_screen.dart';
 import 'package:guardian_keyper/src/settings/ui/settings_screen.dart';
-import 'package:guardian_keyper/src/message/ui/show_qr_code_screen.dart';
-import 'package:guardian_keyper/src/message/ui/scan_qr_code_screen.dart';
+import 'package:guardian_keyper/src/core/ui/screens/show_qr_code_screen.dart';
+import 'package:guardian_keyper/src/core/ui/screens/scan_qr_code_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_vault/vault_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_dashboard/shard_screen.dart';
 import 'package:guardian_keyper/src/vaults/ui/_vault_create/vault_create_screen.dart';

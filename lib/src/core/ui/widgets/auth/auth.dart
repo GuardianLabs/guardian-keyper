@@ -1,9 +1,9 @@
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 
-import '../../../consts.dart';
-
-import '../common.dart';
-import '../icon_of.dart';
+import 'package:guardian_keyper/src/core/consts.dart';
+import 'package:guardian_keyper/src/core/ui/utils.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/common.dart';
+import 'package:guardian_keyper/src/core/ui/widgets/icon_of.dart';
 
 part 'ask_pass_code.dart';
 part 'demand_pass_code.dart';
@@ -72,7 +72,7 @@ final _wrongPassCodeSnackbar = buildSnackBar(
 );
 
 EdgeInsets _getPadding(final BuildContext context) =>
-    (MediaQuery.of(context).size.height > smallScreenHeight
-        ? paddingV32
-        : paddingV12) +
-    paddingH20;
+    paddingH20 +
+    (getScreenSize(MediaQuery.of(context).size) == ScreenSize.small
+        ? paddingV12
+        : paddingV32);
