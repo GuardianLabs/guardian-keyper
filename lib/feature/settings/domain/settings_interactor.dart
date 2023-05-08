@@ -1,0 +1,40 @@
+import 'package:get_it/get_it.dart';
+
+import 'package:guardian_keyper/data/network_manager.dart';
+import 'package:guardian_keyper/data/platform_manager.dart';
+import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
+
+import '../data/settings_manager.dart';
+
+class SettingsInteractor {
+  late final vibrate = _platformManager.vibrate;
+  late final setPassCode = _settingsManager.setPassCode;
+  late final setDeviceName = _settingsManager.setDeviceName;
+  late final setIsBiometricsEnabled = _settingsManager.setIsBiometricsEnabled;
+
+  PeerId get selfId => _settingsManager.selfId;
+
+  String get passCode => _settingsManager.passCode;
+
+  String get deviceName => _settingsManager.deviceName;
+
+  bool get isBootstrapEnabled => _settingsManager.isBootstrapEnabled;
+
+  bool get isBiometricsEnabled => _settingsManager.isBiometricsEnabled;
+
+  bool get useBiometrics => hasBiometrics && isBiometricsEnabled;
+
+  bool get hasBiometrics => _settingsManager.hasBiometrics;
+
+  Stream<MapEntry<String, Object>> get settingsChanges =>
+      _settingsManager.changes;
+
+  Future<void> setIsBootstrapEnabled(final bool isEnabled) async {
+    _networkManager.toggleBootstrap(isEnabled);
+    await _settingsManager.setIsBootstrapEnabled(isEnabled);
+  }
+
+  final _networkManager = GetIt.I<NetworkManager>();
+  final _settingsManager = GetIt.I<SettingsManager>();
+  final _platformManager = GetIt.I<PlatformManager>();
+}
