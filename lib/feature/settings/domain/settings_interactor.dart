@@ -26,8 +26,7 @@ class SettingsInteractor {
 
   bool get hasBiometrics => _settingsManager.hasBiometrics;
 
-  Stream<MapEntry<String, Object>> get settingsChanges =>
-      _settingsManager.changes;
+  Stream<(String, Object)> get settingsChanges => _settingsManager.changes;
 
   Future<void> setIsBootstrapEnabled(final bool isEnabled) async {
     _networkManager.toggleBootstrap(isEnabled);

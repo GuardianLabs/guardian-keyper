@@ -1,7 +1,7 @@
 import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
 import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
-import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'vault_secret_recovery_presenter.dart';
 import 'pages/discovering_peers_page.dart';
@@ -17,13 +17,15 @@ class VaultSecretRecoveryScreen extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final vaultIdWithSecretId = ModalRoute.of(context)?.settings.arguments
-        as MapEntry<VaultId, SecretId>;
+    final arguments = ModalRoute.of(context)!.settings.arguments as (
+      VaultId vaultId,
+      SecretId secretId,
+    );
     return ChangeNotifierProvider(
       create: (_) => VaultSecretRecoveryPresenter(
         pages: _pages,
-        vaultId: vaultIdWithSecretId.key,
-        secretId: vaultIdWithSecretId.value,
+        vaultId: arguments.$1,
+        secretId: arguments.$2,
       ),
       child: ScaffoldSafe(
         child: Selector<VaultSecretRecoveryPresenter, int>(

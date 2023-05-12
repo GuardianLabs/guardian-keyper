@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/domain/entity/vault_model.dart';
+import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
 
 import '../../../domain/vault_interactor.dart';
 
@@ -17,10 +17,7 @@ class OnRemoveSecretDialog extends StatelessWidget {
         context: context,
         useSafeArea: true,
         isScrollControlled: true,
-        builder: (final BuildContext context) => OnRemoveSecretDialog(
-          vault: vault,
-          secretId: secretId,
-        ),
+        builder: (_) => OnRemoveSecretDialog(vault: vault, secretId: secretId),
       );
 
   final VaultModel vault;

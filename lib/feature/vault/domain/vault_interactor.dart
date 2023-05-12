@@ -44,7 +44,7 @@ class VaultInteractor {
 
   Stream<MessageModel> get messageStream => _networkManager.messageStream;
 
-  Stream<MapEntry<PeerId, bool>> get peerStatusChangeStream =>
+  Stream<(PeerId, bool)> get peerStatusChangeStream =>
       _networkManager.peerStatusChangeStream;
 
   bool get useBiometrics =>

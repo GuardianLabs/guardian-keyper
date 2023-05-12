@@ -2,8 +2,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
-import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/ui/utils/screen_size.dart';
 
 class QRCodeScanScreen extends StatefulWidget {
   const QRCodeScanScreen({super.key});
@@ -20,7 +20,12 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final size = MediaQuery.of(context).size;
-    final scanAreaSize = _getScanAreaSize(size);
+    final scanAreaSize = switch (ScreenSize.get(size)) {
+      ScreenSmall _ => size.width * 0.7,
+      ScreenMedium _ => size.width * 0.7,
+      ScreenLarge _ => size.width * 0.6,
+      ScreenBig _ => size.width * 0.5,
+    };
     _scanWindow = Rect.fromCenter(
       center: size.center(Offset.zero),
       width: scanAreaSize,
@@ -56,8 +61,8 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
                 ),
               ),
             ),
-            Column(
-              children: const [
+            const Column(
+              children: [
                 // Header
                 HeaderBar(
                   isTransparent: true,
@@ -69,19 +74,6 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
           ],
         ),
       );
-
-  double _getScanAreaSize(final Size size) {
-    switch (getScreenSize(size)) {
-      case ScreenSize.big:
-        return size.width * 0.5;
-      case ScreenSize.large:
-        return size.width * 0.6;
-      case ScreenSize.medium:
-        return size.width * 0.7;
-      case ScreenSize.small:
-        return size.width * 0.7;
-    }
-  }
 }
 
 class _ScannerOverlay extends CustomPainter {

@@ -21,8 +21,21 @@ class DashboardPresenter extends ChangeNotifier {
           : _shards.add(vault.id);
     }
     // init subscriptions
-    _vaultsUpdatesSubscription.resume();
-    _settingsUpdatesSubscription.resume();
+    _settingsInteractor.settingsChanges.listen((final (String, Object) event) {
+      if (event.$1 == keyDeviceName) notifyListeners();
+    });
+    _vaultInteractor.watch().listen((final event) {
+      if (event.deleted) {
+        _vaults.remove(event.key);
+        _shards.remove(event.key);
+      } else {
+        final vault = event.value as VaultModel;
+        vault.ownerId == _settingsInteractor.selfId
+            ? _vaults.add(vault.id)
+            : _shards.add(vault.id);
+      }
+      notifyListeners();
+    });
   }
 
   late final share = _platformManager.share;
@@ -33,37 +46,11 @@ class DashboardPresenter extends ChangeNotifier {
 
   PeerId get selfId => _settingsInteractor.selfId;
 
-  @override
-  void dispose() {
-    _settingsUpdatesSubscription.cancel();
-    _vaultsUpdatesSubscription.cancel();
-    super.dispose();
-  }
+  final _vaults = <VaultId>{};
+  final _shards = <VaultId>{};
 
   final _platformManager = GetIt.I<PlatformService>();
   final _vaultInteractor = GetIt.I<VaultInteractor>();
   final _messagesInteractor = GetIt.I<MessageInteractor>();
   final _settingsInteractor = GetIt.I<SettingsInteractor>();
-
-  final _vaults = <VaultId>{};
-  final _shards = <VaultId>{};
-
-  late final _settingsUpdatesSubscription = _settingsInteractor.settingsChanges
-      .listen((final MapEntry<String, Object> event) {
-    if (event.key == keyDeviceName) notifyListeners();
-  });
-
-  late final _vaultsUpdatesSubscription =
-      _vaultInteractor.watch().listen((final event) {
-    if (event.deleted) {
-      _vaults.remove(event.key);
-      _shards.remove(event.key);
-    } else {
-      final vault = event.value as VaultModel;
-      vault.ownerId == _settingsInteractor.selfId
-          ? _vaults.add(vault.id)
-          : _shards.add(vault.id);
-    }
-    notifyListeners();
-  });
 }

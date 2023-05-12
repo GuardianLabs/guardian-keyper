@@ -1,4 +1,4 @@
-part of '../../../../feature/auth/auth.dart';
+part of 'auth.dart';
 
 Future<void> showChangePassCode({
   required final BuildContext context,

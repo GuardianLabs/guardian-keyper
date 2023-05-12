@@ -4,11 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:guardian_keyper/data/network_manager.dart';
 import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
 import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
-import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
-import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
+import 'package:guardian_keyper/domain/entity/vault_model.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 import 'package:guardian_keyper/domain/entity/secret_shard_model.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
+import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
+import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 
 import '../data/message_repository.dart';
 

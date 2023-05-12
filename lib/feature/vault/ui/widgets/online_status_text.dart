@@ -39,8 +39,8 @@ class _OnlineStatusTextState extends State<OnlineStatusText> {
   Widget build(final BuildContext context) => StreamBuilder<bool>(
         initialData: _vaultInteractor.getPeerStatus(widget.peerId),
         stream: _vaultInteractor.peerStatusChangeStream
-            .where((e) => e.key == widget.peerId)
-            .map((e) => e.value),
+            .where((e) => e.$1 == widget.peerId)
+            .map((e) => e.$2),
         builder: (
           final BuildContext context,
           final AsyncSnapshot<bool> snapshot,

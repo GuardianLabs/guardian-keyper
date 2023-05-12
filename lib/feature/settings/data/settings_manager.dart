@@ -13,13 +13,12 @@ class SettingsManager {
   bool get hasBiometrics => _hasBiometrics;
   bool get isBootstrapEnabled => _isBootstrapEnabled;
   bool get isBiometricsEnabled => _isBiometricsEnabled;
-  Stream<MapEntry<String, Object>> get changes =>
-      _updatesStreamController.stream;
+  Stream<(String, Object)> get changes => _updatesStreamController.stream;
 
   final _platformManager = GetIt.I<PlatformService>();
   final _preferencesManager = GetIt.I<PreferencesService>();
   final _updatesStreamController =
-      StreamController<MapEntry<String, Object>>.broadcast();
+      StreamController<(String, Object)>.broadcast();
 
   late PeerId _selfId;
   late String _passCode, _deviceName;
@@ -50,24 +49,24 @@ class SettingsManager {
     _deviceName = value;
     _selfId = _selfId.copyWith(name: value);
     await _preferencesManager.set<String>(keyDeviceName, value);
-    _updatesStreamController.add(MapEntry(keyDeviceName, value));
+    _updatesStreamController.add((keyDeviceName, value));
   }
 
   Future<void> setPassCode(final String value) async {
     _passCode = value;
     await _preferencesManager.set<String>(keyPassCode, value);
-    _updatesStreamController.add(MapEntry(keyPassCode, value));
+    _updatesStreamController.add((keyPassCode, value));
   }
 
   Future<void> setIsBootstrapEnabled(final bool value) async {
     _isBootstrapEnabled = value;
     await _preferencesManager.set<bool>(keyIsBootstrapEnabled, value);
-    _updatesStreamController.add(MapEntry(keyIsBootstrapEnabled, value));
+    _updatesStreamController.add((keyIsBootstrapEnabled, value));
   }
 
   Future<void> setIsBiometricsEnabled(final bool value) async {
     _isBiometricsEnabled = value;
     await _preferencesManager.set<bool>(keyIsBiometricsEnabled, value);
-    _updatesStreamController.add(MapEntry(keyIsBiometricsEnabled, value));
+    _updatesStreamController.add((keyIsBiometricsEnabled, value));
   }
 }

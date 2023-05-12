@@ -36,9 +36,8 @@ class NetworkManager {
 
   Stream<MessageModel> get messageStream => _messagesController.stream;
 
-  Stream<MapEntry<PeerId, bool>> get peerStatusChangeStream =>
-      router.lastSeenStream
-          .map((e) => MapEntry(PeerId(token: e.key.value), e.value));
+  Stream<(PeerId, bool)> get peerStatusChangeStream =>
+      router.lastSeenStream.map((e) => (PeerId(token: e.key.value), e.value));
 
   final _env = GetIt.I<Env>();
   final _platformManager = GetIt.I<PlatformService>();

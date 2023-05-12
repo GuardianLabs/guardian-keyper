@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../utils/utils.dart';
 import '../theme/theme.dart';
+import '../utils/screen_size.dart';
 
 export 'package:flutter/material.dart';
 
@@ -153,7 +153,7 @@ class PageTitle extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final paddingTop =
-        getScreenSize(MediaQuery.of(context).size) == ScreenSize.small
+        ScreenSize.get(MediaQuery.of(context).size) is ScreenSmall
             ? paddingTop12
             : paddingTop32;
     return Padding(
