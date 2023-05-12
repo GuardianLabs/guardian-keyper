@@ -55,24 +55,15 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
             child: PrimaryButton(
               text: 'Add via a QR Code',
               onPressed: () => Navigator.of(context)
-                  .pushNamed<String?>(routeQrCodeScan)
-                  .then(_setCode),
+                  .pushNamed(routeQrCodeScan)
+                  .then((value) => _setCode(value as String?)),
             ),
           ),
           Padding(
             padding: paddingAll20,
             child: Selector<VaultRestorePresenter, bool>(
-              selector: (
-                final BuildContext context,
-                final VaultRestorePresenter presenter,
-              ) =>
-                  presenter.canUseClipboard,
-              builder: (
-                final BuildContext context,
-                final bool canUseClipboard,
-                final Widget? widget,
-              ) =>
-                  PrimaryButton(
+              selector: (_, presenter) => presenter.canUseClipboard,
+              builder: (_, canUseClipboard, __) => PrimaryButton(
                 text: 'Add via a Text Code',
                 onPressed: canUseClipboard
                     ? () => _presenter.getCodeFromClipboard().then(_setCode)

@@ -13,6 +13,10 @@ import 'package:guardian_keyper/domain/entity/vault_model.dart';
 import '../data/message_repository.dart';
 
 class MessageInteractor {
+  MessageInteractor() {
+    _networkManager.messageStream.listen(_onMessage);
+  }
+
   late final messageTTL = _networkManager.messageTTL;
 
   late final pingPeer = _networkManager.pingPeer;
@@ -23,25 +27,6 @@ class MessageInteractor {
   PeerId get selfId => _settingsManager.selfId;
 
   Iterable<MessageModel> get messages => _messageRepository.values;
-
-  final _networkManager = GetIt.I<NetworkManager>();
-  final _settingsManager = GetIt.I<SettingsManager>();
-  final _vaultRepository = GetIt.I<VaultRepository>();
-  final _messageRepository = GetIt.I<MessageRepository>();
-
-  late final _subscription = _networkManager.messageStream.listen(_onMessage);
-
-  Future<void> start() async {
-    _subscription.resume();
-  }
-
-  Future<void> pause() {
-    return _messageRepository.flush();
-  }
-
-  Future<void> stop() {
-    return _subscription.cancel();
-  }
 
   /// Create ticket to join vault
   Future<MessageModel> createJoinVaultCode() async {
@@ -88,6 +73,12 @@ class MessageInteractor {
       message,
     );
   }
+
+  // Private
+  final _networkManager = GetIt.I<NetworkManager>();
+  final _settingsManager = GetIt.I<SettingsManager>();
+  final _vaultRepository = GetIt.I<VaultRepository>();
+  final _messageRepository = GetIt.I<MessageRepository>();
 
   void _onMessage(MessageModel message) {
     final ticket = _messageRepository.get(message.aKey);

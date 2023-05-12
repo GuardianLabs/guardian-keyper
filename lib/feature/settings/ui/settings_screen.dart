@@ -1,4 +1,3 @@
-import 'package:guardian_keyper/ui/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/feature/auth/auth.dart';
@@ -42,21 +41,8 @@ class SettingsScreen extends StatelessWidget {
                             style: textStyleSourceSansPro414Purple,
                           ),
                           trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                          onTap: () async {
-                            final newName = await OnSetDeviceNameDialog.show(
-                              context,
-                              deviceName: presenter.deviceName,
-                            );
-                            if (newName == null) return;
-                            if (presenter.deviceName == newName) return;
-                            await presenter.setDeviceName(newName);
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(buildSnackBar(
-                                text: 'Device name was changed successfully.',
-                              ));
-                            }
-                          },
+                          onTap: () =>
+                              OnSetDeviceNameDialog.show(context, presenter),
                         ),
                       ),
                       // Change PassCode

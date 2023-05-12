@@ -52,7 +52,7 @@ class SecretsPanelList extends StatelessWidget {
                     padding: paddingTop12,
                     child: ElevatedButton(
                       onPressed: () => Navigator.of(context).pushNamed(
-                        routeVaultRecoverSecret,
+                        routeVaultSecretRecover,
                         arguments: MapEntry(vault.id, secretId),
                       ),
                       child: const Text('Recover my Secret'),

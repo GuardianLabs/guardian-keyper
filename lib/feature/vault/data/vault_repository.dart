@@ -2,9 +2,8 @@ import 'dart:typed_data';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:guardian_keyper/data/preferences_manager.dart';
-
-import '../../../domain/entity/vault_model.dart';
+import 'package:guardian_keyper/data/preferences_service.dart';
+import 'package:guardian_keyper/domain/entity/vault_model.dart';
 
 typedef VaultRepository = Box<VaultModel>;
 
@@ -13,7 +12,7 @@ Future<VaultRepository> getVaultRepository() async {
   return Hive.openBox<VaultModel>(
     'vaults',
     encryptionCipher: HiveAesCipher(
-        await GetIt.I<PreferencesManager>().get<Uint8List>(keySeed) ??
+        await GetIt.I<PreferencesService>().get<Uint8List>(keySeed) ??
             Uint8List(0)),
   );
 }

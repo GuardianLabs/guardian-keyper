@@ -9,18 +9,16 @@ class MessageHomeScreen extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => MessageHomePresenter(),
+        create: (_) => MessageHomePresenter(),
         child: DefaultTabController(
           length: 2,
           child: Scaffold(
+            primary: false,
             // Header
             appBar: AppBar(
               title: const Text('Messages'),
               bottom: const TabBar(
-                tabs: [
-                  Tab(text: 'Active'),
-                  Tab(text: 'Resolved'),
-                ],
+                tabs: [Tab(text: 'Active'), Tab(text: 'Resolved')],
               ),
             ),
             // Body
@@ -33,10 +31,7 @@ class MessageHomeScreen extends StatelessWidget {
                 ),
                 const Expanded(
                   child: TabBarView(
-                    children: [
-                      ActiveMessagesTab(),
-                      ResolvedMessagesTab(),
-                    ],
+                    children: [ActiveMessagesTab(), ResolvedMessagesTab()],
                   ),
                 ),
                 Container(

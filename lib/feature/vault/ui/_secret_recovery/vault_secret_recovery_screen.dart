@@ -16,24 +16,24 @@ class VaultSecretRecoveryScreen extends StatelessWidget {
   const VaultSecretRecoveryScreen({super.key});
 
   @override
-  Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) {
-          final vaultIdWithSecretId = ModalRoute.of(context)?.settings.arguments
-              as MapEntry<VaultId, SecretId>;
-          return VaultSecretRecoveryPresenter(
-            pages: _pages,
-            vaultId: vaultIdWithSecretId.key,
-            secretId: vaultIdWithSecretId.value,
-          );
-        },
-        child: ScaffoldSafe(
-          child: Selector<VaultSecretRecoveryPresenter, int>(
-            selector: (_, presenter) => presenter.currentPage,
-            builder: (_, currentPage, __) => AnimatedSwitcher(
-              duration: pageChangeDuration,
-              child: _pages[currentPage],
-            ),
+  Widget build(final BuildContext context) {
+    final vaultIdWithSecretId = ModalRoute.of(context)?.settings.arguments
+        as MapEntry<VaultId, SecretId>;
+    return ChangeNotifierProvider(
+      create: (_) => VaultSecretRecoveryPresenter(
+        pages: _pages,
+        vaultId: vaultIdWithSecretId.key,
+        secretId: vaultIdWithSecretId.value,
+      ),
+      child: ScaffoldSafe(
+        child: Selector<VaultSecretRecoveryPresenter, int>(
+          selector: (_, presenter) => presenter.currentPage,
+          builder: (_, currentPage, __) => AnimatedSwitcher(
+            duration: pageChangeDuration,
+            child: _pages[currentPage],
           ),
         ),
-      );
+      ),
+    );
+  }
 }

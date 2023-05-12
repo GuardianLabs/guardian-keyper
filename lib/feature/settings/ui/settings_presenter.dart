@@ -1,38 +1,46 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:guardian_keyper/app/consts.dart';
+
 import '../domain/settings_interactor.dart';
 
 export 'package:provider/provider.dart';
 
 class SettingsPresenter extends ChangeNotifier {
-  SettingsPresenter() {
-    _updatesSubsrciption.resume();
-  }
+  late final vibrate = _settingsInteractor.vibrate;
+  late final setPassCode = _settingsInteractor.setPassCode;
 
   String get passCode => _settingsInteractor.passCode;
   String get deviceName => _settingsInteractor.deviceName;
   bool get hasBiometrics => _settingsInteractor.hasBiometrics;
   bool get isBootstrapEnabled => _settingsInteractor.isBootstrapEnabled;
   bool get isBiometricsEnabled => _settingsInteractor.isBiometricsEnabled;
+  bool get hasMinimumDeviceNameLength => _deviceName.length >= minNameLength;
 
-  late final vibrate = _settingsInteractor.vibrate;
-  late final setPassCode = _settingsInteractor.setPassCode;
-  late final setDeviceName = _settingsInteractor.setDeviceName;
-  late final setIsBootstrapEnabled = _settingsInteractor.setIsBootstrapEnabled;
-  late final setIsBiometricsEnabled =
-      _settingsInteractor.setIsBiometricsEnabled;
+  set deviceName(final String value) {
+    _deviceName = value;
+    notifyListeners();
+  }
 
-  @override
-  void dispose() {
-    _updatesSubsrciption.cancel();
-    super.dispose();
+  Future<void> setDeviceName() async {
+    if (_settingsInteractor.deviceName == _deviceName) return;
+    await _settingsInteractor.setDeviceName(_deviceName);
+    notifyListeners();
+  }
+
+  Future<void> setIsBootstrapEnabled(final bool value) async {
+    await _settingsInteractor.setIsBootstrapEnabled(value);
+    notifyListeners();
+  }
+
+  Future<void> setIsBiometricsEnabled(final bool value) async {
+    await _settingsInteractor.setIsBiometricsEnabled(value);
+    notifyListeners();
   }
 
   // Private
   final _settingsInteractor = GetIt.I<SettingsInteractor>();
 
-  late final _updatesSubsrciption = _settingsInteractor.settingsChanges.listen(
-    (_) => notifyListeners(),
-  );
+  late String _deviceName = _settingsInteractor.deviceName;
 }

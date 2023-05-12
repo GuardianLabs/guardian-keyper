@@ -23,23 +23,12 @@ const routeShardShow = '/vault/shard/show';
 const routeVaultShow = '/vault/show';
 const routeVaultCreate = '/vault/create';
 const routeVaultRestore = '/vault/restore';
-const routeVaultAddGuardian = '/vault/guardian/add';
+const routeVaultGuardianAdd = '/vault/guardian/add';
 
-const routeVaultAddSecret = '/vault/secret/add';
-const routeVaultRecoverSecret = '/vault/secret/recover';
+const routeVaultSecretAdd = '/vault/secret/add';
+const routeVaultSecretRecover = '/vault/secret/recover';
 
-Route? onGenerateRoute(final RouteSettings settings) {
-  final screen = routes[settings.name];
-  return screen == null
-      ? null
-      : MaterialPageRoute(
-          fullscreenDialog: true,
-          settings: settings,
-          builder: (_) => screen,
-        );
-}
-
-const routes = <String, Widget>{
+const screensByRouteName = <String, Widget>{
   routeIntro: IntroScreen(),
   routeSettings: SettingsScreen(),
   // QRCode
@@ -51,8 +40,19 @@ const routes = <String, Widget>{
   routeVaultShow: VaultShowScreen(),
   routeVaultCreate: VaultCreateScreen(),
   routeVaultRestore: VaultRestoreScreen(),
-  routeVaultAddGuardian: VaultGuardianAddScreen(),
+  routeVaultGuardianAdd: VaultGuardianAddScreen(),
   // Secret
-  routeVaultAddSecret: VaultSecretAddScreen(),
-  routeVaultRecoverSecret: VaultSecretRecoveryScreen(),
+  routeVaultSecretAdd: VaultSecretAddScreen(),
+  routeVaultSecretRecover: VaultSecretRecoveryScreen(),
 };
+
+Route? onGenerateRoute(final RouteSettings settings) {
+  final screen = screensByRouteName[settings.name];
+  return screen == null
+      ? null
+      : MaterialPageRoute(
+          fullscreenDialog: true,
+          settings: settings,
+          builder: (_) => screen,
+        );
+}

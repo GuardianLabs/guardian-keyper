@@ -15,19 +15,19 @@ class VaultGuardianAddScreen extends StatelessWidget {
   const VaultGuardianAddScreen({super.key});
 
   @override
-  Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => VaultGuardianAddPresenter(
-          pages: _pages,
-          vaultId: ModalRoute.of(context)?.settings.arguments as VaultId,
-        ),
-        child: ScaffoldSafe(
-          child: Selector<VaultGuardianAddPresenter, int>(
-            selector: (_, presenter) => presenter.currentPage,
-            builder: (_, currentPage, __) => AnimatedSwitcher(
-              duration: pageChangeDuration,
-              child: _pages[currentPage],
-            ),
+  Widget build(final BuildContext context) {
+    final vaultId = ModalRoute.of(context)!.settings.arguments as VaultId;
+    return ChangeNotifierProvider(
+      create: (_) => VaultGuardianAddPresenter(pages: _pages, vaultId: vaultId),
+      child: ScaffoldSafe(
+        child: Selector<VaultGuardianAddPresenter, int>(
+          selector: (_, presenter) => presenter.currentPage,
+          builder: (_, currentPage, __) => AnimatedSwitcher(
+            duration: pageChangeDuration,
+            child: _pages[currentPage],
           ),
         ),
-      );
+      ),
+    );
+  }
 }

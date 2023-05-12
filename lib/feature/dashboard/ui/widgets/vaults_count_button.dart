@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 
+import 'package:guardian_keyper/ui/home_presenter.dart';
 import 'package:guardian_keyper/ui/theme/theme.dart';
-import 'package:guardian_keyper/feature/vault/ui/_shard_home/shard_home_screen.dart';
 
 import '../dashboard_presenter.dart';
-import '../../home/ui/home_presenter.dart';
 
-class ShardsCountButton extends StatelessWidget {
-  const ShardsCountButton({super.key});
+class VaultsCountButton extends StatelessWidget {
+  const VaultsCountButton({super.key});
 
   @override
   Widget build(final BuildContext context) => GestureDetector(
-        onTap: () => context.read<HomePresenter>().gotoPage<ShardHomeScreen>(),
+        onTap: context.read<HomePresenter>().gotoVaults,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: borderRadius,
-            color: clYellow,
+            color: clGreen,
           ),
           padding: paddingAll8,
           child: Row(
@@ -25,22 +24,13 @@ class ShardsCountButton extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Stored Shards',
+                    'My Vaults',
                     style: textStyleSourceSansPro612.copyWith(color: clBlack),
                   ),
                   Selector<DashboardPresenter, int>(
-                    selector: (
-                      final BuildContext context,
-                      final DashboardPresenter presenter,
-                    ) =>
-                        presenter.shardsCount,
-                    builder: (
-                      final BuildContext context,
-                      final int shardsCount,
-                      final Widget? widget,
-                    ) =>
-                        Text(
-                      '$shardsCount Shards',
+                    selector: (_, presenter) => presenter.vaultsCount,
+                    builder: (_, vaultsCount, __) => Text(
+                      '$vaultsCount Vaults',
                       style: textStylePoppins616.copyWith(color: clBlack),
                     ),
                   ),

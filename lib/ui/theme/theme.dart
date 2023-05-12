@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-part 'fonts.dart';
-part 'theme_dark.dart';
-part 'theme_light.dart';
 
 const clIndigo900 = Color(0xFF1A0244);
 const clIndigo800 = Color(0xFF300077);
@@ -51,18 +46,66 @@ final boxDecorationStart = BoxDecoration(
   color: clIndigo500,
 );
 
-final _fixedSizeHeight48 = MaterialStateProperty.all<Size>(
-  const Size(double.infinity, 48),
+final textStyleSourceSansPro412 = GoogleFonts.sourceSansPro(
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
 );
 
-final _shapeBorder = RoundedRectangleBorder(borderRadius: borderRadius);
-
-final _buttonShape = MaterialStateProperty.all<OutlinedBorder>(
-  RoundedRectangleBorder(borderRadius: borderRadius),
+final textStyleSourceSansPro414 = GoogleFonts.sourceSansPro(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
 );
 
-final _buttonForegroundColor = MaterialStateProperty.resolveWith<Color>(
-  (states) => states.contains(MaterialState.disabled)
-      ? const Color(0xFF76678F)
-      : clWhite,
+final textStyleSourceSansPro414Purple = GoogleFonts.sourceSansPro(
+  color: clPurpleLight,
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+);
+
+final textStyleSourceSansPro416 = GoogleFonts.sourceSansPro(
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+);
+
+final textStyleSourceSansPro416Purple = GoogleFonts.sourceSansPro(
+  color: clPurpleLight,
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+);
+
+final textStyleSourceSansPro612 = GoogleFonts.sourceSansPro(
+  fontSize: 12,
+  fontWeight: FontWeight.w600,
+);
+
+final textStyleSourceSansPro612Purple = GoogleFonts.sourceSansPro(
+  color: clPurpleLight,
+  fontSize: 12,
+  fontWeight: FontWeight.w600,
+);
+
+final textStyleSourceSansPro614 = GoogleFonts.sourceSansPro(
+  fontSize: 14,
+  fontWeight: FontWeight.w600,
+);
+
+final textStyleSourceSansPro616 = GoogleFonts.sourceSansPro(
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+);
+
+final textStyleSourceSansPro616Purple = GoogleFonts.sourceSansPro(
+  color: clPurpleLight,
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+);
+
+final textStylePoppins616 = GoogleFonts.poppins(
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+);
+
+final textStylePoppins620 = GoogleFonts.poppins(
+  fontSize: 20,
+  fontWeight: FontWeight.w600,
 );

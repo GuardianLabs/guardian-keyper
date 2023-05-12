@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 import 'package:guardian_keyper/app/consts.dart';
-import 'package:guardian_keyper/ui/utils.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../dashboard_presenter.dart';

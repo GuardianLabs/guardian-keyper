@@ -9,17 +9,17 @@ typedef EventLogger = Future<void> Function(
   bool? outOfSession,
 });
 
-class AnalyticsManager {
-  static Future<AnalyticsManager> init() async {
+class AnalyticsService {
+  static Future<AnalyticsService> init() async {
     final amplitude = Amplitude.getInstance();
     final apiKey = GetIt.I<Env>().amplitudeKey;
-    if (apiKey.isEmpty) return const AnalyticsManager();
+    if (apiKey.isEmpty) return const AnalyticsService();
     await amplitude.init(apiKey);
     await amplitude.trackingSessionEvents(true);
     // Enable COPPA privacy guard.
     // This is useful when you choose not to report sensitive user information.
     await amplitude.enableCoppaControl();
-    return AnalyticsManager(logEvent: amplitude.logEvent);
+    return AnalyticsService(logEvent: amplitude.logEvent);
   }
 
   static Future<void> _logEvent(
@@ -30,7 +30,7 @@ class AnalyticsManager {
 
   final EventLogger logEvent;
 
-  const AnalyticsManager({this.logEvent = _logEvent});
+  const AnalyticsService({this.logEvent = _logEvent});
 
   Future<void> logStartCreateVault() => logEvent('Start CreateVault');
   Future<void> logFinishCreateVault() => logEvent('Finish CreateVault');

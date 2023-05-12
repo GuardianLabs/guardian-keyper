@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/data/network_manager.dart';
-import 'package:guardian_keyper/data/platform_manager.dart';
+import 'package:guardian_keyper/data/platform_service.dart';
 import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
 
 import '../data/settings_manager.dart';
@@ -36,5 +36,5 @@ class SettingsInteractor {
 
   final _networkManager = GetIt.I<NetworkManager>();
   final _settingsManager = GetIt.I<SettingsManager>();
-  final _platformManager = GetIt.I<PlatformManager>();
+  final _platformManager = GetIt.I<PlatformService>();
 }

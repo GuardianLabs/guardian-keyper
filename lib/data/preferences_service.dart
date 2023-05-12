@@ -9,7 +9,7 @@ const keyDeviceName = 'deviceName';
 const keyIsBootstrapEnabled = 'isBootstrapEnabled';
 const keyIsBiometricsEnabled = 'isBiometricsEnabled';
 
-class PreferencesManager {
+class PreferencesService {
   static const _storageName = 'settings';
   static const _storage = FlutterSecureStorage(
     iOptions: IOSOptions(accountName: _storageName),
@@ -21,8 +21,6 @@ class PreferencesManager {
           KeyCipherAlgorithm.RSA_ECB_OAEPwithSHA_256andMGF1Padding,
     ),
   );
-
-  const PreferencesManager();
 
   Future<T?> get<T extends Object>(final Object key) async {
     final value = await _storage.read(key: key.toString());

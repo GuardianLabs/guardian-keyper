@@ -1,5 +1,4 @@
 import 'package:guardian_keyper/app/consts.dart';
-import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'vault_restore_presenter.dart';
@@ -16,10 +15,7 @@ class VaultRestoreScreen extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => VaultRestorePresenter(
-          pages: _pages,
-          vaultId: ModalRoute.of(context)?.settings.arguments as VaultId?,
-        ),
+        create: (_) => VaultRestorePresenter(pages: _pages),
         child: ScaffoldSafe(
           child: Selector<VaultRestorePresenter, int>(
             selector: (_, presenter) => presenter.currentPage,

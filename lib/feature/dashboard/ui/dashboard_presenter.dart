@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:guardian_keyper/data/platform_manager.dart';
-import 'package:guardian_keyper/data/preferences_manager.dart';
+import 'package:guardian_keyper/data/platform_service.dart';
+import 'package:guardian_keyper/data/preferences_service.dart';
 import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
 import 'package:guardian_keyper/domain/entity/vault_model.dart';
 import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
@@ -40,7 +40,7 @@ class DashboardPresenter extends ChangeNotifier {
     super.dispose();
   }
 
-  final _platformManager = GetIt.I<PlatformManager>();
+  final _platformManager = GetIt.I<PlatformService>();
   final _vaultInteractor = GetIt.I<VaultInteractor>();
   final _messagesInteractor = GetIt.I<MessageInteractor>();
   final _settingsInteractor = GetIt.I<SettingsInteractor>();

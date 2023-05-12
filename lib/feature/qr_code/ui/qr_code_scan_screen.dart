@@ -2,7 +2,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
-import 'package:guardian_keyper/ui/utils.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 class QRCodeScanScreen extends StatefulWidget {

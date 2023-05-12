@@ -58,10 +58,7 @@ class RestrictedVaultPage extends StatelessWidget {
           padding: paddingBottom32,
           child: PrimaryButton(
             text: 'Add a Guardian',
-            onPressed: () => Navigator.of(context).pushNamed(
-              routeVaultRestore,
-              arguments: false,
-            ),
+            onPressed: () => Navigator.of(context).pushNamed(routeVaultRestore),
           ),
         ),
         // Guardians

@@ -5,7 +5,7 @@ import 'package:vector_graphics/vector_graphics.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/data/platform_manager.dart';
+import 'package:guardian_keyper/data/platform_service.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 
 class QRCodeShowScreen extends StatefulWidget {
@@ -31,16 +31,15 @@ class QRCodeShowScreen extends StatefulWidget {
 }
 
 class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
-  final _platformManager = GetIt.I<PlatformManager>();
+  final _platformManager = GetIt.I<PlatformService>();
 
-  late final MessageModel _message;
-  late final String _qrCode;
+  late final _message =
+      ModalRoute.of(context)!.settings.arguments as MessageModel;
+  late final _qrCode = _message.toBase64url();
 
   @override
   void initState() {
     super.initState();
-    _message = ModalRoute.of(context)?.settings.arguments as MessageModel;
-    _qrCode = _message.toBase64url();
     _platformManager.wakelockEnable();
   }
 

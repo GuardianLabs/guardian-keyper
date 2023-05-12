@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:nsd/nsd.dart' as nsd;
 import 'package:get_it/get_it.dart';
+import 'package:nsd/nsd.dart' as nsd;
 import 'package:flutter/foundation.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
 
 import '../app/consts.dart';
-import 'platform_manager.dart';
+import 'platform_service.dart';
 
 class MdnsManager {
   static const _mdnsPeerId = 'peerId';
@@ -19,15 +19,6 @@ class MdnsManager {
     required final p2p.RouterL2 router,
   })  : _port = port,
         _router = router;
-
-  final int _port;
-  final p2p.RouterL2 _router;
-
-  final _platformManager = GetIt.I<PlatformManager>();
-
-  late final nsd.Registration _registration;
-
-  nsd.Discovery? _discovery;
 
   Future<MdnsManager> init() async {
     try {
@@ -42,6 +33,7 @@ class MdnsManager {
             },
           ))
           .timeout(initTimeout);
+      await startDiscovery();
     } on nsd.NsdError catch (e) {
       if (kDebugMode) print(e);
       rethrow;
@@ -52,7 +44,7 @@ class MdnsManager {
   }
 
   Future<void> startDiscovery() async {
-    if (_platformManager.hasWiFi) {
+    if (GetIt.I<PlatformService>().hasWiFi) {
       try {
         _discovery ??= await nsd
             .startDiscovery(_mdnsType, ipLookupType: nsd.IpLookupType.any)
@@ -81,13 +73,20 @@ class MdnsManager {
     }
   }
 
-  /// Must be called on app stops
-  Future<void> dispose() async {
-    await stopDiscovery();
-    await nsd.unregister(_registration);
-  }
+  Future<void> unregister() => nsd.unregister(_registration);
 
-  void _onEvent(final nsd.Service service, final nsd.ServiceStatus status) {
+  // Private
+  final int _port;
+  final p2p.RouterL2 _router;
+
+  late final nsd.Registration _registration;
+
+  nsd.Discovery? _discovery;
+
+  void _onEvent(
+    final nsd.Service service,
+    final nsd.ServiceStatus status,
+  ) {
     if (kDebugMode) print('mDNS $status: ${service.addresses}');
     if (service.type != _mdnsType) return;
     final peerIdBytes = service.txt?[_mdnsPeerId];

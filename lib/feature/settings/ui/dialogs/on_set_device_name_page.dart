@@ -1,79 +1,88 @@
 import 'package:guardian_keyper/app/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-class OnSetDeviceNameDialog extends StatefulWidget {
-  static Future<String?> show(
-    final BuildContext context, {
-    required final String deviceName,
-  }) =>
-      Navigator.of(context).push<String>(
-        MaterialPageRoute<String>(
+import '../settings_presenter.dart';
+
+class OnSetDeviceNameDialog extends StatelessWidget {
+  static Future<void> show(
+    final BuildContext context,
+    final SettingsPresenter presenter,
+  ) =>
+      Navigator.of(context).push(
+        MaterialPageRoute(
           fullscreenDialog: true,
-          settings: RouteSettings(arguments: deviceName),
-          builder: (_) => const OnSetDeviceNameDialog(),
+          builder: (_) => ChangeNotifierProvider.value(
+            value: presenter,
+            child: const OnSetDeviceNameDialog(),
+          ),
         ),
       );
 
   const OnSetDeviceNameDialog({super.key});
 
   @override
-  State<OnSetDeviceNameDialog> createState() => _OnSetDeviceNameDialogState();
-}
-
-class _OnSetDeviceNameDialogState extends State<OnSetDeviceNameDialog> {
-  late String _deviceName =
-      ModalRoute.of(context)?.settings.arguments as String;
-
-  @override
-  Widget build(final BuildContext context) => ScaffoldSafe(
-        child: Column(
-          children: [
-            // Header
-            const HeaderBar(
-              caption: 'Change Device Name',
-              backButton: HeaderBarBackButton(),
-            ),
-            // Body
-            Expanded(
-              child: ListView(
-                padding: paddingAll20,
-                children: [
-                  Padding(
-                    padding: paddingAll20,
-                    child: Text(
-                      'Create new Device name',
-                      textAlign: TextAlign.center,
-                      style: textStylePoppins620,
+  Widget build(final BuildContext context) {
+    final presenter = context.read<SettingsPresenter>();
+    return ScaffoldSafe(
+      child: Column(
+        children: [
+          // Header
+          const HeaderBar(
+            caption: 'Change Device Name',
+            backButton: HeaderBarBackButton(),
+          ),
+          // Body
+          Expanded(
+            child: ListView(
+              padding: paddingAll20,
+              children: [
+                Padding(
+                  padding: paddingAll20,
+                  child: Text(
+                    'Create new Device name',
+                    textAlign: TextAlign.center,
+                    style: textStylePoppins620,
+                  ),
+                ),
+                Padding(
+                  padding: paddingV20,
+                  child: TextFormField(
+                    autofocus: true,
+                    keyboardType: TextInputType.text,
+                    maxLength: maxNameLength,
+                    initialValue: presenter.deviceName,
+                    onChanged: (value) => presenter.deviceName = value,
+                    decoration: const InputDecoration(
+                      labelText: ' Device name ',
+                      helperText: 'Minimum $minNameLength characters',
                     ),
                   ),
-                  Padding(
-                    padding: paddingV20,
-                    child: TextFormField(
-                      autofocus: true,
-                      keyboardType: TextInputType.text,
-                      maxLength: maxNameLength,
-                      initialValue: _deviceName,
-                      onChanged: (value) => setState(() => _deviceName = value),
-                      decoration: const InputDecoration(
-                        labelText: ' Device name ',
-                        helperText: 'Minimum $minNameLength characters',
-                      ),
-                    ),
-                  ),
-                  // Footer
-                  Padding(
-                    padding: paddingV20,
-                    child: PrimaryButton(
+                ),
+                // Footer
+                Padding(
+                  padding: paddingV20,
+                  child: Consumer<SettingsPresenter>(
+                    builder: (
+                      final BuildContext context,
+                      final SettingsPresenter presenter,
+                      final Widget? child,
+                    ) =>
+                        PrimaryButton(
                       text: 'Proceed',
-                      onPressed: _deviceName.length < minNameLength
-                          ? null
-                          : () => Navigator.of(context).pop(_deviceName),
+                      onPressed: presenter.hasMinimumDeviceNameLength
+                          ? () async {
+                              await presenter.setDeviceName();
+                              if (context.mounted) Navigator.of(context).pop();
+                            }
+                          : null,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 }

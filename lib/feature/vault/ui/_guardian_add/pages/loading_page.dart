@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/utils.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
@@ -41,17 +41,8 @@ class _LoadingPageState extends State<LoadingPage> {
                   Padding(
                     padding: paddingTop20,
                     child: Selector<VaultGuardianAddPresenter, bool>(
-                      selector: (
-                        final BuildContext context,
-                        final VaultGuardianAddPresenter presenter,
-                      ) =>
-                          presenter.isWaiting,
-                      builder: (
-                        final BuildContext context,
-                        final bool isWaiting,
-                        final Widget? widget,
-                      ) =>
-                          Visibility(
+                      selector: (_, presenter) => presenter.isWaiting,
+                      builder: (_, isWaiting, __) => Visibility(
                         visible: isWaiting,
                         child: const CircularProgressIndicator.adaptive(),
                       ),

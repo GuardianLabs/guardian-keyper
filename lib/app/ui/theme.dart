@@ -1,10 +1,15 @@
-part of '../../ui/theme/theme.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:guardian_keyper/ui/theme/theme.dart';
 
 const systemStyleDark = SystemUiOverlayStyle(
   statusBarColor: Color(0xFF1A0244),
   statusBarBrightness: Brightness.dark,
   statusBarIconBrightness: Brightness.light,
 );
+
+final themeLight = ThemeData.light();
 
 final themeDark = ThemeData.dark().copyWith(
   // Color Scheme
@@ -159,4 +164,20 @@ final themeDark = ThemeData.dark().copyWith(
       style: ButtonStyle(
     foregroundColor: MaterialStateProperty.all<Color>(clWhite),
   )),
+);
+
+final _fixedSizeHeight48 = MaterialStateProperty.all<Size>(
+  const Size(double.infinity, 48),
+);
+
+final _shapeBorder = RoundedRectangleBorder(borderRadius: borderRadius);
+
+final _buttonShape = MaterialStateProperty.all<OutlinedBorder>(
+  RoundedRectangleBorder(borderRadius: borderRadius),
+);
+
+final _buttonForegroundColor = MaterialStateProperty.resolveWith<Color>(
+  (states) => states.contains(MaterialState.disabled)
+      ? const Color(0xFF76678F)
+      : clWhite,
 );

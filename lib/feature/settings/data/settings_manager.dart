@@ -3,8 +3,8 @@ import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
 import 'package:guardian_keyper/data/network_manager.dart';
-import 'package:guardian_keyper/data/platform_manager.dart';
-import 'package:guardian_keyper/data/preferences_manager.dart';
+import 'package:guardian_keyper/data/platform_service.dart';
+import 'package:guardian_keyper/data/preferences_service.dart';
 
 class SettingsManager {
   PeerId get selfId => _selfId;
@@ -16,8 +16,8 @@ class SettingsManager {
   Stream<MapEntry<String, Object>> get changes =>
       _updatesStreamController.stream;
 
-  final _platformManager = GetIt.I<PlatformManager>();
-  final _preferencesManager = GetIt.I<PreferencesManager>();
+  final _platformManager = GetIt.I<PlatformService>();
+  final _preferencesManager = GetIt.I<PreferencesService>();
   final _updatesStreamController =
       StreamController<MapEntry<String, Object>>.broadcast();
 

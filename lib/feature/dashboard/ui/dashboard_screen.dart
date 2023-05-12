@@ -3,27 +3,22 @@ import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'dashboard_presenter.dart';
-import 'widgets/copy_my_key_to_clipboard_button.dart';
-import 'widgets/vaults_panel.dart';
 import 'widgets/share_panel.dart';
+import 'widgets/vaults_panel.dart';
+import 'widgets/copy_my_key_to_clipboard_button.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   @override
   Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => DashboardPresenter(),
+        create: (_) => DashboardPresenter(),
         child: ListView(
           padding: paddingV20,
           children: [
             // Device Name
             Consumer<DashboardPresenter>(
-              builder: (
-                final BuildContext context,
-                final DashboardPresenter presenter,
-                final Widget? widget,
-              ) =>
-                  RichText(
+              builder: (_, presenter, __) => RichText(
                 text: TextSpan(
                   style: textStylePoppins620,
                   children: buildTextWithId(id: presenter.selfId),
@@ -33,12 +28,7 @@ class DashboardScreen extends StatelessWidget {
             // My Key
             Row(children: [
               Consumer<DashboardPresenter>(
-                builder: (
-                  final BuildContext context,
-                  final DashboardPresenter presenter,
-                  final Widget? widget,
-                ) =>
-                    Text(
+                builder: (_, presenter, __) => Text(
                   presenter.selfId.toHexShort(),
                   style: textStyleSourceSansPro414Purple,
                 ),

@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/data/network_manager.dart';
-import 'package:guardian_keyper/data/platform_manager.dart';
-import 'package:guardian_keyper/data/analytics_manager.dart';
+import 'package:guardian_keyper/data/platform_service.dart';
+import 'package:guardian_keyper/data/analytics_service.dart';
 import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
 import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
 import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
@@ -49,10 +49,6 @@ class VaultInteractor {
 
   bool get useBiometrics =>
       _settingsManager.hasBiometrics && _settingsManager.isBiometricsEnabled;
-
-  Future<void> pause() async {
-    await _vaultRepository.flush();
-  }
 
   VaultModel? getVaultById(final VaultId vaultId) =>
       _vaultRepository.get(vaultId.asKey);
@@ -105,8 +101,8 @@ class VaultInteractor {
       );
 
   final _networkManager = GetIt.I<NetworkManager>();
-  final _platformManager = GetIt.I<PlatformManager>();
+  final _platformManager = GetIt.I<PlatformService>();
   final _settingsManager = GetIt.I<SettingsManager>();
-  final _analyticsManager = GetIt.I<AnalyticsManager>();
+  final _analyticsManager = GetIt.I<AnalyticsService>();
   final _vaultRepository = GetIt.I<VaultRepository>();
 }

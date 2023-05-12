@@ -6,12 +6,12 @@ import 'package:flutter/foundation.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
 
 import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/domain/entity/env.dart';
+import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 
-import '../domain/entity/env.dart';
-import '../domain/entity/_id/peer_id.dart';
-import 'preferences_manager.dart';
-import 'platform_manager.dart';
+import 'preferences_service.dart';
+import 'platform_service.dart';
 
 class NetworkManager {
   NetworkManager({
@@ -41,8 +41,8 @@ class NetworkManager {
           .map((e) => MapEntry(PeerId(token: e.key.value), e.value));
 
   final _env = GetIt.I<Env>();
-  final _platformManager = GetIt.I<PlatformManager>();
-  final _preferencesManager = GetIt.I<PreferencesManager>();
+  final _platformManager = GetIt.I<PlatformService>();
+  final _preferencesManager = GetIt.I<PreferencesService>();
   final _messagesController = StreamController<MessageModel>.broadcast();
 
   Future<NetworkManager> init() async {
@@ -78,10 +78,6 @@ class NetworkManager {
   void pause([void _]) {
     router.stop();
     router.transports.clear();
-  }
-
-  void stop([void _]) {
-    router.stop();
   }
 
   Future<void> sendTo({

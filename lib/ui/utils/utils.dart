@@ -1,5 +1,5 @@
-import '../app/consts.dart';
-import 'widgets/common.dart';
+import '../../app/consts.dart';
+import '../widgets/common.dart';
 
 const smallScreenHeight = 600;
 const mediumScreenHeight = 800;

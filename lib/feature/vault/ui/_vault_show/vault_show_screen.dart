@@ -13,7 +13,7 @@ class VaultShowScreen extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final vaultId = ModalRoute.of(context)?.settings.arguments as VaultId;
+    final vaultId = ModalRoute.of(context)!.settings.arguments as VaultId;
     return ChangeNotifierProvider(
       create: (_) => VaultShowPresenter(vaultId: vaultId),
       child: ScaffoldSafe(
@@ -25,8 +25,10 @@ class VaultShowScreen extends StatelessWidget {
               captionSpans: buildTextWithId(id: vaultId),
               backButton: const HeaderBarBackButton(),
               closeButton: HeaderBarMoreButton(
-                onPressed: () =>
-                    OnVaultMoreDialog.show(context, vaultId: vaultId),
+                onPressed: () => OnVaultMoreDialog.show(
+                  context,
+                  vaultId: vaultId,
+                ),
               ),
             ),
             // Body

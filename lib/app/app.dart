@@ -2,12 +2,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
-
-import '../ui/theme/theme.dart';
-import '../ui/widgets/init_loader.dart';
-import 'routes.dart';
 import 'di.dart';
+import 'routes.dart';
+import 'ui/home_screen.dart';
+import 'ui/theme.dart';
+import 'ui/splash_screen.dart';
 
 class App extends StatelessWidget {
   static Future<void> init() async {
@@ -16,32 +15,25 @@ class App extends StatelessWidget {
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
-  const App({super.key, this.di = const DI()});
+  const App({
+    super.key,
+    this.di = const DI(),
+  });
 
   final DI di;
 
   @override
-  Widget build(final BuildContext context) => FutureBuilder<bool>(
-        future: di.init(),
-        builder: (
-          final BuildContext context,
-          final AsyncSnapshot<bool> snapshot,
-        ) =>
-            snapshot.data == null
-                ? MaterialApp(
-                    home: const InitLoader(),
-                    theme: themeLight,
-                    darkTheme: themeDark,
-                    themeMode: ThemeMode.dark,
-                  )
-                : MaterialApp(
-                    title: 'Guardian Keyper',
-                    theme: themeLight,
-                    darkTheme: themeDark,
-                    themeMode: ThemeMode.dark,
-                    onGenerateRoute: onGenerateRoute,
-                    navigatorObservers: [SentryNavigatorObserver()],
-                    home: const HomeScreen(),
-                  ),
+  Widget build(final BuildContext context) => MaterialApp(
+        title: 'Guardian Keyper',
+        theme: themeLight,
+        darkTheme: themeDark,
+        themeMode: ThemeMode.dark,
+        onGenerateRoute: onGenerateRoute,
+        navigatorObservers: [SentryNavigatorObserver()],
+        home: FutureBuilder<DI>(
+          future: di.init(),
+          builder: (_, snapshot) =>
+              snapshot.data == null ? const SplashScreen() : const HomeScreen(),
+        ),
       );
 }

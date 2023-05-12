@@ -11,7 +11,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../domain/entity/env.dart';
 
-class PlatformManager {
+class PlatformService {
   static final _connectivity = Connectivity();
   static final _localAuth = LocalAuthentication();
 
