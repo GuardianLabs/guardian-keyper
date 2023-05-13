@@ -22,6 +22,8 @@ class PreferencesService {
     ),
   );
 
+  const PreferencesService();
+
   Future<T?> get<T extends Object>(final Object key) async {
     final value = await _storage.read(key: key.toString());
     if (value == null) return null;

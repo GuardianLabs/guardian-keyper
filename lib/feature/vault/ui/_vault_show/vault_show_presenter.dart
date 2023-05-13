@@ -27,8 +27,8 @@ class VaultShowPresenter extends ChangeNotifier {
   final _vaultInteractor = GetIt.I<VaultInteractor>();
 
   late final _vaultChangesSubscription =
-      _vaultInteractor.watch(key: _vault.aKey).listen((final event) {
-    if (event.deleted) return;
+      _vaultInteractor.watch(_vault.aKey).listen((final event) {
+    if (event.isDeleted) return;
     _vault = event.value as VaultModel;
     notifyListeners();
   });

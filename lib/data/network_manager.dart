@@ -40,18 +40,18 @@ class NetworkManager {
       router.lastSeenStream.map((e) => (PeerId(token: e.key.value), e.value));
 
   final _env = GetIt.I<Env>();
-  final _platformManager = GetIt.I<PlatformService>();
-  final _preferencesManager = GetIt.I<PreferencesService>();
+  final _platformService = GetIt.I<PlatformService>();
+  final _preferencesService = GetIt.I<PreferencesService>();
   final _messagesController = StreamController<MessageModel>.broadcast();
 
   Future<NetworkManager> init() async {
     final seed =
-        await _preferencesManager.get<Uint8List>(keySeed) ?? Uint8List(0);
+        await _preferencesService.get<Uint8List>(keySeed) ?? Uint8List(0);
     final cryptoKeys = await router
         .init(p2p.CryptoKeys.empty()..seed = seed)
         .timeout(initTimeout);
     if (seed.isEmpty) {
-      await _preferencesManager.set<Uint8List>(keySeed, cryptoKeys.seed);
+      await _preferencesService.set<Uint8List>(keySeed, cryptoKeys.seed);
     }
     router.messageStream.listen((final p2p.Message p2pMessage) {
       final message = MessageModel.tryFromBytes(p2pMessage.payload);
@@ -63,14 +63,14 @@ class NetworkManager {
   }
 
   Future<void> start([void _]) async {
-    await _platformManager.checkConnectivity();
-    if (_platformManager.hasNoConnectivity) return;
-    for (final address in await _platformManager.getIPs()) {
+    await _platformService.checkConnectivity();
+    if (_platformService.hasNoConnectivity) return;
+    for (final address in await _platformService.getIPs()) {
       router.transports.add(p2p.TransportUdp(
         bindAddress: p2p.FullAddress(address: address, port: port),
       ));
     }
-    toggleBootstrap(await _preferencesManager.get<bool>(keyIsBootstrapEnabled));
+    toggleBootstrap(await _preferencesService.get<bool>(keyIsBootstrapEnabled));
     await router.start();
   }
 

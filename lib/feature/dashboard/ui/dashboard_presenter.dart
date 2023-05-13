@@ -21,11 +21,11 @@ class DashboardPresenter extends ChangeNotifier {
           : _shards.add(vault.id);
     }
     // init subscriptions
-    _settingsInteractor.settingsChanges.listen((final (String, Object) event) {
-      if (event.$1 == keyDeviceName) notifyListeners();
+    _settingsInteractor.settingsChanges.listen((final event) {
+      if (event.key == keyDeviceName) notifyListeners();
     });
     _vaultInteractor.watch().listen((final event) {
-      if (event.deleted) {
+      if (event.isDeleted) {
         _vaults.remove(event.key);
         _shards.remove(event.key);
       } else {

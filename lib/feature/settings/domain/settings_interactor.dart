@@ -13,20 +13,13 @@ class SettingsInteractor {
   late final setIsBiometricsEnabled = _settingsManager.setIsBiometricsEnabled;
 
   PeerId get selfId => _settingsManager.selfId;
-
   String get passCode => _settingsManager.passCode;
-
   String get deviceName => _settingsManager.deviceName;
-
-  bool get isBootstrapEnabled => _settingsManager.isBootstrapEnabled;
-
-  bool get isBiometricsEnabled => _settingsManager.isBiometricsEnabled;
-
-  bool get useBiometrics => hasBiometrics && isBiometricsEnabled;
-
   bool get hasBiometrics => _settingsManager.hasBiometrics;
-
-  Stream<(String, Object)> get settingsChanges => _settingsManager.changes;
+  bool get useBiometrics => hasBiometrics && isBiometricsEnabled;
+  bool get isBootstrapEnabled => _settingsManager.isBootstrapEnabled;
+  bool get isBiometricsEnabled => _settingsManager.isBiometricsEnabled;
+  Stream<SettingsEvent> get settingsChanges => _settingsManager.changes;
 
   Future<void> setIsBootstrapEnabled(final bool isEnabled) async {
     _networkManager.toggleBootstrap(isEnabled);

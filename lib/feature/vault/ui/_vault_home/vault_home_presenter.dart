@@ -31,7 +31,7 @@ class VaultHomePresenter extends ChangeNotifier {
 
   late final _vaultsUpdatesSubscription =
       _vaultInteractor.watch().listen((final event) {
-    if (event.deleted) {
+    if (event.isDeleted) {
       _myVaults.removeWhere((_, v) => v.aKey == event.key);
     } else {
       final vault = event.value as VaultModel;

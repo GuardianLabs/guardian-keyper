@@ -6,6 +6,8 @@ import 'package:guardian_keyper/data/network_manager.dart';
 import 'package:guardian_keyper/data/platform_service.dart';
 import 'package:guardian_keyper/data/preferences_service.dart';
 
+typedef SettingsEvent = ({String key, Object value});
+
 class SettingsManager {
   PeerId get selfId => _selfId;
   String get passCode => _passCode;
@@ -13,12 +15,11 @@ class SettingsManager {
   bool get hasBiometrics => _hasBiometrics;
   bool get isBootstrapEnabled => _isBootstrapEnabled;
   bool get isBiometricsEnabled => _isBiometricsEnabled;
-  Stream<(String, Object)> get changes => _updatesStreamController.stream;
+  Stream<SettingsEvent> get changes => _updatesStreamController.stream;
 
   final _platformManager = GetIt.I<PlatformService>();
   final _preferencesManager = GetIt.I<PreferencesService>();
-  final _updatesStreamController =
-      StreamController<(String, Object)>.broadcast();
+  final _updatesStreamController = StreamController<SettingsEvent>.broadcast();
 
   late PeerId _selfId;
   late String _passCode, _deviceName;
@@ -49,24 +50,24 @@ class SettingsManager {
     _deviceName = value;
     _selfId = _selfId.copyWith(name: value);
     await _preferencesManager.set<String>(keyDeviceName, value);
-    _updatesStreamController.add((keyDeviceName, value));
+    _updatesStreamController.add((key: keyDeviceName, value: value));
   }
 
   Future<void> setPassCode(final String value) async {
     _passCode = value;
     await _preferencesManager.set<String>(keyPassCode, value);
-    _updatesStreamController.add((keyPassCode, value));
+    _updatesStreamController.add((key: keyPassCode, value: value));
   }
 
   Future<void> setIsBootstrapEnabled(final bool value) async {
     _isBootstrapEnabled = value;
     await _preferencesManager.set<bool>(keyIsBootstrapEnabled, value);
-    _updatesStreamController.add((keyIsBootstrapEnabled, value));
+    _updatesStreamController.add((key: keyIsBootstrapEnabled, value: value));
   }
 
   Future<void> setIsBiometricsEnabled(final bool value) async {
     _isBiometricsEnabled = value;
     await _preferencesManager.set<bool>(keyIsBiometricsEnabled, value);
-    _updatesStreamController.add((keyIsBiometricsEnabled, value));
+    _updatesStreamController.add((key: keyIsBiometricsEnabled, value: value));
   }
 }

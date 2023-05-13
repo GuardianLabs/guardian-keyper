@@ -15,16 +15,14 @@ import 'package:guardian_keyper/feature/auth/auth.dart';
 import 'package:guardian_keyper/feature/dashboard/ui/dashboard_screen.dart';
 import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
 
+import 'package:guardian_keyper/feature/message/domain/message_interactor.dart';
 import 'package:guardian_keyper/feature/message/ui/message_home_screen.dart';
 import 'package:guardian_keyper/feature/message/ui/widgets/message_notify_icon.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
 
-import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
+import 'package:guardian_keyper/feature/vault/domain/vault_interactor.dart';
 import 'package:guardian_keyper/feature/vault/ui/_shard_home/shard_home_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_vault_home/vault_home_screen.dart';
-
-import 'package:guardian_keyper/feature/message/domain/message_interactor.dart';
-import 'package:guardian_keyper/feature/message/data/message_repository.dart';
 
 import '../routes.dart';
 
@@ -70,8 +68,8 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _messagesInteractor.watchMessages().listen((final event) {
-      if (event.deleted) return;
+    _messagesInteractor.watch().listen((final event) {
+      if (event.isDeleted) return;
       if (!_canShowMessage) return;
       final message = event.value as MessageModel;
       if (message.isNotReceived) return;
@@ -84,15 +82,18 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       }
     });
     Future.microtask(() async {
-      _settingsInteractor.passCode.isEmpty
-          ? await Navigator.of(context).pushNamed(routeIntro)
-          : await showDemandPassCode(
-              context: context,
-              onVibrate: _platformManager.vibrate,
-              currentPassCode: _settingsInteractor.passCode,
-              useBiometrics: _settingsInteractor.useBiometrics,
-              localAuthenticate: _platformManager.localAuthenticate,
-            );
+      if (_settingsInteractor.passCode.isEmpty) {
+        await Navigator.of(context).pushNamed(routeIntro);
+      } else {
+        _messagesInteractor.pruneMessages();
+        await showDemandPassCode(
+          context: context,
+          onVibrate: _platformManager.vibrate,
+          currentPassCode: _settingsInteractor.passCode,
+          useBiometrics: _settingsInteractor.useBiometrics,
+          localAuthenticate: _platformManager.localAuthenticate,
+        );
+      }
       await _networkManager.start();
     });
   }
@@ -107,8 +108,8 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.paused:
         _networkManager.pause();
-        await _vaultRepository.flush();
-        await _messageRepository.flush();
+        await _vaultInteractor.flush();
+        await _messagesInteractor.flush();
         await _mdnsManager.stopDiscovery();
         break;
       default:
@@ -157,8 +158,7 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   final _platformManager = GetIt.I<PlatformService>();
   final _mdnsManager = GetIt.I<MdnsManager>();
   final _networkManager = GetIt.I<NetworkManager>();
-  final _vaultRepository = GetIt.I<VaultRepository>();
-  final _messageRepository = GetIt.I<MessageRepository>();
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
   final _messagesInteractor = GetIt.I<MessageInteractor>();
   final _settingsInteractor = GetIt.I<SettingsInteractor>();
 

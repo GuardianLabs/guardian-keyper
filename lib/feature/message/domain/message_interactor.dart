@@ -12,6 +12,8 @@ import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 
 import '../data/message_repository.dart';
 
+typedef MessageEvent = ({String key, MessageModel? value, bool isDeleted});
+
 class MessageInteractor {
   MessageInteractor() {
     _networkManager.messageStream.listen(_onMessage);
@@ -19,14 +21,20 @@ class MessageInteractor {
 
   late final messageTTL = _networkManager.messageTTL;
 
+  late final flush = _messageRepository.flush;
   late final pingPeer = _networkManager.pingPeer;
   late final getPeerStatus = _networkManager.getPeerStatus;
-
-  late final watchMessages = _messageRepository.watch;
 
   PeerId get selfId => _settingsManager.selfId;
 
   Iterable<MessageModel> get messages => _messageRepository.values;
+
+  Stream<MessageEvent> watch() =>
+      _messageRepository.watch().map<MessageEvent>((e) => (
+            key: e.key as String,
+            value: e.value as MessageModel?,
+            isDeleted: e.deleted,
+          ));
 
   /// Create ticket to join vault
   Future<MessageModel> createJoinVaultCode() async {
@@ -72,6 +80,20 @@ class MessageInteractor {
       message.timestamp.millisecondsSinceEpoch.toString(),
       message,
     );
+  }
+
+  Future<void> pruneMessages() async {
+    if (_messageRepository.isEmpty) return;
+    final expired = _messageRepository.values
+        .where((e) =>
+            e.isRequested &&
+            (e.code == MessageCode.createGroup ||
+                e.code == MessageCode.takeGroup) &&
+            e.timestamp
+                .isBefore(DateTime.now().subtract(const Duration(days: 1))))
+        .toList(growable: false);
+    await _messageRepository.deleteAll(expired.map((e) => e.aKey));
+    await _messageRepository.compact();
   }
 
   // Private

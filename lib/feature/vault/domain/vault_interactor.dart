@@ -6,15 +6,16 @@ import 'package:guardian_keyper/data/analytics_service.dart';
 import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
 import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
 import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
-import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 import 'package:guardian_keyper/domain/entity/vault_model.dart';
+import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 
 import '../data/vault_repository.dart';
 
-class VaultInteractor {
-  late final watch = _vaultRepository.watch;
+typedef VaultEvent = ({String key, VaultModel? value, bool isDeleted});
 
+class VaultInteractor {
+  late final flush = _vaultRepository.flush;
   late final pingPeer = _networkManager.pingPeer;
   late final getPeerStatus = _networkManager.getPeerStatus;
   late final requestRetryPeriod = _networkManager.messageTTL;
@@ -49,6 +50,13 @@ class VaultInteractor {
 
   bool get useBiometrics =>
       _settingsManager.hasBiometrics && _settingsManager.isBiometricsEnabled;
+
+  Stream<VaultEvent> watch([final String? key]) =>
+      _vaultRepository.watch(key: key).map<VaultEvent>((e) => (
+            key: e.key as String,
+            value: e.value as VaultModel?,
+            isDeleted: e.deleted,
+          ));
 
   VaultModel? getVaultById(final VaultId vaultId) =>
       _vaultRepository.get(vaultId.asKey);

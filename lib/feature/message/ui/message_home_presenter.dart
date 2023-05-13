@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 
@@ -10,11 +8,6 @@ import '../domain/message_interactor.dart';
 export 'package:provider/provider.dart';
 
 class MessageHomePresenter extends ChangeNotifier {
-  late final archivateMessage = _messagesInteractor.archivateMessage;
-
-  List<MessageModel> get activeMessages => _activeMessages;
-  List<MessageModel> get resolvedMessages => _resolvedMessages;
-
   MessageHomePresenter() {
     // cache and sort messages
     for (final message in _messagesInteractor.messages) {
@@ -24,29 +17,31 @@ class MessageHomePresenter extends ChangeNotifier {
             : _resolvedMessages.add(message);
       }
     }
-    _activeMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    _resolvedMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    _messagesUpdatesSubscription =
-        _messagesInteractor.watchMessages().listen(_onMessagesUpdates);
+    _sortActiveMessages();
+    _sertResolvedMessages();
+    _messagesInteractor.watch().listen(_onMessagesUpdates);
   }
 
+  late final archivateMessage = _messagesInteractor.archivateMessage;
+
+  List<MessageModel> get activeMessages => _activeMessages;
+  List<MessageModel> get resolvedMessages => _resolvedMessages;
+
+  // Private
   final _activeMessages = <MessageModel>[];
   final _resolvedMessages = <MessageModel>[];
   final _messagesInteractor = GetIt.I<MessageInteractor>();
 
-  late final StreamSubscription<BoxEvent> _messagesUpdatesSubscription;
+  void _sortActiveMessages() =>
+      _activeMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
-  @override
-  void dispose() {
-    _messagesUpdatesSubscription.cancel();
-    super.dispose();
-  }
+  void _sertResolvedMessages() =>
+      _resolvedMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
-  void _onMessagesUpdates(final BoxEvent event) {
-    if (event.deleted) {
-      final key = event.key as String;
-      _activeMessages.removeWhere((e) => e.aKey == key);
-      _resolvedMessages.removeWhere((e) => e.aKey == key);
+  void _onMessagesUpdates(final MessageEvent event) {
+    if (event.isDeleted) {
+      _activeMessages.removeWhere((e) => e.aKey == event.key);
+      _resolvedMessages.removeWhere((e) => e.aKey == event.key);
     } else {
       final message = event.value as MessageModel;
       if (message.peerId == _messagesInteractor.selfId) return;
@@ -55,11 +50,13 @@ class MessageHomePresenter extends ChangeNotifier {
         index < 0
             ? _activeMessages.add(message)
             : _activeMessages[index] = message;
+        _sortActiveMessages();
       } else {
         final index = _resolvedMessages.indexOf(message);
         index < 0
             ? _resolvedMessages.add(message)
             : _resolvedMessages[index] = message;
+        _sertResolvedMessages();
       }
     }
     notifyListeners();

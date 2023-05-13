@@ -1,4 +1,6 @@
+import 'dart:typed_data';
 import 'package:get_it/get_it.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/vault/domain/vault_interactor.dart';
@@ -28,7 +30,8 @@ class DI {
 
     // Services
     GetIt.I.registerSingleton<PlatformService>(PlatformService());
-    GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
+    const preferencesService = PreferencesService();
+    GetIt.I.registerSingleton<PreferencesService>(preferencesService);
     GetIt.I.registerSingleton<AnalyticsService>(await AnalyticsService.init());
 
     // Managers
@@ -44,8 +47,14 @@ class DI {
 
     // Repositories
     await Hive.initFlutter('data_v1');
-    GetIt.I.registerSingleton<MessageRepository>(await getMessageRepository());
-    GetIt.I.registerSingleton<VaultRepository>(await getVaultRepository());
+    final seed = await preferencesService.get<Uint8List>(keySeed);
+    final cipher = HiveAesCipher(seed!);
+    GetIt.I.registerSingleton<MessageRepository>(
+      await getMessageRepository(cipher),
+    );
+    GetIt.I.registerSingleton<VaultRepository>(
+      await getVaultRepository(cipher),
+    );
 
     // Interactors
     GetIt.I.registerSingleton<SettingsInteractor>(SettingsInteractor());

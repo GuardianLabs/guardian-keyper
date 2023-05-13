@@ -31,7 +31,7 @@ class ShardHomePresenter extends ChangeNotifier {
 
   late final _vaultsUpdatesSubscription =
       _vaultInteractor.watch().listen((final event) {
-    if (event.deleted) {
+    if (event.isDeleted) {
       _shards.removeWhere((_, v) => v.aKey == event.key);
     } else {
       final vault = event.value as VaultModel;
