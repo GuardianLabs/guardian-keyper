@@ -12,3 +12,11 @@ const keepalivePeriod = Duration(seconds: 10);
 const snackBarDuration = Duration(seconds: 2);
 const initTimeout = Duration(seconds: 5);
 const qrCodeExpires = Duration(days: 1);
+
+const amplitudeKey = String.fromEnvironment('AMPLITUDE_KEY');
+const urlPlayMarket = String.fromEnvironment('PLAY_MARKET');
+const urlAppStore = String.fromEnvironment('APP_STORE');
+const bsAddressV4 = String.fromEnvironment('BS_V4');
+const bsAddressV6 = String.fromEnvironment('BS_V6');
+const bsPeerId = String.fromEnvironment('BS_ID');
+const bsPort = int.fromEnvironment('BS_PORT', defaultValue: defaultPort);

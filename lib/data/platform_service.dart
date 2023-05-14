@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:get_it/get_it.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:vibration/vibration.dart';
 import 'package:local_auth/local_auth.dart';
@@ -9,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import '../domain/entity/env.dart';
+import '../app/consts.dart';
 
 class PlatformService {
   static final _connectivity = Connectivity();
@@ -67,9 +66,6 @@ class PlatformService {
     }
   }
 
-  Future<bool> openMarket() => launchUrl(
-        Uri.parse(Platform.isAndroid ? _env.urlPlayMarket : _env.urlAppStore),
-      );
-
-  final _env = GetIt.I<Env>();
+  Future<bool> openMarket() =>
+      launchUrl(Uri.parse(Platform.isAndroid ? urlPlayMarket : urlAppStore));
 }

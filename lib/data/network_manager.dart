@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
 
 import 'package:guardian_keyper/app/consts.dart';
-import 'package:guardian_keyper/domain/entity/env.dart';
 import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 
@@ -39,7 +38,6 @@ class NetworkManager {
   Stream<(PeerId, bool)> get peerStatusChangeStream =>
       router.lastSeenStream.map((e) => (PeerId(token: e.key.value), e.value));
 
-  final _env = GetIt.I<Env>();
   final _platformService = GetIt.I<PlatformService>();
   final _preferencesService = GetIt.I<PreferencesService>();
   final _messagesController = StreamController<MessageModel>.broadcast();
@@ -102,35 +100,35 @@ class NetworkManager {
       router.pingPeer(p2p.PeerId(value: peerId.token));
 
   void toggleBootstrap([bool? isActive]) {
-    if (_env.bsPeerId.isEmpty) return;
-    final bsPeerId = p2p.PeerId(value: base64Decode(_env.bsPeerId));
+    if (bsPeerId.isEmpty) return;
+    final peerId = p2p.PeerId(value: base64Decode(bsPeerId));
     if (isActive == true) {
       final addressProperties = p2p.AddressProperties(isStatic: true);
-      if (_env.bsAddressV4.isNotEmpty) {
+      if (bsAddressV4.isNotEmpty) {
         router.addPeerAddress(
           canForward: true,
-          peerId: bsPeerId,
+          peerId: peerId,
           address: p2p.FullAddress(
-            address: InternetAddress(_env.bsAddressV4),
-            port: _env.bsPort,
+            address: InternetAddress(bsAddressV4),
+            port: port,
           ),
           properties: addressProperties,
         );
       }
-      if (_env.bsAddressV6.isNotEmpty) {
+      if (bsAddressV6.isNotEmpty) {
         router.addPeerAddress(
           canForward: true,
-          peerId: bsPeerId,
+          peerId: peerId,
           address: p2p.FullAddress(
-            address: InternetAddress(_env.bsAddressV6),
-            port: _env.bsPort,
+            address: InternetAddress(bsAddressV6),
+            port: port,
           ),
           properties: addressProperties,
         );
       }
-      if (router.isRun) router.sendMessage(dstPeerId: bsPeerId);
+      if (router.isRun) router.sendMessage(dstPeerId: peerId);
     } else {
-      router.removePeerAddress(bsPeerId);
+      router.removePeerAddress(peerId);
     }
   }
 }

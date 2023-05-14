@@ -11,7 +11,6 @@ import 'package:guardian_keyper/feature/message/domain/message_interactor.dart';
 import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
 
-import '../domain/entity/env.dart';
 import '../data/mdns_manager.dart';
 import '../data/network_manager.dart';
 import '../data/platform_service.dart';
@@ -25,8 +24,6 @@ class DI {
 
   Future<DI> init() async {
     if (_isInited) return this;
-
-    GetIt.I.registerSingleton<Env>(const Env());
 
     // Services
     GetIt.I.registerSingleton<PlatformService>(PlatformService());

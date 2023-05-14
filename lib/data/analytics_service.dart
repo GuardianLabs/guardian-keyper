@@ -1,7 +1,6 @@
-import 'package:get_it/get_it.dart';
 import 'package:amplitude_flutter/amplitude.dart';
 
-import '../domain/entity/env.dart';
+import '../app/consts.dart';
 
 typedef EventLogger = Future<void> Function(
   String eventType, {
@@ -12,9 +11,8 @@ typedef EventLogger = Future<void> Function(
 class AnalyticsService {
   static Future<AnalyticsService> init() async {
     final amplitude = Amplitude.getInstance();
-    final apiKey = GetIt.I<Env>().amplitudeKey;
-    if (apiKey.isEmpty) return const AnalyticsService();
-    await amplitude.init(apiKey);
+    if (amplitudeKey.isEmpty) return const AnalyticsService();
+    await amplitude.init(amplitudeKey);
     await amplitude.trackingSessionEvents(true);
     // Enable COPPA privacy guard.
     // This is useful when you choose not to report sensitive user information.
