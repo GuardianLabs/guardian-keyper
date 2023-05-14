@@ -30,7 +30,7 @@ class DI {
 
     // Services
     GetIt.I.registerSingleton<PlatformService>(PlatformService());
-    const preferencesService = PreferencesService();
+    final preferencesService = PreferencesService();
     GetIt.I.registerSingleton<PreferencesService>(preferencesService);
     GetIt.I.registerSingleton<AnalyticsService>(await AnalyticsService.init());
 

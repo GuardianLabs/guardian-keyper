@@ -22,52 +22,25 @@ class PreferencesService {
     ),
   );
 
-  const PreferencesService();
+  Future<T?> get<T extends Object>(final String key) =>
+      _storage.read(key: key).then((final String? value) => value == null
+          ? null
+          : switch (T) {
+              String => value as T,
+              bool => bool.tryParse(value) as T,
+              Uint8List => base64Decode(value) as T,
+              _ => throw const ValueFormatException(),
+            });
 
-  Future<T?> get<T extends Object>(final Object key) async {
-    final value = await _storage.read(key: key.toString());
-    if (value == null) return null;
-    switch (T) {
-      case bool:
-        return (value == 'true') as T;
-      case String:
-        return value as T;
-      case int:
-        return int.parse(value) as T;
-      case Uint8List:
-        return base64Decode(value) as T;
-      default:
-        throw const ValueFormatException();
-    }
-  }
-
-  Future<T> set<T extends Object>(final Object key, final T value) async {
-    switch (T) {
-      case bool:
-        await _storage.write(key: key.toString(), value: value.toString());
-        break;
-      case String:
-        await _storage.write(key: key.toString(), value: value as String);
-        break;
-      case int:
-        await _storage.write(key: key.toString(), value: value.toString());
-        break;
-      case Uint8List:
-        await _storage.write(
-          key: key.toString(),
-          value: base64UrlEncode(value as Uint8List),
-        );
-        break;
-      default:
-        throw const ValueFormatException();
-    }
-    return value;
-  }
-
-  Future<Object> delete(final Object key) async {
-    await _storage.delete(key: key.toString());
-    return key;
-  }
+  Future<void> set<T extends Object>(final String key, final T value) =>
+      switch (T) {
+        bool || String => _storage.write(key: key, value: value.toString()),
+        Uint8List => _storage.write(
+            key: key,
+            value: base64UrlEncode(value as Uint8List),
+          ),
+        _ => throw const ValueFormatException(),
+      };
 }
 
 class ValueFormatException extends FormatException {

@@ -3,10 +3,10 @@ import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 
 import '../../domain/message_interactor.dart';
+import '../widgets/request_panel.dart';
 import 'message_titles_mixin.dart';
 
 class OnMessageActiveDialog extends StatefulWidget with MessageTitlesMixin {
@@ -18,8 +18,7 @@ class OnMessageActiveDialog extends StatefulWidget with MessageTitlesMixin {
         context: context,
         useSafeArea: true,
         isScrollControlled: true,
-        builder: (final BuildContext context) =>
-            OnMessageActiveDialog(message: message),
+        builder: (_) => OnMessageActiveDialog(message: message),
       );
 
   final MessageModel message;
@@ -108,58 +107,9 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
                       ),
                     ],
                   )
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const IconOf.shield(color: clWhite),
-                          Padding(
-                            padding: paddingTop12,
-                            child: _isPeerOnline
-                                ? Text(
-                                    'Online',
-                                    style: textStyleSourceSansPro612.copyWith(
-                                      color: clGreen,
-                                    ),
-                                  )
-                                : Text(
-                                    'Offline',
-                                    style: textStyleSourceSansPro612.copyWith(
-                                      color: clRed,
-                                    ),
-                                  ),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: RichText(
-                            softWrap: true,
-                            text: TextSpan(
-                              style: textStyleSourceSansPro416Purple,
-                              children: [
-                                const TextSpan(
-                                  text: 'To approve or reject the request,'
-                                      ' both users must run the app ',
-                                ),
-                                TextSpan(
-                                  text: 'at the same time',
-                                  style: textStyleSourceSansPro616,
-                                ),
-                                ...buildTextWithId(
-                                  leadingText: '. Ask ',
-                                  id: widget.message.peerId,
-                                  trailingText: ' to log in.',
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                : RequestPanel(
+                    peerId: widget.message.peerId,
+                    isPeerOnline: _isPeerOnline,
                   ),
           ),
         ),
@@ -189,7 +139,7 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
     setState(() => _isRequestActive = true);
     try {
       // TBD: move to presenter
-      await GetIt.I<MessageInteractor>().sendRespone(response);
+      await _messagesInteractor.sendRespone(response);
       if (mounted) Navigator.of(context).pop(true);
     } catch (_) {
       _animationController

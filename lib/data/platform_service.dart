@@ -46,7 +46,8 @@ class PlatformService {
   Future<String> getDeviceName([final undefinedName = 'Undefined']) async {
     if (Platform.isAndroid) {
       return (await DeviceInfoPlugin().androidInfo).model;
-    } else if (Platform.isIOS) {
+    }
+    if (Platform.isIOS) {
       return (await DeviceInfoPlugin().iosInfo).model ?? undefinedName;
     }
     return undefinedName;

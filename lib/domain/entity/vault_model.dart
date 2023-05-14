@@ -79,7 +79,7 @@ class VaultModel extends Serializable {
 
       default:
         throw const FormatException(
-          'Unsupported version of RecoveryGroupModel!',
+          'Unsupported version of VaultModel!',
         );
     }
   }
