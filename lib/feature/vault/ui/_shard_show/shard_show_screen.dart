@@ -1,6 +1,6 @@
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
 import 'dialogs/on_change_owner_dialog.dart';
 
@@ -9,7 +9,7 @@ class ShardShowScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vault = ModalRoute.of(context)!.settings.arguments as VaultModel;
+    final vault = ModalRoute.of(context)!.settings.arguments as Vault;
     return ScaffoldSafe(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

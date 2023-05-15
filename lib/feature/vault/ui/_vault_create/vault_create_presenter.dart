@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/ui/page_presenter_base.dart';
 
 import '../../domain/vault_interactor.dart';
@@ -44,8 +44,8 @@ class VaultCreatePresenter extends PagePresenterBase {
     notifyListeners();
   }
 
-  Future<VaultModel> createVault() async {
-    final vault = await _vaultInteractor.createVault(VaultModel(
+  Future<Vault> createVault() async {
+    final vault = await _vaultInteractor.createVault(Vault(
       id: VaultId(name: _vaultName),
       maxSize: _vaultSize,
       threshold: _vaultThreshold,

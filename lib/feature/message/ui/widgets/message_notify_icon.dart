@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
-import '../../domain/message_interactor.dart';
+import '../../domain/use_case/message_interactor.dart';
 
 class MessageNotifyIcon extends StatelessWidget {
   const MessageNotifyIcon({super.key, required this.isSelected});

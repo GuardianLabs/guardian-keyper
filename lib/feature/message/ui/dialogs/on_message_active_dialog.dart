@@ -3,9 +3,9 @@ import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
-import '../../domain/message_interactor.dart';
+import '../../domain/use_case/message_interactor.dart';
 import '../widgets/request_panel.dart';
 import 'message_titles_mixin.dart';
 

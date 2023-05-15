@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
 import '../../domain/vault_interactor.dart';
 
@@ -16,7 +16,7 @@ class VaultShowPresenter extends ChangeNotifier {
 
   late final pingPeer = _vaultInteractor.pingPeer;
 
-  VaultModel get vault => _vault;
+  Vault get vault => _vault;
 
   @override
   void dispose() {
@@ -33,5 +33,5 @@ class VaultShowPresenter extends ChangeNotifier {
     notifyListeners();
   });
 
-  late VaultModel _vault;
+  late Vault _vault;
 }

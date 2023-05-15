@@ -2,8 +2,8 @@ import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
-import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
 
 import '../../../domain/vault_interactor.dart';
 
@@ -11,7 +11,7 @@ class OnRemoveSecretDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
     required SecretId secretId,
-    required VaultModel vault,
+    required Vault vault,
   }) =>
       showModalBottomSheet(
         context: context,
@@ -26,7 +26,7 @@ class OnRemoveSecretDialog extends StatelessWidget {
     required this.secretId,
   });
 
-  final VaultModel vault;
+  final Vault vault;
   final SecretId secretId;
 
   @override

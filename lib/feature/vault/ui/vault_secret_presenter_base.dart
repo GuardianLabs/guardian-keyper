@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
-import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
-import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
-import 'package:guardian_keyper/domain/entity/message_model.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 import '../domain/vault_interactor.dart';
 import 'vault_presenter_base.dart';

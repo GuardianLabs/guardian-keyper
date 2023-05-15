@@ -1,13 +1,13 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/data/network_manager.dart';
-import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
-import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
-import 'package:guardian_keyper/domain/entity/message_model.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 
-import '../data/message_repository.dart';
+import '../../data/message_repository.dart';
+import '../entity/message_model.dart';
 import 'message_ingress_mixin.dart';
 import 'message_egress_mixin.dart';
 
@@ -63,7 +63,7 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
     await _messageRepository.put(
       message.aKey,
       message.copyWith(
-        payload: VaultModel(id: groupId, ownerId: PeerId.empty),
+        payload: Vault(id: groupId, ownerId: PeerId.empty),
       ),
     );
     return message;

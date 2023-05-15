@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
 import '../../domain/vault_interactor.dart';
 
@@ -18,7 +18,7 @@ class VaultHomePresenter extends ChangeNotifier {
     _vaultChanges.resume();
   }
 
-  Map<VaultId, VaultModel> get myVaults => _myVaults;
+  Map<VaultId, Vault> get myVaults => _myVaults;
 
   @override
   void dispose() {
@@ -26,7 +26,7 @@ class VaultHomePresenter extends ChangeNotifier {
     super.dispose();
   }
 
-  final _myVaults = <VaultId, VaultModel>{};
+  final _myVaults = <VaultId, Vault>{};
   final _vaultInteractor = GetIt.I<VaultInteractor>();
 
   late final _vaultChanges = _vaultInteractor.watch().listen((event) {

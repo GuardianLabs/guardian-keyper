@@ -2,10 +2,10 @@ import 'package:get_it/get_it.dart';
 import 'package:sss256/sss256.dart';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
-import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
-import 'package:guardian_keyper/domain/entity/message_model.dart';
-import 'package:guardian_keyper/domain/entity/secret_shard_model.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 
 import '../../domain/vault_interactor.dart';
 import '../vault_secret_presenter_base.dart';
@@ -103,7 +103,7 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
           status: guardian == _vaultInteractor.selfId
               ? MessageStatus.accepted
               : MessageStatus.created,
-          payload: SecretShardModel(
+          payload: SecretShard(
             id: secretId,
             ownerId: _vaultInteractor.selfId,
             vaultId: vault.id,

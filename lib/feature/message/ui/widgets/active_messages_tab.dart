@@ -1,5 +1,5 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 import '../message_home_presenter.dart';
 import '../dialogs/on_message_archivate_dialog.dart';

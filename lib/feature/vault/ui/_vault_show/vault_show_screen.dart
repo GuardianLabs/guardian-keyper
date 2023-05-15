@@ -1,6 +1,6 @@
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 
 import 'vault_show_presenter.dart';
 import 'dialogs/on_vault_more_dialog.dart';

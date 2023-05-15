@@ -1,6 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:guardian_keyper/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 typedef MessageRepository = Box<MessageModel>;
 

@@ -3,16 +3,16 @@ import 'package:get_it/get_it.dart';
 import 'package:guardian_keyper/data/network_manager.dart';
 import 'package:guardian_keyper/data/platform_service.dart';
 import 'package:guardian_keyper/data/analytics_service.dart';
-import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
-import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
-import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
-import 'package:guardian_keyper/domain/entity/message_model.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 import '../data/vault_repository.dart';
+import 'entity/secret_id.dart';
+import 'entity/vault_id.dart';
+import 'entity/vault.dart';
 
-typedef VaultEvent = ({String key, VaultModel? vault, bool isDeleted});
+typedef VaultEvent = ({String key, Vault? vault, bool isDeleted});
 
 class VaultInteractor {
   late final flush = _vaultRepository.flush;
@@ -41,7 +41,7 @@ class VaultInteractor {
 
   String get passCode => _settingsManager.passCode;
 
-  Iterable<VaultModel> get vaults => _vaultRepository.values;
+  Iterable<Vault> get vaults => _vaultRepository.values;
 
   Stream<MessageModel> get messageStream => _networkManager.messageStream;
 
@@ -54,14 +54,13 @@ class VaultInteractor {
   Stream<VaultEvent> watch([String? key]) =>
       _vaultRepository.watch(key: key).map<VaultEvent>((e) => (
             key: e.key as String,
-            vault: e.value as VaultModel?,
+            vault: e.value as Vault?,
             isDeleted: e.deleted,
           ));
 
-  VaultModel? getVaultById(VaultId vaultId) =>
-      _vaultRepository.get(vaultId.asKey);
+  Vault? getVaultById(VaultId vaultId) => _vaultRepository.get(vaultId.asKey);
 
-  Future<VaultModel> createVault(VaultModel vault) async {
+  Future<Vault> createVault(Vault vault) async {
     await _vaultRepository.put(vault.aKey, vault);
     return vault;
   }
@@ -71,7 +70,7 @@ class VaultInteractor {
     return vaultId;
   }
 
-  Future<VaultModel> addGuardian({
+  Future<Vault> addGuardian({
     required VaultId vaultId,
     required PeerId guardian,
   }) async {
@@ -84,7 +83,7 @@ class VaultInteractor {
   }
 
   Future<void> addSecret({
-    required VaultModel vault,
+    required Vault vault,
     required SecretId secretId,
     required String secretValue,
   }) =>
@@ -94,7 +93,7 @@ class VaultInteractor {
       );
 
   Future<void> removeSecret({
-    required VaultModel vault,
+    required Vault vault,
     required SecretId secretId,
   }) async {
     vault.secrets.remove(secretId);

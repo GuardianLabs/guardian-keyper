@@ -1,6 +1,6 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 mixin MessageTitlesMixin {
   static const _icons = {

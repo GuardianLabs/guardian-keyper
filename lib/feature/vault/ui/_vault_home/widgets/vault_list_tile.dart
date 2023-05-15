@@ -1,11 +1,11 @@
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 class VaultListTile extends StatelessWidget {
-  final VaultModel vault;
+  final Vault vault;
 
   const VaultListTile({super.key, required this.vault});
 
@@ -27,7 +27,7 @@ class VaultListTile extends StatelessWidget {
         ),
       );
 
-  Text _buildSubtitle(final VaultModel vault) {
+  Text _buildSubtitle(final Vault vault) {
     final styleRed = textStyleSourceSansPro414.copyWith(color: clRed);
     if (vault.isRestricted) {
       return vault.isRestricted

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:collection/collection.dart';
 
-import '../serializable.dart';
+import 'serializable.dart';
 
 abstract class IdBase extends Serializable {
   static const _listEq = ListEquality<int>();

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/ui/page_presenter_base.dart';
-import 'package:guardian_keyper/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 import '../domain/vault_interactor.dart';
 

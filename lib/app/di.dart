@@ -6,7 +6,7 @@ import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/vault/domain/vault_interactor.dart';
 
 import 'package:guardian_keyper/feature/message/data/message_repository.dart';
-import 'package:guardian_keyper/feature/message/domain/message_interactor.dart';
+import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
 import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';

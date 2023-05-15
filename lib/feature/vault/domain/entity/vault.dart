@@ -1,16 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:messagepack/messagepack.dart';
 
-import '_id/peer_id.dart';
-import '_id/secret_id.dart';
-import '_id/vault_id.dart';
-import 'serializable.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/serializable.dart';
 
-class VaultModel extends Serializable {
+import 'secret_id.dart';
+import 'vault_id.dart';
+
+class Vault extends Serializable {
   static const currentVersion = 1;
   static const typeId = 12;
 
-  VaultModel({
+  Vault({
     this.version = currentVersion,
     VaultId? id,
     required this.ownerId,
@@ -30,7 +31,7 @@ class VaultModel extends Serializable {
 
   @override
   bool operator ==(Object other) =>
-      other is VaultModel &&
+      other is Vault &&
       runtimeType == other.runtimeType &&
       id.hashCode == other.id.hashCode;
 
@@ -51,11 +52,11 @@ class VaultModel extends Serializable {
   bool get isRestricted => isNotFull && secrets.isNotEmpty;
   bool get isNotRestricted => !isRestricted;
 
-  factory VaultModel.fromBytes(List<int> value) {
+  factory Vault.fromBytes(List<int> value) {
     final u = Unpacker(value is Uint8List ? value : Uint8List.fromList(value));
     final version = u.unpackInt()!;
     return switch (version) {
-      currentVersion => VaultModel(
+      currentVersion => Vault(
           version: version,
           id: VaultId.fromBytes(u.unpackBinary()),
           maxSize: u.unpackInt()!,
@@ -91,12 +92,12 @@ class VaultModel extends Serializable {
     return p.takeBytes();
   }
 
-  VaultModel copyWith({
+  Vault copyWith({
     PeerId? ownerId,
     Map<PeerId, String>? guardians,
     Map<SecretId, String>? secrets,
   }) =>
-      VaultModel(
+      Vault(
         version: version,
         id: id,
         ownerId: ownerId ?? this.ownerId,

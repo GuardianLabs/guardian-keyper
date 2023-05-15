@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/data/network_manager.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
-import 'package:guardian_keyper/domain/entity/message_model.dart';
-import 'package:guardian_keyper/domain/entity/secret_shard_model.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 
@@ -26,7 +26,7 @@ abstract mixin class MessageEgressMixin {
   Future<void> _sendCreateGroupResponse(MessageModel message) async {
     await _sendResponse(message);
     if (message.isAccepted) {
-      final vault = VaultModel(
+      final vault = Vault(
         id: message.vault.id,
         ownerId: message.peerId,
         maxSize: message.vault.maxSize,
@@ -76,7 +76,7 @@ abstract mixin class MessageEgressMixin {
       final vault = _vaultRepository.get(message.vaultId.asKey)!;
       await _sendResponse(
         message.copyWith(
-            payload: SecretShardModel(
+            payload: SecretShard(
           id: message.secretShard.id,
           ownerId: vault.ownerId,
           vaultId: vault.id,

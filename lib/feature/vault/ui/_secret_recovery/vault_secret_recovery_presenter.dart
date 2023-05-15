@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/feature/auth/auth.dart';
-import 'package:guardian_keyper/domain/entity/message_model.dart';
-import 'package:guardian_keyper/domain/entity/secret_shard_model.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 
 import '../../domain/vault_interactor.dart';
 import '../vault_secret_presenter_base.dart';
@@ -27,7 +27,7 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
         status: guardian == vault.ownerId
             ? MessageStatus.accepted
             : MessageStatus.created,
-        payload: SecretShardModel(
+        payload: SecretShard(
           id: secretId,
           ownerId: _vaultInteractor.selfId,
           vaultId: vaultId,

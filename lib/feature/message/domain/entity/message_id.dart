@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:messagepack/messagepack.dart';
 
-import 'id_base.dart';
+import 'package:guardian_keyper/domain/entity/id_base.dart';
 
 class MessageId extends IdBase {
   static const currentVersion = 1;

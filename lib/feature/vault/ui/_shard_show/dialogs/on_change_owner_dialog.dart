@@ -4,13 +4,13 @@ import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
-import 'package:guardian_keyper/feature/message/domain/message_interactor.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
 class OnChangeOwnerDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
-    required VaultModel vault,
+    required Vault vault,
   }) =>
       showModalBottomSheet(
         context: context,
@@ -24,7 +24,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
     required this.vault,
   });
 
-  final VaultModel vault;
+  final Vault vault;
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(

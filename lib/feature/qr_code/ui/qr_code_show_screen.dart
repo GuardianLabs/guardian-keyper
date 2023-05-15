@@ -6,7 +6,7 @@ import 'package:vector_graphics/vector_graphics.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/data/platform_service.dart';
-import 'package:guardian_keyper/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 class QRCodeShowScreen extends StatefulWidget {
   static const _caption = {

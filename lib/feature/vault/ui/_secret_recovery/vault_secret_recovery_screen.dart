@@ -1,7 +1,7 @@
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
-import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
 
 import 'vault_secret_recovery_presenter.dart';
 import 'pages/discovering_peers_page.dart';

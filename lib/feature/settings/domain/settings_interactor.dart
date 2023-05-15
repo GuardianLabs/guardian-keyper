@@ -2,7 +2,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/data/network_manager.dart';
 import 'package:guardian_keyper/data/platform_service.dart';
-import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 
 import '../data/settings_manager.dart';
 

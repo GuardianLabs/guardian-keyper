@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 import 'package:guardian_keyper/ui/theme/theme.dart';
-import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 
 import '../../domain/vault_interactor.dart';
 

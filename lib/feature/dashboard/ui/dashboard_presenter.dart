@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/data/platform_service.dart';
 import 'package:guardian_keyper/data/preferences_service.dart';
-import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
-import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/vault_interactor.dart';
-import 'package:guardian_keyper/feature/message/domain/message_interactor.dart';
+import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
 
 export 'package:provider/provider.dart';

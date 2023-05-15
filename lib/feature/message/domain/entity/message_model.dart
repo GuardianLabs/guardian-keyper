@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:messagepack/messagepack.dart';
 
-import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/domain/entity/serializable.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
-import 'package:guardian_keyper/domain/entity/secret_shard_model.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 
-import '_id/message_id.dart';
-import '_id/vault_id.dart';
+import 'message_id.dart';
 
 enum MessageStatus {
   created,
@@ -66,8 +66,8 @@ class MessageModel extends Serializable {
   late final int? payloadTypeId = payload == null
       ? null
       : switch (payload.runtimeType) {
-          VaultModel => VaultModel.typeId,
-          SecretShardModel => SecretShardModel.typeId,
+          Vault => Vault.typeId,
+          SecretShard => SecretShard.typeId,
           _ => throw const FormatException('Unsupported payload type!'),
         };
 
@@ -80,21 +80,21 @@ class MessageModel extends Serializable {
   @override
   int get hashCode => Object.hash(runtimeType, id.hashCode);
 
-  bool get containsVault => payload is VaultModel;
-  VaultModel get vault => payload as VaultModel;
+  bool get containsVault => payload is Vault;
+  Vault get vault => payload as Vault;
 
-  bool get containsSecretShard => payload is SecretShardModel;
-  SecretShardModel get secretShard => payload as SecretShardModel;
+  bool get containsSecretShard => payload is SecretShard;
+  SecretShard get secretShard => payload as SecretShard;
 
   PeerId get ownerId => switch (payload) {
-        VaultModel vault => vault.ownerId,
-        SecretShardModel shard => shard.ownerId,
+        Vault vault => vault.ownerId,
+        SecretShard shard => shard.ownerId,
         _ => throw const FormatException('Payload have no ownerId!'),
       };
 
   VaultId get vaultId => switch (payload) {
-        VaultModel vault => vault.id,
-        SecretShardModel shard => shard.vaultId,
+        Vault vault => vault.id,
+        SecretShard shard => shard.vaultId,
         _ => throw const FormatException('Payload have no groupId!'),
       };
 
@@ -137,9 +137,8 @@ class MessageModel extends Serializable {
           status: MessageStatus.values[u.unpackInt()!],
           payload: switch (u.unpackInt()) {
             null => null,
-            VaultModel.typeId => VaultModel.fromBytes(u.unpackBinary()),
-            SecretShardModel.typeId =>
-              SecretShardModel.fromBytes(u.unpackBinary()),
+            Vault.typeId => Vault.fromBytes(u.unpackBinary()),
+            SecretShard.typeId => SecretShard.fromBytes(u.unpackBinary()),
             _ => throw const FormatException('Unsupported payload type!'),
           },
         ),

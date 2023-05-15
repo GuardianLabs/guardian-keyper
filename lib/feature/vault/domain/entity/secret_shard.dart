@@ -1,16 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:messagepack/messagepack.dart';
 
-import '_id/peer_id.dart';
-import '_id/secret_id.dart';
-import '_id/vault_id.dart';
-import 'serializable.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/serializable.dart';
 
-class SecretShardModel extends Serializable {
+import 'secret_id.dart';
+import 'vault_id.dart';
+
+class SecretShard extends Serializable {
   static const currentVersion = 1;
   static const typeId = 11;
 
-  SecretShardModel({
+  SecretShard({
     this.version = currentVersion,
     required this.id,
     required this.ownerId,
@@ -30,18 +31,18 @@ class SecretShardModel extends Serializable {
 
   @override
   bool operator ==(Object other) =>
-      other is SecretShardModel &&
+      other is SecretShard &&
       runtimeType == other.runtimeType &&
       id.hashCode == other.id.hashCode;
 
   @override
   int get hashCode => Object.hash(runtimeType, id.hashCode);
 
-  factory SecretShardModel.fromBytes(List<int> bytes) {
+  factory SecretShard.fromBytes(List<int> bytes) {
     final u = Unpacker(bytes is Uint8List ? bytes : Uint8List.fromList(bytes));
     final version = u.unpackInt()!;
     return switch (version) {
-      currentVersion => SecretShardModel(
+      currentVersion => SecretShard(
           version: version,
           id: SecretId.fromBytes(u.unpackBinary()),
           ownerId: PeerId.fromBytes(u.unpackBinary()),
@@ -67,11 +68,11 @@ class SecretShardModel extends Serializable {
     return p.takeBytes();
   }
 
-  SecretShardModel copyWith({
+  SecretShard copyWith({
     PeerId? ownerId,
     String? shard,
   }) =>
-      SecretShardModel(
+      SecretShard(
         version: version,
         id: id,
         ownerId: ownerId ?? this.ownerId,

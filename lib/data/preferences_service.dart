@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-const keySeed = 'seed';
-const keyPassCode = 'passCode';
-const keyDeviceName = 'deviceName';
-const keyIsBootstrapEnabled = 'isBootstrapEnabled';
-const keyIsBiometricsEnabled = 'isBiometricsEnabled';
+const keySeed = 'SettingsRepositoryKeys.seed';
+const keyPassCode = 'SettingsRepositoryKeys.passCode';
+const keyDeviceName = 'SettingsRepositoryKeys.deviceName';
+const keyIsBootstrapEnabled = 'SettingsRepositoryKeys.isBootstrapEnabled';
+const keyIsBiometricsEnabled = 'SettingsRepositoryKeys.isBiometricsEnabled';
 
 class PreferencesService {
   static const _storageName = 'settings';
