@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
+import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/splash_screen.dart';
 import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 
@@ -26,6 +27,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
         title: 'Guardian Keyper',
+        color: clIndigo900,
         theme: themeLight,
         darkTheme: themeDark,
         themeMode: ThemeMode.dark,

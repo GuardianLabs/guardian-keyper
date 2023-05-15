@@ -19,7 +19,7 @@ class IntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => IntroPresenter(pages: _pages),
+        create: (_) => IntroPresenter(pageCount: _pages.length),
         child: WillPopScope(
           onWillPop: () async => false,
           child: ScaffoldSafe(

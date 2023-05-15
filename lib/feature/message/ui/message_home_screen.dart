@@ -10,6 +10,7 @@ class MessageHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
+        key: const Key('MessageHomePresenter'),
         create: (_) => MessageHomePresenter(),
         child: DefaultTabController(
           length: _tabs.length,

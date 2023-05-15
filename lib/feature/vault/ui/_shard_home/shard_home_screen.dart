@@ -17,14 +17,10 @@ class ShardHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (BuildContext context) => ShardHomePresenter(),
+        key: const Key('ShardHomePresenter'),
+        create: (_) => ShardHomePresenter(),
         child: Consumer<ShardHomePresenter>(
-          builder: (
-            BuildContext context,
-            final ShardHomePresenter presenter,
-            final Widget? widget,
-          ) =>
-              ListView(
+          builder: (context, presenter, __) => ListView(
             primary: true,
             children: [
               // Header

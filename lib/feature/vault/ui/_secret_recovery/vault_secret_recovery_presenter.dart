@@ -6,8 +6,8 @@ import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/feature/auth/auth.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
+import 'package:guardian_keyper/domain/entity/secret_shard_model.dart';
 
-import '../../../../domain/entity/secret_shard_model.dart';
 import '../../domain/vault_interactor.dart';
 import '../vault_secret_presenter_base.dart';
 
@@ -15,7 +15,7 @@ export 'package:provider/provider.dart';
 
 class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
   VaultSecretRecoveryPresenter({
-    required super.pages,
+    required super.pageCount,
     required super.vaultId,
     required super.secretId,
   }) {
@@ -96,7 +96,7 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
 
   void onPressedCopy({
     required BuildContext context,
-    required final SnackBar snackBar,
+    required SnackBar snackBar,
   }) async {
     if (_isAuthorized) {
       await Clipboard.setData(ClipboardData(text: secret));
@@ -127,7 +127,7 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
 
   Future<void> _checkPassCode({
     required BuildContext context,
-    required final void Function() onUnlocked,
+    required void Function() onUnlocked,
   }) =>
       showAskPassCode(
         context: context,

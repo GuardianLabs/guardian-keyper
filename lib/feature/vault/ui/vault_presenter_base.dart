@@ -8,7 +8,7 @@ import '../domain/vault_interactor.dart';
 
 abstract class VaultPresenterBase extends PagePresenterBase {
   VaultPresenterBase({
-    required super.pages,
+    required super.pageCount,
     super.currentPage,
   });
 

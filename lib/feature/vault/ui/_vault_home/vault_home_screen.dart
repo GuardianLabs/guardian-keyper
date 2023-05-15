@@ -9,14 +9,10 @@ class VaultHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (BuildContext context) => VaultHomePresenter(),
+        key: const Key('VaultHomePresenter'),
+        create: (_) => VaultHomePresenter(),
         child: Consumer<VaultHomePresenter>(
-          builder: (
-            BuildContext context,
-            final VaultHomePresenter presenter,
-            final Widget? widget,
-          ) =>
-              Column(
+          builder: (context, presenter, __) => Column(
             children: [
               // Header
               const HeaderBar(caption: 'Vaults'),

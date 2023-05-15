@@ -31,7 +31,7 @@ Route? onGenerateRoute(RouteSettings settings) => MaterialPageRoute(
         routeVaultGuardianAdd => const VaultGuardianAddScreen(),
         // Secret
         routeVaultSecretAdd => const VaultSecretAddScreen(),
-        routeVaultSecretRecover => const VaultSecretRecoveryScreen(),
+        routeVaultSecretRecovery => const VaultSecretRecoveryScreen(),
         // null
         _ => throw Exception('Route not found!'),
       },

@@ -35,4 +35,4 @@ const routeVaultCreate = '/vault/create';
 const routeVaultRestore = '/vault/restore';
 const routeVaultGuardianAdd = '/vault/guardian/add';
 const routeVaultSecretAdd = '/vault/secret/add';
-const routeVaultSecretRecover = '/vault/secret/recover';
+const routeVaultSecretRecovery = '/vault/secret/recovery';

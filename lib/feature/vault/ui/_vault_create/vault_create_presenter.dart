@@ -10,7 +10,7 @@ import '../../domain/vault_interactor.dart';
 export 'package:provider/provider.dart';
 
 class VaultCreatePresenter extends PagePresenterBase {
-  VaultCreatePresenter({required super.pages}) {
+  VaultCreatePresenter({required super.pageCount}) {
     _vaultInteractor.logStartCreateVault();
   }
 

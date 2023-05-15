@@ -15,27 +15,25 @@ class VaultHomePresenter extends ChangeNotifier {
       if (vault.ownerId == _vaultInteractor.selfId) _myVaults[vault.id] = vault;
     }
     // init subscription
-    _vaultsUpdatesSubscription.resume();
+    _vaultChanges.resume();
   }
 
   Map<VaultId, VaultModel> get myVaults => _myVaults;
 
   @override
   void dispose() {
-    _vaultsUpdatesSubscription.cancel();
+    _vaultChanges.cancel();
     super.dispose();
   }
 
   final _myVaults = <VaultId, VaultModel>{};
   final _vaultInteractor = GetIt.I<VaultInteractor>();
 
-  late final _vaultsUpdatesSubscription =
-      _vaultInteractor.watch().listen((final event) {
+  late final _vaultChanges = _vaultInteractor.watch().listen((event) {
     if (event.isDeleted) {
       _myVaults.removeWhere((_, v) => v.aKey == event.key);
-    } else {
-      final vault = event.value as VaultModel;
-      if (vault.ownerId == _vaultInteractor.selfId) _myVaults[vault.id] = vault;
+    } else if (event.vault!.ownerId == _vaultInteractor.selfId) {
+      _myVaults[event.vault!.id] = event.vault!;
     }
     notifyListeners();
   });

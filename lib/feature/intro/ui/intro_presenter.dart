@@ -9,7 +9,7 @@ import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart
 export 'package:provider/provider.dart';
 
 class IntroPresenter extends PagePresenterBase {
-  IntroPresenter({required super.pages});
+  IntroPresenter({required super.pageCount});
 
   final _settingsInteractor = GetIt.I<SettingsInteractor>();
 
@@ -23,12 +23,12 @@ class IntroPresenter extends PagePresenterBase {
 
   bool get canSaveName => _deviceName.length >= minNameLength;
 
-  set introStep(final int value) {
+  set introStep(int value) {
     _introStep = value;
     notifyListeners();
   }
 
-  void setDeviceName(final String value) {
+  void setDeviceName(String value) {
     _deviceName = value;
     notifyListeners();
   }
@@ -38,7 +38,7 @@ class IntroPresenter extends PagePresenterBase {
     nextPage();
   }
 
-  Future<void> setIsBiometricsEnabled(final bool value) async {
+  Future<void> setIsBiometricsEnabled(bool value) async {
     await _settingsInteractor.setIsBiometricsEnabled(value);
     notifyListeners();
   }

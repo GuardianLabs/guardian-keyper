@@ -9,7 +9,7 @@ import '../domain/vault_interactor.dart';
 import 'vault_presenter_base.dart';
 
 abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
-  VaultGuardianPresenterBase({required super.pages});
+  VaultGuardianPresenterBase({required super.pageCount});
 
   VaultId? get vaultId;
 

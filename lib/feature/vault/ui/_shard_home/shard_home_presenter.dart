@@ -15,27 +15,25 @@ class ShardHomePresenter extends ChangeNotifier {
       if (vault.ownerId != _vaultInteractor.selfId) _shards[vault.id] = vault;
     }
     // init subscription
-    _vaultsUpdatesSubscription.resume();
+    _vaultChanges.resume();
   }
 
   Map<VaultId, VaultModel> get shards => _shards;
 
   @override
   void dispose() {
-    _vaultsUpdatesSubscription.cancel();
+    _vaultChanges.cancel();
     super.dispose();
   }
 
   final _shards = <VaultId, VaultModel>{};
   final _vaultInteractor = GetIt.I<VaultInteractor>();
 
-  late final _vaultsUpdatesSubscription =
-      _vaultInteractor.watch().listen((final event) {
+  late final _vaultChanges = _vaultInteractor.watch().listen((event) {
     if (event.isDeleted) {
       _shards.removeWhere((_, v) => v.aKey == event.key);
-    } else {
-      final vault = event.value as VaultModel;
-      if (vault.ownerId != _vaultInteractor.selfId) _shards[vault.id] = vault;
+    } else if (event.vault!.ownerId != _vaultInteractor.selfId) {
+      _shards[event.vault!.id] = event.vault!;
     }
     notifyListeners();
   });

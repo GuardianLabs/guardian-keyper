@@ -23,7 +23,10 @@ class VaultSecretAddScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final vaultId = ModalRoute.of(context)!.settings.arguments as VaultId;
     return ChangeNotifierProvider(
-      create: (_) => VaultSecretAddPresenter(pages: _pages, vaultId: vaultId),
+      create: (_) => VaultSecretAddPresenter(
+        pageCount: _pages.length,
+        vaultId: vaultId,
+      ),
       child: ScaffoldSafe(
         child: Selector<VaultSecretAddPresenter, int>(
           selector: (_, presenter) => presenter.currentPage,

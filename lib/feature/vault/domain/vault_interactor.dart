@@ -12,7 +12,7 @@ import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 
 import '../data/vault_repository.dart';
 
-typedef VaultEvent = ({String key, VaultModel? value, bool isDeleted});
+typedef VaultEvent = ({String key, VaultModel? vault, bool isDeleted});
 
 class VaultInteractor {
   late final flush = _vaultRepository.flush;
@@ -54,7 +54,7 @@ class VaultInteractor {
   Stream<VaultEvent> watch([String? key]) =>
       _vaultRepository.watch(key: key).map<VaultEvent>((e) => (
             key: e.key as String,
-            value: e.value as VaultModel?,
+            vault: e.value as VaultModel?,
             isDeleted: e.deleted,
           ));
 

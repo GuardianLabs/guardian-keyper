@@ -3,15 +3,9 @@ import 'page_presenter_base.dart';
 export 'package:provider/provider.dart';
 
 class HomePresenter extends PagePresenterBase {
-  HomePresenter({
-    required super.pages,
-    required this.vaultsPageNum,
-    required this.shardsPageNum,
-  });
+  HomePresenter({required super.pageCount});
 
-  final int vaultsPageNum, shardsPageNum;
+  void gotoVaults() => gotoPage(1);
 
-  void gotoVaults() => gotoPage(vaultsPageNum);
-
-  void gotoShards() => gotoPage(shardsPageNum);
+  void gotoShards() => gotoPage(2);
 }

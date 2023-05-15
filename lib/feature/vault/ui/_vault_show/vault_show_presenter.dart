@@ -11,7 +11,7 @@ export 'package:provider/provider.dart';
 class VaultShowPresenter extends ChangeNotifier {
   VaultShowPresenter({required VaultId vaultId}) {
     _vault = _vaultInteractor.getVaultById(vaultId)!;
-    _vaultChangesSubscription.resume();
+    _vaultChanges.resume();
   }
 
   late final pingPeer = _vaultInteractor.pingPeer;
@@ -20,16 +20,16 @@ class VaultShowPresenter extends ChangeNotifier {
 
   @override
   void dispose() {
-    _vaultChangesSubscription.cancel();
+    _vaultChanges.cancel();
     super.dispose();
   }
 
   final _vaultInteractor = GetIt.I<VaultInteractor>();
 
-  late final _vaultChangesSubscription =
-      _vaultInteractor.watch(_vault.aKey).listen((final event) {
+  late final _vaultChanges =
+      _vaultInteractor.watch(_vault.aKey).listen((event) {
     if (event.isDeleted) return;
-    _vault = event.value as VaultModel;
+    _vault = event.vault!;
     notifyListeners();
   });
 

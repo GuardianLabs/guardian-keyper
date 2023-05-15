@@ -17,7 +17,7 @@ class VaultCreateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => VaultCreatePresenter(pages: _pages),
+        create: (_) => VaultCreatePresenter(pageCount: _pages.length),
         child: ScaffoldSafe(
           child: Selector<VaultCreatePresenter, int>(
             selector: (_, presenter) => presenter.currentPage,

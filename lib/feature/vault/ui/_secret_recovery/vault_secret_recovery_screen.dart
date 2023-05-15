@@ -17,15 +17,15 @@ class VaultSecretRecoveryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)!.settings.arguments as (
+    final arguments = ModalRoute.of(context)!.settings.arguments as ({
       VaultId vaultId,
       SecretId secretId,
-    );
+    });
     return ChangeNotifierProvider(
       create: (_) => VaultSecretRecoveryPresenter(
-        pages: _pages,
-        vaultId: arguments.$1,
-        secretId: arguments.$2,
+        pageCount: _pages.length,
+        vaultId: arguments.vaultId,
+        secretId: arguments.secretId,
       ),
       child: ScaffoldSafe(
         child: Selector<VaultSecretRecoveryPresenter, int>(

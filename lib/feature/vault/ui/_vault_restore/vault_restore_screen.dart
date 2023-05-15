@@ -15,7 +15,7 @@ class VaultRestoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => VaultRestorePresenter(pages: _pages),
+        create: (_) => VaultRestorePresenter(pageCount: _pages.length),
         child: ScaffoldSafe(
           child: Selector<VaultRestorePresenter, int>(
             selector: (_, presenter) => presenter.currentPage,

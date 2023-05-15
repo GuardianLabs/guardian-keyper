@@ -3,9 +3,8 @@ import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/data/platform_service.dart';
 import 'package:guardian_keyper/data/preferences_service.dart';
-import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
 import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/vault_interactor.dart';
 import 'package:guardian_keyper/feature/message/domain/message_interactor.dart';
 import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
@@ -21,21 +20,15 @@ class DashboardPresenter extends ChangeNotifier {
           : _shards.add(vault.id);
     }
     // init subscriptions
-    _settingsInteractor.settingsChanges.listen((final event) {
-      if (event.key == keyDeviceName) notifyListeners();
-    });
-    _vaultInteractor.watch().listen((final event) {
-      if (event.isDeleted) {
-        _vaults.remove(event.key);
-        _shards.remove(event.key);
-      } else {
-        final vault = event.value as VaultModel;
-        vault.ownerId == _settingsInteractor.selfId
-            ? _vaults.add(vault.id)
-            : _shards.add(vault.id);
-      }
-      notifyListeners();
-    });
+    _settingsChanges.resume();
+    _vaultChanges.resume();
+  }
+
+  @override
+  void dispose() {
+    _settingsChanges.cancel();
+    _vaultChanges.cancel();
+    super.dispose();
   }
 
   late final share = _platformManager.share;
@@ -53,4 +46,20 @@ class DashboardPresenter extends ChangeNotifier {
   final _vaultInteractor = GetIt.I<VaultInteractor>();
   final _messagesInteractor = GetIt.I<MessageInteractor>();
   final _settingsInteractor = GetIt.I<SettingsInteractor>();
+
+  late final _settingsChanges = _settingsInteractor.watch.listen((event) {
+    if (event.key == keyDeviceName) notifyListeners();
+  });
+
+  late final _vaultChanges = _vaultInteractor.watch().listen((event) {
+    if (event.isDeleted) {
+      _vaults.remove(event.key);
+      _shards.remove(event.key);
+    } else {
+      event.vault!.ownerId == _settingsInteractor.selfId
+          ? _vaults.add(event.vault!.id)
+          : _shards.add(event.vault!.id);
+    }
+    notifyListeners();
+  });
 }

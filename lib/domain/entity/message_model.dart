@@ -123,10 +123,10 @@ class MessageModel extends Serializable {
 
   factory MessageModel.fromBytes(List<int> value) {
     final u = Unpacker(value is Uint8List ? value : Uint8List.fromList(value));
-    final version = u.unpackInt()!;
+    final version = u.unpackInt();
     return switch (version) {
       currentVersion => MessageModel(
-          version: version,
+          version: version!,
           id: MessageId.fromBytes(u.unpackBinary()),
           peerId: PeerId.fromBytes(u.unpackBinary()),
           timestamp: DateTime.fromMillisecondsSinceEpoch(
@@ -136,6 +136,7 @@ class MessageModel extends Serializable {
           code: MessageCode.values[u.unpackInt()!],
           status: MessageStatus.values[u.unpackInt()!],
           payload: switch (u.unpackInt()) {
+            null => null,
             VaultModel.typeId => VaultModel.fromBytes(u.unpackBinary()),
             SecretShardModel.typeId =>
               SecretShardModel.fromBytes(u.unpackBinary()),

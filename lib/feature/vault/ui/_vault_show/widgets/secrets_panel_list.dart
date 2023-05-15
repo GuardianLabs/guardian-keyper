@@ -48,8 +48,8 @@ class SecretsPanelList extends StatelessWidget {
                     padding: paddingTop12,
                     child: ElevatedButton(
                       onPressed: () => Navigator.of(context).pushNamed(
-                        routeVaultSecretRecover,
-                        arguments: (vault.id, secretId),
+                        routeVaultSecretRecovery,
+                        arguments: (vaultId: vault.id, secretId: secretId),
                       ),
                       child: const Text('Recover my Secret'),
                     ),
@@ -59,8 +59,8 @@ class SecretsPanelList extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () => OnRemoveSecretDialog.show(
                         context,
-                        secretId: secretId,
                         vault: vault,
+                        secretId: secretId,
                       ),
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(clRed),

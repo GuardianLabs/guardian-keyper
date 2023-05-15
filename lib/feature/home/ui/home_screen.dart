@@ -27,10 +27,10 @@ import 'package:guardian_keyper/feature/vault/ui/_vault_home/vault_home_screen.d
 
 class HomeScreen extends StatefulWidget {
   static const _pages = [
-    DashboardScreen(),
-    VaultHomeScreen(),
-    ShardHomeScreen(),
-    MessageHomeScreen(),
+    DashboardScreen(key: Key('DashboardScreen')),
+    VaultHomeScreen(key: Key('VaultHomeScreen')),
+    ShardHomeScreen(key: Key('ShardHomeScreen')),
+    MessageHomeScreen(key: Key('MessageHomeScreen')),
   ];
 
   static const _items = [
@@ -98,7 +98,7 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(final AppLifecycleState state) async {
+  void didChangeAppLifecycleState(state) async {
     super.didChangeAppLifecycleState(state);
     if (kDebugMode) print(state);
     switch (state) {
@@ -124,16 +124,11 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => HomePresenter(
-          pages: HomeScreen._pages,
-          vaultsPageNum:
-              HomeScreen._pages.indexWhere((e) => e is VaultHomeScreen),
-          shardsPageNum:
-              HomeScreen._pages.indexWhere((e) => e is ShardHomeScreen),
-        ),
+        key: const Key('HomePresenter'),
+        create: (_) => HomePresenter(pageCount: HomeScreen._pages.length),
         child: Selector<HomePresenter, int>(
           selector: (_, presenter) => presenter.currentPage,
-          builder: (BuildContext context, currentPage, __) => Scaffold(
+          builder: (context, currentPage, __) => Scaffold(
             backgroundColor: clIndigo900,
             resizeToAvoidBottomInset: true,
             bottomNavigationBar: BottomNavigationBar(

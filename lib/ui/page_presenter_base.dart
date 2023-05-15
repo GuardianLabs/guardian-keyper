@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 
 abstract class PagePresenterBase extends ChangeNotifier {
-  final List<Widget> pages;
+  final int pageCount;
 
   int currentPage;
 
   PagePresenterBase({
-    required this.pages,
+    required this.pageCount,
     this.currentPage = 0,
   });
 
@@ -16,7 +16,7 @@ abstract class PagePresenterBase extends ChangeNotifier {
   }
 
   void nextPage([void _]) {
-    if (currentPage < pages.length - 1) {
+    if (currentPage < pageCount - 1) {
       currentPage++;
       notifyListeners();
     }

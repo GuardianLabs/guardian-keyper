@@ -12,6 +12,7 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
+        key: const Key('DashboardPresenter'),
         create: (_) => DashboardPresenter(),
         child: ListView(
           padding: paddingV20,

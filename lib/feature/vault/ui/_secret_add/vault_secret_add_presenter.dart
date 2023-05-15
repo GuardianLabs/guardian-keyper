@@ -14,7 +14,7 @@ export 'package:provider/provider.dart';
 
 class VaultSecretAddPresenter extends VaultSecretPresenterBase {
   VaultSecretAddPresenter({
-    required super.pages,
+    required super.pageCount,
     required super.vaultId,
   }) : super(secretId: SecretId()) {
     _vaultInteractor.logStartAddSecret();
