@@ -12,7 +12,7 @@ class VaultShowScreen extends StatelessWidget {
   const VaultShowScreen({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final vaultId = ModalRoute.of(context)!.settings.arguments as VaultId;
     return ChangeNotifierProvider(
       create: (_) => VaultShowPresenter(vaultId: vaultId),

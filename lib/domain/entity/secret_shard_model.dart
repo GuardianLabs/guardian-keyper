@@ -10,16 +10,13 @@ class SecretShardModel extends Serializable {
   static const currentVersion = 1;
   static const typeId = 11;
 
-  final int version;
   final SecretId id;
   final PeerId ownerId;
   final VaultId vaultId;
-  final int groupSize;
-  final int groupThreshold;
+  final int groupSize, groupThreshold;
   final String shard;
 
   const SecretShardModel({
-    this.version = currentVersion,
     required this.id,
     required this.ownerId,
     required this.vaultId,
@@ -37,29 +34,21 @@ class SecretShardModel extends Serializable {
   @override
   int get hashCode => Object.hash(runtimeType, id.hashCode);
 
-  @override
-  bool get isEmpty => shard.isEmpty;
-
   String get aKey => id.asKey;
 
   factory SecretShardModel.fromBytes(List<int> bytes) {
     final u = Unpacker(bytes is Uint8List ? bytes : Uint8List.fromList(bytes));
-    final version = u.unpackInt()!;
-    switch (version) {
-      case 1:
-        return SecretShardModel(
-          version: version,
-          id: SecretId.fromBytes(u.unpackBinary()),
-          ownerId: PeerId.fromBytes(u.unpackBinary()),
-          vaultId: VaultId.fromBytes(u.unpackBinary()),
-          groupSize: u.unpackInt()!,
-          groupThreshold: u.unpackInt()!,
-          shard: u.unpackString()!,
-        );
-
-      default:
-        throw const FormatException('Unsupported version of SecretShardModel');
+    if (u.unpackInt() != currentVersion) {
+      throw const FormatException('Unsupported version of SecretShardModel');
     }
+    return SecretShardModel(
+      id: SecretId.fromBytes(u.unpackBinary()),
+      ownerId: PeerId.fromBytes(u.unpackBinary()),
+      vaultId: VaultId.fromBytes(u.unpackBinary()),
+      groupSize: u.unpackInt()!,
+      groupThreshold: u.unpackInt()!,
+      shard: u.unpackString()!,
+    );
   }
 
   @override

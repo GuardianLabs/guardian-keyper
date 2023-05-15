@@ -1,23 +1,22 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/app/routes.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
-import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/domain/entity/vault_model.dart';
 import 'package:guardian_keyper/feature/message/domain/message_interactor.dart';
 
 class OnChangeOwnerDialog extends StatelessWidget {
   static Future<void> show(
-    final BuildContext context, {
-    required final VaultModel vault,
+    BuildContext context, {
+    required VaultModel vault,
   }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (final BuildContext context) =>
-            OnChangeOwnerDialog(vault: vault),
+        builder: (_) => OnChangeOwnerDialog(vault: vault),
       );
 
   const OnChangeOwnerDialog({
@@ -28,7 +27,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
   final VaultModel vault;
 
   @override
-  Widget build(final BuildContext context) => BottomSheetWidget(
+  Widget build(BuildContext context) => BottomSheetWidget(
         icon: const IconOf.owner(
           isBig: true,
           bage: BageType.warning,

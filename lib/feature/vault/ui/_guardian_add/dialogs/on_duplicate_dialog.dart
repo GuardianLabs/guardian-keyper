@@ -5,9 +5,9 @@ import 'package:guardian_keyper/domain/entity/message_model.dart';
 
 class OnDuplicateDialog extends StatelessWidget {
   static Future<void> show(
-    final BuildContext context,
-    final MessageModel message,
-  ) =>
+    BuildContext context, {
+    required MessageModel message,
+  }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: false,
@@ -15,12 +15,15 @@ class OnDuplicateDialog extends StatelessWidget {
         builder: (_) => OnDuplicateDialog(message: message),
       );
 
-  const OnDuplicateDialog({super.key, required this.message});
+  const OnDuplicateDialog({
+    super.key,
+    required this.message,
+  });
 
   final MessageModel message;
 
   @override
-  Widget build(final BuildContext context) => BottomSheetWidget(
+  Widget build(BuildContext context) => BottomSheetWidget(
         titleString: 'You can’t add the same Guardian twice',
         textSpan: [
           const TextSpan(text: 'Seems like you’ve already added '),

@@ -11,7 +11,7 @@ class MessageNotifyIcon extends StatelessWidget {
   final bool isSelected;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final messageInteractor = GetIt.I<MessageInteractor>();
     return StreamBuilder(
       stream: messageInteractor.watch(),

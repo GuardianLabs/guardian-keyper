@@ -10,7 +10,7 @@ class VaultsPanel extends StatelessWidget {
   const VaultsPanel({super.key});
 
   @override
-  Widget build(final BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
         decoration: boxDecoration,
         padding: paddingAll20,
         child: Column(

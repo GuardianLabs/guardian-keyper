@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
+import 'widgets/icon_of.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   @override
-  Widget build(final BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
         alignment: Alignment.center,
         color: _backgroundColor,
         child: RotationTransition(

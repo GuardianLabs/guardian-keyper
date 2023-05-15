@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
@@ -20,7 +20,7 @@ class _GuardianWithPingTileState extends State<GuardianWithPingTile> {
   bool _isWaiting = false;
 
   @override
-  Widget build(final BuildContext context) => GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
         onLongPress: _isWaiting
             ? null
             : () async {

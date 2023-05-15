@@ -12,21 +12,17 @@ dependencies:
   flutter:
     sdk: flutter
   double_back_to_close_app: ^2.1.0
-  # logging_appenders: ^1.0.2
-  vector_graphics: ^1.1.5
+  vector_graphics: ^1.1.5+1
   google_fonts: ^4.0.4
   flutter_svg: ^2.0.5
   messagepack: ^0.2.1
-  collection: ^1.17.0
+  collection: ^1.17.1
+  qr_flutter: ^4.1.0
   provider: ^6.0.5
-  # logging: ^1.1.1
   get_it: ^7.6.0
   p2plib: ^1.1.5
   sss256: ^1.0.0
   intl: ^0.18.0
-  qr_flutter:
-    git:
-      url: "https://github.com/theyakka/qr.flutter"
 
   # Platform dependent
   flutter_secure_storage: ^8.0.0
@@ -46,7 +42,6 @@ dependencies:
 
   # Analytics
   sentry_flutter: ^7.5.2
-  # sentry_logging: ^7.5.2
   amplitude_flutter: ^3.13.0
 
 dev_dependencies:

@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
@@ -9,7 +9,7 @@ class AddSecretPage extends StatelessWidget {
   const AddSecretPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final presenter = context.read<VaultSecretAddPresenter>();
     return Column(
       children: [

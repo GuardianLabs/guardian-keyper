@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 
 import '../domain/settings_interactor.dart';
 

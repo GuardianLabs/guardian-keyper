@@ -9,7 +9,7 @@ import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 
 import '../data/message_repository.dart';
 import 'message_ingress_mixin.dart';
-import 'message_egress_maxin.dart';
+import 'message_egress_mixin.dart';
 
 typedef MessageEvent = ({String key, MessageModel? value, bool isDeleted});
 
@@ -29,7 +29,7 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
   Iterable<MessageModel> get messages => _messageRepository.values;
 
   @override
-  Future<void> archivateMessage(final MessageModel message) async {
+  Future<void> archivateMessage(MessageModel message) async {
     await _messageRepository.delete(message.aKey);
     await _messageRepository.put(
       message.timestamp.millisecondsSinceEpoch.toString(),
@@ -55,7 +55,7 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
   }
 
   /// Create ticket to take vault
-  Future<MessageModel> createTakeVaultCode(final VaultId? groupId) async {
+  Future<MessageModel> createTakeVaultCode(VaultId? groupId) async {
     final message = MessageModel(
       code: MessageCode.takeGroup,
       peerId: _settingsManager.selfId,
@@ -70,16 +70,9 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
   }
 
   Future<void> pruneMessages() async {
-    if (_messageRepository.isEmpty) return;
-    final expired = _messageRepository.values
-        .where((e) =>
-            e.isRequested &&
-            (e.code == MessageCode.createGroup ||
-                e.code == MessageCode.takeGroup) &&
-            e.timestamp
-                .isBefore(DateTime.now().subtract(const Duration(days: 1))))
-        .toList(growable: false);
-    await _messageRepository.deleteAll(expired.map((e) => e.aKey));
+    await _messageRepository.deleteAll(_messageRepository.values
+        .where((e) => e.isForPrune)
+        .map((e) => e.aKey));
     await _messageRepository.compact();
   }
 

@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/page_presenter_base.dart';
 import 'package:guardian_keyper/feature/auth/auth.dart';
 import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
@@ -43,7 +43,7 @@ class IntroPresenter extends PagePresenterBase {
     notifyListeners();
   }
 
-  Future<void> createPassCode({required final BuildContext context}) =>
+  Future<void> createPassCode({required BuildContext context}) =>
       showCreatePassCode(
         context: context,
         onVibrate: _settingsInteractor.vibrate,

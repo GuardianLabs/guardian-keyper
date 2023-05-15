@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../dashboard_presenter.dart';
@@ -7,7 +7,7 @@ class SharePanel extends StatelessWidget {
   const SharePanel({super.key});
 
   @override
-  Widget build(final BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
         decoration: boxDecoration,
         padding: paddingAll20,
         child: Column(

@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
@@ -23,7 +23,7 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Header
@@ -41,17 +41,8 @@ class _LoadingPageState extends State<LoadingPage> {
                   Padding(
                     padding: paddingTop20,
                     child: Selector<VaultRestorePresenter, bool>(
-                      selector: (
-                        final BuildContext context,
-                        final VaultRestorePresenter presenter,
-                      ) =>
-                          presenter.isWaiting,
-                      builder: (
-                        final BuildContext context,
-                        final bool isWaiting,
-                        final Widget? widget,
-                      ) =>
-                          Visibility(
+                      selector: (_, presenter) => presenter.isWaiting,
+                      builder: (_, isWaiting, __) => Visibility(
                         visible: isWaiting,
                         child: const CircularProgressIndicator.adaptive(),
                       ),
@@ -80,9 +71,9 @@ class _LoadingPageState extends State<LoadingPage> {
         ],
       );
 
-  void _handleResponse(final MessageModel message) async {
+  void _handleResponse(MessageModel message) async {
     if (message.isAccepted) {
-      await OnSuccessDialog.show(context, message);
+      await OnSuccessDialog.show(context, message: message);
       if (context.mounted) {
         message.vault.isFull
             ? Navigator.of(context).pop()
@@ -92,7 +83,7 @@ class _LoadingPageState extends State<LoadingPage> {
               );
       }
     } else if (message.isRejected) {
-      await OnRejectDialog.show(context, message);
+      await OnRejectDialog.show(context, message: message);
     } else {
       await OnFailDialog.show(context);
     }

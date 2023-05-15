@@ -2,6 +2,7 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
@@ -23,8 +24,6 @@ import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dia
 import 'package:guardian_keyper/feature/vault/domain/vault_interactor.dart';
 import 'package:guardian_keyper/feature/vault/ui/_shard_home/shard_home_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_vault_home/vault_home_screen.dart';
-
-import '../routes.dart';
 
 class HomeScreen extends StatefulWidget {
   static const _pages = [
@@ -77,7 +76,7 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       if (routeName == '/' || routeName == routeQrCodeShow) {
         _canShowMessage = false;
         Navigator.of(context).popUntil((r) => r.isFirst);
-        OnMessageActiveDialog.show(context: context, message: message)
+        OnMessageActiveDialog.show(context, message: message)
             .then((_) => _canShowMessage = true);
       }
     });
@@ -124,7 +123,7 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(final BuildContext context) => ChangeNotifierProvider(
+  Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (_) => HomePresenter(
           pages: HomeScreen._pages,
           vaultsPageNum:
@@ -134,7 +133,8 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
         child: Selector<HomePresenter, int>(
           selector: (_, presenter) => presenter.currentPage,
-          builder: (final BuildContext context, currentPage, __) => Scaffold(
+          builder: (BuildContext context, currentPage, __) => Scaffold(
+            backgroundColor: clIndigo900,
             resizeToAvoidBottomInset: true,
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: currentPage,

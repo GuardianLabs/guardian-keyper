@@ -2,11 +2,10 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/services.dart';
 
-import 'package:guardian_keyper/app/consts.dart';
 import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 
-import '../../domain/vault_interactor.dart';
+import '../domain/vault_interactor.dart';
 import 'vault_presenter_base.dart';
 
 abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
@@ -21,7 +20,7 @@ abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
   bool get canUseClipboard => _canUseClipboard;
 
   void checkClipboard() => Clipboard.hasStrings().then(
-        (final bool hasStrings) {
+        (bool hasStrings) {
           _canUseClipboard = hasStrings;
           notifyListeners();
         },
@@ -40,17 +39,11 @@ abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
     return code;
   }
 
-  void setCode(final String? code) {
+  void setCode(String? code) {
     if (code == null || _qrCode != null) return;
     final message = MessageModel.tryFromBase64(code);
 
-    if (message == null) {
-      throw const SetCodeFailException();
-    }
-    if (message.code != messageCode) {
-      throw const SetCodeFailException();
-    }
-    if (message.timestamp.subtract(qrCodeExpires).isAfter(DateTime.now())) {
+    if (message == null || message.code != messageCode || message.isExpired) {
       throw const SetCodeFailException();
     }
     if (message.version > MessageModel.currentVersion) {

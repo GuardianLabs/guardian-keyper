@@ -51,30 +51,30 @@ class VaultInteractor {
   bool get useBiometrics =>
       _settingsManager.hasBiometrics && _settingsManager.isBiometricsEnabled;
 
-  Stream<VaultEvent> watch([final String? key]) =>
+  Stream<VaultEvent> watch([String? key]) =>
       _vaultRepository.watch(key: key).map<VaultEvent>((e) => (
             key: e.key as String,
             value: e.value as VaultModel?,
             isDeleted: e.deleted,
           ));
 
-  VaultModel? getVaultById(final VaultId vaultId) =>
+  VaultModel? getVaultById(VaultId vaultId) =>
       _vaultRepository.get(vaultId.asKey);
 
-  Future<VaultModel> createVault(final VaultModel vault) async {
+  Future<VaultModel> createVault(VaultModel vault) async {
     await _vaultRepository.put(vault.aKey, vault);
     return vault;
   }
 
-  Future<VaultId> removeVault(final VaultId vaultId) async {
+  Future<VaultId> removeVault(VaultId vaultId) async {
     await _vaultRepository.delete(vaultId.asKey);
     return vaultId;
   }
 
-  Future<VaultModel> addGuardian(
-    final VaultId vaultId,
-    final PeerId guardian,
-  ) async {
+  Future<VaultModel> addGuardian({
+    required VaultId vaultId,
+    required PeerId guardian,
+  }) async {
     var vault = _vaultRepository.get(vaultId.asKey)!;
     vault = vault.copyWith(
       guardians: {...vault.guardians, guardian: ''},
@@ -84,9 +84,9 @@ class VaultInteractor {
   }
 
   Future<void> addSecret({
-    required final VaultModel vault,
-    required final SecretId secretId,
-    required final String secretValue,
+    required VaultModel vault,
+    required SecretId secretId,
+    required String secretValue,
   }) =>
       _vaultRepository.put(
         vault.aKey,
@@ -94,17 +94,16 @@ class VaultInteractor {
       );
 
   Future<void> removeSecret({
-    required final VaultModel vault,
-    required final SecretId secretId,
+    required VaultModel vault,
+    required SecretId secretId,
   }) async {
     vault.secrets.remove(secretId);
     await _vaultRepository.put(vault.aKey, vault);
   }
 
-  Future<void> sendToGuardian(final MessageModel message) =>
-      _networkManager.sendTo(
+  Future<void> sendToGuardian(MessageModel message) => _networkManager.sendTo(
+        message.peerId,
         isConfirmable: false,
-        peerId: message.peerId,
         message: message.copyWith(peerId: _settingsManager.selfId),
       );
 

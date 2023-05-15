@@ -4,11 +4,11 @@ import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 
 import '../../domain/vault_interactor.dart';
-import '../presenters/vault_guardian_presenter_base.dart';
+import '../vault_guardian_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 
-export '../presenters/vault_guardian_presenter_base.dart';
+export '../vault_guardian_presenter_base.dart';
 
 class VaultRestorePresenter extends VaultGuardianPresenterBase {
   VaultRestorePresenter({
@@ -30,7 +30,7 @@ class VaultRestorePresenter extends VaultGuardianPresenterBase {
   void requestWorker([timer]) => _vaultInteractor.sendToGuardian(qrCode!);
 
   @override
-  void responseHandler(final MessageModel message) async {
+  void responseHandler(MessageModel message) async {
     if (isNotWaiting) return;
     if (qrCode == null) return;
     if (!message.hasResponse) return;
@@ -58,8 +58,8 @@ class VaultRestorePresenter extends VaultGuardianPresenterBase {
         return;
       } else if (existingVault.isNotFull) {
         final vault = await _vaultInteractor.addGuardian(
-          message.vaultId,
-          qrCode!.peerId,
+          vaultId: message.vaultId,
+          guardian: qrCode!.peerId,
         );
         _vaultInteractor.logFinishRestoreVault();
         requestCompleter.complete(message.copyWith(

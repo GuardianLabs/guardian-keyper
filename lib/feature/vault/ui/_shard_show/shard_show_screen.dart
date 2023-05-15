@@ -8,7 +8,7 @@ class ShardShowScreen extends StatelessWidget {
   const ShardShowScreen({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final vault = ModalRoute.of(context)!.settings.arguments as VaultModel;
     return ScaffoldSafe(
       child: Column(

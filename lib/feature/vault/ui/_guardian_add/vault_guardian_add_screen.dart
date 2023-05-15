@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
@@ -15,7 +15,7 @@ class VaultGuardianAddScreen extends StatelessWidget {
   const VaultGuardianAddScreen({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final vaultId = ModalRoute.of(context)!.settings.arguments as VaultId;
     return ChangeNotifierProvider(
       create: (_) => VaultGuardianAddPresenter(pages: _pages, vaultId: vaultId),

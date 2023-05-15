@@ -13,7 +13,7 @@ mixin class MessageIngressMixin {
 
     switch (message.code) {
       case MessageCode.createGroup:
-        if (message.isEmpty) return;
+        if (message.payload == null) return;
         // qrCode was not generated
         if (ticket == null) return;
         // qrCode was processed already
@@ -33,7 +33,7 @@ mixin class MessageIngressMixin {
         break;
 
       case MessageCode.setShard:
-        if (message.isEmpty) return;
+        if (message.payload == null) return;
         // request already processed
         if (ticket != null) return;
         final vault = _vaultRepository.get(message.vaultId.asKey);
@@ -46,7 +46,7 @@ mixin class MessageIngressMixin {
         break;
 
       case MessageCode.getShard:
-        if (message.isEmpty) return;
+        if (message.payload == null) return;
         // request already processed
         if (ticket != null) return;
         final vault = _vaultRepository.get(message.vaultId.asKey);

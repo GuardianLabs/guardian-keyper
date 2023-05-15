@@ -1,7 +1,7 @@
 part of 'auth.dart';
 
 Future<void> showChangePassCode({
-  required final BuildContext context,
+  required BuildContext context,
   required final String currentPassCode,
   required final OnConfirmed onConfirmed,
   required final Future<void> Function() onVibrate,

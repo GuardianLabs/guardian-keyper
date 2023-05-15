@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const keySeed = 'seed';
-const keyPassCode = 'pass_code';
+const keyPassCode = 'passCode';
 const keyDeviceName = 'deviceName';
 const keyIsBootstrapEnabled = 'isBootstrapEnabled';
 const keyIsBiometricsEnabled = 'isBiometricsEnabled';
@@ -22,8 +22,8 @@ class PreferencesService {
     ),
   );
 
-  Future<T?> get<T extends Object>(final String key) =>
-      _storage.read(key: key).then((final String? value) => value == null
+  Future<T?> get<T extends Object>(String key) =>
+      _storage.read(key: key).then((value) => value == null
           ? null
           : switch (T) {
               String => value as T,
@@ -32,8 +32,7 @@ class PreferencesService {
               _ => throw const ValueFormatException(),
             });
 
-  Future<void> set<T extends Object>(final String key, final T value) =>
-      switch (T) {
+  Future<void> set<T extends Object>(String key, T value) => switch (T) {
         bool || String => _storage.write(key: key, value: value.toString()),
         Uint8List => _storage.write(
             key: key,

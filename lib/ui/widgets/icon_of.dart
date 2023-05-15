@@ -221,7 +221,7 @@ class IconOf extends StatelessWidget {
   }) : icon = 'assets/icons/biometric_logon_v1.svg';
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final actualSize = (size ?? 40) * (isBig == true ? 2 : 1);
     final iconWidget = Container(
       decoration: BoxDecoration(

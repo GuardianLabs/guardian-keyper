@@ -5,9 +5,9 @@ import 'package:guardian_keyper/domain/entity/message_model.dart';
 
 class OnFailDialog extends StatelessWidget {
   static Future<void> show(
-    final BuildContext context,
-    final MessageModel message,
-  ) =>
+    BuildContext context, {
+    required MessageModel message,
+  }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: true,
@@ -15,12 +15,15 @@ class OnFailDialog extends StatelessWidget {
         builder: (_) => OnFailDialog(message: message),
       );
 
-  const OnFailDialog({super.key, required this.message});
+  const OnFailDialog({
+    super.key,
+    required this.message,
+  });
 
   final MessageModel message;
 
   @override
-  Widget build(final BuildContext context) => BottomSheetWidget(
+  Widget build(BuildContext context) => BottomSheetWidget(
         icon: const IconOf.splitAndShare(isBig: true, bage: BageType.error),
         titleString: 'Something went wrong!',
         textSpan: [

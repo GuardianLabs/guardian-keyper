@@ -1,7 +1,7 @@
 part of '../../../../feature/auth/auth.dart';
 
 Future<void> showDemandPassCode({
-  required final BuildContext context,
+  required BuildContext context,
   required final String currentPassCode,
   required final LocalAuthenticate localAuthenticate,
   required final Future<void> Function() onVibrate,

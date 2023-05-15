@@ -8,20 +8,17 @@ import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
 import '../../../domain/vault_interactor.dart';
 
 class OnRemoveSecretDialog extends StatelessWidget {
-  static Future<void> show({
-    required final BuildContext context,
-    required final SecretId secretId,
-    required final VaultModel vault,
+  static Future<void> show(
+    BuildContext context, {
+    required SecretId secretId,
+    required VaultModel vault,
   }) =>
-      showModalBottomSheet<bool>(
+      showModalBottomSheet(
         context: context,
         useSafeArea: true,
         isScrollControlled: true,
         builder: (_) => OnRemoveSecretDialog(vault: vault, secretId: secretId),
       );
-
-  final VaultModel vault;
-  final SecretId secretId;
 
   const OnRemoveSecretDialog({
     super.key,
@@ -29,8 +26,11 @@ class OnRemoveSecretDialog extends StatelessWidget {
     required this.secretId,
   });
 
+  final VaultModel vault;
+  final SecretId secretId;
+
   @override
-  Widget build(final BuildContext context) => BottomSheetWidget(
+  Widget build(BuildContext context) => BottomSheetWidget(
         icon: const IconOf.removeGroup(
           isBig: true,
           bage: BageType.warning,

@@ -33,7 +33,7 @@ class IntrosPage extends StatelessWidget {
   const IntrosPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final presenter = context.watch<IntroPresenter>();
     return GestureDetector(
       behavior: HitTestBehavior.translucent,

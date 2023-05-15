@@ -8,7 +8,7 @@ class ChooseSizePage extends StatelessWidget {
   const ChooseSizePage({super.key});
 
   @override
-  Widget build(final BuildContext context) => Column(children: [
+  Widget build(BuildContext context) => Column(children: [
         // Header
         HeaderBar(
           caption: 'Vault Size',

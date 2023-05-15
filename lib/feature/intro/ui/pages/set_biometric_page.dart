@@ -9,7 +9,7 @@ class SetBiometricPage extends StatelessWidget {
   const SetBiometricPage({super.key});
 
   @override
-  Widget build(final BuildContext context) => Padding(
+  Widget build(BuildContext context) => Padding(
         padding: paddingAll20,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

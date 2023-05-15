@@ -23,7 +23,7 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
   }
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           // Header
           const HeaderBar(
@@ -108,9 +108,9 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
         ],
       );
 
-  void _handleResponse(final MessageModel message) async {
+  void _handleResponse(MessageModel message) async {
     if (message.isRejected) {
-      await OnRejectDialog.show(context, message);
+      await OnRejectDialog.show(context, message: message);
       if (context.mounted) Navigator.of(context).pop();
     }
   }

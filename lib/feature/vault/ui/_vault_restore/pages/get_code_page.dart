@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../vault_restore_presenter.dart';
@@ -31,13 +31,13 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(final AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) _presenter.checkClipboard();
   }
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           // Header
           const HeaderBar(

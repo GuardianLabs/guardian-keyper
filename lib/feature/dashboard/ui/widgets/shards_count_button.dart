@@ -9,7 +9,7 @@ class ShardsCountButton extends StatelessWidget {
   const ShardsCountButton({super.key});
 
   @override
-  Widget build(final BuildContext context) => GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
         onTap: context.read<HomePresenter>().gotoShards,
         child: Container(
           decoration: BoxDecoration(

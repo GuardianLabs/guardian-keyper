@@ -20,7 +20,7 @@ class GuardianListTile extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) => ListTile(
+  Widget build(BuildContext context) => ListTile(
         visualDensity: checkStatus
             ? const VisualDensity(vertical: VisualDensity.maximumDensity)
             : null,

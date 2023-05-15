@@ -13,7 +13,7 @@ class ScaffoldSafe extends StatelessWidget {
   const ScaffoldSafe({super.key, required this.child});
 
   @override
-  Widget build(final BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         primary: true,
         resizeToAvoidBottomInset: true,
         body: SafeArea(child: child),
@@ -39,7 +39,7 @@ class HeaderBar extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
         height: sideSize,
         color: isTransparent
             ? Colors.transparent
@@ -88,7 +88,7 @@ class HeaderBarCloseButton extends StatelessWidget {
   const HeaderBarCloseButton({super.key, this.onPressed});
 
   @override
-  Widget build(final BuildContext context) => GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
         onTap: onPressed ?? Navigator.of(context).pop,
         behavior: HitTestBehavior.opaque,
         child: Center(
@@ -106,7 +106,7 @@ class HeaderBarMoreButton extends StatelessWidget {
   const HeaderBarMoreButton({super.key, this.onPressed});
 
   @override
-  Widget build(final BuildContext context) => GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
         onTap: onPressed,
         behavior: HitTestBehavior.opaque,
         child: Center(
@@ -124,7 +124,7 @@ class HeaderBarBackButton extends StatelessWidget {
   const HeaderBarBackButton({super.key, this.onPressed});
 
   @override
-  Widget build(final BuildContext context) => GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
         onTap: onPressed ?? Navigator.of(context).pop,
         behavior: HitTestBehavior.opaque,
         child: Center(
@@ -151,7 +151,7 @@ class PageTitle extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final paddingTop =
         ScreenSize.get(MediaQuery.of(context).size) is ScreenSmall
             ? paddingTop12
@@ -204,7 +204,7 @@ class PrimaryButton extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) => Material(
+  Widget build(BuildContext context) => Material(
         child: Ink(
           decoration: BoxDecoration(
             borderRadius: borderRadius,
@@ -283,7 +283,7 @@ class BottomSheetWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) => Padding(
+  Widget build(BuildContext context) => Padding(
         padding: paddingAll20,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -368,7 +368,7 @@ class InfoPanel extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) => animationController == null
+  Widget build(BuildContext context) => animationController == null
       ? buildBody()
       : DecoratedBoxTransition(
           decoration: DecorationTween(
@@ -423,7 +423,7 @@ class DotColored extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         height: size,
         width: size,

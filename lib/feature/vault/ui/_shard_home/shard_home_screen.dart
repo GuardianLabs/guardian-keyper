@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
@@ -16,11 +16,11 @@ class ShardHomeScreen extends StatelessWidget {
   const ShardHomeScreen({super.key});
 
   @override
-  Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => ShardHomePresenter(),
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+        create: (BuildContext context) => ShardHomePresenter(),
         child: Consumer<ShardHomePresenter>(
           builder: (
-            final BuildContext context,
+            BuildContext context,
             final ShardHomePresenter presenter,
             final Widget? widget,
           ) =>

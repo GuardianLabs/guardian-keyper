@@ -9,7 +9,7 @@ import 'package:guardian_keyper/domain/entity/message_model.dart';
 
 import '../../../../domain/entity/secret_shard_model.dart';
 import '../../domain/vault_interactor.dart';
-import '../presenters/vault_secret_presenter_base.dart';
+import '../vault_secret_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 
@@ -78,7 +78,7 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
     notifyListeners();
   }
 
-  void onPressedShow({required final BuildContext context}) {
+  void onPressedShow({required BuildContext context}) {
     if (_isAuthorized) {
       _isObfuscated = false;
       notifyListeners();
@@ -95,7 +95,7 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
   }
 
   void onPressedCopy({
-    required final BuildContext context,
+    required BuildContext context,
     required final SnackBar snackBar,
   }) async {
     if (_isAuthorized) {
@@ -126,7 +126,7 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
   bool _isAuthorized = false;
 
   Future<void> _checkPassCode({
-    required final BuildContext context,
+    required BuildContext context,
     required final void Function() onUnlocked,
   }) =>
       showAskPassCode(

@@ -14,7 +14,7 @@ class RequestPanel extends StatelessWidget {
   final PeerId peerId;
 
   @override
-  Widget build(final BuildContext context) => Row(
+  Widget build(BuildContext context) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Column(

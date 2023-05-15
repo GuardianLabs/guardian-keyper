@@ -5,23 +5,25 @@ import 'package:guardian_keyper/domain/entity/message_model.dart';
 
 class OnSuccessDialog extends StatelessWidget {
   static Future<void> show(
-    final BuildContext context,
-    final MessageModel message,
-  ) =>
+    BuildContext context, {
+    required MessageModel message,
+  }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (final BuildContext context) =>
-            OnSuccessDialog(message: message),
+        builder: (_) => OnSuccessDialog(message: message),
       );
 
-  const OnSuccessDialog({super.key, required this.message});
+  const OnSuccessDialog({
+    super.key,
+    required this.message,
+  });
 
   final MessageModel message;
 
   @override
-  Widget build(final BuildContext context) => message.vault.isFull
+  Widget build(BuildContext context) => message.vault.isFull
       ? BottomSheetWidget(
           icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
           titleString: 'Ownership Changed',

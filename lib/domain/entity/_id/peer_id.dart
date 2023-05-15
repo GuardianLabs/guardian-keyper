@@ -8,7 +8,10 @@ class PeerId extends IdBase {
 
   static final empty = PeerId(token: Uint8List(0));
 
-  const PeerId({required super.token, super.name});
+  PeerId({
+    required super.token,
+    super.name,
+  });
 
   factory PeerId.fromBytes(List<int> token) {
     final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));

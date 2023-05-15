@@ -7,24 +7,26 @@ import 'package:guardian_keyper/domain/entity/message_model.dart';
 import 'message_titles_mixin.dart';
 
 class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
-  static Future<bool?> show({
-    required final BuildContext context,
-    required final MessageModel message,
+  static Future<bool?> show(
+    BuildContext context, {
+    required MessageModel message,
   }) =>
       showModalBottomSheet<bool>(
         context: context,
         useSafeArea: true,
         isScrollControlled: true,
-        builder: (final BuildContext context) =>
-            OnMessageResolvedDialog(message: message),
+        builder: (_) => OnMessageResolvedDialog(message: message),
       );
+
+  const OnMessageResolvedDialog({
+    super.key,
+    required this.message,
+  });
 
   final MessageModel message;
 
-  const OnMessageResolvedDialog({super.key, required this.message});
-
   @override
-  Widget build(final BuildContext context) => BottomSheetWidget(
+  Widget build(BuildContext context) => BottomSheetWidget(
         titleString: getTitle(message),
         body: Padding(
           padding: paddingV20,

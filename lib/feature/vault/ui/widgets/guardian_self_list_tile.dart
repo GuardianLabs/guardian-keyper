@@ -8,7 +8,7 @@ class GuardianSelfListTile extends StatelessWidget {
   const GuardianSelfListTile({super.key, required this.guardian});
 
   @override
-  Widget build(final BuildContext context) => ListTile(
+  Widget build(BuildContext context) => ListTile(
         leading: const IconOf.shield(color: clWhite, bgColor: clGreen),
         title: Text(
           'Secret Shard stored on my device',

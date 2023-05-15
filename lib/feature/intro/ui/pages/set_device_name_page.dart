@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
@@ -8,7 +8,7 @@ class SetDeviceNamePage extends StatelessWidget {
   const SetDeviceNamePage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final presenter = context.read<IntroPresenter>();
     return ListView(
       padding: paddingAll20,

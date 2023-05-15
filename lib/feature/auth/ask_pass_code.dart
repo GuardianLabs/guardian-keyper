@@ -1,7 +1,7 @@
 part of '../../../../feature/auth/auth.dart';
 
 Future<void> showAskPassCode({
-  required final BuildContext context,
+  required BuildContext context,
   required final String currentPassCode,
   required final void Function() onUnlocked,
   required final Future<void> Function() onVibrate,

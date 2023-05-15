@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'intro_presenter.dart';
@@ -18,7 +18,7 @@ class IntroScreen extends StatelessWidget {
   const IntroScreen({super.key});
 
   @override
-  Widget build(final BuildContext context) => ChangeNotifierProvider(
+  Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (_) => IntroPresenter(pages: _pages),
         child: WillPopScope(
           onWillPop: () async => false,

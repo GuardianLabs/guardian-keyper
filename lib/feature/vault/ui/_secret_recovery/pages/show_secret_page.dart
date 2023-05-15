@@ -10,7 +10,7 @@ class ShowSecretPage extends StatelessWidget {
   const ShowSecretPage({super.key});
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           // Header
           const HeaderBar(
@@ -33,7 +33,7 @@ class ShowSecretPage extends StatelessWidget {
                     padding: paddingAll20,
                     child: Consumer<VaultSecretRecoveryPresenter>(
                       builder: (
-                        final BuildContext context,
+                        BuildContext context,
                         final VaultSecretRecoveryPresenter presenter,
                         final Widget? widget,
                       ) =>

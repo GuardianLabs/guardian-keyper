@@ -10,9 +10,9 @@ import '../widgets/request_panel.dart';
 import 'message_titles_mixin.dart';
 
 class OnMessageActiveDialog extends StatefulWidget with MessageTitlesMixin {
-  static Future<bool?> show({
-    required final BuildContext context,
-    required final MessageModel message,
+  static Future<bool?> show(
+    BuildContext context, {
+    required MessageModel message,
   }) =>
       showModalBottomSheet<bool>(
         context: context,
@@ -21,9 +21,12 @@ class OnMessageActiveDialog extends StatefulWidget with MessageTitlesMixin {
         builder: (_) => OnMessageActiveDialog(message: message),
       );
 
-  final MessageModel message;
+  const OnMessageActiveDialog({
+    super.key,
+    required this.message,
+  });
 
-  const OnMessageActiveDialog({super.key, required this.message});
+  final MessageModel message;
 
   @override
   State<OnMessageActiveDialog> createState() => _OnMessageActiveDialogState();
@@ -72,7 +75,7 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
   }
 
   @override
-  Widget build(final BuildContext context) => BottomSheetWidget(
+  Widget build(BuildContext context) => BottomSheetWidget(
         titleString: widget.getTitle(widget.message),
         textSpan: [
           ...buildTextWithId(id: widget.message.peerId),
@@ -134,11 +137,10 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
         ]),
       );
 
-  Future<void> _sendRespone(final MessageStatus status) async {
+  Future<void> _sendRespone(MessageStatus status) async {
     final response = widget.message.copyWith(status: status);
     setState(() => _isRequestActive = true);
     try {
-      // TBD: move to presenter
       await _messagesInteractor.sendRespone(response);
       if (mounted) Navigator.of(context).pop(true);
     } catch (_) {

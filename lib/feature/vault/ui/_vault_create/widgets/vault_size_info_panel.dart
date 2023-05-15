@@ -23,7 +23,7 @@ class _VaultSizeInfoPanelState extends State<VaultSizeInfoPanel>
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final presenter = Provider.of<VaultCreatePresenter>(context);
     _animationController.forward(from: 0);
     return InfoPanel.info(

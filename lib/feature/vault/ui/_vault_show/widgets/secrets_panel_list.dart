@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
@@ -9,7 +9,7 @@ class SecretsPanelList extends StatelessWidget {
   const SecretsPanelList({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final vault = context.read<VaultShowPresenter>().vault;
     return ExpansionPanelList.radio(
       dividerColor: clSurface,
@@ -21,11 +21,7 @@ class SecretsPanelList extends StatelessWidget {
             backgroundColor: clSurface,
             canTapOnHeader: true,
             value: secretId.asKey,
-            headerBuilder: (
-              final BuildContext context,
-              final bool isExpanded,
-            ) =>
-                Row(
+            headerBuilder: (_, __) => Row(
               children: [
                 Padding(
                   padding: paddingH20 + paddingV12,
@@ -62,7 +58,7 @@ class SecretsPanelList extends StatelessWidget {
                     padding: paddingTop12,
                     child: ElevatedButton(
                       onPressed: () => OnRemoveSecretDialog.show(
-                        context: context,
+                        context,
                         secretId: secretId,
                         vault: vault,
                       ),

@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'vault_home_presenter.dart';
@@ -8,11 +8,11 @@ class VaultHomeScreen extends StatelessWidget {
   const VaultHomeScreen({super.key});
 
   @override
-  Widget build(final BuildContext context) => ChangeNotifierProvider(
-        create: (final BuildContext context) => VaultHomePresenter(),
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+        create: (BuildContext context) => VaultHomePresenter(),
         child: Consumer<VaultHomePresenter>(
           builder: (
-            final BuildContext context,
+            BuildContext context,
             final VaultHomePresenter presenter,
             final Widget? widget,
           ) =>

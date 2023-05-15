@@ -7,7 +7,7 @@ class GuardiansControlPanel extends StatelessWidget {
   const GuardiansControlPanel({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final presenter = Provider.of<VaultCreatePresenter>(context);
     return Container(
       decoration: BoxDecoration(

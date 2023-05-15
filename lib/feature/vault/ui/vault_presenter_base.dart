@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:guardian_keyper/ui/page_presenter_base.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 
-import '../../domain/vault_interactor.dart';
+import '../domain/vault_interactor.dart';
 
 abstract class VaultPresenterBase extends PagePresenterBase {
   VaultPresenterBase({
@@ -26,7 +26,7 @@ abstract class VaultPresenterBase extends PagePresenterBase {
 
   void requestWorker([Timer? timer]);
 
-  void responseHandler(final MessageModel message);
+  void responseHandler(MessageModel message);
 
   Future<MessageModel> startRequest() async {
     _networkSubscription.resume();
@@ -40,7 +40,7 @@ abstract class VaultPresenterBase extends PagePresenterBase {
     return requestCompleter.future;
   }
 
-  void stopListenResponse({final bool shouldNotify = true}) {
+  void stopListenResponse({bool shouldNotify = true}) {
     _timer?.cancel();
     _networkSubscription.cancel();
     _vaultInteractor.wakelockDisable();

@@ -1,13 +1,13 @@
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../settings_presenter.dart';
 
 class OnSetDeviceNameDialog extends StatelessWidget {
   static Future<void> show(
-    final BuildContext context,
-    final SettingsPresenter presenter,
-  ) =>
+    BuildContext context, {
+    required SettingsPresenter presenter,
+  }) =>
       Navigator.of(context).push(
         MaterialPageRoute(
           fullscreenDialog: true,
@@ -21,7 +21,7 @@ class OnSetDeviceNameDialog extends StatelessWidget {
   const OnSetDeviceNameDialog({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final presenter = context.read<SettingsPresenter>();
     return ScaffoldSafe(
       child: Column(
@@ -62,12 +62,7 @@ class OnSetDeviceNameDialog extends StatelessWidget {
                 Padding(
                   padding: paddingV20,
                   child: Consumer<SettingsPresenter>(
-                    builder: (
-                      final BuildContext context,
-                      final SettingsPresenter presenter,
-                      final Widget? child,
-                    ) =>
-                        PrimaryButton(
+                    builder: (context, presenter, __) => PrimaryButton(
                       text: 'Proceed',
                       onPressed: presenter.hasMinimumDeviceNameLength
                           ? () async {

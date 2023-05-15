@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'vault_create_presenter.dart';
@@ -16,7 +16,7 @@ class VaultCreateScreen extends StatelessWidget {
   const VaultCreateScreen({super.key});
 
   @override
-  Widget build(final BuildContext context) => ChangeNotifierProvider(
+  Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (_) => VaultCreatePresenter(pages: _pages),
         child: ScaffoldSafe(
           child: Selector<VaultCreatePresenter, int>(

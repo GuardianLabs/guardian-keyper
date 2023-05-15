@@ -8,7 +8,7 @@ import '../../../domain/vault_interactor.dart';
 
 class OnVaultMoreDialog extends StatelessWidget {
   static Future<void> show(
-    final BuildContext context, {
+    BuildContext context, {
     required final VaultId vaultId,
   }) =>
       showModalBottomSheet<bool>(
@@ -23,7 +23,7 @@ class OnVaultMoreDialog extends StatelessWidget {
   final VaultId vaultId;
 
   @override
-  Widget build(final BuildContext context) => BottomSheetWidget(
+  Widget build(BuildContext context) => BottomSheetWidget(
         footer: ElevatedButton(
           child: const SizedBox(
             width: double.infinity,
@@ -44,8 +44,7 @@ class OnVaultMoreDialog extends StatelessWidget {
         ),
       );
 
-  Widget _removeVaultDialogBuilder(final BuildContext context) =>
-      BottomSheetWidget(
+  Widget _removeVaultDialogBuilder(BuildContext context) => BottomSheetWidget(
         icon: const IconOf.removeGroup(
           isBig: true,
           bage: BageType.warning,

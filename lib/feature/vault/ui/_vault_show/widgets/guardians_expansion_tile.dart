@@ -8,7 +8,7 @@ class GuardiansExpansionTile extends StatelessWidget {
   const GuardiansExpansionTile({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final vault = context.read<VaultShowPresenter>().vault;
     return ExpansionTile(
       title: Text(

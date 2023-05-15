@@ -2,11 +2,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
+import 'package:guardian_keyper/ui/splash_screen.dart';
+import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
+
 import 'di.dart';
+import 'theme.dart';
 import 'routes.dart';
-import 'ui/home_screen.dart';
-import 'ui/theme.dart';
-import 'ui/splash_screen.dart';
 
 class App extends StatelessWidget {
   static Future<void> init() async {
@@ -23,7 +24,7 @@ class App extends StatelessWidget {
   final DI di;
 
   @override
-  Widget build(final BuildContext context) => MaterialApp(
+  Widget build(BuildContext context) => MaterialApp(
         title: 'Guardian Keyper',
         theme: themeLight,
         darkTheme: themeDark,

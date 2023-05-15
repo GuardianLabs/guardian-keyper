@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../vault_secret_add_presenter.dart';
@@ -8,7 +8,7 @@ class AddNamePage extends StatelessWidget {
   const AddNamePage({super.key});
 
   @override
-  Widget build(final BuildContext context) => ListView(
+  Widget build(BuildContext context) => ListView(
         shrinkWrap: true,
         children: [
           // Header
@@ -40,7 +40,7 @@ class AddNamePage extends StatelessWidget {
             child: Selector<VaultSecretAddPresenter, bool>(
               selector: (_, presenter) => presenter.isNameTooShort,
               builder: (
-                final BuildContext context,
+                BuildContext context,
                 final bool isNameTooShort,
                 final Widget? widget,
               ) =>

@@ -5,23 +5,25 @@ import 'package:guardian_keyper/domain/entity/message_model.dart';
 
 class OnRejectDialog extends StatelessWidget {
   static Future<void> show(
-    final BuildContext context,
-    final MessageModel message,
-  ) =>
+    BuildContext context, {
+    required MessageModel message,
+  }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (final BuildContext context) =>
-            OnRejectDialog(message: message),
+        builder: (_) => OnRejectDialog(message: message),
       );
 
-  const OnRejectDialog({super.key, required this.message});
+  const OnRejectDialog({
+    super.key,
+    required this.message,
+  });
 
   final MessageModel message;
 
   @override
-  Widget build(final BuildContext context) => BottomSheetWidget(
+  Widget build(BuildContext context) => BottomSheetWidget(
         icon: const IconOf.secrets(isBig: true, bage: BageType.error),
         titleString: 'Ownership Transfer Rejected',
         textSpan: [

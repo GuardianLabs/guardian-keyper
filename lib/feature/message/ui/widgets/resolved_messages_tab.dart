@@ -7,7 +7,7 @@ class ResolvedMessagesTab extends StatelessWidget {
   const ResolvedMessagesTab({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final messages = context.watch<MessageHomePresenter>().resolvedMessages;
     return messages.isEmpty
         ? Center(

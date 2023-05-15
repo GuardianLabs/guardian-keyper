@@ -1,14 +1,14 @@
 import 'package:get_it/get_it.dart';
 import 'package:sss256/sss256.dart';
 
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
 import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 import 'package:guardian_keyper/domain/entity/secret_shard_model.dart';
 
 import '../../domain/vault_interactor.dart';
-import '../presenters/vault_secret_presenter_base.dart';
+import '../vault_secret_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 

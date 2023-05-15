@@ -19,6 +19,6 @@ class _SetPasscodePageState extends State<SetPasscodePage> {
   }
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       Container(color: Theme.of(context).colorScheme.background);
 }

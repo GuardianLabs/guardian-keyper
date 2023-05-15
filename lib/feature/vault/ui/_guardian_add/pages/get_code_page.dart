@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
@@ -38,7 +38,7 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           // Header
           HeaderBar(
@@ -83,7 +83,7 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
         ],
       );
 
-  void _setCode(final String? code) {
+  void _setCode(String? code) {
     try {
       _presenter.setCode(code);
     } on SetCodeFailException {
@@ -93,7 +93,7 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
     } on SetCodeVersionHighException {
       OnVersionHighDialog.show(context);
     } on SetCodeDuplicateException catch (e) {
-      OnDuplicateDialog.show(context, e.message);
+      OnDuplicateDialog.show(context, message: e.message);
     }
   }
 }

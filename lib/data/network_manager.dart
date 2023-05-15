@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
 
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
 
@@ -51,7 +51,7 @@ class NetworkManager {
     if (seed.isEmpty) {
       await _preferencesService.set<Uint8List>(keySeed, cryptoKeys.seed);
     }
-    router.messageStream.listen((final p2p.Message p2pMessage) {
+    router.messageStream.listen((p2p.Message p2pMessage) {
       final message = MessageModel.tryFromBytes(p2pMessage.payload);
       if (message != null && message.version == MessageModel.currentVersion) {
         _messagesController.add(message);
@@ -60,7 +60,7 @@ class NetworkManager {
     return this;
   }
 
-  Future<void> start([void _]) async {
+  Future<void> start() async {
     await _platformService.checkConnectivity();
     if (_platformService.hasNoConnectivity) return;
     for (final address in await _platformService.getIPs()) {
@@ -72,15 +72,15 @@ class NetworkManager {
     await router.start();
   }
 
-  void pause([void _]) {
+  void pause() {
     router.stop();
     router.transports.clear();
   }
 
-  Future<void> sendTo({
-    required final PeerId peerId,
-    required final MessageModel message,
-    required final bool isConfirmable,
+  Future<void> sendTo(
+    PeerId peerId, {
+    required MessageModel message,
+    bool isConfirmable = false,
   }) async {
     try {
       await router.sendMessage(
@@ -93,10 +93,10 @@ class NetworkManager {
     }
   }
 
-  bool getPeerStatus(final PeerId peerId) =>
+  bool getPeerStatus(PeerId peerId) =>
       router.getPeerStatus(p2p.PeerId(value: peerId.token));
 
-  Future<bool> pingPeer(final PeerId peerId) =>
+  Future<bool> pingPeer(PeerId peerId) =>
       router.pingPeer(p2p.PeerId(value: peerId.token));
 
   void toggleBootstrap([bool? isActive]) {

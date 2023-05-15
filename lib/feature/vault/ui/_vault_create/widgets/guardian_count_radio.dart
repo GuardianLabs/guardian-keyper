@@ -24,7 +24,7 @@ class GuardianCountRadio extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) => InkWell(
+  Widget build(BuildContext context) => InkWell(
         onTap: () => context
             .read<VaultCreatePresenter>()
             .setVaultSize(vaultSize, vaultThreshold),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/feature/intro/ui/intro_screen.dart';
 import 'package:guardian_keyper/feature/settings/ui/settings_screen.dart';
 import 'package:guardian_keyper/feature/qr_code/ui/qr_code_show_screen.dart';
@@ -12,47 +13,26 @@ import 'package:guardian_keyper/feature/vault/ui/_vault_restore/vault_restore_sc
 import 'package:guardian_keyper/feature/vault/ui/_guardian_add/vault_guardian_add_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_secret_recovery/vault_secret_recovery_screen.dart';
 
-const routeIntro = '/intro';
-const routeSettings = '/settings';
-
-const routeQrCodeShow = '/qrcode/show';
-const routeQrCodeScan = '/qrcode/scan';
-
-const routeShardShow = '/vault/shard/show';
-
-const routeVaultShow = '/vault/show';
-const routeVaultCreate = '/vault/create';
-const routeVaultRestore = '/vault/restore';
-const routeVaultGuardianAdd = '/vault/guardian/add';
-
-const routeVaultSecretAdd = '/vault/secret/add';
-const routeVaultSecretRecover = '/vault/secret/recover';
-
-const screensByRouteName = <String, Widget>{
-  routeIntro: IntroScreen(),
-  routeSettings: SettingsScreen(),
-  // QRCode
-  routeQrCodeShow: QRCodeShowScreen(),
-  routeQrCodeScan: QRCodeScanScreen(),
-  // Shard
-  routeShardShow: ShardShowScreen(),
-  // Vault
-  routeVaultShow: VaultShowScreen(),
-  routeVaultCreate: VaultCreateScreen(),
-  routeVaultRestore: VaultRestoreScreen(),
-  routeVaultGuardianAdd: VaultGuardianAddScreen(),
-  // Secret
-  routeVaultSecretAdd: VaultSecretAddScreen(),
-  routeVaultSecretRecover: VaultSecretRecoveryScreen(),
-};
-
-Route? onGenerateRoute(final RouteSettings settings) {
-  final screen = screensByRouteName[settings.name];
-  return screen == null
-      ? null
-      : MaterialPageRoute(
-          fullscreenDialog: true,
-          settings: settings,
-          builder: (_) => screen,
-        );
-}
+Route? onGenerateRoute(RouteSettings settings) => MaterialPageRoute(
+      settings: settings,
+      fullscreenDialog: true,
+      builder: (_) => switch (settings.name) {
+        routeIntro => const IntroScreen(),
+        routeSettings => const SettingsScreen(),
+        // QRCode
+        routeQrCodeShow => const QRCodeShowScreen(),
+        routeQrCodeScan => const QRCodeScanScreen(),
+        // Shard
+        routeShardShow => const ShardShowScreen(),
+        // Vault
+        routeVaultShow => const VaultShowScreen(),
+        routeVaultCreate => const VaultCreateScreen(),
+        routeVaultRestore => const VaultRestoreScreen(),
+        routeVaultGuardianAdd => const VaultGuardianAddScreen(),
+        // Secret
+        routeVaultSecretAdd => const VaultSecretAddScreen(),
+        routeVaultSecretRecover => const VaultSecretRecoveryScreen(),
+        // null
+        _ => throw Exception('Route not found!'),
+      },
+    );

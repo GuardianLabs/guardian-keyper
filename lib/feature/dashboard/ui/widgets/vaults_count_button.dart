@@ -9,7 +9,7 @@ class VaultsCountButton extends StatelessWidget {
   const VaultsCountButton({super.key});
 
   @override
-  Widget build(final BuildContext context) => GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
         onTap: context.read<HomePresenter>().gotoVaults,
         child: Container(
           decoration: BoxDecoration(

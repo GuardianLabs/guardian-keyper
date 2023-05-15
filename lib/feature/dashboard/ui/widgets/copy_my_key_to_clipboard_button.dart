@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
@@ -20,7 +20,7 @@ class _CopyMyKeyToClipboardButtonState
   var isDisabled = false;
 
   @override
-  Widget build(final BuildContext context) => IconButton(
+  Widget build(BuildContext context) => IconButton(
         icon: const Icon(Icons.copy, size: 20),
         onPressed: isDisabled
             ? null

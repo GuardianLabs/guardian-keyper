@@ -5,10 +5,13 @@ abstract class PagePresenterBase extends ChangeNotifier {
 
   int currentPage;
 
-  PagePresenterBase({required this.pages, this.currentPage = 0});
+  PagePresenterBase({
+    required this.pages,
+    this.currentPage = 0,
+  });
 
-  void gotoPage<T extends Widget>([int? pageNumber]) {
-    currentPage = pageNumber ?? pages.indexWhere((e) => e is T);
+  void gotoPage(int pageNumber) {
+    currentPage = pageNumber;
     notifyListeners();
   }
 

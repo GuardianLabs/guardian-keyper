@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
@@ -10,7 +10,7 @@ class RestrictedVaultPage extends StatelessWidget {
   const RestrictedVaultPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final vault = context.watch<VaultShowPresenter>().vault;
     return ListView(
       padding: paddingAll20,

@@ -9,7 +9,7 @@ class ActiveMessagesTab extends StatelessWidget {
   const ActiveMessagesTab({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final presenter = context.watch<MessageHomePresenter>();
     return presenter.activeMessages.isEmpty
         ? Center(
@@ -23,7 +23,7 @@ class ActiveMessagesTab extends StatelessWidget {
         : ListView(
             children: presenter.activeMessages
                 .map(
-                  (final MessageModel message) => Dismissible(
+                  (message) => Dismissible(
                     key: Key(message.aKey),
                     background: Container(
                       alignment: Alignment.centerLeft,

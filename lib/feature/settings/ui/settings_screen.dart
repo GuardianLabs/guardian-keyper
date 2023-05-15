@@ -9,7 +9,7 @@ class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(final BuildContext context) => ChangeNotifierProvider(
+  Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (_) => SettingsPresenter(),
         child: ScaffoldSafe(
           child: Column(
@@ -22,12 +22,7 @@ class SettingsScreen extends StatelessWidget {
               // Body
               Expanded(
                 child: Consumer<SettingsPresenter>(
-                  builder: (
-                    final BuildContext context,
-                    final SettingsPresenter presenter,
-                    final Widget? widget,
-                  ) =>
-                      ListView(
+                  builder: (context, presenter, __) => ListView(
                     padding: paddingAll20,
                     children: [
                       // Change Device Name
@@ -41,8 +36,10 @@ class SettingsScreen extends StatelessWidget {
                             style: textStyleSourceSansPro414Purple,
                           ),
                           trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                          onTap: () =>
-                              OnSetDeviceNameDialog.show(context, presenter),
+                          onTap: () => OnSetDeviceNameDialog.show(
+                            context,
+                            presenter: presenter,
+                          ),
                         ),
                       ),
                       // Change PassCode

@@ -4,9 +4,8 @@ import 'package:guardian_keyper/domain/entity/_id/peer_id.dart';
 import 'package:guardian_keyper/domain/entity/_id/secret_id.dart';
 import 'package:guardian_keyper/domain/entity/_id/vault_id.dart';
 import 'package:guardian_keyper/domain/entity/message_model.dart';
-import 'package:guardian_keyper/domain/entity/vault_model.dart';
 
-import '../../domain/vault_interactor.dart';
+import '../domain/vault_interactor.dart';
 import 'vault_presenter_base.dart';
 
 abstract class VaultSecretPresenterBase extends VaultPresenterBase {
@@ -15,14 +14,15 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
     required super.pages,
     required this.vaultId,
     required this.secretId,
-  }) {
-    vault = _vaultInteractor.getVaultById(vaultId)!;
-  }
+  });
 
   SecretId secretId;
+
   final VaultId vaultId;
-  late final VaultModel vault;
+
   final Set<MessageModel> messages = {};
+
+  late final vault = _vaultInteractor.getVaultById(vaultId)!;
 
   @override
   void requestWorker([timer]) {
@@ -35,11 +35,10 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
     }
   }
 
-  MessageModel getMessageOf(final PeerId guardian) => messages.firstWhere(
-        (e) => e.peerId == guardian,
-      );
+  MessageModel getMessageOf(PeerId guardian) =>
+      messages.firstWhere((e) => e.peerId == guardian);
 
-  MessageModel? checkAndUpdateMessage(final MessageModel message) {
+  MessageModel? checkAndUpdateMessage(MessageModel message) {
     if (message.hasNoResponse) return null;
     final storedMessage = messages.lookup(message);
     if (storedMessage == null || storedMessage.hasResponse) return null;

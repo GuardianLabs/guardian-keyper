@@ -9,7 +9,7 @@ class ShareSecretPage extends StatelessWidget {
   const ShareSecretPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final presenter = context.read<VaultSecretAddPresenter>();
     return Column(
       children: [

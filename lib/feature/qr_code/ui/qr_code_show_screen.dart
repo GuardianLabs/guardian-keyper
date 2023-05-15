@@ -50,7 +50,7 @@ class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
   }
 
   @override
-  Widget build(final BuildContext context) => ScaffoldSafe(
+  Widget build(BuildContext context) => ScaffoldSafe(
         child: Column(
           children: [
             // Header
@@ -78,19 +78,17 @@ class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
                       Container(
                         decoration: boxDecoration,
                         child: QrImageView(
-                          // key: Key(_qrCode),
-                          gapless: false,
-                          padding: paddingAll20,
-                          foregroundColor: Colors.white,
+                          data: _qrCode,
+                          errorCorrectionLevel: QrErrorCorrectLevel.M,
                           dataModuleStyle: const QrDataModuleStyle(
                             color: clPurpleLight,
-                            dataModuleShape: QrDataModuleShape.circle,
+                            dataModuleShape: QrDataModuleShape.square,
                           ),
                           eyeStyle: const QrEyeStyle(
-                            eyeShape: QrEyeShape.circle,
+                            color: clPurpleLight,
+                            eyeShape: QrEyeShape.square,
                           ),
-                          errorCorrectionLevel: QrErrorCorrectLevel.M,
-                          data: _qrCode,
+                          padding: paddingAll20,
                         ),
                       ),
                       LayoutBuilder(builder: (_, constraints) {
@@ -121,7 +119,7 @@ class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
               padding: paddingAll20,
               width: double.infinity,
               child: Builder(
-                builder: (final BuildContext context) => ElevatedButton.icon(
+                builder: (context) => ElevatedButton.icon(
                   icon: const IconOf.share(
                     bgColor: clIndigo500,
                     size: 20,

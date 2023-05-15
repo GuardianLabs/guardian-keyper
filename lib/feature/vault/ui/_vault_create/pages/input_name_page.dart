@@ -1,5 +1,4 @@
-import 'package:guardian_keyper/app/routes.dart';
-import 'package:guardian_keyper/app/consts.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../vault_create_presenter.dart';
@@ -8,7 +7,7 @@ class InputNamePage extends StatelessWidget {
   const InputNamePage({super.key});
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           // Header
           HeaderBar(
@@ -36,12 +35,12 @@ class InputNamePage extends StatelessWidget {
                   padding: paddingV32,
                   child: Selector<VaultCreatePresenter, bool>(
                     selector: (
-                      final BuildContext context,
+                      BuildContext context,
                       final VaultCreatePresenter presenter,
                     ) =>
                         presenter.isVaultNameTooShort,
                     builder: (
-                      final BuildContext context,
+                      BuildContext context,
                       final bool isGroupNameToolShort,
                       final Widget? widget,
                     ) =>

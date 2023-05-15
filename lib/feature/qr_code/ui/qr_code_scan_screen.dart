@@ -34,7 +34,7 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
   }
 
   @override
-  Widget build(final BuildContext context) => ScaffoldSafe(
+  Widget build(BuildContext context) => ScaffoldSafe(
         child: Stack(
           children: [
             MobileScanner(

@@ -8,7 +8,7 @@ import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 
 abstract mixin class MessageEgressMixin {
-  Future<void> archivateMessage(final MessageModel message);
+  Future<void> archivateMessage(MessageModel message);
 
   Future<void> sendRespone(final MessageModel message) =>
       switch (message.code) {
@@ -23,7 +23,7 @@ abstract mixin class MessageEgressMixin {
   final _settingsManager = GetIt.I<SettingsManager>();
   final _vaultRepository = GetIt.I<VaultRepository>();
 
-  Future<void> _sendCreateGroupResponse(final MessageModel message) async {
+  Future<void> _sendCreateGroupResponse(MessageModel message) async {
     await _sendResponse(message);
     if (message.isAccepted) {
       final vault = VaultModel(
@@ -37,7 +37,7 @@ abstract mixin class MessageEgressMixin {
     await archivateMessage(message);
   }
 
-  Future<void> _sendTakeGroupResponse(final MessageModel message) async {
+  Future<void> _sendTakeGroupResponse(MessageModel message) async {
     if (message.isAccepted) {
       final vault = _vaultRepository
           .get(message.vault.aKey)!
@@ -54,7 +54,7 @@ abstract mixin class MessageEgressMixin {
     await archivateMessage(message);
   }
 
-  Future<void> _sendSetShardResponse(final MessageModel message) async {
+  Future<void> _sendSetShardResponse(MessageModel message) async {
     if (message.isAccepted) {
       final vault = _vaultRepository.get(message.vaultId.asKey)!;
       await _vaultRepository.put(
@@ -71,7 +71,7 @@ abstract mixin class MessageEgressMixin {
     ));
   }
 
-  Future<void> _sendGetShardResponse(final MessageModel message) async {
+  Future<void> _sendGetShardResponse(MessageModel message) async {
     if (message.isAccepted) {
       final vault = _vaultRepository.get(message.vaultId.asKey)!;
       await _sendResponse(
@@ -91,10 +91,9 @@ abstract mixin class MessageEgressMixin {
     await archivateMessage(message);
   }
 
-  Future<void> _sendResponse(final MessageModel message) =>
-      _networkManager.sendTo(
+  Future<void> _sendResponse(MessageModel message) => _networkManager.sendTo(
+        message.peerId,
         isConfirmable: true,
-        peerId: message.peerId,
         message: message.copyWith(peerId: _settingsManager.selfId),
       );
 }

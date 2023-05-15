@@ -1,4 +1,4 @@
-import '../../app/consts.dart';
+import '../../consts.dart';
 import '../widgets/common.dart';
 
 SnackBar buildSnackBar({

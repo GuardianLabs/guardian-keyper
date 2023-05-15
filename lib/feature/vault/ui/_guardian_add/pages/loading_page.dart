@@ -1,6 +1,7 @@
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/domain/entity/message_model.dart';
 
 import '../vault_guardian_add_presenter.dart';
 import '../dialogs/on_fail_dialog.dart';
@@ -23,7 +24,7 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Header
@@ -68,7 +69,7 @@ class _LoadingPageState extends State<LoadingPage> {
         ],
       );
 
-  void _handleResponse(final MessageModel message) async {
+  void _handleResponse(MessageModel message) async {
     if (message.isAccepted) {
       ScaffoldMessenger.of(context).showSnackBar(
         buildSnackBar(

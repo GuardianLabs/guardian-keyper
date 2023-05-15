@@ -24,20 +24,19 @@ enum MessageCode { createGroup, getShard, setShard, takeGroup }
 class MessageModel extends Serializable {
   static const currentVersion = 1;
   static const typeId = 10;
+  static const requestExpires = Duration(days: 1);
 
   static MessageModel? tryFromBase64(String? value) {
-    if (value == null) return null;
     try {
-      return MessageModel.fromBase64(value);
+      return MessageModel.fromBase64(value!);
     } catch (_) {
       return null;
     }
   }
 
   static MessageModel? tryFromBytes(Uint8List? value) {
-    if (value == null) return null;
     try {
-      return MessageModel.fromBytes(value);
+      return MessageModel.fromBytes(value!);
     } catch (_) {
       return null;
     }
@@ -55,14 +54,18 @@ class MessageModel extends Serializable {
   MessageModel({
     this.version = currentVersion,
     MessageId? id,
-    required this.peerId,
     DateTime? timestamp,
+    required this.peerId,
     required this.code,
     this.status = MessageStatus.created,
     this.payload,
   })  : id = id ?? MessageId(),
-        timestamp = timestamp ?? DateTime.now(),
-        payloadTypeId = type2TypeId[payload.runtimeType];
+        timestamp = timestamp ?? DateTime.timestamp(),
+        payloadTypeId = switch (payload) {
+          VaultModel _ => VaultModel.typeId,
+          SecretShardModel _ => SecretShardModel.typeId,
+          _ => throw const FormatException('Unsupported payload type!'),
+        };
 
   @override
   bool operator ==(Object other) =>
@@ -73,9 +76,6 @@ class MessageModel extends Serializable {
   @override
   int get hashCode => Object.hash(runtimeType, id.hashCode);
 
-  @override
-  bool get isEmpty => payload == null;
-
   String get aKey => id.asKey;
 
   bool get haveVault => payload is VaultModel;
@@ -84,29 +84,18 @@ class MessageModel extends Serializable {
   bool get haveSecretShard => payload is SecretShardModel;
   SecretShardModel get secretShard => payload as SecretShardModel;
 
-  PeerId get ownerId {
-    switch (payload.runtimeType) {
-      case SecretShardModel:
-        return (payload as SecretShardModel).ownerId;
-      case VaultModel:
-        return (payload as VaultModel).ownerId;
-      default:
-        throw const FormatException('Payload have no ownerId!');
-    }
-  }
+  PeerId get ownerId => switch (payload) {
+        VaultModel vault => vault.ownerId,
+        SecretShardModel shard => shard.ownerId,
+        _ => throw const FormatException('Payload have no ownerId!'),
+      };
 
-  VaultId get vaultId {
-    switch (payload.runtimeType) {
-      case SecretShardModel:
-        return (payload as SecretShardModel).vaultId;
-      case VaultModel:
-        return (payload as VaultModel).id;
-      default:
-        throw const FormatException('Payload have no groupId!');
-    }
-  }
+  VaultId get vaultId => switch (payload) {
+        VaultModel vault => vault.id,
+        SecretShardModel shard => shard.vaultId,
+        _ => throw const FormatException('Payload have no groupId!'),
+      };
 
-  bool get isRequested => status == MessageStatus.created;
   bool get isNotRequested => status != MessageStatus.created;
 
   bool get isReceived => status == MessageStatus.received;
@@ -114,18 +103,18 @@ class MessageModel extends Serializable {
 
   bool get isAccepted => status == MessageStatus.accepted;
   bool get isRejected => status == MessageStatus.rejected;
-  bool get isFailed => status == MessageStatus.failed;
-  bool get isDuplicated => status == MessageStatus.duplicated;
-
-  bool get isResolved =>
-      status == MessageStatus.accepted || status == MessageStatus.rejected;
-
-  bool get isNotResolved => !isResolved;
 
   bool get hasResponse =>
       status != MessageStatus.created && status != MessageStatus.received;
 
   bool get hasNoResponse => !hasResponse;
+
+  bool get isExpired =>
+      timestamp.isBefore(DateTime.timestamp().subtract(requestExpires));
+
+  bool get isForPrune =>
+      (status == MessageStatus.created || status == MessageStatus.received) &&
+      isExpired;
 
   factory MessageModel.fromBase64(String value) =>
       MessageModel.fromBytes(base64Decode(value));
@@ -143,7 +132,11 @@ class MessageModel extends Serializable {
         final status = MessageStatus.values[u.unpackInt()!];
         final payloadTypeId = u.unpackInt();
         final payloadRaw = u.unpackBinary();
-        final payload = typeId2Type[payloadTypeId]?.call(payloadRaw);
+        final payload = switch (payloadTypeId) {
+          VaultModel.typeId => VaultModel.fromBytes(payloadRaw),
+          SecretShardModel.typeId => SecretShardModel.fromBytes(payloadRaw),
+          _ => throw const FormatException('Unsupported payload type!'),
+        };
         return MessageModel(
           version: version,
           id: id,
@@ -192,13 +185,3 @@ class MessageModel extends Serializable {
         payload: emptyPayload == true ? null : payload ?? this.payload,
       );
 }
-
-const typeId2Type = {
-  SecretShardModel.typeId: SecretShardModel.fromBytes,
-  VaultModel.typeId: VaultModel.fromBytes,
-};
-
-const type2TypeId = {
-  SecretShardModel: SecretShardModel.typeId,
-  VaultModel: VaultModel.typeId,
-};

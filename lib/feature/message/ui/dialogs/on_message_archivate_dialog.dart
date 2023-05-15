@@ -3,8 +3,7 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'message_titles_mixin.dart';
 
 class OnMessageArchivateDialog extends StatelessWidget with MessageTitlesMixin {
-  static Future<bool?> show(final BuildContext context) =>
-      showModalBottomSheet<bool>(
+  static Future<bool?> show(BuildContext context) => showModalBottomSheet<bool>(
         context: context,
         useSafeArea: true,
         isScrollControlled: true,
@@ -14,7 +13,7 @@ class OnMessageArchivateDialog extends StatelessWidget with MessageTitlesMixin {
   const OnMessageArchivateDialog({super.key});
 
   @override
-  Widget build(final BuildContext context) => BottomSheetWidget(
+  Widget build(BuildContext context) => BottomSheetWidget(
         titleString: 'Are you sure?',
         textString: 'This Request will be moved to Resolved'
             ' and you will not able to Approve it!',

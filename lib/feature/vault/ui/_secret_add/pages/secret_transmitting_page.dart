@@ -26,7 +26,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
   }
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           // Header
           const HeaderBar(
@@ -86,13 +86,13 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
         ],
       );
 
-  void _handleResponse(final MessageModel message) async {
+  void _handleResponse(MessageModel message) async {
     if (message.isAccepted) {
-      await OnSuccessDialog.show(context, message);
+      await OnSuccessDialog.show(context, message: message);
     } else if (message.isRejected) {
-      await OnRejectDialog.show(context, message);
+      await OnRejectDialog.show(context, message: message);
     } else {
-      await OnFailDialog.show(context, message);
+      await OnFailDialog.show(context, message: message);
     }
     if (context.mounted) Navigator.of(context).pop();
   }

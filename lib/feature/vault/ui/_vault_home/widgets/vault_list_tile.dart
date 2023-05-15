@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/domain/entity/vault_model.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
@@ -10,7 +10,7 @@ class VaultListTile extends StatelessWidget {
   const VaultListTile({super.key, required this.vault});
 
   @override
-  Widget build(final BuildContext context) => ListTile(
+  Widget build(BuildContext context) => ListTile(
         leading: const IconOf.shield(color: clWhite),
         title: RichText(
           text: TextSpan(

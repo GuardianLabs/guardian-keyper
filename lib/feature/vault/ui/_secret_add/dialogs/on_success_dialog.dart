@@ -5,9 +5,9 @@ import 'package:guardian_keyper/domain/entity/message_model.dart';
 
 class OnSuccessDialog extends StatelessWidget {
   static Future<void> show(
-    final BuildContext context,
-    final MessageModel message,
-  ) =>
+    BuildContext context, {
+    required MessageModel message,
+  }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: true,
@@ -15,12 +15,15 @@ class OnSuccessDialog extends StatelessWidget {
         builder: (_) => OnSuccessDialog(message: message),
       );
 
-  const OnSuccessDialog({super.key, required this.message});
+  const OnSuccessDialog({
+    super.key,
+    required this.message,
+  });
 
   final MessageModel message;
 
   @override
-  Widget build(final BuildContext context) => BottomSheetWidget(
+  Widget build(BuildContext context) => BottomSheetWidget(
         icon: const IconOf.splitAndShare(isBig: true, bage: BageType.ok),
         titleString: 'Your Secret has been split',
         textSpan: [

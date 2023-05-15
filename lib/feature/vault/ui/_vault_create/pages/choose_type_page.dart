@@ -8,7 +8,7 @@ class ChooseTypePage extends StatelessWidget {
   const ChooseTypePage({super.key});
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           // Header
           const HeaderBar(
