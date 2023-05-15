@@ -42,15 +42,6 @@ class MessageModel extends Serializable {
     }
   }
 
-  final int version;
-  final MessageId id;
-  final PeerId peerId;
-  final DateTime timestamp;
-  final MessageCode code;
-  final MessageStatus status;
-  final int? payloadTypeId;
-  final Serializable? payload;
-
   MessageModel({
     this.version = currentVersion,
     MessageId? id,
@@ -60,10 +51,23 @@ class MessageModel extends Serializable {
     this.status = MessageStatus.created,
     this.payload,
   })  : id = id ?? MessageId(),
-        timestamp = timestamp ?? DateTime.timestamp(),
-        payloadTypeId = switch (payload) {
-          VaultModel _ => VaultModel.typeId,
-          SecretShardModel _ => SecretShardModel.typeId,
+        timestamp = timestamp ?? DateTime.timestamp();
+
+  final int version;
+  final MessageId id;
+  final PeerId peerId;
+  final DateTime timestamp;
+  final MessageCode code;
+  final MessageStatus status;
+  final Serializable? payload;
+
+  late final String aKey = id.asKey;
+
+  late final int? payloadTypeId = payload == null
+      ? null
+      : switch (payload.runtimeType) {
+          VaultModel => VaultModel.typeId,
+          SecretShardModel => SecretShardModel.typeId,
           _ => throw const FormatException('Unsupported payload type!'),
         };
 
@@ -76,12 +80,10 @@ class MessageModel extends Serializable {
   @override
   int get hashCode => Object.hash(runtimeType, id.hashCode);
 
-  String get aKey => id.asKey;
-
-  bool get haveVault => payload is VaultModel;
+  bool get containsVault => payload is VaultModel;
   VaultModel get vault => payload as VaultModel;
 
-  bool get haveSecretShard => payload is SecretShardModel;
+  bool get containsSecretShard => payload is SecretShardModel;
   SecretShardModel get secretShard => payload as SecretShardModel;
 
   PeerId get ownerId => switch (payload) {
@@ -122,34 +124,26 @@ class MessageModel extends Serializable {
   factory MessageModel.fromBytes(List<int> value) {
     final u = Unpacker(value is Uint8List ? value : Uint8List.fromList(value));
     final version = u.unpackInt()!;
-    switch (version) {
-      case 1:
-        final id = MessageId.fromBytes(u.unpackBinary());
-        final peerId = PeerId.fromBytes(u.unpackBinary());
-        final timestamp =
-            DateTime.fromMillisecondsSinceEpoch(u.unpackInt()!, isUtc: true);
-        final code = MessageCode.values[u.unpackInt()!];
-        final status = MessageStatus.values[u.unpackInt()!];
-        final payloadTypeId = u.unpackInt();
-        final payloadRaw = u.unpackBinary();
-        final payload = switch (payloadTypeId) {
-          VaultModel.typeId => VaultModel.fromBytes(payloadRaw),
-          SecretShardModel.typeId => SecretShardModel.fromBytes(payloadRaw),
-          _ => throw const FormatException('Unsupported payload type!'),
-        };
-        return MessageModel(
+    return switch (version) {
+      currentVersion => MessageModel(
           version: version,
-          id: id,
-          peerId: peerId,
-          timestamp: timestamp,
-          code: code,
-          status: status,
-          payload: payload,
-        );
-
-      default:
-        throw const FormatException('Unsupported version of MessageModel!');
-    }
+          id: MessageId.fromBytes(u.unpackBinary()),
+          peerId: PeerId.fromBytes(u.unpackBinary()),
+          timestamp: DateTime.fromMillisecondsSinceEpoch(
+            u.unpackInt()!,
+            isUtc: true,
+          ),
+          code: MessageCode.values[u.unpackInt()!],
+          status: MessageStatus.values[u.unpackInt()!],
+          payload: switch (u.unpackInt()) {
+            VaultModel.typeId => VaultModel.fromBytes(u.unpackBinary()),
+            SecretShardModel.typeId =>
+              SecretShardModel.fromBytes(u.unpackBinary()),
+            _ => throw const FormatException('Unsupported payload type!'),
+          },
+        ),
+      _ => throw const FormatException('Unsupported version of Message!'),
+    };
   }
 
   @override

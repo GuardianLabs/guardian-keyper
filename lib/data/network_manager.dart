@@ -51,11 +51,9 @@ class NetworkManager {
     if (seed.isEmpty) {
       await _preferencesService.set<Uint8List>(keySeed, cryptoKeys.seed);
     }
-    router.messageStream.listen((p2p.Message p2pMessage) {
+    router.messageStream.listen((p2pMessage) {
       final message = MessageModel.tryFromBytes(p2pMessage.payload);
-      if (message != null && message.version == MessageModel.currentVersion) {
-        _messagesController.add(message);
-      }
+      if (message != null) _messagesController.add(message);
     });
     return this;
   }

@@ -10,13 +10,8 @@ class SecretShardModel extends Serializable {
   static const currentVersion = 1;
   static const typeId = 11;
 
-  final SecretId id;
-  final PeerId ownerId;
-  final VaultId vaultId;
-  final int groupSize, groupThreshold;
-  final String shard;
-
-  const SecretShardModel({
+  SecretShardModel({
+    this.version = currentVersion,
     required this.id,
     required this.ownerId,
     required this.vaultId,
@@ -24,6 +19,14 @@ class SecretShardModel extends Serializable {
     required this.groupThreshold,
     required this.shard,
   });
+
+  final SecretId id;
+  final PeerId ownerId;
+  final VaultId vaultId;
+  final int version, groupSize, groupThreshold;
+  final String shard;
+
+  late final String aKey = id.asKey;
 
   @override
   bool operator ==(Object other) =>
@@ -34,21 +37,21 @@ class SecretShardModel extends Serializable {
   @override
   int get hashCode => Object.hash(runtimeType, id.hashCode);
 
-  String get aKey => id.asKey;
-
   factory SecretShardModel.fromBytes(List<int> bytes) {
     final u = Unpacker(bytes is Uint8List ? bytes : Uint8List.fromList(bytes));
-    if (u.unpackInt() != currentVersion) {
-      throw const FormatException('Unsupported version of SecretShardModel');
-    }
-    return SecretShardModel(
-      id: SecretId.fromBytes(u.unpackBinary()),
-      ownerId: PeerId.fromBytes(u.unpackBinary()),
-      vaultId: VaultId.fromBytes(u.unpackBinary()),
-      groupSize: u.unpackInt()!,
-      groupThreshold: u.unpackInt()!,
-      shard: u.unpackString()!,
-    );
+    final version = u.unpackInt()!;
+    return switch (version) {
+      currentVersion => SecretShardModel(
+          version: version,
+          id: SecretId.fromBytes(u.unpackBinary()),
+          ownerId: PeerId.fromBytes(u.unpackBinary()),
+          vaultId: VaultId.fromBytes(u.unpackBinary()),
+          groupSize: u.unpackInt()!,
+          groupThreshold: u.unpackInt()!,
+          shard: u.unpackString()!,
+        ),
+      _ => throw const FormatException('Unsupported version of SecretShard'),
+    };
   }
 
   @override
@@ -69,6 +72,7 @@ class SecretShardModel extends Serializable {
     String? shard,
   }) =>
       SecretShardModel(
+        version: version,
         id: id,
         ownerId: ownerId ?? this.ownerId,
         vaultId: vaultId,

@@ -10,13 +10,8 @@ class VaultModel extends Serializable {
   static const currentVersion = 1;
   static const typeId = 12;
 
-  final VaultId id;
-  final PeerId ownerId;
-  final int maxSize, threshold;
-  final Map<PeerId, String> guardians;
-  final Map<SecretId, String> secrets;
-
   VaultModel({
+    this.version = currentVersion,
     VaultId? id,
     required this.ownerId,
     this.maxSize = 0,
@@ -24,6 +19,14 @@ class VaultModel extends Serializable {
     this.guardians = const {},
     this.secrets = const {},
   }) : id = id ?? VaultId();
+
+  final VaultId id;
+  final PeerId ownerId;
+  final int version, maxSize, threshold;
+  final Map<PeerId, String> guardians;
+  final Map<SecretId, String> secrets;
+
+  late final String aKey = id.asKey;
 
   @override
   bool operator ==(Object other) =>
@@ -34,39 +37,37 @@ class VaultModel extends Serializable {
   @override
   int get hashCode => Object.hash(runtimeType, id.hashCode);
 
-  String get aKey => id.asKey;
-
   int get size => guardians.length;
   int get missed => maxSize - size;
   int get redudancy => maxSize - threshold;
 
+  bool get hasQuorum => size >= threshold;
+  bool get hasSecrets => secrets.isNotEmpty;
+  bool get isSelfGuarded => guardians.containsKey(ownerId);
+
   bool get isFull => guardians.length == maxSize;
   bool get isNotFull => !isFull;
-
-  bool get hasQuorum => size >= threshold;
 
   bool get isRestricted => isNotFull && secrets.isNotEmpty;
   bool get isNotRestricted => !isRestricted;
 
-  bool get hasSecrets => secrets.isNotEmpty;
-
-  bool get isSelfGuarded => guardians.containsKey(ownerId);
-
   factory VaultModel.fromBytes(List<int> value) {
     final u = Unpacker(value is Uint8List ? value : Uint8List.fromList(value));
-    if (u.unpackInt() != currentVersion) {
-      throw const FormatException('Unsupported version of VaultModel!');
-    }
-    return VaultModel(
-      id: VaultId.fromBytes(u.unpackBinary()),
-      maxSize: u.unpackInt()!,
-      threshold: u.unpackInt()!,
-      ownerId: PeerId.fromBytes(u.unpackBinary()),
-      guardians: u.unpackMap().map<PeerId, String>(
-          (k, v) => MapEntry(PeerId.fromBytes(k as List<int>), v as String)),
-      secrets: u.unpackMap().map<SecretId, String>(
-          (k, v) => MapEntry(SecretId.fromBytes(k as List<int>), v as String)),
-    );
+    final version = u.unpackInt()!;
+    return switch (version) {
+      currentVersion => VaultModel(
+          version: version,
+          id: VaultId.fromBytes(u.unpackBinary()),
+          maxSize: u.unpackInt()!,
+          threshold: u.unpackInt()!,
+          ownerId: PeerId.fromBytes(u.unpackBinary()),
+          guardians: u.unpackMap().map<PeerId, String>((k, v) =>
+              MapEntry(PeerId.fromBytes(k as List<int>), v as String)),
+          secrets: u.unpackMap().map<SecretId, String>((k, v) =>
+              MapEntry(SecretId.fromBytes(k as List<int>), v as String)),
+        ),
+      _ => throw const FormatException('Unsupported version of Vault!'),
+    };
   }
 
   @override
@@ -96,6 +97,7 @@ class VaultModel extends Serializable {
     Map<SecretId, String>? secrets,
   }) =>
       VaultModel(
+        version: version,
         id: id,
         ownerId: ownerId ?? this.ownerId,
         maxSize: maxSize,

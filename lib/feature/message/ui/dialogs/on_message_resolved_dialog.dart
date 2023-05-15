@@ -66,7 +66,7 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
                     ],
                   ),
                 ),
-                if (message.haveVault)
+                if (message.containsVault)
                   Padding(
                     padding: paddingBottom20,
                     child: Row(
@@ -84,7 +84,7 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
                       ],
                     ),
                   ),
-                if (message.haveSecretShard)
+                if (message.containsSecretShard)
                   Padding(
                     padding: paddingBottom20,
                     child: Row(
