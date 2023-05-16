@@ -90,13 +90,14 @@ class MdnsManager {
     if (kDebugMode) print('mDNS $status: ${service.addresses}');
     if (service.type != _mdnsType) return;
     final peerIdBytes = service.txt?[_mdnsPeerId];
-    if (peerIdBytes == null) return;
+    if (peerIdBytes == null || peerIdBytes.isEmpty) return;
     if (status == nsd.ServiceStatus.found) {
       final peerId = p2p.PeerId(
         value: base64Decode(_utf8Decoder.convert(peerIdBytes)),
       );
       final props = p2p.AddressProperties(isLocal: true, isStatic: true);
       for (final address in service.addresses!) {
+        if (address.isLinkLocal || address.address.isEmpty) continue;
         _router.addPeerAddress(
           peerId: peerId,
           properties: props,

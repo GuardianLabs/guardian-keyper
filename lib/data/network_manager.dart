@@ -80,6 +80,7 @@ class NetworkManager {
     required MessageModel message,
     bool isConfirmable = false,
   }) async {
+    if (peerId.isEmpty) return;
     try {
       await router.sendMessage(
         isConfirmable: isConfirmable,

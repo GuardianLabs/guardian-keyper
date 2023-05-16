@@ -23,6 +23,8 @@ class PeerId extends IdBase {
     );
   }
 
+  bool get isEmpty => token.isEmpty;
+
   @override
   Uint8List toBytes() {
     final p = Packer()
