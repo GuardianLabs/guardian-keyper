@@ -5,7 +5,7 @@ import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
 
-import '../../../domain/vault_interactor.dart';
+import '../../../domain/use_case/vault_interactor.dart';
 
 class OnRemoveSecretDialog extends StatelessWidget {
   static Future<void> show(

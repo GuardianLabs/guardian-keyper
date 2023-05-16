@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'package:get_it/get_it.dart';
-import 'package:flutter/services.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
-import '../domain/vault_interactor.dart';
+import '../domain/use_case/vault_interactor.dart';
 import 'vault_presenter_base.dart';
 
 abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
@@ -19,24 +18,17 @@ abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
 
   bool get canUseClipboard => _canUseClipboard;
 
-  void checkClipboard() => Clipboard.hasStrings().then(
-        (bool hasStrings) {
+  void checkClipboard() => _vaultInteractor.hasStringsInClipboard().then(
+        (hasStrings) {
           _canUseClipboard = hasStrings;
           notifyListeners();
         },
       );
 
-  Future<String?> getCodeFromClipboard() async {
+  Future<String?> getCodeFromClipboard() {
     _canUseClipboard = false;
     notifyListeners();
-    final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-    var code = clipboardData?.text;
-    if (code != null) {
-      code = code.trim();
-      final whiteSpace = code.lastIndexOf('\n');
-      code = whiteSpace == -1 ? code : code.substring(whiteSpace).trim();
-    }
-    return code;
+    return _vaultInteractor.getCodeFromClipboard();
   }
 
   void setCode(String? code) {

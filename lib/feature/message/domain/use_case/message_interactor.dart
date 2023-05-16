@@ -2,8 +2,8 @@ import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/data/network_manager.dart';
 import 'package:guardian_keyper/domain/entity/peer_id.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 
 import '../../data/message_repository.dart';
@@ -18,9 +18,7 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
     _networkManager.messageStream.listen(onMessage);
   }
 
-  late final messageTTL = _networkManager.messageTTL;
-
-  late final flush = _messageRepository.flush;
+  late final pause = _messageRepository.flush;
   late final pingPeer = _networkManager.pingPeer;
   late final getPeerStatus = _networkManager.getPeerStatus;
 

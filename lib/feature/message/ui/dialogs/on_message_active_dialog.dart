@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:get_it/get_it.dart';
 
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
+import '../../domain/entity/message_model.dart';
 import '../../domain/use_case/message_interactor.dart';
 import '../widgets/request_panel.dart';
 import 'message_titles_mixin.dart';
@@ -42,7 +43,7 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
   );
 
   late final _timer = Timer.periodic(
-    _messagesInteractor.messageTTL,
+    retryNetworkTimeout,
     (_) {
       _messagesInteractor.pingPeer(widget.message.peerId).then(
         (isOnline) {

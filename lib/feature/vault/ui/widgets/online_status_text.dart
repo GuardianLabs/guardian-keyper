@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/domain/entity/peer_id.dart';
 
-import '../../domain/vault_interactor.dart';
+import '../../domain/use_case/vault_interactor.dart';
 
 class OnlineStatusText extends StatefulWidget {
   final PeerId peerId;

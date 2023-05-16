@@ -1,9 +1,7 @@
 import 'package:get_it/get_it.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/page_presenter_base.dart';
-import 'package:guardian_keyper/feature/auth/auth.dart';
+import 'package:guardian_keyper/ui/presenters/page_presenter_base.dart';
 import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
 
 export 'package:provider/provider.dart';
@@ -22,6 +20,8 @@ class IntroPresenter extends PagePresenterBase {
   String get deviceName => _deviceName;
 
   bool get canSaveName => _deviceName.length >= minNameLength;
+
+  bool get hasBiometrics => _settingsInteractor.hasBiometrics;
 
   set introStep(int value) {
     _introStep = value;
@@ -42,18 +42,4 @@ class IntroPresenter extends PagePresenterBase {
     await _settingsInteractor.setIsBiometricsEnabled(value);
     notifyListeners();
   }
-
-  Future<void> createPassCode({required BuildContext context}) =>
-      showCreatePassCode(
-        context: context,
-        onVibrate: _settingsInteractor.vibrate,
-        onConfirmed: (final String passCode) async {
-          await _settingsInteractor.setPassCode(passCode);
-          if (context.mounted) {
-            _settingsInteractor.hasBiometrics
-                ? nextPage()
-                : Navigator.of(context).pop();
-          }
-        },
-      );
 }

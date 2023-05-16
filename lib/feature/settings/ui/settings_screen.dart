@@ -1,6 +1,8 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/feature/auth/auth.dart';
+
+import 'package:guardian_keyper/feature/auth/ui/dialogs/on_create_pass_code.dart';
+import 'package:guardian_keyper/feature/auth/ui/dialogs/on_change_pass_code_dialog.dart';
 
 import 'settings_presenter.dart';
 import 'dialogs/on_set_device_name_page.dart';
@@ -54,17 +56,8 @@ class SettingsScreen extends StatelessWidget {
                           ),
                           trailing: const Icon(Icons.arrow_forward_ios_rounded),
                           onTap: () => presenter.passCode.isEmpty
-                              ? showCreatePassCode(
-                                  context: context,
-                                  onConfirmed: presenter.setPassCode,
-                                  onVibrate: presenter.vibrate,
-                                )
-                              : showChangePassCode(
-                                  context: context,
-                                  onConfirmed: presenter.setPassCode,
-                                  currentPassCode: presenter.passCode,
-                                  onVibrate: presenter.vibrate,
-                                ),
+                              ? OnCreatePassCodeDialog.show(context)
+                              : OnChangePassCodeDialog.show(context),
                         ),
                       ),
                       // Toggle Biometrics

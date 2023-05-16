@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
-import '../../domain/vault_interactor.dart';
+import '../../domain/use_case/vault_interactor.dart';
 
 class OnVersionLowDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showModalBottomSheet(

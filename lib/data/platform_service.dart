@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:vibration/vibration.dart';
 import 'package:local_auth/local_auth.dart';
@@ -18,6 +19,7 @@ class PlatformService {
   final vibrate = Vibration.vibrate;
   final wakelockEnable = Wakelock.enable;
   final wakelockDisable = Wakelock.disable;
+  final hasStringsInClipboard = Clipboard.hasStrings;
   final getAvailableBiometrics = _localAuth.getAvailableBiometrics;
 
   bool get hasWiFi => _connectivityResult == ConnectivityResult.wifi;
@@ -28,6 +30,18 @@ class PlatformService {
       .map<bool>((result) => result != ConnectivityResult.none);
 
   ConnectivityResult _connectivityResult = ConnectivityResult.none;
+
+  Future<String?> copyFromClipboard() async =>
+      (await Clipboard.getData(Clipboard.kTextPlain))?.text;
+
+  Future<bool> copyToClipboard(String text) async {
+    try {
+      await Clipboard.setData(ClipboardData(text: text));
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 
   Future<bool> checkConnectivity() async {
     _connectivityResult = await _connectivity.checkConnectivity();
@@ -42,7 +56,7 @@ class PlatformService {
     return result;
   }
 
-  Future<String> getDeviceName([final undefinedName = 'Undefined']) async {
+  Future<String> getDeviceName([String undefinedName = 'Undefined']) async {
     if (Platform.isAndroid) {
       return (await DeviceInfoPlugin().androidInfo).model;
     }
@@ -53,8 +67,8 @@ class PlatformService {
   }
 
   Future<bool> localAuthenticate({
-    final bool biometricOnly = true,
-    final String localizedReason = 'Please authenticate to log into the app',
+    bool biometricOnly = true,
+    String localizedReason = 'Please authenticate to log into the app',
   }) async {
     try {
       return await _localAuth.authenticate(

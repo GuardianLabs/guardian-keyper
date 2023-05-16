@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:guardian_keyper/ui/theme/theme.dart';
-import 'package:guardian_keyper/ui/splash_screen.dart';
+import 'package:guardian_keyper/ui/screens/splash_screen.dart';
 import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 
 import 'di.dart';

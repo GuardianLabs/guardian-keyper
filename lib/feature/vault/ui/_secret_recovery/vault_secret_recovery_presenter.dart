@@ -1,14 +1,9 @@
 import 'package:get_it/get_it.dart';
-import 'package:sss256/sss256.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
 
-import 'package:guardian_keyper/feature/auth/auth.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 
-import '../../domain/vault_interactor.dart';
+import '../../domain/use_case/vault_interactor.dart';
 import '../vault_secret_presenter_base.dart';
 
 export 'package:provider/provider.dart';
@@ -47,20 +42,16 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
   int get needAtLeast => vault.threshold - (vault.isSelfGuarded ? 1 : 0);
 
   @override
-  void responseHandler(final MessageModel message) async {
-    if (message.code != MessageCode.getShard) return;
-    final updatedMessage = checkAndUpdateMessage(message);
+  void responseHandler(MessageModel message) async {
+    final updatedMessage = checkAndUpdateMessage(message, MessageCode.getShard);
     if (updatedMessage == null) return;
     if (messages.where((m) => m.isAccepted).length >= vault.threshold) {
       stopListenResponse();
       _vaultInteractor.logFinishRestoreSecret();
-      _secret = await compute<List<String>, String>(
-        (List<String> shares) => restoreSecret(shares: shares),
-        messages
-            .where((e) => e.secretShard.shard.isNotEmpty)
-            .map((e) => e.secretShard.shard)
-            .toList(),
-      );
+      _secret = await _vaultInteractor.restoreSecret(messages
+          .where((e) => e.secretShard.shard.isNotEmpty)
+          .map((e) => e.secretShard.shard)
+          .toList());
       requestCompleter.complete(updatedMessage);
       nextPage();
     } else if (messages.where((e) => e.isRejected).length > vault.redudancy) {
@@ -78,44 +69,32 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
     notifyListeners();
   }
 
-  void onPressedShow({required BuildContext context}) {
+  bool tryShow() {
     if (_isAuthorized) {
       _isObfuscated = false;
       notifyListeners();
-    } else {
-      _checkPassCode(
-        context: context,
-        onUnlocked: () {
-          _isObfuscated = false;
-          _isAuthorized = true;
-          notifyListeners();
-        },
-      );
+      return true;
     }
+    return false;
   }
 
-  void onPressedCopy({
-    required BuildContext context,
-    required SnackBar snackBar,
-  }) async {
+  void onUnlockedShow() {
+    _isObfuscated = false;
+    _isAuthorized = true;
+    notifyListeners();
+  }
+
+  Future<bool> tryCopy() async {
     if (_isAuthorized) {
-      await Clipboard.setData(ClipboardData(text: secret));
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    } else {
-      _checkPassCode(
-        context: context,
-        onUnlocked: () async {
-          _isAuthorized = true;
-          notifyListeners();
-          await Clipboard.setData(ClipboardData(text: secret));
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
-        },
-      );
+      return _vaultInteractor.copyToClipboard(secret);
     }
+    return false;
+  }
+
+  Future<bool> onUnlockedCopy() {
+    _isAuthorized = true;
+    notifyListeners();
+    return tryCopy();
   }
 
   // Private
@@ -124,17 +103,4 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
   String _secret = '';
   bool _isObfuscated = true;
   bool _isAuthorized = false;
-
-  Future<void> _checkPassCode({
-    required BuildContext context,
-    required void Function() onUnlocked,
-  }) =>
-      showAskPassCode(
-        context: context,
-        onUnlocked: onUnlocked,
-        onVibrate: _vaultInteractor.vibrate,
-        currentPassCode: _vaultInteractor.passCode,
-        useBiometrics: _vaultInteractor.useBiometrics,
-        localAuthenticate: _vaultInteractor.localAuthenticate,
-      );
 }

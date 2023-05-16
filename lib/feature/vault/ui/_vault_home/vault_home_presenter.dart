@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
-import '../../domain/vault_interactor.dart';
+import '../../domain/use_case/vault_interactor.dart';
 
 export 'package:provider/provider.dart';
 

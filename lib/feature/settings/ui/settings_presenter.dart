@@ -8,9 +8,6 @@ import '../domain/settings_interactor.dart';
 export 'package:provider/provider.dart';
 
 class SettingsPresenter extends ChangeNotifier {
-  late final vibrate = _settingsInteractor.vibrate;
-  late final setPassCode = _settingsInteractor.setPassCode;
-
   String get passCode => _settingsInteractor.passCode;
   String get deviceName => _settingsInteractor.deviceName;
   bool get hasBiometrics => _settingsInteractor.hasBiometrics;

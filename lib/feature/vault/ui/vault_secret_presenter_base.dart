@@ -5,7 +5,7 @@ import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
-import '../domain/vault_interactor.dart';
+import '../domain/use_case/vault_interactor.dart';
 import 'vault_presenter_base.dart';
 
 abstract class VaultSecretPresenterBase extends VaultPresenterBase {
@@ -38,16 +38,20 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
   MessageModel getMessageOf(PeerId guardian) =>
       messages.firstWhere((e) => e.peerId == guardian);
 
-  MessageModel? checkAndUpdateMessage(MessageModel message) {
+  MessageModel? checkAndUpdateMessage(MessageModel message, MessageCode code) {
     if (message.hasNoResponse) return null;
+    if (message.code != MessageCode.getShard) return null;
+
     final storedMessage = messages.lookup(message);
     if (storedMessage == null || storedMessage.hasResponse) return null;
+
     messages.remove(message);
     final updatedMessage = storedMessage.copyWith(
       status: message.status,
       payload: message.payload,
     );
     messages.add(updatedMessage);
+
     notifyListeners();
     return updatedMessage;
   }

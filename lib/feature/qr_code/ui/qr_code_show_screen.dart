@@ -31,8 +31,9 @@ class QRCodeShowScreen extends StatefulWidget {
 }
 
 class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
-  final _platformManager = GetIt.I<PlatformService>();
+  final _platformService = GetIt.I<PlatformService>();
 
+  // TBD: Get needed params via constructor, remove MessageModel dependency
   late final _message =
       ModalRoute.of(context)!.settings.arguments as MessageModel;
   late final _qrCode = _message.toBase64url();
@@ -40,12 +41,12 @@ class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
   @override
   void initState() {
     super.initState();
-    _platformManager.wakelockEnable();
+    _platformService.wakelockEnable();
   }
 
   @override
   void dispose() {
-    _platformManager.wakelockDisable();
+    _platformService.wakelockDisable();
     super.dispose();
   }
 
@@ -127,7 +128,7 @@ class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
                   label: const Text('Share Code'),
                   onPressed: () {
                     final box = context.findRenderObject() as RenderBox?;
-                    _platformManager.share(
+                    _platformService.share(
                       'This is a SINGLE-USE authentication token for '
                       'Guardian Keyper. DO NOT REUSE IT! \n $_qrCode',
                       subject: 'Guardian Code',

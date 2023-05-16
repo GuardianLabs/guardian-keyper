@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
-import '../../domain/vault_interactor.dart';
+import '../../domain/use_case/vault_interactor.dart';
 import '../vault_guardian_presenter_base.dart';
 
 export 'package:provider/provider.dart';

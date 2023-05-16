@@ -6,31 +6,30 @@ import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/ui/home_presenter.dart';
+import 'package:guardian_keyper/ui/presenters/home_presenter.dart';
 import 'package:guardian_keyper/data/mdns_manager.dart';
 import 'package:guardian_keyper/data/network_manager.dart';
-import 'package:guardian_keyper/data/platform_service.dart';
 
-import 'package:guardian_keyper/feature/auth/auth.dart';
 import 'package:guardian_keyper/feature/dashboard/ui/dashboard_screen.dart';
 import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
+import 'package:guardian_keyper/feature/auth/ui/dialogs/on_demand_auth_dialog.dart';
 
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
-import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
-import 'package:guardian_keyper/feature/message/ui/message_home_screen.dart';
-import 'package:guardian_keyper/feature/message/ui/widgets/message_notify_icon.dart';
-import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
-
-import 'package:guardian_keyper/feature/vault/domain/vault_interactor.dart';
+import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 import 'package:guardian_keyper/feature/vault/ui/_shard_home/shard_home_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_vault_home/vault_home_screen.dart';
 
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
+import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
+import 'package:guardian_keyper/feature/message/ui/widgets/message_notify_icon.dart';
+import 'package:guardian_keyper/feature/message/ui/message_home_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   static const _pages = [
-    DashboardScreen(key: Key('DashboardScreen')),
-    VaultHomeScreen(key: Key('VaultHomeScreen')),
-    ShardHomeScreen(key: Key('ShardHomeScreen')),
-    MessageHomeScreen(key: Key('MessageHomeScreen')),
+    DashboardScreen(),
+    VaultHomeScreen(),
+    ShardHomeScreen(),
+    MessageHomeScreen(),
   ];
 
   static const _items = [
@@ -67,7 +66,8 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _messagesInteractor.watch().listen((final event) {
+
+    _messagesInteractor.watch().listen((event) {
       if (event.isDeleted) return;
       if (!_canShowMessage) return;
       final message = event.value as MessageModel;
@@ -80,18 +80,13 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             .then((_) => _canShowMessage = true);
       }
     });
+
     Future.microtask(() async {
       if (_settingsInteractor.passCode.isEmpty) {
         await Navigator.of(context).pushNamed(routeIntro);
       } else {
         _messagesInteractor.pruneMessages();
-        await showDemandPassCode(
-          context: context,
-          onVibrate: _platformManager.vibrate,
-          currentPassCode: _settingsInteractor.passCode,
-          useBiometrics: _settingsInteractor.useBiometrics,
-          localAuthenticate: _platformManager.localAuthenticate,
-        );
+        await OnDemandAuthDialog.show(context);
       }
       await _networkManager.start();
     });
@@ -107,19 +102,13 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.paused:
         _networkManager.pause();
-        await _vaultInteractor.flush();
-        await _messagesInteractor.flush();
+        await _vaultInteractor.pause();
+        await _messagesInteractor.pause();
         await _mdnsManager.stopDiscovery();
+        await _mdnsManager.unregister();
         break;
       default:
     }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _mdnsManager.unregister();
-    super.dispose();
   }
 
   @override
@@ -150,7 +139,6 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       );
 
   // Private
-  final _platformManager = GetIt.I<PlatformService>();
   final _mdnsManager = GetIt.I<MdnsManager>();
   final _networkManager = GetIt.I<NetworkManager>();
   final _vaultInteractor = GetIt.I<VaultInteractor>();
