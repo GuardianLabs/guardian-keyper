@@ -1,35 +1,40 @@
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
+
+import '../../../domain/entity/vault.dart';
 
 class OnSuccessDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
-    required MessageModel message,
+    required Vault vault,
+    required PeerId peerId,
   }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (_) => OnSuccessDialog(message: message),
+        builder: (_) => OnSuccessDialog(peerId: peerId, vault: vault),
       );
 
   const OnSuccessDialog({
     super.key,
-    required this.message,
+    required this.vault,
+    required this.peerId,
   });
 
-  final MessageModel message;
+  final PeerId peerId;
+  final Vault vault;
 
   @override
-  Widget build(BuildContext context) => message.vault.isFull
+  Widget build(BuildContext context) => vault.isFull
       ? BottomSheetWidget(
           icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
           titleString: 'Ownership Changed',
           textSpan: buildTextWithId(
             leadingText: 'The ownership of the Vault ',
-            id: message.vaultId,
+            id: vault.id,
             trailingText: ' has been transferred to your device.',
           ),
           footer: PrimaryButton(
@@ -42,11 +47,11 @@ class OnSuccessDialog extends StatelessWidget {
           titleString: 'Ownership Transfer Approved',
           textSpan: [
             ...buildTextWithId(
-              id: message.peerId,
+              id: peerId,
               trailingText:
                   ' approved the transfer of ownership for the Vault ',
             ),
-            ...buildTextWithId(id: message.vaultId),
+            ...buildTextWithId(id: vault.id),
           ],
           footer: PrimaryButton(
             text: 'Add another Guardian',

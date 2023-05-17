@@ -1,26 +1,27 @@
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+
+import '../../../domain/entity/vault_id.dart';
 
 class OnSuccessDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
-    required MessageModel message,
+    required VaultId vaultId,
   }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: true,
         isScrollControlled: true,
-        builder: (_) => OnSuccessDialog(message: message),
+        builder: (_) => OnSuccessDialog(vaultId: vaultId),
       );
 
   const OnSuccessDialog({
     super.key,
-    required this.message,
+    required this.vaultId,
   });
 
-  final MessageModel message;
+  final VaultId vaultId;
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
@@ -28,7 +29,7 @@ class OnSuccessDialog extends StatelessWidget {
         titleString: 'Your Secret has been split',
         textSpan: [
           const TextSpan(text: 'Now you can restore your '),
-          ...buildTextWithId(id: message.vaultId),
+          ...buildTextWithId(id: vaultId),
           const TextSpan(text: ' Secret with the help of Guardians.'),
         ],
         footer: Padding(

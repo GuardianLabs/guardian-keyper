@@ -8,6 +8,14 @@ import 'package:guardian_keyper/feature/auth/ui/dialogs/on_ask_auth_dialog.dart'
 import '../vault_secret_recovery_presenter.dart';
 
 class ShowSecretPage extends StatelessWidget {
+  static const _mask = SvgPicture(AssetBytesLoader(
+    'assets/images/secret_mask.svg.vec',
+  ));
+
+  static final _snackBar = buildSnackBar(
+    text: 'Secret is copied to your clipboard.',
+  );
+
   const ShowSecretPage({super.key});
 
   @override
@@ -27,8 +35,8 @@ class ShowSecretPage extends StatelessWidget {
             children: [
               const PageTitle(
                 title: 'Here’s your Secret',
-                subtitle: 'Make sure your display is covered if you want '
-                    'to see your Secret.',
+                subtitle:
+                    'Make sure your display is covered if you want to see your Secret.',
               ),
               // Secret
               Card(
@@ -42,9 +50,7 @@ class ShowSecretPage extends StatelessWidget {
                         height: 160,
                         padding: paddingBottom20,
                         child: presenter.isObfuscated
-                            ? const SvgPicture(AssetBytesLoader(
-                                'assets/images/secret_mask.svg.vec',
-                              ))
+                            ? _mask
                             : Text(
                                 presenter.secret,
                                 style: textStyleSourceSansPro414Purple,
@@ -54,10 +60,14 @@ class ShowSecretPage extends StatelessWidget {
                         Expanded(
                           child: presenter.isObfuscated
                               ? ElevatedButton(
-                                  onPressed: () => _onShowPressed(
-                                    context,
-                                    presenter,
-                                  ),
+                                  onPressed: () {
+                                    if (!presenter.tryShow()) {
+                                      OnAskAuthDialog.show(
+                                        context,
+                                        onUnlocked: presenter.onUnlockedShow,
+                                      );
+                                    }
+                                  },
                                   child: const Text('Show'),
                                 )
                               : ElevatedButton(
@@ -69,10 +79,27 @@ class ShowSecretPage extends StatelessWidget {
                         Expanded(
                           child: PrimaryButton(
                             text: 'Copy',
-                            onPressed: () => _onCopyPressed(
-                              context,
-                              presenter,
-                            ),
+                            onPressed: () async {
+                              final isOk = await presenter.tryCopy();
+                              if (context.mounted) {
+                                if (isOk) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(_snackBar);
+                                } else {
+                                  await OnAskAuthDialog.show(
+                                    context,
+                                    onUnlocked: () async {
+                                      final isCopied =
+                                          await presenter.onUnlockedCopy();
+                                      if (isCopied && context.mounted) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(_snackBar);
+                                      }
+                                    },
+                                  );
+                                }
+                              }
+                            },
                           ),
                         ),
                       ]),
@@ -85,40 +112,5 @@ class ShowSecretPage extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  void _onShowPressed(
-    BuildContext context,
-    VaultSecretRecoveryPresenter presenter,
-  ) {
-    if (!presenter.tryShow()) {
-      OnAskAuthDialog.show(context, onUnlocked: presenter.onUnlockedShow);
-    }
-  }
-
-  void _onCopyPressed(
-    BuildContext context,
-    VaultSecretRecoveryPresenter presenter,
-  ) async {
-    final isOk = await presenter.tryCopy();
-    if (context.mounted) {
-      final snackBar = buildSnackBar(
-        text: 'Secret is copied to your clipboard.',
-      );
-      if (isOk) {
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        return;
-      } else {
-        await OnAskAuthDialog.show(
-          context,
-          onUnlocked: () async {
-            final isCopied = await presenter.onUnlockedCopy();
-            if (isCopied && context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-          },
-        );
-      }
-    }
   }
 }

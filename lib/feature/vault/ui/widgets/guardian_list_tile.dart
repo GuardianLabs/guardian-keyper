@@ -1,7 +1,7 @@
-import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 
 import 'online_status_text.dart';
 

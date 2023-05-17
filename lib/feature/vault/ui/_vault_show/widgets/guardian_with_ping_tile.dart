@@ -1,8 +1,8 @@
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 
 import '../vault_show_presenter.dart';
 import '../../widgets/guardian_list_tile.dart';

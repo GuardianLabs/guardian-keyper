@@ -6,24 +6,8 @@ import 'package:vector_graphics/vector_graphics.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/data/platform_service.dart';
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 class QRCodeShowScreen extends StatefulWidget {
-  static const _caption = {
-    MessageCode.createGroup: 'Become a Guardian',
-    MessageCode.takeGroup: 'Change owner',
-  };
-  static const _subtitle = {
-    MessageCode.createGroup:
-        'This is a one-time for joining a Vault as a Guardian. '
-            'You can either show it directly as a QR Code '
-            'or Share as a Text via any messenger.',
-    MessageCode.takeGroup:
-        'This is a one-time for changing the owner of the Vault. '
-            'You can either show it directly as a QR Code '
-            'or Share as a Text via any messenger.',
-  };
-
   const QRCodeShowScreen({super.key});
 
   @override
@@ -33,10 +17,11 @@ class QRCodeShowScreen extends StatefulWidget {
 class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
   final _platformService = GetIt.I<PlatformService>();
 
-  // TBD: Get needed params via constructor, remove MessageModel dependency
-  late final _message =
-      ModalRoute.of(context)!.settings.arguments as MessageModel;
-  late final _qrCode = _message.toBase64url();
+  late final arguments = ModalRoute.of(context)!.settings.arguments as ({
+    String qrCode,
+    String caption,
+    String subtitle,
+  });
 
   @override
   void initState() {
@@ -56,13 +41,13 @@ class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
           children: [
             // Header
             HeaderBar(
-              caption: QRCodeShowScreen._caption[_message.code],
+              caption: arguments.caption,
               closeButton: const HeaderBarCloseButton(),
             ),
             // Body
             PageTitle(
               title: 'Your one-time Code',
-              subtitle: QRCodeShowScreen._subtitle[_message.code],
+              subtitle: arguments.subtitle,
             ),
             // QR Code
             Expanded(
@@ -79,7 +64,7 @@ class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
                       Container(
                         decoration: boxDecoration,
                         child: QrImageView(
-                          data: _qrCode,
+                          data: arguments.qrCode,
                           errorCorrectionLevel: QrErrorCorrectLevel.M,
                           dataModuleStyle: const QrDataModuleStyle(
                             color: clPurpleLight,
@@ -130,7 +115,7 @@ class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
                     final box = context.findRenderObject() as RenderBox?;
                     _platformService.share(
                       'This is a SINGLE-USE authentication token for '
-                      'Guardian Keyper. DO NOT REUSE IT! \n $_qrCode',
+                      'Guardian Keyper. DO NOT REUSE IT! \n ${arguments.qrCode}',
                       subject: 'Guardian Code',
                       sharePositionOrigin:
                           box!.localToGlobal(Offset.zero) & box.size,

@@ -64,8 +64,8 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
             child: PrimaryButton(
               text: 'Add via a QR Code',
               onPressed: () => Navigator.of(context)
-                  .pushNamed(routeQrCodeScan)
-                  .then((value) => _setCode(value as String?)),
+                  .pushNamed<String?>(routeQrCodeScan)
+                  .then(_setCode),
             ),
           ),
           Padding(
@@ -93,7 +93,7 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
     } on SetCodeVersionHighException {
       OnVersionHighDialog.show(context);
     } on SetCodeDuplicateException catch (e) {
-      OnDuplicateDialog.show(context, message: e.message);
+      OnDuplicateDialog.show(context, peerId: e.message.peerId);
     }
   }
 }

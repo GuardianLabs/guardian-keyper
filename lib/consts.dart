@@ -28,11 +28,10 @@ const routeSettings = '/settings';
 const routeQrCodeShow = '/qrcode/show';
 const routeQrCodeScan = '/qrcode/scan';
 
-const routeShardShow = '/vault/shard/show';
-
 const routeVaultShow = '/vault/show';
 const routeVaultCreate = '/vault/create';
 const routeVaultRestore = '/vault/restore';
-const routeVaultGuardianAdd = '/vault/guardian/add';
+const routeShardShow = '/vault/shard/show';
 const routeVaultSecretAdd = '/vault/secret/add';
+const routeVaultGuardianAdd = '/vault/guardian/add';
 const routeVaultSecretRecovery = '/vault/secret/recovery';

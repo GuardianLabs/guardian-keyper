@@ -1,5 +1,4 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 import '../vault_secret_add_presenter.dart';
 import '../../widgets/guardian_self_list_tile.dart';
@@ -22,7 +21,16 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
   @override
   void initState() {
     super.initState();
-    _presenter.startRequest().then(_handleResponse);
+    _presenter.startRequest().then((message) async {
+      if (message.isAccepted) {
+        await OnSuccessDialog.show(context, vaultId: message.vaultId);
+      } else if (message.isRejected) {
+        await OnRejectDialog.show(context, vaultId: message.vaultId);
+      } else {
+        await OnFailDialog.show(context, vaultId: message.vaultId);
+      }
+      if (context.mounted) Navigator.of(context).pop();
+    });
   }
 
   @override
@@ -85,15 +93,4 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           ),
         ],
       );
-
-  void _handleResponse(MessageModel message) async {
-    if (message.isAccepted) {
-      await OnSuccessDialog.show(context, message: message);
-    } else if (message.isRejected) {
-      await OnRejectDialog.show(context, message: message);
-    } else {
-      await OnFailDialog.show(context, message: message);
-    }
-    if (context.mounted) Navigator.of(context).pop();
-  }
 }

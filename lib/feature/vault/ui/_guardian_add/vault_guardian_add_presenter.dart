@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
+import '../../domain/entity/vault_id.dart';
 import '../../domain/use_case/vault_interactor.dart';
 import '../vault_guardian_presenter_base.dart';
 
@@ -30,13 +30,7 @@ class VaultGuardianAddPresenter extends VaultGuardianPresenterBase {
 
   @override
   void responseHandler(MessageModel message) async {
-    if (isNotWaiting) return;
-    if (qrCode == null) return;
-    if (message.hasNoResponse) return;
-    if (message.vaultId != vaultId) return;
-    if (message.code != messageCode) return;
-    if (message.peerId != qrCode!.peerId) return;
-    if (message.version != MessageModel.currentVersion) return;
+    if (isNotValidMessage(message, vaultId)) return;
     stopListenResponse();
     if (message.isAccepted) {
       await _vaultInteractor.addGuardian(

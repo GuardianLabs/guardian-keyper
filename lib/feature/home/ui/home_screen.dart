@@ -6,9 +6,9 @@ import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/ui/presenters/home_presenter.dart';
-import 'package:guardian_keyper/data/mdns_manager.dart';
+import 'package:guardian_keyper/data/platform_service.dart';
 import 'package:guardian_keyper/data/network_manager.dart';
+import 'package:guardian_keyper/data/mdns_manager.dart';
 
 import 'package:guardian_keyper/feature/dashboard/ui/dashboard_screen.dart';
 import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
@@ -23,6 +23,8 @@ import 'package:guardian_keyper/feature/message/domain/use_case/message_interact
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
 import 'package:guardian_keyper/feature/message/ui/widgets/message_notify_icon.dart';
 import 'package:guardian_keyper/feature/message/ui/message_home_screen.dart';
+
+import 'home_presenter.dart';
 
 class HomeScreen extends StatefulWidget {
   static const _pages = [
@@ -106,6 +108,7 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         await _messagesInteractor.pause();
         await _mdnsManager.stopDiscovery();
         await _mdnsManager.unregister();
+        await _platformService.wakelockDisable();
         break;
       default:
     }
@@ -141,6 +144,7 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   // Private
   final _mdnsManager = GetIt.I<MdnsManager>();
   final _networkManager = GetIt.I<NetworkManager>();
+  final _platformService = GetIt.I<PlatformService>();
   final _vaultInteractor = GetIt.I<VaultInteractor>();
   final _messagesInteractor = GetIt.I<MessageInteractor>();
   final _settingsInteractor = GetIt.I<SettingsInteractor>();

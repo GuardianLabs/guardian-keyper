@@ -1,26 +1,31 @@
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
+
+import '../../../domain/entity/vault_id.dart';
 
 class OnRejectDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
-    required MessageModel message,
+    required PeerId peerId,
+    required VaultId vaultId,
   }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (_) => OnRejectDialog(message: message),
+        builder: (_) => OnRejectDialog(peerId: peerId, vaultId: vaultId),
       );
 
   const OnRejectDialog({
     super.key,
-    required this.message,
+    required this.peerId,
+    required this.vaultId,
   });
 
-  final MessageModel message;
+  final PeerId peerId;
+  final VaultId vaultId;
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
@@ -28,10 +33,10 @@ class OnRejectDialog extends StatelessWidget {
         titleString: 'Ownership Transfer Rejected',
         textSpan: [
           ...buildTextWithId(
-            id: message.peerId,
+            id: peerId,
             trailingText: ' rejected the transfer of ownership for the Vault ',
           ),
-          ...buildTextWithId(id: message.vaultId),
+          ...buildTextWithId(id: vaultId),
         ],
         body: Padding(
           padding: paddingV20,

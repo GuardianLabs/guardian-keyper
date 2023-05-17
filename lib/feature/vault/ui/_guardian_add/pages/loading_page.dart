@@ -1,11 +1,10 @@
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 import '../vault_guardian_add_presenter.dart';
 import '../dialogs/on_fail_dialog.dart';
-import '../dialogs/on_reject.dart';
+import '../dialogs/on_reject_dialog.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -20,7 +19,29 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
-    _presenter.startRequest().then(_handleResponse);
+    _presenter.startRequest().then((message) async {
+      if (message.isAccepted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          buildSnackBar(
+            textSpans: [
+              ...buildTextWithId(
+                id: message.peerId,
+                leadingText: 'You have successfully added ',
+              ),
+              ...buildTextWithId(
+                id: _presenter.vaultId,
+                leadingText: 'as a Guardian for ',
+              ),
+            ],
+          ),
+        );
+      } else if (message.isRejected) {
+        await OnRejectDialog.show(context);
+      } else {
+        await OnFailDialog.show(context);
+      }
+      if (context.mounted) Navigator.of(context).pop();
+    });
   }
 
   @override
@@ -68,28 +89,4 @@ class _LoadingPageState extends State<LoadingPage> {
           ),
         ],
       );
-
-  void _handleResponse(MessageModel message) async {
-    if (message.isAccepted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        buildSnackBar(
-          textSpans: [
-            ...buildTextWithId(
-              id: message.peerId,
-              leadingText: 'You have successfully added ',
-            ),
-            ...buildTextWithId(
-              id: _presenter.vaultId,
-              leadingText: 'as a Guardian for ',
-            ),
-          ],
-        ),
-      );
-    } else if (message.isRejected) {
-      await OnRejectDialog.show(context);
-    } else {
-      await OnFailDialog.show(context);
-    }
-    if (context.mounted) Navigator.of(context).pop();
-  }
 }
