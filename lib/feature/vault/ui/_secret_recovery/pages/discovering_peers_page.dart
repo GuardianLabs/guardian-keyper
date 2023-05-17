@@ -89,19 +89,19 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
                   Padding(
                     padding: paddingV6,
                     child: guardian == _presenter.vault.ownerId
-                        ? GuardianSelfListTile(guardian: guardian)
+                        ? const GuardianSelfListTile()
                         : Consumer<VaultSecretRecoveryPresenter>(
                             builder: (_, presenter, __) {
                               final message = presenter.getMessageOf(guardian);
                               return GuardianListTile(
                                 guardian: guardian,
+                                checkStatus: true,
+                                isWaiting: message.hasNoResponse,
                                 isSuccess: message.isAccepted
                                     ? true
                                     : message.hasResponse
                                         ? false
                                         : null,
-                                isWaiting: message.hasNoResponse,
-                                checkStatus: true,
                               );
                             },
                           ),

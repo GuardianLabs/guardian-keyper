@@ -23,7 +23,7 @@ class GuardiansExpansionTile extends StatelessWidget {
       children: [
         for (final guardian in vault.guardians.keys)
           guardian == vault.ownerId
-              ? GuardianSelfListTile(guardian: guardian)
+              ? const GuardianSelfListTile()
               : GuardianWithPingTile(guardian: guardian),
       ],
     );

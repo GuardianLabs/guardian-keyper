@@ -64,7 +64,7 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
             child: PrimaryButton(
               text: 'Add via a QR Code',
               onPressed: () => Navigator.of(context)
-                  .pushNamed<String?>(routeQrCodeScan)
+                  .pushNamed(routeQrCodeScan)
                   .then(_setCode),
             ),
           ),
@@ -83,9 +83,9 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
         ],
       );
 
-  void _setCode(String? code) {
+  void _setCode(Object? code) {
     try {
-      _presenter.setCode(code);
+      _presenter.setCode(code as String?);
     } on SetCodeFailException {
       OnFailDialog.show(context);
     } on SetCodeVersionLowException {

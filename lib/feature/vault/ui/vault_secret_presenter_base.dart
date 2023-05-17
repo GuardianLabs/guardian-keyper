@@ -39,8 +39,8 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
       messages.firstWhere((e) => e.peerId == guardian);
 
   MessageModel? checkAndUpdateMessage(MessageModel message, MessageCode code) {
+    if (message.code != code) return null;
     if (message.hasNoResponse) return null;
-    if (message.code != MessageCode.getShard) return null;
 
     final storedMessage = messages.lookup(message);
     if (storedMessage == null || storedMessage.hasResponse) return null;
