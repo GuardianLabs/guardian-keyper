@@ -45,7 +45,7 @@ class ShareSecretPage extends StatelessWidget {
                   Padding(
                     padding: paddingV6,
                     child: guardian == presenter.vault.ownerId
-                        ? GuardianSelfListTile(guardian: guardian)
+                        ? const GuardianSelfListTile()
                         : GuardianListTile(guardian: guardian),
                   )
               ]),

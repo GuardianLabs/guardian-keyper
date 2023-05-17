@@ -50,7 +50,14 @@ class SharePanel extends StatelessWidget {
                   if (context.mounted) {
                     Navigator.of(context).pushNamed(
                       routeQrCodeShow,
-                      arguments: message,
+                      arguments: (
+                        qrCode: message.toBase64url(),
+                        caption: 'Become a Guardian',
+                        subtitle:
+                            'This is a one-time for joining a Vault as a Guardian. '
+                            'You can either show it directly as a QR Code '
+                            'or Share as a Text via any messenger.',
+                      ),
                     );
                   }
                 },

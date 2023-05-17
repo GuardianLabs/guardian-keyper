@@ -10,7 +10,8 @@ class SecretsPanelList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vault = context.read<VaultShowPresenter>().vault;
+    final presenter = context.read<VaultShowPresenter>();
+    final vault = presenter.vault;
     return ExpansionPanelList.radio(
       dividerColor: clSurface,
       elevation: 0,
@@ -59,7 +60,7 @@ class SecretsPanelList extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () => OnRemoveSecretDialog.show(
                         context,
-                        vault: vault,
+                        presenter,
                         secretId: secretId,
                       ),
                       style: const ButtonStyle(

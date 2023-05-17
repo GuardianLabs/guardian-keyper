@@ -1,4 +1,4 @@
-import 'page_presenter_base.dart';
+import 'package:guardian_keyper/ui/presenters/page_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 

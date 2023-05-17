@@ -4,27 +4,29 @@ import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
+
+import '../../../domain/entity/vault_id.dart';
 
 class OnChangeOwnerDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
-    required Vault vault,
+    required VaultId vaultId,
   }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (_) => OnChangeOwnerDialog(vault: vault),
+        builder: (_) => OnChangeOwnerDialog(vaultId: vaultId),
       );
 
   const OnChangeOwnerDialog({
     super.key,
-    required this.vault,
+    required this.vaultId,
   });
 
-  final Vault vault;
+  final VaultId vaultId;
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
@@ -35,7 +37,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
         titleString: 'Change Owner',
         textSpan: buildTextWithId(
           leadingText: 'Are you sure you want to change owner for vault ',
-          id: vault.id,
+          id: vaultId,
           trailingText: '? This action cannot be undone.',
         ),
         footer: Column(
@@ -45,11 +47,18 @@ class OnChangeOwnerDialog extends StatelessWidget {
               onPressed: () async {
                 Navigator.of(context).pop();
                 final message = await GetIt.I<MessageInteractor>()
-                    .createTakeVaultCode(vault.id);
+                    .createTakeVaultCode(vaultId);
                 if (context.mounted) {
                   Navigator.of(context).pushReplacementNamed(
                     routeQrCodeShow,
-                    arguments: message,
+                    arguments: (
+                      qrCode: message.toBase64url(),
+                      caption: 'Change owner',
+                      subtitle:
+                          'This is a one-time for changing the owner of the Vault. '
+                          'You can either show it directly as a QR Code '
+                          'or Share as a Text via any messenger.',
+                    ),
                   );
                 }
               },

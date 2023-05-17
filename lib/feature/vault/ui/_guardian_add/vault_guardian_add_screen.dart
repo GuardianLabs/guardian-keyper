@@ -1,7 +1,7 @@
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
+import '../../domain/entity/vault_id.dart';
 import 'vault_guardian_add_presenter.dart';
 import 'pages/get_code_page.dart';
 import 'pages/loading_page.dart';

@@ -1,26 +1,27 @@
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+
+import '../../../domain/entity/vault_id.dart';
 
 class OnFailDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
-    required MessageModel message,
+    required VaultId vaultId,
   }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: true,
         isScrollControlled: true,
-        builder: (_) => OnFailDialog(message: message),
+        builder: (_) => OnFailDialog(vaultId: vaultId),
       );
 
   const OnFailDialog({
     super.key,
-    required this.message,
+    required this.vaultId,
   });
 
-  final MessageModel message;
+  final VaultId vaultId;
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
@@ -28,7 +29,7 @@ class OnFailDialog extends StatelessWidget {
         titleString: 'Something went wrong!',
         textSpan: [
           const TextSpan(text: 'Sharding process for '),
-          ...buildTextWithId(id: message.vaultId),
+          ...buildTextWithId(id: vaultId),
           const TextSpan(text: ' has been terminated.'),
         ],
         footer: Padding(

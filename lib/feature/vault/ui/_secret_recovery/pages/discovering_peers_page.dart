@@ -1,5 +1,4 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 import '../vault_secret_recovery_presenter.dart';
 import '../../widgets/guardian_self_list_tile.dart';
@@ -19,7 +18,12 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
   @override
   void initState() {
     super.initState();
-    _presenter.startRequest().then(_handleResponse);
+    _presenter.startRequest().then((message) async {
+      if (message.isRejected) {
+        await OnRejectDialog.show(context, vaultId: message.vaultId);
+        if (context.mounted) Navigator.of(context).pop();
+      }
+    });
   }
 
   @override
@@ -85,19 +89,19 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
                   Padding(
                     padding: paddingV6,
                     child: guardian == _presenter.vault.ownerId
-                        ? GuardianSelfListTile(guardian: guardian)
+                        ? const GuardianSelfListTile()
                         : Consumer<VaultSecretRecoveryPresenter>(
                             builder: (_, presenter, __) {
                               final message = presenter.getMessageOf(guardian);
                               return GuardianListTile(
                                 guardian: guardian,
+                                checkStatus: true,
+                                isWaiting: message.hasNoResponse,
                                 isSuccess: message.isAccepted
                                     ? true
                                     : message.hasResponse
                                         ? false
                                         : null,
-                                isWaiting: message.hasNoResponse,
-                                checkStatus: true,
                               );
                             },
                           ),
@@ -107,11 +111,4 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
           ),
         ],
       );
-
-  void _handleResponse(MessageModel message) async {
-    if (message.isRejected) {
-      await OnRejectDialog.show(context, message: message);
-      if (context.mounted) Navigator.of(context).pop();
-    }
-  }
 }

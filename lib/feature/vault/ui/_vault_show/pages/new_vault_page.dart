@@ -44,7 +44,7 @@ class NewVaultPage extends StatelessWidget {
           Padding(
             padding: paddingV6,
             child: guardian == vault.ownerId
-                ? GuardianSelfListTile(guardian: guardian)
+                ? const GuardianSelfListTile()
                 : GuardianWithPingTile(guardian: guardian),
           ),
       ],

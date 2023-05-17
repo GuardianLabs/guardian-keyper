@@ -1,10 +1,10 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/ui/presenters/page_presenter_base.dart';
 
+import '../../domain/entity/vault.dart';
+import '../../domain/entity/vault_id.dart';
 import '../../domain/use_case/vault_interactor.dart';
 
 export 'package:provider/provider.dart';

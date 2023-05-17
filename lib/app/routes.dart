@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:guardian_keyper/consts.dart';
+import 'package:guardian_keyper/ui/screens/qr_code_show_screen.dart';
+import 'package:guardian_keyper/ui/screens/qr_code_scan_screen.dart';
 import 'package:guardian_keyper/feature/intro/ui/intro_screen.dart';
 import 'package:guardian_keyper/feature/settings/ui/settings_screen.dart';
-import 'package:guardian_keyper/feature/qr_code/ui/qr_code_show_screen.dart';
-import 'package:guardian_keyper/feature/qr_code/ui/qr_code_scan_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_vault_show/vault_show_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_shard_show/shard_show_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_vault_create/vault_create_screen.dart';

@@ -13,7 +13,6 @@ class VaultPage extends StatelessWidget {
     final vault = context.watch<VaultShowPresenter>().vault;
     return ListView(
       padding: paddingAll20,
-      primary: true,
       shrinkWrap: true,
       children: [
         // Title

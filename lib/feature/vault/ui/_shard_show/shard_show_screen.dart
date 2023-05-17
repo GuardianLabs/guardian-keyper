@@ -1,7 +1,7 @@
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
+import '../../domain/entity/vault.dart';
 import 'dialogs/on_change_owner_dialog.dart';
 
 class ShardShowScreen extends StatelessWidget {
@@ -51,7 +51,7 @@ class ShardShowScreen extends StatelessWidget {
                     text: 'Change Vault’s Owner',
                     onPressed: () => OnChangeOwnerDialog.show(
                       context,
-                      vault: vault,
+                      vaultId: vault.id,
                     ),
                   ),
                 ),

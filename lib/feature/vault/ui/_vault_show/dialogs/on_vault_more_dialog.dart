@@ -1,26 +1,26 @@
-import 'package:get_it/get_it.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
-
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
-import '../../../domain/use_case/vault_interactor.dart';
+import '../vault_show_presenter.dart';
 
 class OnVaultMoreDialog extends StatelessWidget {
   static Future<void> show(
-    BuildContext context, {
-    required final VaultId vaultId,
-  }) =>
+    BuildContext context,
+    VaultShowPresenter presenter,
+  ) =>
       showModalBottomSheet<bool>(
         context: context,
         useSafeArea: true,
         isScrollControlled: true,
-        builder: (_) => OnVaultMoreDialog(vaultId: vaultId),
+        builder: (_) => OnVaultMoreDialog(presenter: presenter),
       );
 
-  const OnVaultMoreDialog({super.key, required this.vaultId});
+  const OnVaultMoreDialog({
+    super.key,
+    required this.presenter,
+  });
 
-  final VaultId vaultId;
+  final VaultShowPresenter presenter;
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
@@ -57,7 +57,7 @@ class OnVaultMoreDialog extends StatelessWidget {
             text: 'Yes, remove the Vault',
             onPressed: () async {
               Navigator.of(context).pop();
-              await GetIt.I<VaultInteractor>().removeVault(vaultId);
+              await presenter.removeVault();
               if (context.mounted) Navigator.of(context).pop();
             },
           ),
