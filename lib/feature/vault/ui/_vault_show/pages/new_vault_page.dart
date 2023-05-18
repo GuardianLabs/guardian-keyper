@@ -20,18 +20,18 @@ class NewVaultPage extends StatelessWidget {
           subtitleSpans: [
             TextSpan(
               text: 'Add ${vault.maxSize - vault.size} more Guardians ',
-              style: textStyleSourceSansPro616Purple.copyWith(
+              style: styleSourceSansPro616Purple.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             TextSpan(
               text: 'to enable your Vault and secure your Secret.',
-              style: textStyleSourceSansPro416Purple,
+              style: styleSourceSansPro416Purple,
             ),
           ],
         ),
         Padding(
-          padding: paddingBottom32,
+          padding: paddingB32,
           child: PrimaryButton(
             text: 'Add a Guardian',
             onPressed: () => Navigator.of(context).pushNamed(

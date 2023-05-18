@@ -36,7 +36,7 @@ class GuardianListTile extends StatelessWidget {
         title: RichText(
           maxLines: 1,
           text: TextSpan(
-            style: textStyleSourceSansPro614.copyWith(height: 1.5),
+            style: styleSourceSansPro614.copyWith(height: 1.5),
             children: buildTextWithId(
               id: guardian,
               style: TextStyle(
@@ -50,12 +50,12 @@ class GuardianListTile extends StatelessWidget {
         subtitle: Text(
           guardian.toHexShort(),
           maxLines: 1,
-          style: textStyleSourceSansPro414Purple,
+          style: styleSourceSansPro414Purple,
         ),
         trailing: isWaiting
             ? Container(
                 alignment: Alignment.centerRight,
-                margin: checkStatus ? paddingTop20 : null,
+                margin: checkStatus ? paddingT20 : null,
                 height: 20,
                 width: 20,
                 child: const CircularProgressIndicator.adaptive(strokeWidth: 2),

@@ -22,7 +22,7 @@ class SetDeviceNamePage extends StatelessWidget {
           child: Text(
             'Create your Guardian name',
             textAlign: TextAlign.center,
-            style: textStylePoppins620,
+            style: stylePoppins620,
           ),
         ),
         Padding(

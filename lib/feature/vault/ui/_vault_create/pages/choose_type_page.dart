@@ -30,25 +30,25 @@ class ChooseTypePage extends StatelessWidget {
                         children: [
                           const IconOf.yourDevices(bgColor: clWhite),
                           Padding(
-                            padding: paddingTop20,
+                            padding: paddingT20,
                             child: Text(
                               'Your Devices',
-                              style: textStylePoppins616,
+                              style: stylePoppins616,
                             ),
                           ),
                           Padding(
-                            padding: paddingTop12,
+                            padding: paddingT12,
                             child: Text(
                               'Your devices and devices that belong to your '
                               'Guardians, trusted people, friends and family '
                               'who act on your behalf when required.',
-                              style: textStyleSourceSansPro414Purple,
+                              style: styleSourceSansPro414Purple,
                             ),
                           ),
                         ],
                       )),
                 ),
-                const Padding(padding: paddingTop20),
+                const Padding(padding: paddingT20),
                 // Fiduciaries
                 SelectableCard(
                     child: Column(
@@ -65,20 +65,20 @@ class ChooseTypePage extends StatelessWidget {
                           decoration: boxDecoration.copyWith(
                             color: clIndigo500,
                           ),
-                          child: Text('Soon', style: textStyleSourceSansPro614),
+                          child: Text('Soon', style: styleSourceSansPro614),
                         ),
                       ],
                     ),
                     Padding(
-                      padding: paddingTop20,
-                      child: Text('Fiduciaries', style: textStylePoppins616),
+                      padding: paddingT20,
+                      child: Text('Fiduciaries', style: stylePoppins616),
                     ),
                     Padding(
-                      padding: paddingTop12,
+                      padding: paddingT12,
                       child: Text(
                         'Trusted appointed fiduciary third parties appointed to '
                         'act as Guardians on your behalf on a professional basis.',
-                        style: textStyleSourceSansPro414Purple,
+                        style: styleSourceSansPro414Purple,
                       ),
                     ),
                   ],

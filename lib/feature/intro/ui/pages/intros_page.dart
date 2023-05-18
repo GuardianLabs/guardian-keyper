@@ -58,22 +58,22 @@ class IntrosPage extends StatelessWidget {
               child: Container(),
             ),
             Padding(
-              padding: paddingBottom32,
+              padding: paddingB32,
               child: IntrosPage._pictures[presenter.introStep],
             ),
             Padding(
-              padding: paddingBottom12,
+              padding: paddingB12,
               child: Text(
                 _titles[presenter.introStep],
-                style: textStylePoppins620.copyWith(fontSize: 30),
+                style: stylePoppins620.copyWith(fontSize: 30),
                 textAlign: TextAlign.center,
               ),
             ),
             Padding(
-              padding: paddingBottom20,
+              padding: paddingB20,
               child: Text(
                 _subtitles[presenter.introStep],
-                style: textStyleSourceSansPro416,
+                style: styleSourceSansPro416,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -86,7 +86,7 @@ class IntrosPage extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: presenter.nextPage,
-                  child: Text('Skip', style: textStylePoppins616),
+                  child: Text('Skip', style: stylePoppins616),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -105,7 +105,7 @@ class IntrosPage extends StatelessWidget {
                   onPressed: () => presenter.introStep == _titles.length - 1
                       ? presenter.nextPage()
                       : presenter.introStep++,
-                  child: Text('Next', style: textStylePoppins616),
+                  child: Text('Next', style: stylePoppins616),
                 ),
               ],
             ),

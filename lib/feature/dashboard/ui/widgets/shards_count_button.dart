@@ -13,7 +13,7 @@ class ShardsCountButton extends StatelessWidget {
         onTap: context.read<HomePresenter>().gotoShards,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: borderRadius,
+            borderRadius: borderRadius8,
             color: clYellow,
           ),
           padding: paddingAll8,
@@ -25,13 +25,13 @@ class ShardsCountButton extends StatelessWidget {
                 children: [
                   Text(
                     'Stored Shards',
-                    style: textStyleSourceSansPro612.copyWith(color: clBlack),
+                    style: styleSourceSansPro612.copyWith(color: clBlack),
                   ),
                   Selector<DashboardPresenter, int>(
                     selector: (_, presenter) => presenter.shardsCount,
                     builder: (_, shardsCount, __) => Text(
                       '$shardsCount Shards',
-                      style: textStylePoppins616.copyWith(color: clBlack),
+                      style: stylePoppins616.copyWith(color: clBlack),
                     ),
                   ),
                 ],

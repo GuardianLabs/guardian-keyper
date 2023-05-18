@@ -18,7 +18,7 @@ class VaultListTile extends StatelessWidget {
         leading: const IconOf.shield(color: clWhite),
         title: RichText(
           text: TextSpan(
-            style: textStyleSourceSansPro614,
+            style: styleSourceSansPro614,
             children: buildTextWithId(id: vault.id),
           ),
         ),
@@ -32,7 +32,7 @@ class VaultListTile extends StatelessWidget {
       );
 
   Text _buildSubtitle(Vault vault) {
-    final styleRed = textStyleSourceSansPro414.copyWith(color: clRed);
+    final styleRed = styleSourceSansPro414.copyWith(color: clRed);
     if (vault.isRestricted) {
       return vault.isRestricted
           ? Text('Restricted usage', style: styleRed)
@@ -42,7 +42,7 @@ class VaultListTile extends StatelessWidget {
           ? Text(
               // TBD: i18n
               '${vault.size} Guardians, ${vault.secrets.length} Secrets',
-              style: textStyleSourceSansPro414,
+              style: styleSourceSansPro414,
             )
           : Text('Add more Guardians', style: styleRed);
     }

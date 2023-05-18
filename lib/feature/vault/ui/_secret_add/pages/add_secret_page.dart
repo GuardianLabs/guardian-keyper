@@ -46,11 +46,11 @@ class AddSecretPage extends StatelessWidget {
                   obscureText: isSecretObscure,
                   maxLines: isSecretObscure ? 1 : null,
                   maxLength: maxSecretLength,
-                  style: textStyleSourceSansPro416,
+                  style: styleSourceSansPro416,
                   decoration: InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     labelText: ' Your Secret ',
-                    counterStyle: textStyleSourceSansPro414Purple,
+                    counterStyle: styleSourceSansPro414Purple,
                     suffix: isSecretObscure
                         ? Container(
                             decoration: BoxDecoration(

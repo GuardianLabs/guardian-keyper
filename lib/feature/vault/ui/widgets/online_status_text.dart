@@ -48,11 +48,11 @@ class _OnlineStatusTextState extends State<OnlineStatusText> {
             snapshot.data == true
                 ? Text(
                     'Online',
-                    style: textStyleSourceSansPro412.copyWith(color: clGreen),
+                    style: styleSourceSansPro412.copyWith(color: clGreen),
                   )
                 : Text(
                     'Offline',
-                    style: textStyleSourceSansPro412.copyWith(color: clRed),
+                    style: styleSourceSansPro412.copyWith(color: clRed),
                   ),
       );
 }

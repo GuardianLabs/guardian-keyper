@@ -14,7 +14,7 @@ class ResolvedMessagesTab extends StatelessWidget {
             child: Text(
               'You don’t have any resolved messages',
               textAlign: TextAlign.center,
-              style: textStyleSourceSansPro414,
+              style: styleSourceSansPro414,
               softWrap: true,
             ),
           )

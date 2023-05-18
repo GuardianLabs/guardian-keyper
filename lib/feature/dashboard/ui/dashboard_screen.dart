@@ -21,7 +21,7 @@ class DashboardScreen extends StatelessWidget {
             Consumer<DashboardPresenter>(
               builder: (_, presenter, __) => RichText(
                 text: TextSpan(
-                  style: textStylePoppins620,
+                  style: stylePoppins620,
                   children: buildTextWithId(id: presenter.selfId),
                 ),
               ),
@@ -31,7 +31,7 @@ class DashboardScreen extends StatelessWidget {
               Consumer<DashboardPresenter>(
                 builder: (_, presenter, __) => Text(
                   presenter.selfId.toHexShort(),
-                  style: textStyleSourceSansPro414Purple,
+                  style: styleSourceSansPro414Purple,
                 ),
               ),
               Expanded(
@@ -48,12 +48,12 @@ class DashboardScreen extends StatelessWidget {
             ]),
             // QR Code panel
             const Padding(
-              padding: paddingTop20,
+              padding: paddingT20,
               child: SharePanel(),
             ),
             // Vaults panel
             const Padding(
-              padding: paddingTop20,
+              padding: paddingT20,
               child: VaultsPanel(),
             ),
           ],

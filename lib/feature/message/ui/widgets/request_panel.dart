@@ -22,17 +22,17 @@ class RequestPanel extends StatelessWidget {
             children: [
               const IconOf.shield(color: clWhite),
               Padding(
-                padding: paddingTop12,
+                padding: paddingT12,
                 child: isPeerOnline
                     ? Text(
                         'Online',
-                        style: textStyleSourceSansPro612.copyWith(
+                        style: styleSourceSansPro612.copyWith(
                           color: clGreen,
                         ),
                       )
                     : Text(
                         'Offline',
-                        style: textStyleSourceSansPro612.copyWith(
+                        style: styleSourceSansPro612.copyWith(
                           color: clRed,
                         ),
                       ),
@@ -45,7 +45,7 @@ class RequestPanel extends StatelessWidget {
               child: RichText(
                 softWrap: true,
                 text: TextSpan(
-                  style: textStyleSourceSansPro416Purple,
+                  style: styleSourceSansPro416Purple,
                   children: [
                     const TextSpan(
                       text: 'To approve or reject the request,'
@@ -53,7 +53,7 @@ class RequestPanel extends StatelessWidget {
                     ),
                     TextSpan(
                       text: 'at the same time',
-                      style: textStyleSourceSansPro616,
+                      style: styleSourceSansPro616,
                     ),
                     ...buildTextWithId(
                       leadingText: '. Ask ',

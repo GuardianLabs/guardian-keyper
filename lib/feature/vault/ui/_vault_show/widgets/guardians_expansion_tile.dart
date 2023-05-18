@@ -13,11 +13,11 @@ class GuardiansExpansionTile extends StatelessWidget {
     return ExpansionTile(
       title: Text(
         'Vault’s Guardians',
-        style: textStyleSourceSansPro614,
+        style: styleSourceSansPro614,
       ),
       subtitle: Text(
         '${vault.size} Guardians',
-        style: textStyleSourceSansPro414Purple,
+        style: styleSourceSansPro414Purple,
       ),
       childrenPadding: EdgeInsets.zero,
       children: [

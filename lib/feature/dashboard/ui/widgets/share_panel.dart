@@ -20,12 +20,12 @@ class SharePanel extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Become a Guardian', style: textStylePoppins616),
+                      Text('Become a Guardian', style: stylePoppins616),
                       Padding(
-                        padding: paddingTop12,
+                        padding: paddingT12,
                         child: Text(
                           'Share your QR code to join a Vault',
-                          style: textStyleSourceSansPro416Purple,
+                          style: styleSourceSansPro416Purple,
                         ),
                       ),
                     ],
@@ -40,7 +40,7 @@ class SharePanel extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: paddingTop20,
+              padding: paddingT20,
               child: ElevatedButton(
                 child: const Text('Generate QR Code'),
                 onPressed: () async {
@@ -64,7 +64,7 @@ class SharePanel extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: paddingTop20,
+              padding: paddingT20,
               child: OutlinedButton(
                 onPressed: () async {
                   final box = context.findRenderObject() as RenderBox?;

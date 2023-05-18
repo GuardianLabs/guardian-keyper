@@ -11,7 +11,7 @@ class GuardiansControlPanel extends StatelessWidget {
     final presenter = Provider.of<VaultCreatePresenter>(context);
     return Container(
       decoration: BoxDecoration(
-        borderRadius: borderRadius,
+        borderRadius: borderRadius8,
         color: clIndigo800,
       ),
       child: Column(
@@ -48,7 +48,7 @@ class GuardiansControlPanel extends StatelessWidget {
                     'Keep one Shard (encrypted part of a Secret) on my device '
                     'every time I create a new Secret.',
                     softWrap: true,
-                    style: textStyleSourceSansPro412.copyWith(
+                    style: styleSourceSansPro412.copyWith(
                       color: clPurpleLight,
                     ),
                   ),

@@ -13,7 +13,7 @@ class VaultsCountButton extends StatelessWidget {
         onTap: context.read<HomePresenter>().gotoVaults,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: borderRadius,
+            borderRadius: borderRadius8,
             color: clGreen,
           ),
           padding: paddingAll8,
@@ -25,13 +25,13 @@ class VaultsCountButton extends StatelessWidget {
                 children: [
                   Text(
                     'My Vaults',
-                    style: textStyleSourceSansPro612.copyWith(color: clBlack),
+                    style: styleSourceSansPro612.copyWith(color: clBlack),
                   ),
                   Selector<DashboardPresenter, int>(
                     selector: (_, presenter) => presenter.vaultsCount,
                     builder: (_, vaultsCount, __) => Text(
                       '$vaultsCount Vaults',
-                      style: textStylePoppins616.copyWith(color: clBlack),
+                      style: stylePoppins616.copyWith(color: clBlack),
                     ),
                   ),
                 ],

@@ -41,7 +41,7 @@ class OnSetDeviceNameDialog extends StatelessWidget {
                   child: Text(
                     'Create new Device name',
                     textAlign: TextAlign.center,
-                    style: textStylePoppins620,
+                    style: stylePoppins620,
                   ),
                 ),
                 Padding(

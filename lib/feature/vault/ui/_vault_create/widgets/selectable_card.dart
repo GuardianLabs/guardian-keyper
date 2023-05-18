@@ -16,7 +16,7 @@ class SelectableCard extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          borderRadius: borderRadius,
+          borderRadius: borderRadius8,
           color: isSelected ? clIndigo500 : clSurface,
         ),
         child: Stack(

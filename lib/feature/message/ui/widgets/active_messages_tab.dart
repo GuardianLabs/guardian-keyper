@@ -16,7 +16,7 @@ class ActiveMessagesTab extends StatelessWidget {
             child: Text(
               'You don’t have any active messages',
               textAlign: TextAlign.center,
-              style: textStyleSourceSansPro414,
+              style: styleSourceSansPro414,
               softWrap: true,
             ),
           )
@@ -32,7 +32,7 @@ class ActiveMessagesTab extends StatelessWidget {
                       padding: paddingH20,
                       child: Text(
                         'Move to Resolved',
-                        style: textStyleSourceSansPro416Purple,
+                        style: styleSourceSansPro416Purple,
                       ),
                     ),
                     direction: DismissDirection.startToEnd,

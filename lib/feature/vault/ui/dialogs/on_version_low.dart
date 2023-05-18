@@ -27,7 +27,7 @@ class OnVersionLowDialog extends StatelessWidget {
               text: 'Close',
               onPressed: Navigator.of(context).pop,
             ),
-            const Padding(padding: paddingTop20),
+            const Padding(padding: paddingT20),
             TertiaryButton(
               text: 'Update',
               onPressed: GetIt.I<VaultInteractor>().openMarket,

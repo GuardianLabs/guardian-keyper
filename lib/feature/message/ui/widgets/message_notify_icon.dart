@@ -34,7 +34,7 @@ class MessageNotifyIcon extends StatelessWidget {
                   child: Center(
                     child: Text(
                       count > 9 ? '$count+' : count.toString(),
-                      style: textStyleSourceSansPro612.copyWith(
+                      style: styleSourceSansPro612.copyWith(
                         color: clIndigo900,
                       ),
                     ),

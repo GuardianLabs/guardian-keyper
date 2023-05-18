@@ -5,7 +5,7 @@ import '../vault_create_presenter.dart';
 class GuardianCountRadio extends StatelessWidget {
   static final _boxDecorationSelected = BoxDecoration(
     border: Border.all(color: clIndigo500),
-    borderRadius: borderRadius,
+    borderRadius: borderRadius8,
     gradient: const RadialGradient(
       center: Alignment.bottomCenter,
       radius: 1.4,

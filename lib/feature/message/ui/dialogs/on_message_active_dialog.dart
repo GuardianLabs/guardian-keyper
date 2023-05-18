@@ -97,13 +97,13 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
                     children: [
                       Text(
                         'Connection Error',
-                        style: textStyleSourceSansPro616,
+                        style: styleSourceSansPro616,
                       ),
                       Padding(
                         padding: paddingV12,
                         child: Text(
                           'Something went wrong. Please try again.',
-                          style: textStyleSourceSansPro416Purple,
+                          style: styleSourceSansPro416Purple,
                         ),
                       ),
                       LinearProgressIndicator(

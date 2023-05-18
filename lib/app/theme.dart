@@ -32,7 +32,7 @@ final themeDark = ThemeData.dark().copyWith(
   appBarTheme: AppBarTheme(
     backgroundColor: clIndigo900,
     centerTitle: true,
-    titleTextStyle: textStylePoppins616,
+    titleTextStyle: stylePoppins616,
     toolbarHeight: 68,
   ),
   // Bottom Navigation Bar
@@ -40,8 +40,8 @@ final themeDark = ThemeData.dark().copyWith(
     type: BottomNavigationBarType.fixed,
     backgroundColor: clIndigo900,
     selectedItemColor: clWhite,
-    selectedLabelStyle: textStyleSourceSansPro612.copyWith(height: 2.5),
-    unselectedLabelStyle: textStyleSourceSansPro412.copyWith(height: 2.5),
+    selectedLabelStyle: styleSourceSansPro612.copyWith(height: 2.5),
+    unselectedLabelStyle: styleSourceSansPro412.copyWith(height: 2.5),
   ),
   // Bottom Sheet
   bottomSheetTheme: const BottomSheetThemeData(
@@ -60,7 +60,7 @@ final themeDark = ThemeData.dark().copyWith(
     fixedSize: _fixedSizeHeight48,
     foregroundColor: _buttonForegroundColor,
     shape: _buttonShape,
-    textStyle: MaterialStateProperty.all<TextStyle>(textStylePoppins616),
+    textStyle: MaterialStateProperty.all<TextStyle>(stylePoppins616),
     backgroundColor: MaterialStateProperty.resolveWith<Color>((states) =>
         states.contains(MaterialState.disabled)
             ? const Color(0xFF320784)
@@ -89,14 +89,14 @@ final themeDark = ThemeData.dark().copyWith(
           borderColor = clRed;
         }
         return OutlineInputBorder(
-          borderRadius: borderRadius,
+          borderRadius: borderRadius8,
           borderSide: BorderSide(width: borderWidth, color: borderColor),
         );
       },
     ),
-    counterStyle: textStyleSourceSansPro412,
-    helperStyle: textStyleSourceSansPro412,
-    labelStyle: textStyleSourceSansPro412,
+    counterStyle: styleSourceSansPro412,
+    helperStyle: styleSourceSansPro412,
+    labelStyle: styleSourceSansPro412,
   ),
   // ListTile
   listTileTheme: ListTileThemeData(
@@ -117,7 +117,7 @@ final themeDark = ThemeData.dark().copyWith(
               : clIndigo500),
     ),
     shape: _buttonShape,
-    textStyle: MaterialStateProperty.all<TextStyle>(textStylePoppins616),
+    textStyle: MaterialStateProperty.all<TextStyle>(stylePoppins616),
   )),
   // Radio
   radioTheme: RadioThemeData(
@@ -143,9 +143,9 @@ final themeDark = ThemeData.dark().copyWith(
     ),
     labelPadding: EdgeInsets.zero,
     labelColor: clWhite,
-    labelStyle: textStyleSourceSansPro614,
+    labelStyle: styleSourceSansPro614,
     unselectedLabelColor: clWhite,
-    unselectedLabelStyle: textStyleSourceSansPro614,
+    unselectedLabelStyle: styleSourceSansPro614,
   ),
   // Text
   textTheme: TextTheme(
@@ -155,9 +155,9 @@ final themeDark = ThemeData.dark().copyWith(
       fontWeight: FontWeight.w600,
       overflow: TextOverflow.ellipsis,
     ),
-    titleLarge: textStylePoppins620,
-    titleMedium: textStyleSourceSansPro614,
-    bodyMedium: textStyleSourceSansPro414,
+    titleLarge: stylePoppins620,
+    titleMedium: styleSourceSansPro614,
+    bodyMedium: styleSourceSansPro414,
   ),
   // Text Button
   textButtonTheme: TextButtonThemeData(
@@ -170,10 +170,10 @@ final _fixedSizeHeight48 = MaterialStateProperty.all<Size>(
   const Size(double.infinity, 48),
 );
 
-final _shapeBorder = RoundedRectangleBorder(borderRadius: borderRadius);
+final _shapeBorder = RoundedRectangleBorder(borderRadius: borderRadius8);
 
 final _buttonShape = MaterialStateProperty.all<OutlinedBorder>(
-  RoundedRectangleBorder(borderRadius: borderRadius),
+  RoundedRectangleBorder(borderRadius: borderRadius8),
 );
 
 final _buttonForegroundColor = MaterialStateProperty.resolveWith<Color>(

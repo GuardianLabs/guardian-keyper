@@ -73,25 +73,16 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(BuildContext context) => widget.di.isInited
-      ? MaterialApp(
-          title: 'Guardian Keyper',
-          color: clIndigo900,
-          theme: themeLight,
-          darkTheme: themeDark,
-          themeMode: ThemeMode.dark,
-          onGenerateRoute: onGenerateRoute,
-          navigatorObservers: [SentryNavigatorObserver()],
-          home: const HomeScreen(),
-        )
-      : MaterialApp(
-          title: 'Guardian Keyper',
-          color: clIndigo900,
-          theme: themeLight,
-          darkTheme: themeDark,
-          themeMode: ThemeMode.dark,
-          home: const SplashScreen(),
-        );
+  Widget build(BuildContext context) => MaterialApp(
+        title: 'Guardian Keyper',
+        color: clIndigo900,
+        theme: themeLight,
+        darkTheme: themeDark,
+        themeMode: ThemeMode.dark,
+        onGenerateRoute: onGenerateRoute,
+        navigatorObservers: [SentryNavigatorObserver()],
+        home: widget.di.isInited ? const HomeScreen() : const SplashScreen(),
+      );
 
   // Private
   late final _mdnsManager = GetIt.I<MdnsManager>();

@@ -56,14 +56,14 @@ class _LoadingPageState extends State<LoadingPage> {
             closeButton: HeaderBarCloseButton(),
           ),
           // Body
-          const Padding(padding: paddingTop32),
+          const Padding(padding: paddingT32),
           Padding(
             padding: paddingH20,
             child: Card(
               child: Column(
                 children: [
                   Padding(
-                    padding: paddingTop20,
+                    padding: paddingT20,
                     child: Selector<VaultRestorePresenter, bool>(
                       selector: (_, presenter) => presenter.isWaiting,
                       builder: (_, isWaiting, __) => Visibility(
@@ -76,7 +76,7 @@ class _LoadingPageState extends State<LoadingPage> {
                     padding: paddingAll20,
                     child: RichText(
                       text: TextSpan(
-                        style: textStyleSourceSansPro416,
+                        style: styleSourceSansPro416,
                         children: buildTextWithId(
                           leadingText: 'Awaiting ',
                           id: context

@@ -11,12 +11,12 @@ class GuardianSelfListTile extends StatelessWidget {
           'Secret Shard stored on my device',
           maxLines: 1,
           overflow: TextOverflow.fade,
-          style: textStyleSourceSansPro614.copyWith(height: 1.5),
+          style: styleSourceSansPro614.copyWith(height: 1.5),
         ),
         subtitle: Text(
           'Acts as a Guardian’s approval',
           maxLines: 1,
-          style: textStyleSourceSansPro414Purple,
+          style: styleSourceSansPro414Purple,
         ),
       );
 }

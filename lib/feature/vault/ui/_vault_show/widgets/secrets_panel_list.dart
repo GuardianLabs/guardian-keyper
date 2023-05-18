@@ -30,12 +30,12 @@ class SecretsPanelList extends StatelessWidget {
                 ),
                 Text(
                   secretId.name,
-                  style: textStyleSourceSansPro614,
+                  style: styleSourceSansPro614,
                 ),
               ],
             ),
             body: Padding(
-              padding: paddingH20 + paddingBottom20,
+              padding: paddingH20 + paddingB20,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -43,10 +43,10 @@ class SecretsPanelList extends StatelessWidget {
                     'In order to restore this Secret you have to get '
                     'an approval from at least ${vault.threshold} '
                     'Guardians of the Vault.',
-                    style: textStyleSourceSansPro414Purple,
+                    style: styleSourceSansPro414Purple,
                   ),
                   Padding(
-                    padding: paddingTop12,
+                    padding: paddingT12,
                     child: ElevatedButton(
                       onPressed: () => Navigator.of(context).pushNamed(
                         routeVaultSecretRecovery,
@@ -56,7 +56,7 @@ class SecretsPanelList extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: paddingTop12,
+                    padding: paddingT12,
                     child: ElevatedButton(
                       onPressed: () => OnRemoveSecretDialog.show(
                         context,

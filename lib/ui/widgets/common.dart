@@ -8,13 +8,17 @@ export 'package:flutter/material.dart';
 export '../theme/theme.dart';
 
 class ScaffoldSafe extends StatelessWidget {
-  final Widget child;
+  const ScaffoldSafe({
+    super.key,
+    required this.child,
+  });
 
-  const ScaffoldSafe({super.key, required this.child});
+  final Widget child;
 
   @override
   Widget build(BuildContext context) => Scaffold(
         primary: true,
+        backgroundColor: clIndigo900,
         resizeToAvoidBottomInset: true,
         body: SafeArea(child: child),
       );
@@ -22,11 +26,6 @@ class ScaffoldSafe extends StatelessWidget {
 
 class HeaderBar extends StatelessWidget {
   static const double sideSize = 68;
-
-  final String? caption;
-  final List<TextSpan>? captionSpans;
-  final Widget? backButton, captionWidget, closeButton;
-  final bool isTransparent;
 
   const HeaderBar({
     super.key,
@@ -37,6 +36,11 @@ class HeaderBar extends StatelessWidget {
     this.closeButton,
     this.isTransparent = false,
   });
+
+  final String? caption;
+  final List<TextSpan>? captionSpans;
+  final Widget? backButton, captionWidget, closeButton;
+  final bool isTransparent;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -66,7 +70,7 @@ class HeaderBar extends StatelessWidget {
                     text: TextSpan(
                       text: caption,
                       children: captionSpans,
-                      style: textStylePoppins616,
+                      style: stylePoppins616,
                     ),
                   ),
             )),
@@ -83,9 +87,12 @@ class HeaderBar extends StatelessWidget {
 }
 
 class HeaderBarCloseButton extends StatelessWidget {
-  final VoidCallback? onPressed;
+  const HeaderBarCloseButton({
+    super.key,
+    this.onPressed,
+  });
 
-  const HeaderBarCloseButton({super.key, this.onPressed});
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
@@ -101,9 +108,12 @@ class HeaderBarCloseButton extends StatelessWidget {
 }
 
 class HeaderBarMoreButton extends StatelessWidget {
-  final VoidCallback? onPressed;
+  const HeaderBarMoreButton({
+    super.key,
+    this.onPressed,
+  });
 
-  const HeaderBarMoreButton({super.key, this.onPressed});
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
@@ -119,9 +129,12 @@ class HeaderBarMoreButton extends StatelessWidget {
 }
 
 class HeaderBarBackButton extends StatelessWidget {
-  final VoidCallback? onPressed;
+  const HeaderBarBackButton({
+    super.key,
+    this.onPressed,
+  });
 
-  const HeaderBarBackButton({super.key, this.onPressed});
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
@@ -137,11 +150,6 @@ class HeaderBarBackButton extends StatelessWidget {
 }
 
 class PageTitle extends StatelessWidget {
-  final String? title;
-  final String? subtitle;
-  final List<TextSpan>? titleSpans;
-  final List<TextSpan>? subtitleSpans;
-
   const PageTitle({
     super.key,
     this.title,
@@ -150,12 +158,17 @@ class PageTitle extends StatelessWidget {
     this.subtitleSpans,
   });
 
+  final String? title;
+  final String? subtitle;
+  final List<TextSpan>? titleSpans;
+  final List<TextSpan>? subtitleSpans;
+
   @override
   Widget build(BuildContext context) {
     final paddingTop =
         ScreenSize.get(MediaQuery.of(context).size) is ScreenSmall
-            ? paddingTop12
-            : paddingTop32;
+            ? paddingT12
+            : paddingT32;
     return Padding(
       padding: paddingH20,
       child: Column(
@@ -168,19 +181,19 @@ class PageTitle extends StatelessWidget {
               text: TextSpan(
                 text: title,
                 children: titleSpans,
-                style: textStylePoppins620,
+                style: stylePoppins620,
               ),
             ),
           ),
           if (subtitle != null || subtitleSpans != null)
             Padding(
-              padding: paddingTop20,
+              padding: paddingT20,
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   text: subtitle,
                   children: subtitleSpans,
-                  style: textStyleSourceSansPro416Purple.copyWith(
+                  style: styleSourceSansPro416Purple.copyWith(
                     height: 1.5,
                   ),
                 ),
@@ -194,20 +207,20 @@ class PageTitle extends StatelessWidget {
 }
 
 class PrimaryButton extends StatelessWidget {
-  final String text;
-  final VoidCallback? onPressed;
-
   const PrimaryButton({
     super.key,
     required this.text,
     required this.onPressed,
   });
 
+  final String text;
+  final VoidCallback? onPressed;
+
   @override
   Widget build(BuildContext context) => Material(
         child: Ink(
           decoration: BoxDecoration(
-            borderRadius: borderRadius,
+            borderRadius: borderRadius8,
             gradient: onPressed == null
                 ? const LinearGradient(
                     begin: Alignment.topCenter,
@@ -222,7 +235,7 @@ class PrimaryButton extends StatelessWidget {
           ),
           height: 48,
           child: InkWell(
-            borderRadius: borderRadius,
+            borderRadius: borderRadius8,
             onTap: onPressed,
             splashColor: clBlue,
             child: Center(
@@ -230,7 +243,7 @@ class PrimaryButton extends StatelessWidget {
                 text,
                 overflow: TextOverflow.clip,
                 maxLines: 1,
-                style: textStylePoppins616.copyWith(
+                style: stylePoppins616.copyWith(
                   color: onPressed == null ? const Color(0xFF8FB1D0) : clWhite,
                 ),
               ),
@@ -241,14 +254,14 @@ class PrimaryButton extends StatelessWidget {
 }
 
 class TertiaryButton extends StatelessWidget {
-  final String text;
-  final VoidCallback? onPressed;
-
   const TertiaryButton({
     super.key,
     required this.text,
     required this.onPressed,
   });
+
+  final String text;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) => OutlinedButton(
@@ -258,20 +271,13 @@ class TertiaryButton extends StatelessWidget {
             color: clBlue,
             width: 2,
           )),
-          textStyle: MaterialStatePropertyAll(textStylePoppins616),
+          textStyle: MaterialStatePropertyAll(stylePoppins616),
         ),
         child: Text(text),
       );
 }
 
 class BottomSheetWidget extends StatelessWidget {
-  final Widget? icon;
-  final String? titleString;
-  final String? textString;
-  final List<TextSpan>? textSpan;
-  final Widget? body;
-  final Widget? footer;
-
   const BottomSheetWidget({
     super.key,
     this.icon,
@@ -282,31 +288,38 @@ class BottomSheetWidget extends StatelessWidget {
     this.footer,
   });
 
+  final Widget? icon;
+  final String? titleString;
+  final String? textString;
+  final List<TextSpan>? textSpan;
+  final Widget? body;
+  final Widget? footer;
+
   @override
   Widget build(BuildContext context) => Padding(
         padding: paddingAll20,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (icon != null) Padding(padding: paddingBottom32, child: icon),
+            if (icon != null) Padding(padding: paddingB32, child: icon),
             if (titleString != null)
               Padding(
-                padding: paddingBottom12,
+                padding: paddingB12,
                 child: Text(
                   titleString!,
-                  style: textStylePoppins620,
+                  style: stylePoppins620,
                   textAlign: TextAlign.center,
                 ),
               ),
             if (textString != null || textSpan != null)
               Padding(
-                padding: paddingBottom12,
+                padding: paddingB12,
                 child: RichText(
                   textAlign: TextAlign.center,
                   softWrap: true,
                   overflow: TextOverflow.clip,
                   text: TextSpan(
-                    style: textStyleSourceSansPro616Purple,
+                    style: styleSourceSansPro616Purple,
                     text: textString,
                     children: textSpan,
                   ),
@@ -320,13 +333,6 @@ class BottomSheetWidget extends StatelessWidget {
 }
 
 class InfoPanel extends StatelessWidget {
-  final AnimationController? animationController;
-  final String? title;
-  final String? text;
-  final List<TextSpan>? textSpan;
-  final IconData? icon;
-  final Color color;
-
   const InfoPanel({
     super.key,
     this.title,
@@ -367,12 +373,22 @@ class InfoPanel extends StatelessWidget {
     this.animationController,
   });
 
+  final AnimationController? animationController;
+  final String? title;
+  final String? text;
+  final List<TextSpan>? textSpan;
+  final IconData? icon;
+  final Color color;
+
   @override
   Widget build(BuildContext context) => animationController == null
       ? buildBody()
       : DecoratedBoxTransition(
           decoration: DecorationTween(
-            begin: boxDecorationStart,
+            begin: BoxDecoration(
+              borderRadius: borderRadius8,
+              color: clIndigo500,
+            ),
             end: boxDecoration,
           ).animate(animationController!),
           child: buildBody(),
@@ -386,21 +402,21 @@ class InfoPanel extends StatelessWidget {
             if (icon != null) Icon(icon, color: color, size: 20),
             if (title != null)
               Padding(
-                padding: paddingTop12,
+                padding: paddingT12,
                 child: Text(
                   title!,
-                  style: textStyleSourceSansPro616,
+                  style: styleSourceSansPro616,
                   textAlign: TextAlign.center,
                 ),
               ),
             if (text != null || textSpan != null)
               Padding(
-                padding: paddingTop12,
+                padding: paddingT12,
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
                     text: text,
-                    style: textStyleSourceSansPro414Purple,
+                    style: styleSourceSansPro414Purple,
                     children: textSpan,
                   ),
                 ),
@@ -411,16 +427,16 @@ class InfoPanel extends StatelessWidget {
 }
 
 class DotColored extends StatelessWidget {
-  final Widget? child;
-  final Color color;
-  final double size;
-
   const DotColored({
     super.key,
     this.child,
     this.color = clWhite,
     this.size = 8,
   });
+
+  final Widget? child;
+  final Color color;
+  final double size;
 
   @override
   Widget build(BuildContext context) => Container(

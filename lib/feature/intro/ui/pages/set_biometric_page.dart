@@ -18,23 +18,23 @@ class SetBiometricPage extends StatelessWidget {
               'assets/images/intro_biometrics.svg.vec',
             )),
             Padding(
-              padding: paddingTop32,
+              padding: paddingT32,
               child: Text(
                 'Enable biometric authentication?',
-                style: textStylePoppins620.copyWith(fontSize: 30),
+                style: stylePoppins620.copyWith(fontSize: 30),
                 textAlign: TextAlign.center,
               ),
             ),
             Padding(
-              padding: paddingTop12,
+              padding: paddingT12,
               child: Text(
                 'Use biometry for faster, easier and secure access to the app.',
-                style: textStyleSourceSansPro416,
+                style: styleSourceSansPro416,
                 textAlign: TextAlign.center,
               ),
             ),
             Padding(
-              padding: paddingTop20,
+              padding: paddingT20,
               child: Row(children: [
                 Expanded(
                   child: ElevatedButton(

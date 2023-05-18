@@ -35,7 +35,7 @@ class _VaultSizeInfoPanelState extends State<VaultSizeInfoPanel>
         ),
         TextSpan(
           text: '${presenter.ofAmount} out of ${presenter.atLeast}',
-          style: textStyleSourceSansPro616.copyWith(color: clWhite),
+          style: styleSourceSansPro616.copyWith(color: clWhite),
         ),
         const TextSpan(text: ' Guardians'),
       ],

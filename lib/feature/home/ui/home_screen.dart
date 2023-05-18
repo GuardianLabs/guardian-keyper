@@ -14,7 +14,6 @@ import 'package:guardian_keyper/feature/auth/ui/dialogs/on_demand_auth_dialog.da
 import 'package:guardian_keyper/feature/vault/ui/_shard_home/shard_home_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_vault_home/vault_home_screen.dart';
 
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
 import 'package:guardian_keyper/feature/message/ui/widgets/message_notify_icon.dart';
@@ -67,13 +66,12 @@ class HomeScreenState extends State<HomeScreen> {
     _messagesInteractor.watch().listen((event) {
       if (event.isDeleted) return;
       if (!_canShowMessage) return;
-      final message = event.value as MessageModel;
-      if (message.isNotReceived) return;
+      if (event.value!.isNotReceived) return;
       final routeName = ModalRoute.of(context)?.settings.name;
       if (routeName == '/' || routeName == routeQrCodeShow) {
         _canShowMessage = false;
         Navigator.of(context).popUntil((r) => r.isFirst);
-        OnMessageActiveDialog.show(context, message: message)
+        OnMessageActiveDialog.show(context, message: event.value!)
             .then((_) => _canShowMessage = true);
       }
     });
