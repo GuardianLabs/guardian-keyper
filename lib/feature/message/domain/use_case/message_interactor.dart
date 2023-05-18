@@ -19,6 +19,7 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
   }
 
   late final pause = _messageRepository.flush;
+  late final close = _messageRepository.close;
   late final pingPeer = _networkManager.pingPeer;
   late final getPeerStatus = _networkManager.getPeerStatus;
 

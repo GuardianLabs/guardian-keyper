@@ -12,9 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
   double_back_to_close_app: ^2.1.0
-  vector_graphics: ^1.1.5+1
+  vector_graphics: ^1.1.6
   google_fonts: ^4.0.4
-  flutter_svg: ^2.0.5
+  flutter_svg: ^2.0.6
   messagepack: ^0.2.1
   collection: ^1.17.1
   qr_flutter: ^4.1.0

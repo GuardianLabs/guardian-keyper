@@ -59,6 +59,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  final _networkManager = GetIt.I<NetworkManager>();
+  final _messagesInteractor = GetIt.I<MessageInteractor>();
+  final _settingsInteractor = GetIt.I<SettingsInteractor>();
+
+  bool _canShowMessage = true;
+
   @override
   void initState() {
     super.initState();
@@ -113,11 +119,4 @@ class HomeScreenState extends State<HomeScreen> {
           ),
         ),
       );
-
-  // Private
-  final _networkManager = GetIt.I<NetworkManager>();
-  final _messagesInteractor = GetIt.I<MessageInteractor>();
-  final _settingsInteractor = GetIt.I<SettingsInteractor>();
-
-  bool _canShowMessage = true;
 }
