@@ -8,7 +8,7 @@ import 'auth_dialog_mixin.dart';
 class OnAskAuthDialog extends AuthDialogBase {
   static Future<void> show(
     BuildContext context, {
-    required void Function() onUnlocked,
+    required VoidCallback onUnlocked,
   }) {
     final authInteractor = GetIt.I<AuthInteractor>();
     if (authInteractor.passCode.isEmpty) return Future.value();

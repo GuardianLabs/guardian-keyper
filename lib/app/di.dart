@@ -24,8 +24,10 @@ class DI {
 
   const DI();
 
-  Future<DI> init() async {
-    if (_isInited) return this;
+  bool get isInited => _isInited;
+
+  Future<void> init() async {
+    if (_isInited) return;
 
     // Services
     GetIt.I.registerSingleton<PlatformService>(PlatformService());
@@ -62,6 +64,5 @@ class DI {
     GetIt.I.registerSingleton<AuthInteractor>(AuthInteractor());
 
     _isInited = true;
-    return this;
   }
 }

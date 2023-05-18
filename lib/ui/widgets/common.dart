@@ -83,7 +83,7 @@ class HeaderBar extends StatelessWidget {
 }
 
 class HeaderBarCloseButton extends StatelessWidget {
-  final void Function()? onPressed;
+  final VoidCallback? onPressed;
 
   const HeaderBarCloseButton({super.key, this.onPressed});
 
@@ -101,7 +101,7 @@ class HeaderBarCloseButton extends StatelessWidget {
 }
 
 class HeaderBarMoreButton extends StatelessWidget {
-  final void Function()? onPressed;
+  final VoidCallback? onPressed;
 
   const HeaderBarMoreButton({super.key, this.onPressed});
 
@@ -119,7 +119,7 @@ class HeaderBarMoreButton extends StatelessWidget {
 }
 
 class HeaderBarBackButton extends StatelessWidget {
-  final void Function()? onPressed;
+  final VoidCallback? onPressed;
 
   const HeaderBarBackButton({super.key, this.onPressed});
 
@@ -195,7 +195,7 @@ class PageTitle extends StatelessWidget {
 
 class PrimaryButton extends StatelessWidget {
   final String text;
-  final void Function()? onPressed;
+  final VoidCallback? onPressed;
 
   const PrimaryButton({
     super.key,
@@ -242,7 +242,7 @@ class PrimaryButton extends StatelessWidget {
 
 class TertiaryButton extends StatelessWidget {
   final String text;
-  final void Function()? onPressed;
+  final VoidCallback? onPressed;
 
   const TertiaryButton({
     super.key,
