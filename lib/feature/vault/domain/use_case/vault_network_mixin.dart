@@ -8,7 +8,6 @@ import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart
 mixin class VaultNetworkMixin {
   late final pingPeer = _networkManager.pingPeer;
   late final getPeerStatus = _networkManager.getPeerStatus;
-  late final requestRetryPeriod = _networkManager.messageTTL;
 
   PeerId get selfId => _settingsManager.selfId;
 
@@ -17,7 +16,8 @@ mixin class VaultNetworkMixin {
   Stream<(PeerId, bool)> get peerStatusChangeStream =>
       _networkManager.peerStatusChangeStream;
 
-  Future<void> sendToGuardian(MessageModel message) => _networkManager.sendTo(
+  Future<void> sendToGuardian(MessageModel message) =>
+      _networkManager.sendToPeer(
         message.peerId,
         isConfirmable: false,
         message: message.copyWith(peerId: _settingsManager.selfId),
