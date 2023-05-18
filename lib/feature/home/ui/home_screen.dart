@@ -1,25 +1,14 @@
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
-import 'package:flutter/foundation.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/data/platform_service.dart';
-import 'package:guardian_keyper/data/network_manager.dart';
-import 'package:guardian_keyper/data/mdns_manager.dart';
 
 import 'package:guardian_keyper/feature/dashboard/ui/dashboard_screen.dart';
-import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
 import 'package:guardian_keyper/feature/auth/ui/dialogs/on_demand_auth_dialog.dart';
-
-import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 import 'package:guardian_keyper/feature/vault/ui/_shard_home/shard_home_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_vault_home/vault_home_screen.dart';
-
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
-import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
 import 'package:guardian_keyper/feature/message/ui/widgets/message_notify_icon.dart';
 import 'package:guardian_keyper/feature/message/ui/message_home_screen.dart';
@@ -63,55 +52,32 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => HomeScreenState();
 }
 
-class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+class HomeScreenState extends State<HomeScreen> {
+  late final _presenter = context.read<HomePresenter>();
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
 
-    _messagesInteractor.watch().listen((event) {
-      if (event.isDeleted) return;
-      if (!_canShowMessage) return;
-      final message = event.value as MessageModel;
-      if (message.isNotReceived) return;
+    _presenter.messagesSubscription.onData((event) {
       final routeName = ModalRoute.of(context)?.settings.name;
       if (routeName == '/' || routeName == routeQrCodeShow) {
-        _canShowMessage = false;
+        _presenter.canShowMessage = false;
         Navigator.of(context).popUntil((r) => r.isFirst);
-        OnMessageActiveDialog.show(context, message: message)
-            .then((_) => _canShowMessage = true);
+        OnMessageActiveDialog.show(context, message: event.value!)
+            .then((_) => _presenter.canShowMessage = true);
       }
     });
 
     Future.microtask(() async {
-      if (_settingsInteractor.passCode.isEmpty) {
+      if (_presenter.isFirstStart) {
         await Navigator.of(context).pushNamed(routeIntro);
       } else {
-        _messagesInteractor.pruneMessages();
+        _presenter.serveStorage();
         await OnDemandAuthDialog.show(context);
       }
-      await _networkManager.start();
+      await _presenter.start();
     });
-  }
-
-  @override
-  void didChangeAppLifecycleState(state) async {
-    super.didChangeAppLifecycleState(state);
-    if (kDebugMode) print(state);
-    switch (state) {
-      case AppLifecycleState.resumed:
-        await _networkManager.start();
-        break;
-      case AppLifecycleState.paused:
-        _networkManager.pause();
-        await _vaultInteractor.pause();
-        await _messagesInteractor.pause();
-        await _mdnsManager.stopDiscovery();
-        await _mdnsManager.unregister();
-        await _platformService.wakelockDisable();
-        break;
-      default:
-    }
   }
 
   @override
@@ -140,14 +106,4 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
         ),
       );
-
-  // Private
-  final _mdnsManager = GetIt.I<MdnsManager>();
-  final _networkManager = GetIt.I<NetworkManager>();
-  final _platformService = GetIt.I<PlatformService>();
-  final _vaultInteractor = GetIt.I<VaultInteractor>();
-  final _messagesInteractor = GetIt.I<MessageInteractor>();
-  final _settingsInteractor = GetIt.I<SettingsInteractor>();
-
-  bool _canShowMessage = true;
 }

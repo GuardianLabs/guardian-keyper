@@ -33,7 +33,7 @@ class MdnsManager {
             },
           ))
           .timeout(initTimeout);
-      await startDiscovery();
+      await start();
     } on nsd.NsdError catch (e) {
       if (kDebugMode) print(e);
       rethrow;
@@ -43,7 +43,7 @@ class MdnsManager {
     return this;
   }
 
-  Future<void> startDiscovery() async {
+  Future<void> start() async {
     if (GetIt.I<PlatformService>().hasWiFi) {
       try {
         _discovery ??= await nsd
@@ -59,7 +59,7 @@ class MdnsManager {
     }
   }
 
-  Future<void> stopDiscovery() async {
+  Future<void> pause() async {
     if (_discovery == null) return;
     final discovery = _discovery!;
     _discovery = null;
@@ -73,7 +73,7 @@ class MdnsManager {
     }
   }
 
-  Future<void> unregister() => nsd.unregister(_registration);
+  Future<void> stop() => nsd.unregister(_registration);
 
   // Private
   final int _port;
