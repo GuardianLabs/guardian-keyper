@@ -94,9 +94,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         );
 
   // Private
-  final _mdnsManager = GetIt.I<MdnsManager>();
-  final _networkManager = GetIt.I<NetworkManager>();
-  final _platformService = GetIt.I<PlatformService>();
-  final _vaultInteractor = GetIt.I<VaultInteractor>();
-  final _messagesInteractor = GetIt.I<MessageInteractor>();
+  late final _mdnsManager = GetIt.I<MdnsManager>();
+  late final _networkManager = GetIt.I<NetworkManager>();
+  late final _platformService = GetIt.I<PlatformService>();
+  late final _vaultInteractor = GetIt.I<VaultInteractor>();
+  late final _messagesInteractor = GetIt.I<MessageInteractor>();
 }

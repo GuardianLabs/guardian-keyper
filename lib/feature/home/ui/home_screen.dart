@@ -1,14 +1,21 @@
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/data/network_manager.dart';
 
 import 'package:guardian_keyper/feature/dashboard/ui/dashboard_screen.dart';
+import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
 import 'package:guardian_keyper/feature/auth/ui/dialogs/on_demand_auth_dialog.dart';
+
 import 'package:guardian_keyper/feature/vault/ui/_shard_home/shard_home_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_vault_home/vault_home_screen.dart';
+
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
 import 'package:guardian_keyper/feature/message/ui/widgets/message_notify_icon.dart';
 import 'package:guardian_keyper/feature/message/ui/message_home_screen.dart';
@@ -53,30 +60,32 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  late final _presenter = context.read<HomePresenter>();
-
   @override
   void initState() {
     super.initState();
 
-    _presenter.messagesSubscription.onData((event) {
+    _messagesInteractor.watch().listen((event) {
+      if (event.isDeleted) return;
+      if (!_canShowMessage) return;
+      final message = event.value as MessageModel;
+      if (message.isNotReceived) return;
       final routeName = ModalRoute.of(context)?.settings.name;
       if (routeName == '/' || routeName == routeQrCodeShow) {
-        _presenter.canShowMessage = false;
+        _canShowMessage = false;
         Navigator.of(context).popUntil((r) => r.isFirst);
-        OnMessageActiveDialog.show(context, message: event.value!)
-            .then((_) => _presenter.canShowMessage = true);
+        OnMessageActiveDialog.show(context, message: message)
+            .then((_) => _canShowMessage = true);
       }
     });
 
     Future.microtask(() async {
-      if (_presenter.isFirstStart) {
+      if (_settingsInteractor.passCode.isEmpty) {
         await Navigator.of(context).pushNamed(routeIntro);
       } else {
-        _presenter.serveStorage();
+        _messagesInteractor.pruneMessages();
         await OnDemandAuthDialog.show(context);
       }
-      await _presenter.start();
+      await _networkManager.start();
     });
   }
 
@@ -106,4 +115,11 @@ class HomeScreenState extends State<HomeScreen> {
           ),
         ),
       );
+
+  // Private
+  final _networkManager = GetIt.I<NetworkManager>();
+  final _messagesInteractor = GetIt.I<MessageInteractor>();
+  final _settingsInteractor = GetIt.I<SettingsInteractor>();
+
+  bool _canShowMessage = true;
 }
