@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:guardian_keyper/ui/theme/theme.dart';
-import 'package:guardian_keyper/feature/home/ui/home_presenter.dart';
+import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 
 import '../dashboard_presenter.dart';
 
@@ -10,7 +10,7 @@ class ShardsCountButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: context.read<HomePresenter>().gotoShards,
+        onTap: context.findAncestorStateOfType<HomeScreenState>()?.gotoShards,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: borderRadius8,

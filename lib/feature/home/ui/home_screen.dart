@@ -1,4 +1,3 @@
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
@@ -18,8 +17,6 @@ import 'package:guardian_keyper/feature/message/domain/use_case/message_interact
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
 import 'package:guardian_keyper/feature/message/ui/widgets/message_notify_icon.dart';
 import 'package:guardian_keyper/feature/message/ui/message_home_screen.dart';
-
-import 'home_presenter.dart';
 
 class HomeScreen extends StatefulWidget {
   static const _pages = [
@@ -63,7 +60,9 @@ class HomeScreenState extends State<HomeScreen> {
   final _messagesInteractor = GetIt.I<MessageInteractor>();
   final _settingsInteractor = GetIt.I<SettingsInteractor>();
 
+  int _currentPage = 0;
   bool _canShowMessage = true;
+  DateTime _lastExitTryAt = DateTime.now();
 
   @override
   void initState() {
@@ -94,29 +93,45 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        key: const Key('HomePresenter'),
-        create: (_) => HomePresenter(pageCount: HomeScreen._pages.length),
-        child: Selector<HomePresenter, int>(
-          selector: (_, presenter) => presenter.currentPage,
-          builder: (context, currentPage, __) => Scaffold(
-            backgroundColor: clIndigo900,
-            resizeToAvoidBottomInset: true,
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: currentPage,
-              items: HomeScreen._items,
-              onTap: (page) => context.read<HomePresenter>().gotoPage(page),
-            ),
-            body: DoubleBackToCloseApp(
-              snackBar: buildSnackBar(text: 'Tap back again to exit'),
-              child: SafeArea(
-                child: Padding(
-                  padding: paddingH20,
-                  child: HomeScreen._pages[currentPage],
-                ),
-              ),
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: clIndigo900,
+        resizeToAvoidBottomInset: true,
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentPage,
+          items: HomeScreen._items,
+          onTap: (page) => setState(() => _currentPage = page),
+        ),
+        body: WillPopScope(
+          onWillPop: _onWillPop,
+          child: SafeArea(
+            child: Padding(
+              padding: paddingH20,
+              child: HomeScreen._pages[_currentPage],
             ),
           ),
         ),
       );
+
+  Future<bool> _onWillPop() async {
+    final now = DateTime.now();
+    if (_lastExitTryAt.isAfter(now.subtract(snackBarDuration))) return true;
+
+    _lastExitTryAt = now;
+    ScaffoldMessenger.of(context).showSnackBar(
+      buildSnackBar(text: 'Tap back again to exit'),
+    );
+    return false;
+  }
+
+  void gotoVaults() => setState(() {
+        _currentPage = HomeScreen._pages.indexWhere(
+          (e) => e is VaultHomeScreen,
+        );
+      });
+
+  void gotoShards() => setState(() {
+        _currentPage = HomeScreen._pages.indexWhere(
+          (e) => e is ShardHomeScreen,
+        );
+      });
 }
