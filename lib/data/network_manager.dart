@@ -9,9 +9,9 @@ import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
-import 'mdns_service.dart';
-import 'platform_service.dart';
-import 'preferences_service.dart';
+import 'services/mdns_service.dart';
+import 'services/platform_service.dart';
+import 'services/preferences_service.dart';
 
 class NetworkManager {
   NetworkManager({

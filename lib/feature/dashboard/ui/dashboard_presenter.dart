@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:guardian_keyper/data/platform_service.dart';
-import 'package:guardian_keyper/data/preferences_service.dart';
+import 'package:guardian_keyper/data/services/platform_service.dart';
+import 'package:guardian_keyper/data/services/preferences_service.dart';
 import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';

@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/data/platform_service.dart';
+import 'package:guardian_keyper/data/services/platform_service.dart';
 
 mixin class VaultPlatformMixin {
   late final openMarket = _platformService.openMarket;

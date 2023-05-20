@@ -5,7 +5,7 @@ import 'package:vector_graphics/vector_graphics.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/data/platform_service.dart';
+import 'package:guardian_keyper/data/services/platform_service.dart';
 
 class QRCodeShowScreen extends StatefulWidget {
   const QRCodeShowScreen({super.key});

@@ -14,9 +14,9 @@ import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
 
 import '../data/network_manager.dart';
-import '../data/platform_service.dart';
-import '../data/analytics_service.dart';
-import '../data/preferences_service.dart';
+import '../data/services/platform_service.dart';
+import '../data/services/analytics_service.dart';
+import '../data/services/preferences_service.dart';
 
 class DI {
   static bool _isInited = false;

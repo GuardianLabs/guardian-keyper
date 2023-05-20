@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/data/platform_service.dart';
+import 'package:guardian_keyper/data/services/platform_service.dart';
 import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 
 class AuthInteractor {

@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:nsd/nsd.dart' as nsd;
 import 'package:flutter/foundation.dart';
 
-import '../consts.dart';
+import '../../consts.dart';
 
 class MdnsService {
   static const _mdnsPeerId = 'peerId';
