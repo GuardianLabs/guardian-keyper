@@ -13,13 +13,14 @@ class IntrosPage extends StatelessWidget {
     SvgPicture(AssetBytesLoader('assets/images/intro_4.svg.vec')),
   ];
 
-  final _titles = const [
+  static const _titles = [
     'Welcome to Guardian Keyper',
     'Decentralized',
     'Secure',
     'Never forget again',
   ];
-  final _subtitles = const [
+
+  static const _subtitles = [
     'Guardian Keyper is a secure way to store and recover secrets, such as seed'
         ' phrases. With Guardian Keyper, your Web3 assets are safe.',
     'Guardian Keyper splits a secret into a number of encrypted shards. Shards'
@@ -30,6 +31,8 @@ class IntrosPage extends StatelessWidget {
         ' Even in case you’ve lost access to your device.',
   ];
 
+  static final _slideCount = _pictures.length;
+
   const IntrosPage({super.key});
 
   @override
@@ -39,14 +42,9 @@ class IntrosPage extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       onHorizontalDragEnd: (details) {
         if (details.velocity.pixelsPerSecond.dx < -5) {
-          if (presenter.introStep == _titles.length - 1) {
-            presenter.nextPage();
-          } else if (presenter.introStep < _titles.length - 1) {
-            presenter.introStep++;
-          }
-        } else if (details.velocity.pixelsPerSecond.dx > 5 &&
-            presenter.introStep > 0) {
-          presenter.introStep--;
+          presenter.nextSlide(_slideCount);
+        } else if (details.velocity.pixelsPerSecond.dx > 5) {
+          presenter.previousSlide();
         }
       },
       child: Padding(
@@ -57,6 +55,7 @@ class IntrosPage extends StatelessWidget {
               flex: 1,
               child: Container(),
             ),
+            // Slide
             Padding(
               padding: paddingB32,
               child: IntrosPage._pictures[presenter.introStep],
@@ -81,6 +80,7 @@ class IntrosPage extends StatelessWidget {
               flex: 2,
               child: Container(),
             ),
+            // Control bar
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -88,6 +88,7 @@ class IntrosPage extends StatelessWidget {
                   onPressed: presenter.nextPage,
                   child: Text('Skip', style: stylePoppins616),
                 ),
+                // Dots
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -95,16 +96,14 @@ class IntrosPage extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(right: 8),
                         child: DotColored(
-                            color: i == presenter.introStep
-                                ? clBlue
-                                : clIndigo600),
+                          color:
+                              i == presenter.introStep ? clBlue : clIndigo600,
+                        ),
                       ),
                   ],
                 ),
                 TextButton(
-                  onPressed: () => presenter.introStep == _titles.length - 1
-                      ? presenter.nextPage()
-                      : presenter.introStep++,
+                  onPressed: () => presenter.nextSlide(_slideCount),
                   child: Text('Next', style: stylePoppins616),
                 ),
               ],

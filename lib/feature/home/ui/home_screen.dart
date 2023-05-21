@@ -99,14 +99,17 @@ class HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentPage,
           items: HomeScreen._items,
-          onTap: (page) => setState(() => _currentPage = page),
+          onTap: _gotoPage,
         ),
         body: WillPopScope(
           onWillPop: _onWillPop,
           child: SafeArea(
             child: Padding(
               padding: paddingH20,
-              child: HomeScreen._pages[_currentPage],
+              child: IndexedStack(
+                index: _currentPage,
+                children: HomeScreen._pages,
+              ),
             ),
           ),
         ),
@@ -123,15 +126,11 @@ class HomeScreenState extends State<HomeScreen> {
     return false;
   }
 
-  void gotoVaults() => setState(() {
-        _currentPage = HomeScreen._pages.indexWhere(
-          (e) => e is VaultHomeScreen,
-        );
-      });
+  void _gotoPage(int page) => setState(() => _currentPage = page);
 
-  void gotoShards() => setState(() {
-        _currentPage = HomeScreen._pages.indexWhere(
-          (e) => e is ShardHomeScreen,
-        );
-      });
+  void gotoVaults() =>
+      _gotoPage(HomeScreen._pages.indexWhere((e) => e is VaultHomeScreen));
+
+  void gotoShards() =>
+      _gotoPage(HomeScreen._pages.indexWhere((e) => e is ShardHomeScreen));
 }
