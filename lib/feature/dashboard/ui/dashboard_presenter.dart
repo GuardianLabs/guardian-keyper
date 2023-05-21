@@ -31,7 +31,7 @@ class DashboardPresenter extends ChangeNotifier {
     super.dispose();
   }
 
-  late final share = _platformManager.share;
+  late final share = _platformService.share;
   late final createJoinVaultCode = _messagesInteractor.createJoinVaultCode;
 
   int get vaultsCount => _vaults.length;
@@ -42,7 +42,7 @@ class DashboardPresenter extends ChangeNotifier {
   final _vaults = <VaultId>{};
   final _shards = <VaultId>{};
 
-  final _platformManager = GetIt.I<PlatformService>();
+  final _platformService = GetIt.I<PlatformService>();
   final _vaultInteractor = GetIt.I<VaultInteractor>();
   final _messagesInteractor = GetIt.I<MessageInteractor>();
   final _settingsInteractor = GetIt.I<SettingsInteractor>();

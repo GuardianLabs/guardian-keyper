@@ -4,8 +4,8 @@ import 'package:guardian_keyper/data/services/platform_service.dart';
 import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 
 class AuthInteractor {
-  late final vibrate = _platformManager.vibrate;
-  late final localAuthenticate = _platformManager.localAuthenticate;
+  late final vibrate = _platformService.vibrate;
+  late final localAuthenticate = _platformService.localAuthenticate;
 
   late final setPassCode = _settingsManager.setPassCode;
 
@@ -14,6 +14,6 @@ class AuthInteractor {
 
   String get passCode => _settingsManager.passCode;
 
-  final _platformManager = GetIt.I<PlatformService>();
+  final _platformService = GetIt.I<PlatformService>();
   final _settingsManager = GetIt.I<SettingsManager>();
 }
