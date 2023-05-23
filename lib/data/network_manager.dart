@@ -58,13 +58,14 @@ class NetworkManager {
   );
 
   Future<NetworkManager> init() async {
-    final seed =
-        await _preferencesService.get<Uint8List>(keySeed) ?? Uint8List(0);
-    final cryptoKeys = await _router
-        .init(p2p.CryptoKeys.empty()..seed = seed)
-        .timeout(initTimeout);
-    if (seed.isEmpty) {
-      await _preferencesService.set<Uint8List>(keySeed, cryptoKeys.seed);
+    final seed = await _preferencesService.get<Uint8List>(keySeed);
+    if (seed == null) {
+      await _preferencesService.set<Uint8List>(
+        keySeed,
+        await _router.init().timeout(initTimeout),
+      );
+    } else {
+      await _router.init(seed).timeout(initTimeout);
     }
     _router.messageStream.listen((p2pMessage) {
       final message = MessageModel.tryFromBytes(p2pMessage.payload);
