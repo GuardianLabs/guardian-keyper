@@ -42,8 +42,8 @@ class NetworkManager {
 
   Stream<MessageModel> get messageStream => _messagesController.stream;
 
-  Stream<(PeerId, bool)> get peerStatusChangeStream =>
-      _router.lastSeenStream.map((e) => (PeerId(token: e.key.value), e.value));
+  Stream<(PeerId, bool)> get peerStatusChangeStream => _router.lastSeenStream
+      .map((e) => (PeerId(token: e.peerId.value), e.isOnline));
 
   final int _port;
   late final p2p.RouterL2 _router;
@@ -83,9 +83,9 @@ class NetworkManager {
         bindAddress: p2p.FullAddress(address: address, port: _port),
       ));
     }
-    toggleBootstrap(await _preferencesService.get<bool>(keyIsBootstrapEnabled));
     await _router.start();
     if (_platformService.hasWiFi) await _mdnsService.startDiscovery();
+    toggleBootstrap(await _preferencesService.get<bool>(keyIsBootstrapEnabled));
   }
 
   Future<void> pause() async {
