@@ -38,7 +38,7 @@ class ShardHomeScreen extends StatelessWidget {
                     child: ListTile(
                       title: RichText(
                         text: TextSpan(
-                          style: textStyleSourceSansPro614,
+                          style: styleSourceSansPro614,
                           children: buildTextWithId(id: vault.id),
                         ),
                       ),
@@ -48,14 +48,14 @@ class ShardHomeScreen extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         strutStyle: const StrutStyle(height: 1.5),
                         text: TextSpan(
-                          style: textStyleSourceSansPro414Purple,
+                          style: styleSourceSansPro414Purple,
                           children: [
                             TextSpan(
-                              style: textStyleSourceSansPro414Purple,
+                              style: styleSourceSansPro414Purple,
                               children: buildTextWithId(id: vault.ownerId),
                             ),
                             TextSpan(
-                              style: textStyleSourceSansPro414Purple,
+                              style: styleSourceSansPro414Purple,
                               text: '\n${vault.secrets.length} Shard(s)',
                             ),
                           ],

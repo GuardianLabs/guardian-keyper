@@ -22,7 +22,7 @@ class SetDeviceNamePage extends StatelessWidget {
           child: Text(
             'Create your Guardian name',
             textAlign: TextAlign.center,
-            style: textStylePoppins620,
+            style: stylePoppins620,
           ),
         ),
         Padding(
@@ -30,7 +30,7 @@ class SetDeviceNamePage extends StatelessWidget {
             child: TextFormField(
               autofocus: true,
               initialValue: presenter.deviceName,
-              onChanged: presenter.setDeviceName,
+              onChanged: (value) => presenter.deviceName = value,
               keyboardType: TextInputType.text,
               maxLength: maxNameLength,
               decoration: const InputDecoration(

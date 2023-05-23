@@ -35,7 +35,7 @@ class SettingsScreen extends StatelessWidget {
                           title: const Text('Change Guardian name'),
                           subtitle: Text(
                             presenter.deviceName,
-                            style: textStyleSourceSansPro414Purple,
+                            style: styleSourceSansPro414Purple,
                           ),
                           trailing: const Icon(Icons.arrow_forward_ios_rounded),
                           onTap: () => OnSetDeviceNameDialog.show(
@@ -52,7 +52,7 @@ class SettingsScreen extends StatelessWidget {
                           title: const Text('Passcode'),
                           subtitle: Text(
                             'Change authentication passcode',
-                            style: textStyleSourceSansPro414Purple,
+                            style: styleSourceSansPro414Purple,
                           ),
                           trailing: const Icon(Icons.arrow_forward_ios_rounded),
                           onTap: () => presenter.passCode.isEmpty

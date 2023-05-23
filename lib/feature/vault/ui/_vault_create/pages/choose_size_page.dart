@@ -23,19 +23,19 @@ class ChooseSizePage extends StatelessWidget {
             padding: paddingAll20,
             children: [
               Padding(
-                padding: paddingBottom20,
+                padding: paddingB20,
                 child: Text(
                   'Select Guardians amount',
-                  style: textStylePoppins620,
+                  style: stylePoppins620,
                   textAlign: TextAlign.center,
                 ),
               ),
               Padding(
-                padding: paddingBottom32,
+                padding: paddingB32,
                 child: Text(
                   'Pick amount of Guardians which will be responsible '
                   'for keeping the Shards (parts) of your Secrets.',
-                  style: textStyleSourceSansPro416,
+                  style: styleSourceSansPro416,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -43,7 +43,7 @@ class ChooseSizePage extends StatelessWidget {
               const GuardiansControlPanel(),
               // Info
               const Padding(
-                padding: paddingTop32,
+                padding: paddingT32,
                 child: VaultSizeInfoPanel(),
               ),
               // Footer

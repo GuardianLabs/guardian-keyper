@@ -23,89 +23,84 @@ const paddingV6 = EdgeInsets.symmetric(vertical: 6);
 const paddingV12 = EdgeInsets.symmetric(vertical: 12);
 const paddingV20 = EdgeInsets.symmetric(vertical: 20);
 const paddingV32 = EdgeInsets.symmetric(vertical: 32);
-const paddingTop12 = EdgeInsets.only(top: 12);
-const paddingTop20 = EdgeInsets.only(top: 20);
-const paddingTop32 = EdgeInsets.only(top: 32);
-const paddingBottom12 = EdgeInsets.only(bottom: 12);
-const paddingBottom20 = EdgeInsets.only(bottom: 20);
-const paddingBottom32 = EdgeInsets.only(bottom: 32);
+const paddingT12 = EdgeInsets.only(top: 12);
+const paddingT20 = EdgeInsets.only(top: 20);
+const paddingT32 = EdgeInsets.only(top: 32);
+const paddingB12 = EdgeInsets.only(bottom: 12);
+const paddingB20 = EdgeInsets.only(bottom: 20);
+const paddingB32 = EdgeInsets.only(bottom: 32);
 
 const radius8 = Radius.circular(8);
 
 const borderRadiusTop10 = BorderRadius.vertical(top: Radius.circular(10));
 
-final borderRadius = BorderRadius.circular(8);
+final borderRadius8 = BorderRadius.circular(8);
 
 final boxDecoration = BoxDecoration(
-  borderRadius: borderRadius,
+  borderRadius: borderRadius8,
   color: clSurface,
 );
 
-final boxDecorationStart = BoxDecoration(
-  borderRadius: borderRadius,
-  color: clIndigo500,
-);
-
-final textStyleSourceSansPro412 = GoogleFonts.sourceSansPro(
+final styleSourceSansPro412 = GoogleFonts.sourceSansPro(
   fontSize: 12,
   fontWeight: FontWeight.w400,
 );
 
-final textStyleSourceSansPro414 = GoogleFonts.sourceSansPro(
+final styleSourceSansPro414 = GoogleFonts.sourceSansPro(
   fontSize: 14,
   fontWeight: FontWeight.w400,
 );
 
-final textStyleSourceSansPro414Purple = GoogleFonts.sourceSansPro(
+final styleSourceSansPro414Purple = GoogleFonts.sourceSansPro(
   color: clPurpleLight,
   fontSize: 14,
   fontWeight: FontWeight.w400,
 );
 
-final textStyleSourceSansPro416 = GoogleFonts.sourceSansPro(
+final styleSourceSansPro416 = GoogleFonts.sourceSansPro(
   fontSize: 16,
   fontWeight: FontWeight.w400,
 );
 
-final textStyleSourceSansPro416Purple = GoogleFonts.sourceSansPro(
+final styleSourceSansPro416Purple = GoogleFonts.sourceSansPro(
   color: clPurpleLight,
   fontSize: 16,
   fontWeight: FontWeight.w400,
 );
 
-final textStyleSourceSansPro612 = GoogleFonts.sourceSansPro(
+final styleSourceSansPro612 = GoogleFonts.sourceSansPro(
   fontSize: 12,
   fontWeight: FontWeight.w600,
 );
 
-final textStyleSourceSansPro612Purple = GoogleFonts.sourceSansPro(
+final styleSourceSansPro612Purple = GoogleFonts.sourceSansPro(
   color: clPurpleLight,
   fontSize: 12,
   fontWeight: FontWeight.w600,
 );
 
-final textStyleSourceSansPro614 = GoogleFonts.sourceSansPro(
+final styleSourceSansPro614 = GoogleFonts.sourceSansPro(
   fontSize: 14,
   fontWeight: FontWeight.w600,
 );
 
-final textStyleSourceSansPro616 = GoogleFonts.sourceSansPro(
+final styleSourceSansPro616 = GoogleFonts.sourceSansPro(
   fontSize: 16,
   fontWeight: FontWeight.w600,
 );
 
-final textStyleSourceSansPro616Purple = GoogleFonts.sourceSansPro(
+final styleSourceSansPro616Purple = GoogleFonts.sourceSansPro(
   color: clPurpleLight,
   fontSize: 16,
   fontWeight: FontWeight.w600,
 );
 
-final textStylePoppins616 = GoogleFonts.poppins(
+final stylePoppins616 = GoogleFonts.poppins(
   fontSize: 16,
   fontWeight: FontWeight.w600,
 );
 
-final textStylePoppins620 = GoogleFonts.poppins(
+final stylePoppins620 = GoogleFonts.poppins(
   fontSize: 20,
   fontWeight: FontWeight.w600,
 );

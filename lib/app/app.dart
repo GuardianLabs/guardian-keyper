@@ -8,9 +8,7 @@ import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/screens/splash_screen.dart';
 import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 
-import 'package:guardian_keyper/data/mdns_manager.dart';
 import 'package:guardian_keyper/data/network_manager.dart';
-import 'package:guardian_keyper/data/platform_service.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
@@ -37,6 +35,10 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> with WidgetsBindingObserver {
+  late final _networkManager = GetIt.I<NetworkManager>();
+  late final _vaultInteractor = GetIt.I<VaultInteractor>();
+  late final _messagesInteractor = GetIt.I<MessageInteractor>();
+
   @override
   void initState() {
     super.initState();
@@ -45,21 +47,17 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(state) async {
+  void didChangeAppLifecycleState(state) {
     super.didChangeAppLifecycleState(state);
     if (kDebugMode) print(state);
     switch (state) {
       case AppLifecycleState.resumed:
-        await _networkManager.start();
-        await _mdnsManager.start();
+        _networkManager.start();
         break;
       case AppLifecycleState.paused:
-        _mdnsManager.pause();
+        _messagesInteractor.pause();
+        _vaultInteractor.pause();
         _networkManager.pause();
-        // TBD: move to NetworkInteractor
-        _platformService.wakelockDisable();
-        await _vaultInteractor.pause();
-        await _messagesInteractor.pause();
         break;
       default:
     }
@@ -68,35 +66,21 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _mdnsManager.stop();
+    _networkManager.dispose();
+    _vaultInteractor.close();
+    _messagesInteractor.close();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => widget.di.isInited
-      ? MaterialApp(
-          title: 'Guardian Keyper',
-          color: clIndigo900,
-          theme: themeLight,
-          darkTheme: themeDark,
-          themeMode: ThemeMode.dark,
-          onGenerateRoute: onGenerateRoute,
-          navigatorObservers: [SentryNavigatorObserver()],
-          home: const HomeScreen(),
-        )
-      : MaterialApp(
-          title: 'Guardian Keyper',
-          color: clIndigo900,
-          theme: themeLight,
-          darkTheme: themeDark,
-          themeMode: ThemeMode.dark,
-          home: const SplashScreen(),
-        );
-
-  // Private
-  late final _mdnsManager = GetIt.I<MdnsManager>();
-  late final _networkManager = GetIt.I<NetworkManager>();
-  late final _platformService = GetIt.I<PlatformService>();
-  late final _vaultInteractor = GetIt.I<VaultInteractor>();
-  late final _messagesInteractor = GetIt.I<MessageInteractor>();
+  Widget build(BuildContext context) => MaterialApp(
+        title: 'Guardian Keyper',
+        color: clIndigo900,
+        theme: themeLight,
+        darkTheme: themeDark,
+        themeMode: ThemeMode.dark,
+        onGenerateRoute: onGenerateRoute,
+        navigatorObservers: [SentryNavigatorObserver()],
+        home: widget.di.isInited ? const HomeScreen() : const SplashScreen(),
+      );
 }

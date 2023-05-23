@@ -17,19 +17,19 @@ class VaultsPanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: paddingBottom12,
+              padding: paddingB12,
               child: Text(
                 'Vaults',
                 textAlign: TextAlign.left,
-                style: textStylePoppins616,
+                style: stylePoppins616,
               ),
             ),
             Padding(
-              padding: paddingBottom20,
+              padding: paddingB20,
               child: Text(
                 'Create a Vault to secure your Secret '
                 'with the help of your Guardians.',
-                style: textStyleSourceSansPro416Purple,
+                style: styleSourceSansPro416Purple,
                 textAlign: TextAlign.left,
               ),
             ),

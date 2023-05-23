@@ -21,14 +21,14 @@ class ShardShowScreen extends StatelessWidget {
           ),
           // Body
           Padding(
-            padding: paddingTop32 + paddingH20,
+            padding: paddingT32 + paddingH20,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 RichText(
                   text: TextSpan(
-                    style: textStyleSourceSansPro414Purple,
+                    style: styleSourceSansPro414Purple,
                     children: buildTextWithId(id: vault.ownerId),
                   ),
                 ),
@@ -36,17 +36,17 @@ class ShardShowScreen extends StatelessWidget {
                   padding: paddingV6,
                   child: RichText(
                     text: TextSpan(
-                      style: textStylePoppins616,
+                      style: stylePoppins616,
                       children: buildTextWithId(id: vault.id),
                     ),
                   ),
                 ),
                 Text(
                   vault.id.toHexShort(),
-                  style: textStyleSourceSansPro414,
+                  style: styleSourceSansPro414,
                 ),
                 Padding(
-                  padding: paddingTop12,
+                  padding: paddingT12,
                   child: PrimaryButton(
                     text: 'Change Vault’s Owner',
                     onPressed: () => OnChangeOwnerDialog.show(
@@ -56,17 +56,17 @@ class ShardShowScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: paddingTop32,
+                  padding: paddingT32,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Secret Shards',
-                        style: textStylePoppins620,
+                        style: stylePoppins620,
                       ),
                       Text(
                         vault.secrets.length.toString(),
-                        style: textStylePoppins620,
+                        style: stylePoppins620,
                       ),
                     ],
                   ),

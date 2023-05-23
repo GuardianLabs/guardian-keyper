@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/domain/entity/peer_id.dart';
 
@@ -24,7 +25,7 @@ class _OnlineStatusTextState extends State<OnlineStatusText> {
   void initState() {
     super.initState();
     _timer = Timer.periodic(
-      _vaultInteractor.requestRetryPeriod,
+      retryNetworkTimeout,
       (_) => _vaultInteractor.pingPeer(widget.peerId),
     );
   }
@@ -48,11 +49,11 @@ class _OnlineStatusTextState extends State<OnlineStatusText> {
             snapshot.data == true
                 ? Text(
                     'Online',
-                    style: textStyleSourceSansPro412.copyWith(color: clGreen),
+                    style: styleSourceSansPro412.copyWith(color: clGreen),
                   )
                 : Text(
                     'Offline',
-                    style: textStyleSourceSansPro412.copyWith(color: clRed),
+                    style: styleSourceSansPro412.copyWith(color: clRed),
                   ),
       );
 }

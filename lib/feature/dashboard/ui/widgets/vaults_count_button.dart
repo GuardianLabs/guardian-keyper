@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:guardian_keyper/ui/theme/theme.dart';
-import 'package:guardian_keyper/feature/home/ui/home_presenter.dart';
+import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 
 import '../dashboard_presenter.dart';
 
@@ -10,10 +10,10 @@ class VaultsCountButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: context.read<HomePresenter>().gotoVaults,
+        onTap: context.findAncestorStateOfType<HomeScreenState>()?.gotoVaults,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: borderRadius,
+            borderRadius: borderRadius8,
             color: clGreen,
           ),
           padding: paddingAll8,
@@ -25,13 +25,13 @@ class VaultsCountButton extends StatelessWidget {
                 children: [
                   Text(
                     'My Vaults',
-                    style: textStyleSourceSansPro612.copyWith(color: clBlack),
+                    style: styleSourceSansPro612.copyWith(color: clBlack),
                   ),
                   Selector<DashboardPresenter, int>(
                     selector: (_, presenter) => presenter.vaultsCount,
                     builder: (_, vaultsCount, __) => Text(
                       '$vaultsCount Vaults',
-                      style: textStylePoppins616.copyWith(color: clBlack),
+                      style: stylePoppins616.copyWith(color: clBlack),
                     ),
                   ),
                 ],

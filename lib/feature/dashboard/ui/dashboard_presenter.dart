@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:guardian_keyper/data/platform_service.dart';
-import 'package:guardian_keyper/data/preferences_service.dart';
+import 'package:guardian_keyper/data/services/platform_service.dart';
+import 'package:guardian_keyper/data/services/preferences_service.dart';
 import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
@@ -31,7 +31,7 @@ class DashboardPresenter extends ChangeNotifier {
     super.dispose();
   }
 
-  late final share = _platformManager.share;
+  late final share = _platformService.share;
   late final createJoinVaultCode = _messagesInteractor.createJoinVaultCode;
 
   int get vaultsCount => _vaults.length;
@@ -42,7 +42,7 @@ class DashboardPresenter extends ChangeNotifier {
   final _vaults = <VaultId>{};
   final _shards = <VaultId>{};
 
-  final _platformManager = GetIt.I<PlatformService>();
+  final _platformService = GetIt.I<PlatformService>();
   final _vaultInteractor = GetIt.I<VaultInteractor>();
   final _messagesInteractor = GetIt.I<MessageInteractor>();
   final _settingsInteractor = GetIt.I<SettingsInteractor>();

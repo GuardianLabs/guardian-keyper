@@ -50,11 +50,11 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
             title: 'Add your Guardians',
             subtitleSpans: [
               TextSpan(
-                style: textStyleSourceSansPro616Purple,
+                style: styleSourceSansPro616Purple,
                 text: 'Add Guardian(s) ',
               ),
               TextSpan(
-                style: textStyleSourceSansPro416Purple,
+                style: styleSourceSansPro416Purple,
                 text: 'to enable your Vault and secure your Secrets.',
               ),
             ],

@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import '../consts.dart';
+import '../../consts.dart';
 
 class PlatformService {
   static final _connectivity = Connectivity();

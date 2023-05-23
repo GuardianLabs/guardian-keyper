@@ -47,17 +47,17 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
                     padding: paddingAll20,
                     child: Column(children: [
                       Padding(
-                        padding: paddingBottom12,
+                        padding: paddingB12,
                         child: Text(
                           'Waiting for Vault’s Guardians ',
-                          style: textStylePoppins620,
+                          style: stylePoppins620,
                           textAlign: TextAlign.center,
                         ),
                       ),
                       RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(
-                          style: textStyleSourceSansPro414Purple,
+                          style: styleSourceSansPro414Purple,
                           children: const [
                             TextSpan(
                               text:
@@ -73,11 +73,11 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
                         ),
                       ),
                       Padding(
-                        padding: paddingTop20,
+                        padding: paddingT20,
                         child: Text(
                           'You need to get at least ${_presenter.needAtLeast}'
                           ' approvals from Guardians to recover your Secret.',
-                          style: textStyleSourceSansPro414Purple,
+                          style: styleSourceSansPro414Purple,
                           textAlign: TextAlign.center,
                         ),
                       ),

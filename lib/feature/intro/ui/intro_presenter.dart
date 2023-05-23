@@ -11,30 +11,34 @@ class IntroPresenter extends PagePresenterBase {
 
   final _settingsInteractor = GetIt.I<SettingsInteractor>();
 
-  late String _deviceName = _settingsInteractor.deviceName;
+  late String deviceName = _settingsInteractor.deviceName;
 
   int _introStep = 0;
 
   int get introStep => _introStep;
 
-  String get deviceName => _deviceName;
-
-  bool get canSaveName => _deviceName.length >= minNameLength;
+  bool get canSaveName => deviceName.length >= minNameLength;
 
   bool get hasBiometrics => _settingsInteractor.hasBiometrics;
 
-  set introStep(int value) {
-    _introStep = value;
-    notifyListeners();
+  void nextSlide(int pageCount) {
+    if (_introStep == pageCount - 1) {
+      nextPage();
+    } else {
+      _introStep++;
+      notifyListeners();
+    }
   }
 
-  void setDeviceName(String value) {
-    _deviceName = value;
-    notifyListeners();
+  void previousSlide() {
+    if (_introStep > 0) {
+      _introStep--;
+      notifyListeners();
+    }
   }
 
   Future<void> saveDeviceName() async {
-    await _settingsInteractor.setDeviceName(_deviceName);
+    await _settingsInteractor.setDeviceName(deviceName);
     nextPage();
   }
 

@@ -91,7 +91,8 @@ abstract mixin class MessageEgressMixin {
     await archivateMessage(message);
   }
 
-  Future<void> _sendResponse(MessageModel message) => _networkManager.sendTo(
+  Future<void> _sendResponse(MessageModel message) =>
+      _networkManager.sendToPeer(
         message.peerId,
         isConfirmable: true,
         message: message.copyWith(peerId: _settingsManager.selfId),

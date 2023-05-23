@@ -63,7 +63,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
                 }
               },
             ),
-            const Padding(padding: paddingTop20),
+            const Padding(padding: paddingT20),
             SizedBox(
               width: double.infinity,
               child: TertiaryButton(

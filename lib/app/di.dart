@@ -13,11 +13,10 @@ import 'package:guardian_keyper/feature/message/domain/use_case/message_interact
 import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
 
-import '../data/mdns_manager.dart';
 import '../data/network_manager.dart';
-import '../data/platform_service.dart';
-import '../data/analytics_service.dart';
-import '../data/preferences_service.dart';
+import '../data/services/platform_service.dart';
+import '../data/services/analytics_service.dart';
+import '../data/services/preferences_service.dart';
 
 class DI {
   static bool _isInited = false;
@@ -41,9 +40,6 @@ class DI {
     );
     GetIt.I.registerSingleton<SettingsManager>(
       await SettingsManager().init(),
-    );
-    GetIt.I.registerSingleton<MdnsManager>(
-      await MdnsManager(router: GetIt.I<NetworkManager>().router).init(),
     );
 
     // Repositories

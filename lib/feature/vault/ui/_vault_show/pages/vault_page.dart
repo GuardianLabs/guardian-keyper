@@ -30,7 +30,7 @@ class VaultPage extends StatelessWidget {
               ),
         // Action Button
         Padding(
-          padding: paddingBottom32,
+          padding: paddingB32,
           child: PrimaryButton(
             text: 'Add a Secret',
             onPressed: () => Navigator.of(context).pushNamed(
@@ -47,7 +47,7 @@ class VaultPage extends StatelessWidget {
             padding: paddingV20,
             child: Text(
               'Secrets',
-              style: textStylePoppins620,
+              style: stylePoppins620,
             ),
           ),
         if (vault.hasSecrets) const SecretsPanelList(),

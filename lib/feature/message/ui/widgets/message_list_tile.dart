@@ -23,7 +23,7 @@ class MessageListTile extends StatelessWidget with MessageTitlesMixin {
           children: [
             Text(
               getTitle(message),
-              style: textStyleSourceSansPro614,
+              style: styleSourceSansPro614,
             ),
             if (message.isReceived)
               const Padding(
@@ -34,7 +34,7 @@ class MessageListTile extends StatelessWidget with MessageTitlesMixin {
         ),
         subtitle: RichText(
           text: TextSpan(
-            style: textStyleSourceSansPro414Purple,
+            style: styleSourceSansPro414Purple,
             children: buildTextWithId(
               leadingText: '${_roundedAgo()} · from ',
               id: message.peerId,

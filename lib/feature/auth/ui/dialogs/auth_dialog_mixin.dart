@@ -43,14 +43,14 @@ abstract class AuthDialogBase {
 
   static final screenLockConfig = ScreenLockConfig(
     backgroundColor: clIndigo900,
-    textStyle: textStylePoppins616,
-    titleTextStyle: textStylePoppins620,
+    textStyle: stylePoppins616,
+    titleTextStyle: stylePoppins620,
     buttonStyle: ButtonStyle(
       backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
       foregroundColor: const MaterialStatePropertyAll(Colors.white),
       shape: const MaterialStatePropertyAll(CircleBorder()),
       textStyle: MaterialStatePropertyAll(
-        textStylePoppins616.copyWith(overflow: TextOverflow.visible),
+        stylePoppins616.copyWith(overflow: TextOverflow.visible),
       ),
     ),
   );

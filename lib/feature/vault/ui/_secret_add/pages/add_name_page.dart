@@ -20,23 +20,23 @@ class AddNamePage extends StatelessWidget {
           const PageTitle(title: 'Add a name for your Secret'),
           // Input
           Padding(
-            padding: paddingTop32 + paddingH20,
+            padding: paddingT32 + paddingH20,
             child: TextFormField(
               keyboardType: TextInputType.name,
               maxLines: 1,
               maxLength: maxNameLength,
-              style: textStyleSourceSansPro416,
+              style: styleSourceSansPro416,
               decoration: InputDecoration(
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 labelText: ' Secret name ',
-                counterStyle: textStyleSourceSansPro414Purple,
+                counterStyle: styleSourceSansPro414Purple,
               ),
               onChanged: context.read<VaultSecretAddPresenter>().setSecretName,
             ),
           ),
           // Footer
           Padding(
-            padding: paddingTop32 + paddingH20,
+            padding: paddingT32 + paddingH20,
             child: Selector<VaultSecretAddPresenter, bool>(
               selector: (_, presenter) => presenter.isNameTooShort,
               builder: (

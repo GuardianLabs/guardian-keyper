@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:get_it/get_it.dart';
 
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/presenters/page_presenter_base.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
@@ -32,7 +33,7 @@ abstract class VaultPresenterBase extends PagePresenterBase {
     _networkSubscription.resume();
     await _vaultInteractor.wakelockEnable();
     _timer = Timer.periodic(
-      _vaultInteractor.requestRetryPeriod,
+      retryNetworkTimeout,
       requestWorker,
     );
     requestWorker();

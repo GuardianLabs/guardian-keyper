@@ -48,12 +48,12 @@ class ShowSecretPage extends StatelessWidget {
                     children: [
                       Container(
                         height: 160,
-                        padding: paddingBottom20,
+                        padding: paddingB20,
                         child: presenter.isObfuscated
                             ? _mask
                             : Text(
                                 presenter.secret,
-                                style: textStyleSourceSansPro414Purple,
+                                style: styleSourceSansPro414Purple,
                               ),
                       ),
                       Row(children: [

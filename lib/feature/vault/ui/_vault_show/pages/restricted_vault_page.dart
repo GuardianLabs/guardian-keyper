@@ -24,12 +24,12 @@ class RestrictedVaultPage extends StatelessWidget {
                   TextSpan(
                     text: 'You are able to recover all Secrets belonging '
                         'to this Vault, however you can’t add new ones until ',
-                    style: textStyleSourceSansPro416Purple,
+                    style: styleSourceSansPro416Purple,
                   ),
                   TextSpan(
                     text: '${vault.maxSize} out of ${vault.maxSize} '
                         'Guardians are added.',
-                    style: textStyleSourceSansPro616Purple.copyWith(
+                    style: styleSourceSansPro616Purple.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -41,20 +41,20 @@ class RestrictedVaultPage extends StatelessWidget {
                   TextSpan(
                     // TBD: i18n
                     text: 'Add ${vault.missed} more Guardian(s) ',
-                    style: textStyleSourceSansPro616Purple.copyWith(
+                    style: styleSourceSansPro616Purple.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   TextSpan(
                     text: 'which were previously added to this '
                         'Vault via QR Code to complete the recovery.',
-                    style: textStyleSourceSansPro416Purple,
+                    style: styleSourceSansPro416Purple,
                   ),
                 ],
               ),
         // Action Button
         Padding(
-          padding: paddingBottom32,
+          padding: paddingB32,
           child: PrimaryButton(
             text: 'Add a Guardian',
             onPressed: () => Navigator.of(context).pushNamed(routeVaultRestore),
@@ -68,17 +68,17 @@ class RestrictedVaultPage extends StatelessWidget {
             padding: paddingV20,
             child: Text(
               'Secrets',
-              style: textStylePoppins620,
+              style: stylePoppins620,
             ),
           ),
           if (vault.hasQuorum)
             const SecretsPanelList()
           else ...[
             Padding(
-              padding: paddingBottom20,
+              padding: paddingB20,
               child: Text(
                 'Complete the recovery to gain access to Vault’s secrets.',
-                style: textStyleSourceSansPro416Purple,
+                style: styleSourceSansPro416Purple,
               ),
             ),
             for (final secretId in vault.secrets.keys)
@@ -89,7 +89,7 @@ class RestrictedVaultPage extends StatelessWidget {
                   leading: const IconOf.secret(),
                   title: Text(
                     secretId.name,
-                    style: textStyleSourceSansPro614,
+                    style: styleSourceSansPro614,
                   ),
                 ),
               ),

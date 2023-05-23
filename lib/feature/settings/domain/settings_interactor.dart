@@ -17,7 +17,7 @@ class SettingsInteractor {
   bool get isBiometricsEnabled => _settingsManager.isBiometricsEnabled;
   Stream<SettingsEvent> get watch => _settingsManager.changes;
 
-  Future<void> setIsBootstrapEnabled(final bool isEnabled) async {
+  Future<void> setIsBootstrapEnabled(bool isEnabled) async {
     _networkManager.toggleBootstrap(isEnabled);
     await _settingsManager.setIsBootstrapEnabled(isEnabled);
   }

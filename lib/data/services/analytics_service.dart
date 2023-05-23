@@ -1,6 +1,6 @@
 import 'package:amplitude_flutter/amplitude.dart';
 
-import '../consts.dart';
+import '../../consts.dart';
 
 typedef EventLogger = Future<void> Function(
   String eventType, {

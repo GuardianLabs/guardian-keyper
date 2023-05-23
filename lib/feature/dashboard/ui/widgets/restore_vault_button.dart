@@ -9,7 +9,7 @@ class RestoreVaultButton extends StatelessWidget {
         onTap: () => Navigator.of(context).pushNamed(routeVaultRestore),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: borderRadius,
+            borderRadius: borderRadius8,
             color: clIndigo500,
           ),
           padding: paddingAll8,
@@ -21,11 +21,11 @@ class RestoreVaultButton extends StatelessWidget {
                 children: [
                   Text(
                     'Recovery',
-                    style: textStyleSourceSansPro612,
+                    style: styleSourceSansPro612,
                   ),
                   Text(
                     'Restore a Vault',
-                    style: textStylePoppins616,
+                    style: stylePoppins616,
                   ),
                 ],
               ),

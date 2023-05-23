@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/data/analytics_service.dart';
+import 'package:guardian_keyper/data/services/analytics_service.dart';
 
 mixin class VaultAnalyticsMixin {
   late final logStartCreateVault = _analyticsService.logStartCreateVault;
