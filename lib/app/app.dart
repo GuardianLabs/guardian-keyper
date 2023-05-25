@@ -49,6 +49,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(state) {
     super.didChangeAppLifecycleState(state);
+    if (widget.di.isNotInited) return;
     if (kDebugMode) print(state);
     switch (state) {
       case AppLifecycleState.resumed:
