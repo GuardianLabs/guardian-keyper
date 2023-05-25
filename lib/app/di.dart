@@ -25,6 +25,8 @@ class DI {
 
   bool get isInited => _isInited;
 
+  bool get isNotInited => !_isInited;
+
   Future<void> init() async {
     if (_isInited) return;
 
