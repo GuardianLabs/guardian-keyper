@@ -21,6 +21,8 @@ class SettingsManager {
   final _preferencesService = GetIt.I<PreferencesService>();
   final _updatesStreamController = StreamController<SettingsEvent>.broadcast();
 
+  late final getHasBiometrics = _platformService.getHasBiometrics;
+
   late PeerId _selfId;
   late String _passCode, _deviceName;
   late bool _isBiometricsEnabled, _isBootstrapEnabled, _hasBiometrics;
@@ -37,14 +39,9 @@ class SettingsManager {
       token: GetIt.I<NetworkManager>().selfId,
       name: _deviceName,
     );
-
-    await getHasBiometrics();
+    _hasBiometrics = await getHasBiometrics();
     return this;
   }
-
-  Future<bool> getHasBiometrics() => _platformService
-      .getAvailableBiometrics()
-      .then((value) => _hasBiometrics = value.isNotEmpty);
 
   Future<void> setDeviceName(final String value) async {
     _deviceName = value;

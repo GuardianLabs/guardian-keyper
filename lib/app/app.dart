@@ -49,28 +49,20 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(state) {
     super.didChangeAppLifecycleState(state);
-    if (widget.di.isNotInited) return;
     if (kDebugMode) print(state);
+    if (widget.di.isNotInited) return;
+
     switch (state) {
       case AppLifecycleState.resumed:
         _networkManager.start();
         break;
       case AppLifecycleState.paused:
-        _messagesInteractor.pause();
-        _vaultInteractor.pause();
-        _networkManager.pause();
+        _messagesInteractor.flush();
+        _vaultInteractor.flush();
+        _networkManager.stop();
         break;
       default:
     }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _networkManager.dispose();
-    _vaultInteractor.close();
-    _messagesInteractor.close();
-    super.dispose();
   }
 
   @override

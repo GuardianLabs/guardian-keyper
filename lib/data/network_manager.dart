@@ -13,12 +13,14 @@ import 'services/mdns_service.dart';
 import 'services/platform_service.dart';
 import 'services/preferences_service.dart';
 
+enum NetworkManagerState { uninited, stopped, started, pending }
+
 class NetworkManager {
   NetworkManager({
-    int port = defaultPort,
+    this.port = defaultPort,
     final p2p.RouterL2? router,
     final MdnsService? mdnsService,
-  }) : _port = port {
+  }) {
     _router = router ??
         p2p.RouterL2(
           transports: [],
@@ -33,31 +35,49 @@ class NetworkManager {
           onPeerFound: (peerId, address, port) => _router.addPeerAddress(
             peerId: p2p.PeerId(value: peerId),
             properties: _addressProperties,
-            address: p2p.FullAddress(address: address, port: port ?? _port),
+            address: p2p.FullAddress(address: address, port: port ?? this.port),
           ),
         );
+    _connectivityChanges.resume();
   }
 
-  Uint8List get selfId => _router.selfId.value;
+  final int port;
 
-  Stream<MessageModel> get messageStream => _messagesController.stream;
+  late final selfId = _router.selfId.value;
 
-  Stream<(PeerId, bool)> get peerStatusChangeStream => _router.lastSeenStream
+  late final messageStream = _router.messageStream
+      .map((e) => MessageModel.fromBytes(e.payload!))
+      .asBroadcastStream();
+
+  late final peerStatusChangeStream = _router.lastSeenStream
       .map((e) => (PeerId(token: e.peerId.value), e.isOnline));
-
-  final int _port;
-  late final p2p.RouterL2 _router;
-  late final MdnsService _mdnsService;
 
   final _platformService = GetIt.I<PlatformService>();
   final _preferencesService = GetIt.I<PreferencesService>();
-  final _messagesController = StreamController<MessageModel>.broadcast();
+
   final _addressProperties = p2p.AddressProperties(
     isLocal: true,
     isStatic: true,
   );
 
+  late final p2p.RouterL2 _router;
+  late final MdnsService _mdnsService;
+
+  late final _connectivityChanges =
+      _platformService.onConnectivityChanged.listen((state) async {
+    if (state.hasConnectivity) {
+      await stop();
+      await start();
+    } else {
+      await stop();
+    }
+  });
+
+  NetworkManagerState _state = NetworkManagerState.uninited;
+
   Future<NetworkManager> init() async {
+    if (_state != NetworkManagerState.uninited) throw Exception('Init once!');
+    _state = NetworkManagerState.pending;
     final seed = await _preferencesService.get<Uint8List>(keySeed);
     if (seed == null) {
       await _preferencesService.set<Uint8List>(
@@ -67,37 +87,43 @@ class NetworkManager {
     } else {
       await _router.init(seed).timeout(initTimeout);
     }
-    _router.messageStream.listen((p2pMessage) {
-      final message = MessageModel.tryFromBytes(p2pMessage.payload);
-      if (message != null) _messagesController.add(message);
-    });
-    await _mdnsService.register(_router.selfId.value, _port);
+    toggleBootstrap(await _preferencesService.get<bool>(keyIsBootstrapEnabled));
+    _state = NetworkManagerState.stopped;
     return this;
   }
 
   Future<void> start() async {
+    if (_state != NetworkManagerState.stopped) return;
+    _state = NetworkManagerState.pending;
+
     await _platformService.checkConnectivity();
-    if (_platformService.hasNoConnectivity) return;
+    if (_platformService.hasNoConnectivity) {
+      _state = NetworkManagerState.stopped;
+      return;
+    }
     for (final address in await _platformService.getIPs()) {
       _router.transports.add(p2p.TransportUdp(
-        bindAddress: p2p.FullAddress(address: address, port: _port),
+        bindAddress: p2p.FullAddress(address: address, port: port),
       ));
     }
     await _router.start();
-    if (_platformService.hasWiFi) await _mdnsService.startDiscovery();
-    toggleBootstrap(await _preferencesService.get<bool>(keyIsBootstrapEnabled));
+
+    if (_platformService.hasWiFi) {
+      await _mdnsService.register(_router.selfId.value, port);
+      await _mdnsService.startDiscovery();
+    }
+    _state = NetworkManagerState.started;
   }
 
-  Future<void> pause() async {
+  Future<void> stop() async {
+    if (_state != NetworkManagerState.started) return;
+    _state = NetworkManagerState.pending;
     _router.stop();
     _router.transports.clear();
     await _mdnsService.stopDiscovery();
+    await _mdnsService.unregister();
+    _state = NetworkManagerState.stopped;
   }
-
-  Future<void> dispose() => (
-        _platformService.wakelockDisable(),
-        _mdnsService.unregister(),
-      ).wait;
 
   Future<void> sendToPeer(
     PeerId peerId, {
@@ -154,4 +180,15 @@ class NetworkManager {
       _router.removePeerAddress(peerId);
     }
   }
+
+  // void _onPeerFound(
+  //   Uint8List peerId,
+  //   InternetAddress address,
+  //   int? port,
+  // ) =>
+  //     _router.addPeerAddress(
+  //       peerId: p2p.PeerId(value: peerId),
+  //       properties: _addressProperties,
+  //       address: p2p.FullAddress(address: address, port: port ?? this.port),
+  //     );
 }

@@ -6,12 +6,12 @@ import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import '../../../domain/entity/vault.dart';
 
 class OnSuccessDialog extends StatelessWidget {
-  static Future<void> show(
+  static Future<bool?> show(
     BuildContext context, {
     required Vault vault,
     required PeerId peerId,
   }) =>
-      showModalBottomSheet(
+      showModalBottomSheet<bool>(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
@@ -55,7 +55,7 @@ class OnSuccessDialog extends StatelessWidget {
           ],
           footer: PrimaryButton(
             text: 'Add another Guardian',
-            onPressed: Navigator.of(context).pop,
+            onPressed: () => Navigator.of(context).pop(true),
           ),
         );
 }

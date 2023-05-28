@@ -32,7 +32,7 @@ class DI {
 
     // Services
     GetIt.I.registerSingleton<PlatformService>(PlatformService());
-    final preferencesService = PreferencesService();
+    final preferencesService = await PreferencesService.init();
     GetIt.I.registerSingleton<PreferencesService>(preferencesService);
     GetIt.I.registerSingleton<AnalyticsService>(await AnalyticsService.init());
 

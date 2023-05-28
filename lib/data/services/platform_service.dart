@@ -9,7 +9,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import '../../consts.dart';
+import 'package:guardian_keyper/consts.dart';
+
+typedef ConnectivityState = ({bool hasConnectivity, bool hasWiFi});
 
 class PlatformService {
   static final _connectivity = Connectivity();
@@ -20,16 +22,21 @@ class PlatformService {
   final wakelockEnable = Wakelock.enable;
   final wakelockDisable = Wakelock.disable;
   final hasStringsInClipboard = Clipboard.hasStrings;
-  final getAvailableBiometrics = _localAuth.getAvailableBiometrics;
 
-  bool get hasWiFi => _connectivityResult == ConnectivityResult.wifi;
-  bool get hasConnectivity => _connectivityResult != ConnectivityResult.none;
-  bool get hasNoConnectivity => _connectivityResult == ConnectivityResult.none;
+  late final onConnectivityChanged =
+      _connectivity.onConnectivityChanged.map<ConnectivityState>((type) {
+    _connectivityType = type;
+    return (
+      hasConnectivity: type != ConnectivityResult.none,
+      hasWiFi: type == ConnectivityResult.wifi,
+    );
+  });
 
-  Stream<bool> get onConnectivityChanged => _connectivity.onConnectivityChanged
-      .map<bool>((result) => result != ConnectivityResult.none);
+  bool get hasWiFi => _connectivityType == ConnectivityResult.wifi;
+  bool get hasConnectivity => _connectivityType != ConnectivityResult.none;
+  bool get hasNoConnectivity => _connectivityType == ConnectivityResult.none;
 
-  ConnectivityResult _connectivityResult = ConnectivityResult.none;
+  ConnectivityResult _connectivityType = ConnectivityResult.none;
 
   Future<String?> copyFromClipboard() async =>
       (await Clipboard.getData(Clipboard.kTextPlain))?.text;
@@ -44,7 +51,7 @@ class PlatformService {
   }
 
   Future<bool> checkConnectivity() async {
-    _connectivityResult = await _connectivity.checkConnectivity();
+    _connectivityType = await _connectivity.checkConnectivity();
     return hasConnectivity;
   }
 
@@ -65,6 +72,9 @@ class PlatformService {
     }
     return undefinedName;
   }
+
+  Future<bool> getHasBiometrics() =>
+      _localAuth.getAvailableBiometrics().then((value) => value.isNotEmpty);
 
   Future<bool> localAuthenticate({
     bool biometricOnly = true,

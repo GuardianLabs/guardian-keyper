@@ -20,28 +20,32 @@ class _LoadingPageState extends State<LoadingPage> {
     super.initState();
     context.read<VaultRestorePresenter>().startRequest().then((message) async {
       if (message.isAccepted) {
-        await OnSuccessDialog.show(
+        final wantAddAnother = await OnSuccessDialog.show(
           context,
           peerId: message.peerId,
           vault: message.vault,
         );
         if (context.mounted) {
-          message.vault.isFull
-              ? Navigator.of(context).pop()
-              : Navigator.of(context).pushReplacementNamed(
+          wantAddAnother == true
+              ? Navigator.of(context).pushReplacementNamed(
                   routeVaultRestore,
                   arguments: message.vaultId,
-                );
+                )
+              : Navigator.of(context).pop();
+          return;
         }
-      } else if (message.isRejected) {
-        await OnRejectDialog.show(
-          context,
-          peerId: message.peerId,
-          vaultId: message.vaultId,
-        );
-      } else {
-        await OnFailDialog.show(context);
       }
+
+      if (context.mounted) {
+        message.isRejected
+            ? await OnRejectDialog.show(
+                context,
+                peerId: message.peerId,
+                vaultId: message.vaultId,
+              )
+            : await OnFailDialog.show(context);
+      }
+
       if (context.mounted) Navigator.of(context).pop();
     });
   }
