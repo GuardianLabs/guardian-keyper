@@ -19,8 +19,7 @@ class VaultInteractor
         VaultSssMixin,
         VaultNetworkMixin,
         VaultPlatformMixin {
-  late final pause = _vaultRepository.flush;
-  late final close = _vaultRepository.close;
+  late final flush = _vaultRepository.flush;
 
   Iterable<Vault> get vaults => _vaultRepository.values;
 

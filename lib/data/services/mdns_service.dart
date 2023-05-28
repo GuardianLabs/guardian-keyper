@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:nsd/nsd.dart' as nsd;
 import 'package:flutter/foundation.dart';
 
-import '../../consts.dart';
+import 'package:guardian_keyper/consts.dart';
 
 class MdnsService {
   static const _mdnsPeerId = 'peerId';
@@ -25,7 +25,7 @@ class MdnsService {
 
   Future<void> register(Uint8List peerId, int port) async {
     try {
-      _registration = await nsd
+      _registration ??= await nsd
           .register(nsd.Service(
             name: 'Guardian Keyper',
             type: _mdnsType,
@@ -44,7 +44,10 @@ class MdnsService {
   }
 
   Future<void> unregister() async {
-    if (_registration != null) await nsd.unregister(_registration!);
+    if (_registration == null) return;
+    final registration = _registration!;
+    _registration = null;
+    await nsd.unregister(registration);
   }
 
   Future<void> startDiscovery() async {
