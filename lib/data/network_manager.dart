@@ -87,7 +87,8 @@ class NetworkManager {
     } else {
       await _router.init(seed).timeout(initTimeout);
     }
-    toggleBootstrap(await _preferencesService.get<bool>(keyIsBootstrapEnabled));
+    toggleBootstrap(
+        await _preferencesService.get<bool>(keyIsBootstrapEnabled) ?? true);
     _state = NetworkManagerState.stopped;
     return this;
   }
@@ -180,15 +181,4 @@ class NetworkManager {
       _router.removePeerAddress(peerId);
     }
   }
-
-  // void _onPeerFound(
-  //   Uint8List peerId,
-  //   InternetAddress address,
-  //   int? port,
-  // ) =>
-  //     _router.addPeerAddress(
-  //       peerId: p2p.PeerId(value: peerId),
-  //       properties: _addressProperties,
-  //       address: p2p.FullAddress(address: address, port: port ?? this.port),
-  //     );
 }
