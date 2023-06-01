@@ -20,6 +20,7 @@ typedef NetworkManagerState = ({
   NetworkManagerStatus status,
 });
 
+/// Depends on [PreferencesService]
 class NetworkManager {
   NetworkManager({
     MdnsService? mdnsService,

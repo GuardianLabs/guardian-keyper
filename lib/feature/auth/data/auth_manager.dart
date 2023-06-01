@@ -4,6 +4,7 @@ import 'package:guardian_keyper/data/services/preferences_service.dart';
 
 import 'auth_service.dart';
 
+/// Depends on [PreferencesService]
 class AuthManager {
   AuthManager({
     AuthService? authService,

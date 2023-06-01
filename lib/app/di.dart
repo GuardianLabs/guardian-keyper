@@ -13,6 +13,8 @@ import '../data/services/platform_service.dart';
 import '../data/services/analytics_service.dart';
 import '../data/services/preferences_service.dart';
 
+/// Data layer (Managers\Repositories) depends on Services
+/// Domain layer (Interactors) depends on Data layer
 class DI {
   static bool _isInited = false;
 
@@ -24,23 +26,23 @@ class DI {
   Future<void> init() async {
     if (_isInited) return;
 
+    // DATA LAYER
     // Services
     GetIt.I.registerSingleton<PreferencesService>(
       await PreferencesService().init(),
     );
     GetIt.I.registerSingleton<PlatformService>(PlatformService());
     GetIt.I.registerSingleton<AnalyticsService>(await AnalyticsService.init());
-
     // Managers
     GetIt.I.registerSingleton<AuthManager>(await AuthManager().init());
     GetIt.I.registerSingleton<NetworkManager>(await NetworkManager().init());
-
     // Repositories
     GetIt.I.registerSingleton<VaultRepository>(await VaultRepository().init());
     GetIt.I.registerSingleton<MessageRepository>(
       await MessageRepository().init(),
     );
 
+    // DOMAIN LAYER
     // Interactors
     GetIt.I.registerSingleton<MessageInteractor>(MessageInteractor());
     GetIt.I.registerSingleton<VaultInteractor>(VaultInteractor());

@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:guardian_keyper/data/services/preferences_service.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
+/// Depends on [PreferencesService]
 class MessageRepository {
   late final flush = _storage.flush;
 

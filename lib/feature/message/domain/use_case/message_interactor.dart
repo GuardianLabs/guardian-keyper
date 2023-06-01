@@ -10,6 +10,8 @@ import '../entity/message_model.dart';
 import 'message_ingress_mixin.dart';
 import 'message_egress_mixin.dart';
 
+/// Depends on:
+/// [PreferencesService, MessageRepository, VaultRepository, NetworkManager]
 class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
   MessageInteractor() {
     _networkManager.messageStream.listen(onMessage);
