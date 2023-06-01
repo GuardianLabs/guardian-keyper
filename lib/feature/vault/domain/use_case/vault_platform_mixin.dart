@@ -9,6 +9,8 @@ mixin class VaultPlatformMixin {
   late final copyToClipboard = _platformService.copyToClipboard;
   late final hasStringsInClipboard = _platformService.hasStringsInClipboard;
 
+  final _platformService = GetIt.I<PlatformService>();
+
   Future<String?> getCodeFromClipboard() async {
     var code = await _platformService.copyFromClipboard();
     if (code != null) {
@@ -18,6 +20,4 @@ mixin class VaultPlatformMixin {
     }
     return code;
   }
-
-  final _platformService = GetIt.I<PlatformService>();
 }

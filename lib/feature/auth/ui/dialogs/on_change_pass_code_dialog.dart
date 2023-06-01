@@ -4,13 +4,13 @@ import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
+import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 
-import '../../domain/auth_interactor.dart';
 import 'auth_dialog_mixin.dart';
 
 class OnChangePassCodeDialog {
   static Future<void> show(BuildContext context) {
-    final authInteractor = GetIt.I<AuthInteractor>();
+    final authManager = GetIt.I<AuthManager>();
     final padding = AuthDialogBase.getPadding(context);
     return screenLock(
       context: context,
@@ -18,7 +18,7 @@ class OnChangePassCodeDialog {
       config: AuthDialogBase.screenLockConfig,
       keyPadConfig: AuthDialogBase.keyPadConfig,
       secretsConfig: AuthDialogBase.secretsConfig,
-      correctString: authInteractor.passCode,
+      correctString: authManager.passCode,
       title: Padding(
         padding: padding,
         child: AuthDialogBase.currentPassCodeTitle,
@@ -28,7 +28,7 @@ class OnChangePassCodeDialog {
       onError: (_) {
         ScaffoldMessenger.of(context)
             .showSnackBar(AuthDialogBase.wrongPassCodeSnackbar);
-        authInteractor.vibrate();
+        authManager.vibrate();
       },
       onUnlocked: () {
         Navigator.of(context).pop();
@@ -56,10 +56,10 @@ class OnChangePassCodeDialog {
           onError: (_) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(AuthDialogBase.wrongPassCodeSnackbar);
-            authInteractor.vibrate();
+            authManager.vibrate();
           },
           onConfirmed: (passCode) async {
-            await authInteractor.setPassCode(passCode);
+            await authManager.setPassCode(passCode);
             if (context.mounted) {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(

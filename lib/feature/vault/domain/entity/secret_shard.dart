@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:messagepack/messagepack.dart';
 
-import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/domain/entity/serializable.dart';
+import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 
 import 'secret_id.dart';
 import 'vault_id.dart';

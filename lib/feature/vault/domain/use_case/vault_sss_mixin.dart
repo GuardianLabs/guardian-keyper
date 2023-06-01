@@ -3,14 +3,12 @@ import 'package:sss256/sss256.dart' as sss;
 
 /// Shamir`s secret sharing
 mixin class VaultSssMixin {
-  // TBD: use closure
   Future<String> restoreSecret(List<String> shares) =>
       compute<List<String>, String>(
         (List<String> shares) => sss.restoreSecret(shares: shares),
         shares,
       );
 
-  // TBD: use closure
   Future<List<String>> splitSecret({
     required int shares,
     required int threshold,

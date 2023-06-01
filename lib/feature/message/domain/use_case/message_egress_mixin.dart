@@ -1,13 +1,15 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/data/network_manager.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
-import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
 abstract mixin class MessageEgressMixin {
+  final _networkManager = GetIt.I<NetworkManager>();
+  final _vaultRepository = GetIt.I<VaultRepository>();
+
   Future<void> archivateMessage(MessageModel message);
 
   Future<void> sendRespone(final MessageModel message) =>
@@ -17,11 +19,6 @@ abstract mixin class MessageEgressMixin {
         MessageCode.getShard => _sendGetShardResponse(message),
         MessageCode.setShard => _sendSetShardResponse(message),
       };
-
-  // Private
-  final _networkManager = GetIt.I<NetworkManager>();
-  final _settingsManager = GetIt.I<SettingsManager>();
-  final _vaultRepository = GetIt.I<VaultRepository>();
 
   Future<void> _sendCreateGroupResponse(MessageModel message) async {
     await _sendResponse(message);
@@ -95,6 +92,6 @@ abstract mixin class MessageEgressMixin {
       _networkManager.sendToPeer(
         message.peerId,
         isConfirmable: true,
-        message: message.copyWith(peerId: _settingsManager.selfId),
+        message: message.copyWith(peerId: _networkManager.selfId),
       );
 }
