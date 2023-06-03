@@ -1,7 +1,7 @@
 // import 'package:guardian_keyper/src/core/model/core_model.dart';
 // import 'package:guardian_keyper/src/core/utils/random_utils.dart';
 
-// final now = DateTime.now();
+// final now = DateTime.timestamp();
 
 //Token model
 // final peerIdA = PeerId(token: getRandomBytes(64), name: 'Alice');

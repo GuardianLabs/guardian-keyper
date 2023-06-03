@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import '/src/core/app.dart';
+import 'app/app.dart';
 
 Future<void> main() async {
   const sentryUrl = String.fromEnvironment('SENTRY_URL');
