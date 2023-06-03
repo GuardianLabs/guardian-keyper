@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 
 import '../../data/vault_repository.dart';
 import '../entity/secret_id.dart';
@@ -11,8 +11,8 @@ import 'vault_platform_mixin.dart';
 import 'vault_network_mixin.dart';
 import 'vault_sss_mixin.dart';
 
-typedef VaultEvent = ({String key, Vault? vault, bool isDeleted});
-
+/// Depends on:
+/// [PreferencesService, VaultRepository, NetworkManager, PlatformService, AnalyticsService]
 class VaultInteractor
     with
         VaultAnalyticsMixin,
@@ -20,15 +20,11 @@ class VaultInteractor
         VaultNetworkMixin,
         VaultPlatformMixin {
   late final flush = _vaultRepository.flush;
+  late final watch = _vaultRepository.watch;
+
+  final _vaultRepository = GetIt.I<VaultRepository>();
 
   Iterable<Vault> get vaults => _vaultRepository.values;
-
-  Stream<VaultEvent> watch([String? key]) =>
-      _vaultRepository.watch(key: key).map<VaultEvent>((e) => (
-            key: e.key as String,
-            vault: e.value as Vault?,
-            isDeleted: e.deleted,
-          ));
 
   Vault? getVaultById(VaultId vaultId) => _vaultRepository.get(vaultId.asKey);
 
@@ -71,6 +67,4 @@ class VaultInteractor
     vault.secrets.remove(secretId);
     await _vaultRepository.put(vault.aKey, vault);
   }
-
-  final _vaultRepository = GetIt.I<VaultRepository>();
 }

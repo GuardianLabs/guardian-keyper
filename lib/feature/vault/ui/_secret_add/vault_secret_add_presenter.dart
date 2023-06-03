@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 import '../../domain/entity/secret_id.dart';
