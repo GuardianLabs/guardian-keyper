@@ -1,5 +1,5 @@
 import 'package:guardian_keyper/domain/entity/id_base.dart';
-import 'package:guardian_keyper/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 
 import 'common.dart';
 

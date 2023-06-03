@@ -1,28 +1,32 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/data/network_manager.dart';
-import 'package:guardian_keyper/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/network/data/network_manager.dart';
+import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
-import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
 
 import '../../data/message_repository.dart';
 import '../entity/message_model.dart';
 import 'message_ingress_mixin.dart';
 import 'message_egress_mixin.dart';
 
-typedef MessageEvent = ({String key, MessageModel? value, bool isDeleted});
-
+/// Depends on:
+/// [PreferencesService, MessageRepository, VaultRepository, NetworkManager]
 class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
   MessageInteractor() {
     _networkManager.messageStream.listen(onMessage);
   }
 
   late final flush = _messageRepository.flush;
-  late final pingPeer = _networkManager.pingPeer;
+  late final watch = _messageRepository.watch;
+  late final pruneMessages = _messageRepository.prune;
   late final getPeerStatus = _networkManager.getPeerStatus;
+  late final pingPeer = _networkManager.pingPeer;
 
-  PeerId get selfId => _settingsManager.selfId;
+  final _networkManager = GetIt.I<NetworkManager>();
+  final _messageRepository = GetIt.I<MessageRepository>();
+
+  PeerId get selfId => _networkManager.selfId;
 
   Iterable<MessageModel> get messages => _messageRepository.values;
 
@@ -35,18 +39,11 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
     );
   }
 
-  Stream<MessageEvent> watch() =>
-      _messageRepository.watch().map<MessageEvent>((e) => (
-            key: e.key as String,
-            value: e.value as MessageModel?,
-            isDeleted: e.deleted,
-          ));
-
   /// Create ticket to join vault
   Future<MessageModel> createJoinVaultCode() async {
     final message = MessageModel(
       code: MessageCode.createGroup,
-      peerId: _settingsManager.selfId,
+      peerId: _networkManager.selfId,
     );
     await _messageRepository.put(message.aKey, message);
     return message;
@@ -56,7 +53,7 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
   Future<MessageModel> createTakeVaultCode(VaultId? groupId) async {
     final message = MessageModel(
       code: MessageCode.takeGroup,
-      peerId: _settingsManager.selfId,
+      peerId: _networkManager.selfId,
     );
     await _messageRepository.put(
       message.aKey,
@@ -66,16 +63,4 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
     );
     return message;
   }
-
-  Future<void> pruneMessages() async {
-    await _messageRepository.deleteAll(_messageRepository.values
-        .where((e) => e.isForPrune)
-        .map((e) => e.aKey));
-    await _messageRepository.compact();
-  }
-
-  // Private
-  final _networkManager = GetIt.I<NetworkManager>();
-  final _settingsManager = GetIt.I<SettingsManager>();
-  final _messageRepository = GetIt.I<MessageRepository>();
 }

@@ -12,9 +12,7 @@ class MdnsService {
   static const _utf8Encoder = Utf8Encoder();
   static const _utf8Decoder = Utf8Decoder();
 
-  MdnsService({required this.onPeerFound});
-
-  final void Function(
+  late final void Function(
     Uint8List peerId,
     InternetAddress address,
     int? port,

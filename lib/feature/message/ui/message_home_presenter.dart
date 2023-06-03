@@ -18,7 +18,7 @@ class MessageHomePresenter extends ChangeNotifier {
     }
     _sortActiveMessages();
     _sertResolvedMessages();
-    _messagesInteractor.watch().listen(_onMessagesUpdates);
+    __onMessagesUpdates.resume();
   }
 
   late final archivateMessage = _messagesInteractor.archivateMessage;
@@ -31,18 +31,12 @@ class MessageHomePresenter extends ChangeNotifier {
   final _resolvedMessages = <MessageModel>[];
   final _messagesInteractor = GetIt.I<MessageInteractor>();
 
-  void _sortActiveMessages() =>
-      _activeMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-
-  void _sertResolvedMessages() =>
-      _resolvedMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-
-  void _onMessagesUpdates(final MessageEvent event) {
+  late final __onMessagesUpdates = _messagesInteractor.watch().listen((event) {
     if (event.isDeleted) {
       _activeMessages.removeWhere((e) => e.aKey == event.key);
       _resolvedMessages.removeWhere((e) => e.aKey == event.key);
     } else {
-      final message = event.value as MessageModel;
+      final message = event.message!;
       if (message.peerId == _messagesInteractor.selfId) return;
       if (message.isReceived) {
         final index = _activeMessages.indexOf(message);
@@ -59,5 +53,17 @@ class MessageHomePresenter extends ChangeNotifier {
       }
     }
     notifyListeners();
+  });
+
+  @override
+  void dispose() {
+    __onMessagesUpdates.cancel();
+    super.dispose();
   }
+
+  void _sortActiveMessages() =>
+      _activeMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+  void _sertResolvedMessages() =>
+      _resolvedMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 }
