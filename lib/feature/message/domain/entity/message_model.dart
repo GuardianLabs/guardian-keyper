@@ -19,7 +19,7 @@ enum MessageStatus {
   duplicated,
 }
 
-enum MessageCode { createGroup, getShard, setShard, takeGroup }
+enum MessageCode { createVault, getShard, setShard, takeVault }
 
 class MessageModel extends Serializable {
   static const currentVersion = 1;
@@ -95,7 +95,7 @@ class MessageModel extends Serializable {
   VaultId get vaultId => switch (payload) {
         Vault vault => vault.id,
         SecretShard shard => shard.vaultId,
-        _ => throw const FormatException('Payload have no groupId!'),
+        _ => throw const FormatException('Payload have no vaultId!'),
       };
 
   bool get isNotRequested => status != MessageStatus.created;

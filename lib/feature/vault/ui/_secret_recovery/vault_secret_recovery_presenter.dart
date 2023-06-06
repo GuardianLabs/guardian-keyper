@@ -26,8 +26,8 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
           id: secretId,
           ownerId: _vaultInteractor.selfId,
           vaultId: vaultId,
-          groupSize: vault.maxSize,
-          groupThreshold: vault.threshold,
+          vaultSize: vault.maxSize,
+          vaultThreshold: vault.threshold,
           shard: guardian == vault.ownerId ? vault.secrets[secretId]! : '',
         ),
       ));

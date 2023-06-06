@@ -42,7 +42,7 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
   /// Create ticket to join vault
   Future<MessageModel> createJoinVaultCode() async {
     final message = MessageModel(
-      code: MessageCode.createGroup,
+      code: MessageCode.createVault,
       peerId: _networkManager.selfId,
     );
     await _messageRepository.put(message.aKey, message);
@@ -50,15 +50,15 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
   }
 
   /// Create ticket to take vault
-  Future<MessageModel> createTakeVaultCode(VaultId? groupId) async {
+  Future<MessageModel> createTakeVaultCode(VaultId? vaultId) async {
     final message = MessageModel(
-      code: MessageCode.takeGroup,
+      code: MessageCode.takeVault,
       peerId: _networkManager.selfId,
     );
     await _messageRepository.put(
       message.aKey,
       message.copyWith(
-        payload: Vault(id: groupId, ownerId: PeerId.empty),
+        payload: Vault(id: vaultId, ownerId: PeerId.empty),
       ),
     );
     return message;

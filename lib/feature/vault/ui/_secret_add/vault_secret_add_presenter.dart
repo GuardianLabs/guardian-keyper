@@ -48,8 +48,8 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
             id: secretId,
             ownerId: _vaultInteractor.selfId,
             vaultId: vault.id,
-            groupSize: vault.size,
-            groupThreshold: vault.threshold,
+            vaultSize: vault.size,
+            vaultThreshold: vault.threshold,
             shard: shardsIterator.current,
           ),
         ));

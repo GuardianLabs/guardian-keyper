@@ -16,15 +16,15 @@ class SecretShard extends Serializable {
     required this.id,
     required this.ownerId,
     required this.vaultId,
-    required this.groupSize,
-    required this.groupThreshold,
+    required this.vaultSize,
+    required this.vaultThreshold,
     required this.shard,
   });
 
   final SecretId id;
   final PeerId ownerId;
   final VaultId vaultId;
-  final int version, groupSize, groupThreshold;
+  final int version, vaultSize, vaultThreshold;
   final String shard;
 
   late final String aKey = id.asKey;
@@ -47,8 +47,8 @@ class SecretShard extends Serializable {
           id: SecretId.fromBytes(u.unpackBinary()),
           ownerId: PeerId.fromBytes(u.unpackBinary()),
           vaultId: VaultId.fromBytes(u.unpackBinary()),
-          groupSize: u.unpackInt()!,
-          groupThreshold: u.unpackInt()!,
+          vaultSize: u.unpackInt()!,
+          vaultThreshold: u.unpackInt()!,
           shard: u.unpackString()!,
         ),
       _ => throw const FormatException('Unsupported version of SecretShard'),
@@ -62,8 +62,8 @@ class SecretShard extends Serializable {
       ..packBinary(id.toBytes())
       ..packBinary(ownerId.toBytes())
       ..packBinary(vaultId.toBytes())
-      ..packInt(groupSize)
-      ..packInt(groupThreshold)
+      ..packInt(vaultSize)
+      ..packInt(vaultThreshold)
       ..packString(shard);
     return p.takeBytes();
   }
@@ -77,8 +77,8 @@ class SecretShard extends Serializable {
         id: id,
         ownerId: ownerId ?? this.ownerId,
         vaultId: vaultId,
-        groupSize: groupSize,
-        groupThreshold: groupThreshold,
+        vaultSize: vaultSize,
+        vaultThreshold: vaultThreshold,
         shard: shard ?? this.shard,
       );
 

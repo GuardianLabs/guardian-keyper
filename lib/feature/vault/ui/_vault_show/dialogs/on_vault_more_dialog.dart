@@ -45,7 +45,7 @@ class OnVaultMoreDialog extends StatelessWidget {
       );
 
   Widget _removeVaultDialogBuilder(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.removeGroup(
+        icon: const IconOf.removeVault(
           isBig: true,
           bage: BageType.warning,
         ),

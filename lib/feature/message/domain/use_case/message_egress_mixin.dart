@@ -14,13 +14,13 @@ abstract mixin class MessageEgressMixin {
 
   Future<void> sendRespone(final MessageModel message) =>
       switch (message.code) {
-        MessageCode.createGroup => _sendCreateGroupResponse(message),
-        MessageCode.takeGroup => _sendTakeGroupResponse(message),
+        MessageCode.createVault => _sendCreateVaultResponse(message),
+        MessageCode.takeVault => _sendTakeVaultResponse(message),
         MessageCode.getShard => _sendGetShardResponse(message),
         MessageCode.setShard => _sendSetShardResponse(message),
       };
 
-  Future<void> _sendCreateGroupResponse(MessageModel message) async {
+  Future<void> _sendCreateVaultResponse(MessageModel message) async {
     await _sendResponse(message);
     if (message.isAccepted) {
       final vault = Vault(
@@ -34,7 +34,7 @@ abstract mixin class MessageEgressMixin {
     await archivateMessage(message);
   }
 
-  Future<void> _sendTakeGroupResponse(MessageModel message) async {
+  Future<void> _sendTakeVaultResponse(MessageModel message) async {
     if (message.isAccepted) {
       final vault = _vaultRepository
           .get(message.vault.aKey)!
@@ -77,8 +77,8 @@ abstract mixin class MessageEgressMixin {
           id: message.secretShard.id,
           ownerId: vault.ownerId,
           vaultId: vault.id,
-          groupSize: vault.maxSize,
-          groupThreshold: vault.threshold,
+          vaultSize: vault.maxSize,
+          vaultThreshold: vault.threshold,
           shard: vault.secrets[message.secretShard.id]!,
         )),
       );

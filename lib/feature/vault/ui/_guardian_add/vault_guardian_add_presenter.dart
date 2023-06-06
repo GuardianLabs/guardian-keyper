@@ -22,7 +22,7 @@ class VaultGuardianAddPresenter extends VaultGuardianPresenterBase {
   final VaultId vaultId;
 
   @override
-  MessageCode get messageCode => MessageCode.createGroup;
+  MessageCode get messageCode => MessageCode.createVault;
 
   @override
   void requestWorker([timer]) =>
