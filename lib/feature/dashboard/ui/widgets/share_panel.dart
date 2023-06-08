@@ -69,7 +69,7 @@ class SharePanel extends StatelessWidget {
                 onPressed: () async {
                   final box = context.findRenderObject() as RenderBox?;
                   await context.read<DashboardPresenter>().share(
-                        'https://myguardian.network/app-router',
+                        'https://onelink.to/kvv5y3',
                         sharePositionOrigin:
                             box!.localToGlobal(Offset.zero) & box.size,
                       );
