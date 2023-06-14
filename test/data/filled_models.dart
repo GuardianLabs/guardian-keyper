@@ -1,135 +1,97 @@
-// import 'package:guardian_keyper/src/core/model/core_model.dart';
-// import 'package:guardian_keyper/src/core/utils/random_utils.dart';
+import 'package:guardian_keyper/domain/entity/id_base.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_id.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 
-// final now = DateTime.timestamp();
+final now = DateTime.timestamp();
 
-//Token model
-// final peerIdA = PeerId(token: getRandomBytes(64), name: 'Alice');
-// final peerIdB = PeerId(token: getRandomBytes(64), name: 'Bob');
-// final peerIdAA = PeerId(token: peerIdA.token, name: peerIdA.name);
+final tokenA = IdBase.getNewToken(length: 64);
+final tokenB = IdBase.getNewToken(length: 64);
+final tokenAA = tokenA;
 
-// final groupIdA = GroupId(name: 'GroupA');
-// final groupIdB = GroupId(name: 'GroupB');
-// final groupIdAA = GroupId(token: groupIdA.token, name: 'GroupAA');
+final peerIdA = PeerId(token: IdBase.getNewToken(length: 64), name: "Alice");
+final peerIdB = PeerId(token: IdBase.getNewToken(length: 64), name: "Bob");
+final peerIdC = PeerId(token: IdBase.getNewToken(length: 64), name: "Carol");
 
-// final requestIdA = MessageId();
-// final requestIdB = MessageId();
-// final requestIdAA = MessageId(token: requestIdA.token);
+final vaultIdA = VaultId(name: 'VaultA');
+final vaultIdB = VaultId(name: 'VaultB');
+final vaultIdC = VaultId(name: 'VaultC');
 
-// final secretIdA = SecretId(name: 'SecretA');
-// final secretIdB = SecretId(name: 'SecretB');
-// final secretIdAA = SecretId(token: secretIdA.token, name: 'SecretAA');
+final requestIdA = MessageId();
+final requestIdB = MessageId();
 
-//QRCode model
-// final qrCode1 = MessageModel(
-//   peerId: peerIdA,
-//   code: MessageCode.createGroup,
-// );
-// final qrCode2 = MessageModel(
-//   peerId: peerIdB,
-//   code: MessageCode.createGroup,
-// );
+final secretIdA = SecretId(name: 'SecretA');
+final secretIdB = SecretId(name: 'SecretB');
 
-//Secret shard model
-// final secretShardA = SecretShardModel(
-//   id: secretIdA,
-//   shard: 'TopSecret',
-//   ownerId: peerIdA,
-//   groupId: groupIdA,
-//   groupSize: 3,
-//   groupThreshold: 2,
-// );
-// final secretShardB = SecretShardModel(
-//   id: secretIdB,
-//   shard: 'TopSecret',
-//   ownerId: peerIdB,
-//   groupId: groupIdB,
-//   groupSize: 3,
-//   groupThreshold: 2,
-// );
-// final clearedSecretSecretShardA = secretShardA.copyWith(shard: '');
+final vaultA = Vault(
+  id: vaultIdA,
+  ownerId: peerIdA,
+  guardians: {
+    peerIdA: '',
+  },
+);
 
-//Message model
-// final p2pPacketA = MessageModel(
-//   id: requestIdA,
-//   peerId: peerIdA,
-//   timestamp: now,
-//   code: MessageCode.getShard,
-//   status: MessageStatus.accepted,
-//   payload: secretShardA,
-// );
-// final p2pPacketB = MessageModel(
-//   id: requestIdB,
-//   peerId: peerIdB,
-//   timestamp: now,
-//   code: MessageCode.createGroup,
-//   status: MessageStatus.rejected,
-//   payload: secretShardB,
-// );
+final vaultB = Vault(
+  id: vaultIdB,
+  ownerId: peerIdB,
+  guardians: {
+    peerIdB: '',
+  },
+);
 
-//Recovery Group model
-// final guardianA = GuardianModel(
-//   id: peerIdA,
-//   name: 'iPhone',
-//   tag: 'Piece of ...',
-// );
+final vaultC = Vault(
+  id: vaultIdC,
+  ownerId: peerIdC,
+  guardians: {
+    peerIdC: '',
+  },
+);
 
-// final guardianB = GuardianModel(
-//   id: peerIdB,
-//   name: 'SuperPhone',
-//   tag: 'My treasure',
-// );
+final p2pPacketA = MessageModel(
+  id: requestIdA,
+  peerId: peerIdA,
+  timestamp: now,
+  code: MessageCode.getShard,
+  status: MessageStatus.created,
+  payload: secretShardA,
+);
 
-// const recoveryGroupAName = 'Recovery Group A';
-// final recoveryGroupA = RecoveryGroupModel(
-//   id: groupIdA,
-//   name: recoveryGroupAName,
-//   guardians: {guardianA.id: guardianA},
-// );
+final p2pPacketB = MessageModel(
+  id: requestIdB,
+  peerId: peerIdB,
+  timestamp: now,
+  code: MessageCode.createVault,
+  status: MessageStatus.received,
+  payload: secretShardB,
+);
 
-// final emptyRecoveryGroupA = RecoveryGroupModel(
-//   id: groupIdA,
-//   name: recoveryGroupAName,
-//   // ignore: prefer_const_literals_to_create_immutables
-//   guardians: {},
-// );
-
-// final recoveryGroupAwithGuardianB = RecoveryGroupModel(
-//   id: groupIdA,
-//   name: recoveryGroupAName,
-//   guardians: {guardianA.id: guardianA, guardianB.id: guardianB},
-// );
-
-// final fullRecoveryGroupA = RecoveryGroupModel(
-//   id: groupIdA,
-//   name: recoveryGroupAName,
-//   guardians: {guardianA.id: guardianA, guardianB.id: guardianB},
-//   maxSize: 2,
-// );
-
-// final completedRecoveryGroupA = RecoveryGroupModel(
-//   id: groupIdA,
-//   name: recoveryGroupAName,
-//   guardians: {guardianA.id: guardianA},
-// );
-
-// final recoveryGroupB = RecoveryGroupModel(
-//   id: groupIdB,
-//   name: 'Recovery Group B',
-//   guardians: {guardianB.id: guardianB},
-// );
-
-//Settings Model
-// const settingsA = SettingsModel(
-//   deviceName: 'device A',
-//   passCode: '123',
-//   isBiometricsEnabled: true,
-//   isBootstrapEnabled: false,
-// );
-
-// const settingsB = SettingsModel(
-//   deviceName: 'device B',
-//   passCode: '456',
-//   isBiometricsEnabled: false,
-//   isBootstrapEnabled: true,
-// );
+final secretShardA = SecretShard(
+  id: secretIdA,
+  shard: 'TopSecretA',
+  ownerId: peerIdA,
+  vaultId: vaultIdA,
+  vaultSize: 3,
+  vaultThreshold: 2,
+);
+final secretShardB = SecretShard(
+  id: secretIdB,
+  shard: 'TopSecretB',
+  ownerId: peerIdB,
+  vaultId: vaultIdB,
+  vaultSize: 3,
+  vaultThreshold: 2,
+);
+final secretShardC = SecretShard(
+      id: SecretId(name: 'SecretC'),
+      shard: 'TopSecretC',
+      ownerId: peerIdC,
+      vaultId: vaultIdC,
+      vaultSize: 3,
+      vaultThreshold: 2,
+    );
+    
+final clearedSecretSecretShardA = secretShardA.copyWith(shard: '');
