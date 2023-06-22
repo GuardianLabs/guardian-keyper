@@ -1,29 +1,26 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/data/network_manager.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
-import 'package:guardian_keyper/feature/settings/data/settings_manager.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
 abstract mixin class MessageEgressMixin {
+  final _networkManager = GetIt.I<NetworkManager>();
+  final _vaultRepository = GetIt.I<VaultRepository>();
+
   Future<void> archivateMessage(MessageModel message);
 
   Future<void> sendRespone(final MessageModel message) =>
       switch (message.code) {
-        MessageCode.createGroup => _sendCreateGroupResponse(message),
-        MessageCode.takeGroup => _sendTakeGroupResponse(message),
+        MessageCode.createVault => _sendCreateVaultResponse(message),
+        MessageCode.takeVault => _sendTakeVaultResponse(message),
         MessageCode.getShard => _sendGetShardResponse(message),
         MessageCode.setShard => _sendSetShardResponse(message),
       };
 
-  // Private
-  final _networkManager = GetIt.I<NetworkManager>();
-  final _settingsManager = GetIt.I<SettingsManager>();
-  final _vaultRepository = GetIt.I<VaultRepository>();
-
-  Future<void> _sendCreateGroupResponse(MessageModel message) async {
+  Future<void> _sendCreateVaultResponse(MessageModel message) async {
     await _sendResponse(message);
     if (message.isAccepted) {
       final vault = Vault(
@@ -37,7 +34,7 @@ abstract mixin class MessageEgressMixin {
     await archivateMessage(message);
   }
 
-  Future<void> _sendTakeGroupResponse(MessageModel message) async {
+  Future<void> _sendTakeVaultResponse(MessageModel message) async {
     if (message.isAccepted) {
       final vault = _vaultRepository
           .get(message.vault.aKey)!
@@ -80,8 +77,8 @@ abstract mixin class MessageEgressMixin {
           id: message.secretShard.id,
           ownerId: vault.ownerId,
           vaultId: vault.id,
-          groupSize: vault.maxSize,
-          groupThreshold: vault.threshold,
+          vaultSize: vault.maxSize,
+          vaultThreshold: vault.threshold,
           shard: vault.secrets[message.secretShard.id]!,
         )),
       );
@@ -95,6 +92,6 @@ abstract mixin class MessageEgressMixin {
       _networkManager.sendToPeer(
         message.peerId,
         isConfirmable: true,
-        message: message.copyWith(peerId: _settingsManager.selfId),
+        message: message.copyWith(peerId: _networkManager.selfId),
       );
 }

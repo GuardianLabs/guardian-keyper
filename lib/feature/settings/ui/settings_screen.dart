@@ -1,7 +1,6 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
-import 'package:guardian_keyper/feature/auth/ui/dialogs/on_create_pass_code.dart';
 import 'package:guardian_keyper/feature/auth/ui/dialogs/on_change_pass_code_dialog.dart';
 
 import 'settings_presenter.dart';
@@ -55,9 +54,7 @@ class SettingsScreen extends StatelessWidget {
                             style: styleSourceSansPro414Purple,
                           ),
                           trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                          onTap: () => presenter.passCode.isEmpty
-                              ? OnCreatePassCodeDialog.show(context)
-                              : OnChangePassCodeDialog.show(context),
+                          onTap: () => OnChangePassCodeDialog.show(context),
                         ),
                       ),
                       // Toggle Biometrics

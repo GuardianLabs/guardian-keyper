@@ -1,5 +1,5 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 
 import '../vault_secret_add_presenter.dart';
 import '../../widgets/guardian_self_list_tile.dart';

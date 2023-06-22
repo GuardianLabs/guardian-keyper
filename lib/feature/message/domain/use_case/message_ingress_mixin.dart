@@ -12,18 +12,18 @@ mixin class MessageIngressMixin {
     if (kDebugMode) print('$message\n$ticket');
 
     switch (message.code) {
-      case MessageCode.createGroup:
+      case MessageCode.createVault:
         if (message.payload == null) return;
         // qrCode was not generated
         if (ticket == null) return;
         // qrCode was processed already
         if (message.isNotRequested) return;
         if (message.code != ticket.code) return;
-        // group already exists
+        // vault already exists
         if (_vaultRepository.containsKey(message.vaultId.asKey)) return;
         break;
 
-      case MessageCode.takeGroup:
+      case MessageCode.takeVault:
         // qrCode was not generated
         if (ticket == null) return;
         // qrCode was processed already
@@ -37,7 +37,7 @@ mixin class MessageIngressMixin {
         // request already processed
         if (ticket != null) return;
         final vault = _vaultRepository.get(message.vaultId.asKey);
-        // group does not exists
+        // vault does not exists
         if (vault == null) return;
         // not owner
         if (vault.ownerId != message.peerId) return;
@@ -50,7 +50,7 @@ mixin class MessageIngressMixin {
         // request already processed
         if (ticket != null) return;
         final vault = _vaultRepository.get(message.vaultId.asKey);
-        // group does not exists
+        // vault does not exists
         if (vault == null) return;
         // not owner
         if (vault.ownerId != message.peerId) return;

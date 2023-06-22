@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:messagepack/messagepack.dart';
 
-import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/domain/entity/serializable.dart';
+import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 
 import 'message_id.dart';
 
@@ -19,7 +19,7 @@ enum MessageStatus {
   duplicated,
 }
 
-enum MessageCode { createGroup, getShard, setShard, takeGroup }
+enum MessageCode { createVault, getShard, setShard, takeVault }
 
 class MessageModel extends Serializable {
   static const currentVersion = 1;
@@ -95,7 +95,7 @@ class MessageModel extends Serializable {
   VaultId get vaultId => switch (payload) {
         Vault vault => vault.id,
         SecretShard shard => shard.vaultId,
-        _ => throw const FormatException('Payload have no groupId!'),
+        _ => throw const FormatException('Payload have no vaultId!'),
       };
 
   bool get isNotRequested => status != MessageStatus.created;

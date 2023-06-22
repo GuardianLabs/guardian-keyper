@@ -31,7 +31,7 @@ class OnRemoveSecretDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.removeGroup(
+        icon: const IconOf.removeVault(
           isBig: true,
           bage: BageType.warning,
         ),

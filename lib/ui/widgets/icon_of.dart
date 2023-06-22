@@ -130,7 +130,7 @@ class IconOf extends StatelessWidget {
     this.bage,
   }) : icon = 'assets/icons/shard_owner_v1.svg';
 
-  const IconOf.removeGroup({
+  const IconOf.removeVault({
     super.key,
     this.size,
     this.isBig,

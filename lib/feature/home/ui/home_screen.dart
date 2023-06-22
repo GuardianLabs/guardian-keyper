@@ -3,11 +3,11 @@ import 'package:get_it/get_it.dart';
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/data/network_manager.dart';
 
+import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/dashboard/ui/dashboard_screen.dart';
-import 'package:guardian_keyper/feature/settings/domain/settings_interactor.dart';
+
+import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 import 'package:guardian_keyper/feature/auth/ui/dialogs/on_demand_auth_dialog.dart';
 
 import 'package:guardian_keyper/feature/vault/ui/_shard_home/shard_home_screen.dart';
@@ -15,8 +15,9 @@ import 'package:guardian_keyper/feature/vault/ui/_vault_home/vault_home_screen.d
 
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
-import 'package:guardian_keyper/feature/message/ui/widgets/message_notify_icon.dart';
 import 'package:guardian_keyper/feature/message/ui/message_home_screen.dart';
+
+import 'widgets/bottom_navbar.dart';
 
 class HomeScreen extends StatefulWidget {
   static const _pages = [
@@ -24,29 +25,6 @@ class HomeScreen extends StatefulWidget {
     VaultHomeScreen(),
     ShardHomeScreen(),
     MessageHomeScreen(),
-  ];
-
-  static const _items = [
-    BottomNavigationBarItem(
-      icon: IconOf.navBarHome(),
-      activeIcon: IconOf.navBarHomeSelected(),
-      label: 'Home',
-    ),
-    BottomNavigationBarItem(
-      icon: IconOf.navBarKey(),
-      activeIcon: IconOf.navBarKeySelected(),
-      label: 'Vaults',
-    ),
-    BottomNavigationBarItem(
-      icon: IconOf.navBarShield(),
-      activeIcon: IconOf.navBarShieldSelected(),
-      label: 'Shards',
-    ),
-    BottomNavigationBarItem(
-      icon: MessageNotifyIcon(isSelected: false),
-      activeIcon: MessageNotifyIcon(isSelected: true),
-      label: 'Messages',
-    ),
   ];
 
   const HomeScreen({super.key});
@@ -58,7 +36,6 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   final _networkManager = GetIt.I<NetworkManager>();
   final _messagesInteractor = GetIt.I<MessageInteractor>();
-  final _settingsInteractor = GetIt.I<SettingsInteractor>();
 
   int _currentPage = 0;
   bool _canShowMessage = true;
@@ -71,18 +48,18 @@ class HomeScreenState extends State<HomeScreen> {
     _messagesInteractor.watch().listen((event) {
       if (event.isDeleted) return;
       if (!_canShowMessage) return;
-      if (event.value!.isNotReceived) return;
+      if (event.message!.isNotReceived) return;
       final routeName = ModalRoute.of(context)?.settings.name;
       if (routeName == '/' || routeName == routeQrCodeShow) {
         _canShowMessage = false;
         Navigator.of(context).popUntil((r) => r.isFirst);
-        OnMessageActiveDialog.show(context, message: event.value!)
+        OnMessageActiveDialog.show(context, message: event.message!)
             .then((_) => _canShowMessage = true);
       }
     });
 
     Future.microtask(() async {
-      if (_settingsInteractor.passCode.isEmpty) {
+      if (GetIt.I<AuthManager>().passCode.isEmpty) {
         await Navigator.of(context).pushNamed(routeIntro);
       } else {
         _messagesInteractor.pruneMessages();
@@ -96,9 +73,9 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: clIndigo900,
         resizeToAvoidBottomInset: true,
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentPage,
-          items: HomeScreen._items,
+        bottomNavigationBar: BottomNavbar(
+          key: Key('HomePage_$_currentPage'),
+          currentPage: _currentPage,
           onTap: _gotoPage,
         ),
         body: WillPopScope(

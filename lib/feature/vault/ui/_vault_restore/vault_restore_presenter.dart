@@ -24,7 +24,7 @@ class VaultRestorePresenter extends VaultGuardianPresenterBase {
   final VaultId? vaultId;
 
   @override
-  MessageCode get messageCode => MessageCode.takeGroup;
+  MessageCode get messageCode => MessageCode.takeVault;
 
   @override
   void requestWorker([timer]) => _vaultInteractor.sendToGuardian(qrCode!);

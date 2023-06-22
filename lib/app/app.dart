@@ -6,9 +6,9 @@ import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/screens/splash_screen.dart';
-import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 
-import 'package:guardian_keyper/data/network_manager.dart';
+import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
+import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
