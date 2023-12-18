@@ -32,11 +32,13 @@ class ScaffoldSafe extends StatelessWidget {
 }
 
 class HeaderBar extends StatelessWidget {
+  static const _emptyButton = SizedBox(height: 40, width: 40);
+
   const HeaderBar({
     super.key,
     this.caption = '',
-    this.leftButton,
-    this.rightButton,
+    this.leftButton = _emptyButton,
+    this.rightButton = _emptyButton,
     this.isTransparent = false,
   });
 
