@@ -37,7 +37,7 @@ class SetBiometricPage extends StatelessWidget {
               padding: paddingT20,
               child: Row(children: [
                 Expanded(
-                  child: ElevatedButton(
+                  child: FilledButton(
                     onPressed: () async {
                       await context
                           .read<IntroPresenter>()
@@ -47,16 +47,16 @@ class SetBiometricPage extends StatelessWidget {
                     child: const Text('No'),
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Expanded(
-                  child: PrimaryButton(
+                  child: FilledButton(
                     onPressed: () async {
                       await context
                           .read<IntroPresenter>()
                           .setBiometrics(isEnabled: true);
                       if (context.mounted) Navigator.of(context).pop();
                     },
-                    text: 'Yes',
+                    child: const Text('Yes'),
                   ),
                 ),
               ]),

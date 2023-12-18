@@ -46,7 +46,7 @@ class OnShowIdDialog extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: paddingH20,
-                child: ElevatedButton(
+                child: FilledButton(
                   onPressed: () async {
                     await Clipboard.setData(ClipboardData(text: id));
                     if (context.mounted) {

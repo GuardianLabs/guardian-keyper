@@ -119,20 +119,20 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
         ),
         footer: Row(children: [
           Expanded(
-            child: ElevatedButton(
+            child: FilledButton(
               onPressed: _isPeerOnline && !_isRequestError && !_isRequestActive
                   ? () => _sendRespone(MessageStatus.rejected)
                   : null,
               child: const Text('Reject'),
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 12),
           Expanded(
-            child: PrimaryButton(
+            child: FilledButton(
               onPressed: _isPeerOnline && !_isRequestError && !_isRequestActive
                   ? () => _sendRespone(MessageStatus.accepted)
                   : null,
-              text: 'Approve',
+              child: const Text('Approve'),
             ),
           ),
         ]),

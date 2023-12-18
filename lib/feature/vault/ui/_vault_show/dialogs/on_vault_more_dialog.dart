@@ -24,7 +24,7 @@ class OnVaultMoreDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        footer: ElevatedButton(
+        footer: FilledButton(
           child: const SizedBox(
             width: double.infinity,
             child: Text(

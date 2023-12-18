@@ -59,7 +59,7 @@ class ShowSecretPage extends StatelessWidget {
                       Row(children: [
                         Expanded(
                           child: presenter.isObfuscated
-                              ? ElevatedButton(
+                              ? FilledButton(
                                   onPressed: () {
                                     if (!presenter.tryShow()) {
                                       OnAskAuthDialog.show(
@@ -70,7 +70,7 @@ class ShowSecretPage extends StatelessWidget {
                                   },
                                   child: const Text('Show'),
                                 )
-                              : ElevatedButton(
+                              : FilledButton(
                                   onPressed: presenter.onPressedHide,
                                   child: const Text('Hide'),
                                 ),

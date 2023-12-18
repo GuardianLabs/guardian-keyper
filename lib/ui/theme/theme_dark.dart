@@ -51,19 +51,6 @@ final themeDark = ThemeData.dark().copyWith(
     margin: EdgeInsets.zero,
     shape: _shapeBorder,
   ),
-  // Elevated Button
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ButtonStyle(
-      fixedSize: _fixedSizeHeight48,
-      foregroundColor: _buttonForegroundColor,
-      shape: _buttonShape,
-      textStyle: MaterialStateProperty.all<TextStyle>(stylePoppins616),
-      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-        (states) =>
-            states.contains(MaterialState.disabled) ? clIndigo800 : clIndigo500,
-      ),
-    ),
-  ),
   // Expansion Panel
   expansionTileTheme: const ExpansionTileThemeData(
     backgroundColor: clSurface,

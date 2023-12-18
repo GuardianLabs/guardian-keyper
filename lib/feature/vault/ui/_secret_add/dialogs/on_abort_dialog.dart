@@ -21,16 +21,16 @@ class OnAbortDialog extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: ElevatedButton(
+                child: FilledButton(
                   onPressed: Navigator.of(context).pop,
                   child: const Text('No'),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 12),
               Expanded(
-                child: PrimaryButton(
-                  text: 'Yes',
+                child: FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('Yes'),
                 ),
               ),
             ],
