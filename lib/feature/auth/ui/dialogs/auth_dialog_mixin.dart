@@ -3,35 +3,15 @@ import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/utils/screen_size.dart';
 
-abstract class AuthDialogBase {
-  static const keyPadConfig = KeyPadConfig(clearOnLongPressed: true);
+mixin class AuthDialogMixin {
+  static const cancelButton = Icon(Icons.cancel);
 
-  static const cancelButton = Text(
-    'Cancel',
-    maxLines: 1,
-    softWrap: false,
-    textAlign: TextAlign.center,
-    overflow: TextOverflow.visible,
-  );
-
-  static const resetButton = Text(
-    'Reset',
-    maxLines: 1,
-    softWrap: false,
-    textAlign: TextAlign.center,
-    overflow: TextOverflow.visible,
-  );
+  static const resetButton = Icon(Icons.cancel);
 
   static const currentPassCodeTitle =
       Text('Please enter your current passcode');
 
-  static const secretsConfig = SecretsConfig(
-    secretConfig: SecretConfig(
-      borderSize: 0,
-      borderColor: Colors.transparent,
-      disabledColor: Colors.white38,
-    ),
-  );
+  static const keyPadConfig = KeyPadConfig(clearOnLongPressed: true);
 
   static EdgeInsets getPadding(BuildContext context) =>
       paddingH20 +
@@ -42,17 +22,13 @@ abstract class AuthDialogBase {
   static ScreenLockConfig getScreenLockConfig(BuildContext context) {
     final theme = Theme.of(context);
     return ScreenLockConfig(
-      backgroundColor: theme.colorScheme.background,
+      themeData: theme,
+      backgroundColor: theme.colorScheme.surface.withOpacity(0.5),
       textStyle: theme.textTheme.titleMedium,
       titleTextStyle: theme.textTheme.titleLarge,
       buttonStyle: ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll(theme.colorScheme.background),
-        foregroundColor:
-            MaterialStatePropertyAll(theme.colorScheme.onBackground),
+        foregroundColor: MaterialStatePropertyAll(theme.colorScheme.onSurface),
         side: const MaterialStatePropertyAll(BorderSide.none),
-        textStyle: MaterialStatePropertyAll(
-          theme.textTheme.titleMedium?.copyWith(overflow: TextOverflow.visible),
-        ),
       ),
     );
   }

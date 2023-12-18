@@ -31,6 +31,7 @@ final colorSchemeDark = ColorScheme.fromSeed(
   onBackground: Colors.white,
   surface: const Color(0xFF24035F),
   onSurface: const Color(0xFFE6DEF8),
+  onSurfaceVariant: const Color(0xFFA066F5),
 );
 
 final themeDark = themeData.copyWith(
@@ -106,6 +107,7 @@ final themeDark = themeData.copyWith(
     subtitleTextStyle: themeData.listTileTheme.subtitleTextStyle!.copyWith(
       color: colorSchemeDark.onSurface,
     ),
+    iconColor: colorSchemeDark.onSurface,
   ),
   // Outlined Button
   outlinedButtonTheme: OutlinedButtonThemeData(

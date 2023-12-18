@@ -11,14 +11,13 @@ class OnCreatePassCodeDialog {
   static Future<void> show(BuildContext context) {
     final authManager = GetIt.I<AuthManager>();
     final inputController = InputController();
-    final padding = AuthDialogBase.getPadding(context);
+    final padding = AuthDialogMixin.getPadding(context);
     return screenLockCreate(
       context: context,
       canCancel: false,
       digits: passCodeLength,
-      config: AuthDialogBase.getScreenLockConfig(context),
-      keyPadConfig: AuthDialogBase.keyPadConfig,
-      secretsConfig: AuthDialogBase.secretsConfig,
+      config: AuthDialogMixin.getScreenLockConfig(context),
+      keyPadConfig: AuthDialogMixin.keyPadConfig,
       inputController: inputController,
       title: Padding(
         padding: padding,
@@ -28,7 +27,7 @@ class OnCreatePassCodeDialog {
         padding: padding,
         child: const Text('Enter it once more'),
       ),
-      customizedButtonChild: AuthDialogBase.resetButton,
+      customizedButtonChild: AuthDialogMixin.resetButton,
       customizedButtonTap: inputController.unsetConfirmed,
       onConfirmed: (passCode) async {
         await authManager.setPassCode(passCode);

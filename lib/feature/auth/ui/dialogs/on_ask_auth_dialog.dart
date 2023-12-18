@@ -6,7 +6,7 @@ import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 
 import 'auth_dialog_mixin.dart';
 
-class OnAskAuthDialog extends AuthDialogBase {
+class OnAskAuthDialog {
   static Future<void> show(
     BuildContext context, {
     required VoidCallback onUnlocked,
@@ -23,15 +23,15 @@ class OnAskAuthDialog extends AuthDialogBase {
     if (context.mounted) {
       return screenLock(
         context: context,
-        config: AuthDialogBase.getScreenLockConfig(context),
-        keyPadConfig: AuthDialogBase.keyPadConfig,
-        secretsConfig: AuthDialogBase.secretsConfig,
+        useBlur: true,
+        config: AuthDialogMixin.getScreenLockConfig(context),
+        keyPadConfig: AuthDialogMixin.keyPadConfig,
         correctString: authManager.passCode,
         title: Padding(
-          padding: AuthDialogBase.getPadding(context),
-          child: AuthDialogBase.currentPassCodeTitle,
+          padding: AuthDialogMixin.getPadding(context),
+          child: AuthDialogMixin.currentPassCodeTitle,
         ),
-        cancelButton: AuthDialogBase.cancelButton,
+        cancelButton: AuthDialogMixin.cancelButton,
         customizedButtonChild:
             authBio == null ? null : const Icon(Icons.fingerprint, size: 48),
         customizedButtonTap: authBio,

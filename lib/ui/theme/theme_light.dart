@@ -26,6 +26,8 @@ final colorSchemeLight = ColorScheme.fromSwatch(
   brightness: Brightness.light,
   primarySwatch: colorSwatchLight,
 ).copyWith(
+  background: const Color(0xFFF7F7F7),
+  onBackground: Colors.grey,
   primary: colorSwatchLight.shade500,
   onPrimary: Colors.white,
   primaryContainer: colorSwatchLight.shade400,
@@ -34,8 +36,6 @@ final colorSchemeLight = ColorScheme.fromSwatch(
   surfaceTint: const Color(0xFFF7F7F7),
   onSurface: const Color(0xFF120D23),
   onSurfaceVariant: colorSwatchLight.shade500,
-  background: const Color(0xFFF7F7F7),
-  onBackground: Colors.grey,
 );
 
 const colorSchemeExtensionLight = BrandColors(
@@ -59,5 +59,65 @@ final themeLight = themeData.copyWith(
     backgroundColor: colorSchemeLight.background,
     selectedItemColor: colorSchemeLight.primary,
     unselectedItemColor: colorSchemeLight.onBackground,
+  ),
+  // Bottom Sheet
+  bottomSheetTheme: themeData.bottomSheetTheme.copyWith(
+    backgroundColor: colorSchemeLight.background,
+  ),
+  // Card
+  cardTheme: themeData.cardTheme.copyWith(
+    color: colorSchemeLight.surface,
+  ),
+  // Divider
+  dividerTheme: themeData.dividerTheme.copyWith(
+    color: colorSchemeLight.primary,
+  ),
+  // Expansion Panel
+  expansionTileTheme: themeData.expansionTileTheme.copyWith(
+    collapsedIconColor: colorSchemeLight.onPrimary,
+    iconColor: colorSchemeLight.onPrimary,
+  ),
+  // Icon
+  iconTheme: IconThemeData(
+    color: colorSchemeLight.onPrimary,
+  ),
+  // ListTile
+  listTileTheme: themeData.listTileTheme.copyWith(
+    tileColor: colorSchemeLight.surface,
+    titleTextStyle: themeData.listTileTheme.titleTextStyle!.copyWith(
+      color: colorSchemeLight.onPrimary,
+    ),
+    subtitleTextStyle: themeData.listTileTheme.subtitleTextStyle!.copyWith(
+      color: colorSchemeLight.onSurface,
+    ),
+    iconColor: colorSchemeLight.onSurface,
+  ),
+  // SnackBar
+  snackBarTheme: themeData.snackBarTheme.copyWith(
+    backgroundColor: colorSchemeExtensionDark.highlightColor,
+    contentTextStyle: const TextStyle(color: Color(0xFF004D45)),
+  ),
+  // Switch
+  switchTheme: SwitchThemeData(
+    thumbColor: MaterialStatePropertyAll(colorSchemeLight.onPrimary),
+    trackColor: MaterialStateProperty.resolveWith<Color>((states) =>
+        states.contains(MaterialState.selected)
+            ? colorSchemeLight.tertiary
+            : colorSchemeLight.secondary),
+    trackOutlineColor: MaterialStatePropertyAll(colorSchemeLight.secondary),
+    trackOutlineWidth: const MaterialStatePropertyAll(0),
+  ),
+  // TabBar
+  tabBarTheme: themeData.tabBarTheme.copyWith(
+    indicatorSize: TabBarIndicatorSize.tab,
+    indicator: BoxDecoration(
+      borderRadius: const BorderRadius.vertical(
+        top: Radius.circular(10),
+      ),
+      color: colorSchemeLight.secondary,
+    ),
+    labelPadding: EdgeInsets.zero,
+    labelColor: colorSchemeLight.onPrimary,
+    unselectedLabelColor: colorSchemeLight.onSecondary,
   ),
 );

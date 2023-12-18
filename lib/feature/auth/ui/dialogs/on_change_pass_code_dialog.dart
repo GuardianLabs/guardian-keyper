@@ -10,18 +10,17 @@ import 'auth_dialog_mixin.dart';
 class OnChangePassCodeDialog {
   static Future<void> show(BuildContext context) {
     final authManager = GetIt.I<AuthManager>();
-    final padding = AuthDialogBase.getPadding(context);
+    final padding = AuthDialogMixin.getPadding(context);
     return screenLock(
       context: context,
-      config: AuthDialogBase.getScreenLockConfig(context),
-      keyPadConfig: AuthDialogBase.keyPadConfig,
-      secretsConfig: AuthDialogBase.secretsConfig,
+      config: AuthDialogMixin.getScreenLockConfig(context),
+      keyPadConfig: AuthDialogMixin.keyPadConfig,
       correctString: authManager.passCode,
       title: Padding(
         padding: padding,
-        child: AuthDialogBase.currentPassCodeTitle,
+        child: AuthDialogMixin.currentPassCodeTitle,
       ),
-      cancelButton: AuthDialogBase.cancelButton,
+      cancelButton: AuthDialogMixin.cancelButton,
       onCancelled: Navigator.of(context).pop,
       onError: (_) {
         showSnackBar(
@@ -38,9 +37,8 @@ class OnChangePassCodeDialog {
         screenLockCreate(
           context: context,
           digits: passCodeLength,
-          config: AuthDialogBase.getScreenLockConfig(context),
-          keyPadConfig: AuthDialogBase.keyPadConfig,
-          secretsConfig: AuthDialogBase.secretsConfig,
+          config: AuthDialogMixin.getScreenLockConfig(context),
+          keyPadConfig: AuthDialogMixin.keyPadConfig,
           inputController: inputController,
           title: Padding(
             padding: padding,
@@ -50,9 +48,9 @@ class OnChangePassCodeDialog {
             padding: padding,
             child: const Text('Please repeate your new passcode'),
           ),
-          cancelButton: AuthDialogBase.cancelButton,
+          cancelButton: AuthDialogMixin.cancelButton,
           onCancelled: Navigator.of(context).pop,
-          customizedButtonChild: AuthDialogBase.resetButton,
+          customizedButtonChild: AuthDialogMixin.resetButton,
           customizedButtonTap: inputController.unsetConfirmed,
           onError: (_) {
             showSnackBar(

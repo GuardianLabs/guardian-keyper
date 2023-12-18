@@ -20,13 +20,13 @@ class OnDemandAuthDialog {
       return screenLock(
         context: context,
         canCancel: false,
-        config: AuthDialogBase.getScreenLockConfig(context),
-        keyPadConfig: AuthDialogBase.keyPadConfig,
-        secretsConfig: AuthDialogBase.secretsConfig,
+        useBlur: true,
+        config: AuthDialogMixin.getScreenLockConfig(context),
+        keyPadConfig: AuthDialogMixin.keyPadConfig,
         correctString: authManager.passCode,
         title: Padding(
-          padding: AuthDialogBase.getPadding(context),
-          child: AuthDialogBase.currentPassCodeTitle,
+          padding: AuthDialogMixin.getPadding(context),
+          child: AuthDialogMixin.currentPassCodeTitle,
         ),
         customizedButtonChild:
             authBio == null ? null : const Icon(Icons.fingerprint, size: 48),
