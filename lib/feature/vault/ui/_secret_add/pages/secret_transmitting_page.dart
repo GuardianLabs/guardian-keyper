@@ -59,7 +59,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: _brandColor.warningColor.withOpacity(.4),
+                    color: _brandColor.warningColor.withOpacity(.2),
                   ),
                   padding: paddingAll20,
                   child: Text(
