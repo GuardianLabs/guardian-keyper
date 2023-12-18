@@ -34,11 +34,9 @@ class _CopyMyKeyToClipboardButtonState
                   () => setState(() => _isDisabled = false),
                 );
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    buildSnackBar(
-                      context,
-                      text: 'Public Key has been copied to clipboard.',
-                    ),
+                  showSnackBar(
+                    context,
+                    text: 'Public Key has been copied to clipboard.',
                   );
                 }
               },

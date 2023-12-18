@@ -24,12 +24,12 @@ class OnChangePassCodeDialog {
       cancelButton: AuthDialogBase.cancelButton,
       onCancelled: Navigator.of(context).pop,
       onError: (_) {
-        ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+        showSnackBar(
           context,
           text: 'Wrong passcode!',
           isFloating: true,
           isError: true,
-        ));
+        );
         authManager.vibrate();
       },
       onUnlocked: () {
@@ -55,23 +55,23 @@ class OnChangePassCodeDialog {
           customizedButtonChild: AuthDialogBase.resetButton,
           customizedButtonTap: inputController.unsetConfirmed,
           onError: (_) {
-            ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+            showSnackBar(
               context,
               text: 'Wrong passcode!',
               isFloating: true,
               isError: true,
-            ));
+            );
             authManager.vibrate();
           },
           onConfirmed: (passCode) async {
             await authManager.setPassCode(passCode);
             if (context.mounted) {
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+              showSnackBar(
                 context,
                 text: 'Your login passcode was changed successfully!',
                 isFloating: true,
-              ));
+              );
             }
           },
         ).then((_) => inputController.dispose);

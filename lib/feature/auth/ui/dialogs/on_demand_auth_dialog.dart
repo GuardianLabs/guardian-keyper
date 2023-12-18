@@ -34,12 +34,12 @@ class OnDemandAuthDialog {
         onOpened: authBio,
         onUnlocked: Navigator.of(context).pop,
         onError: (_) {
-          ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+          showSnackBar(
             context,
             text: 'Wrong passcode!',
             isFloating: true,
             isError: true,
-          ));
+          );
           authManager.vibrate();
         },
       );

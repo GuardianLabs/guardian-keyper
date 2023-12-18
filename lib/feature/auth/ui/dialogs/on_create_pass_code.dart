@@ -35,12 +35,12 @@ class OnCreatePassCodeDialog {
         if (context.mounted) Navigator.of(context).pop();
       },
       onError: (_) {
-        ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+        showSnackBar(
           context,
           text: 'Wrong passcode!',
           isFloating: true,
           isError: true,
-        ));
+        );
         authManager.vibrate();
       },
     ).then((_) => inputController.dispose);

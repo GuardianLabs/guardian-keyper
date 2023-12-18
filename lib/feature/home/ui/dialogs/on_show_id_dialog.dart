@@ -56,11 +56,9 @@ class OnShowIdDialog extends StatelessWidget {
                     await Clipboard.setData(ClipboardData(text: id));
                     if (context.mounted) {
                       Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        buildSnackBar(
-                          context,
-                          text: 'Public Key has been copied to clipboard.',
-                        ),
+                      showSnackBar(
+                        context,
+                        text: 'Public Key has been copied to clipboard.',
                       );
                     }
                   },

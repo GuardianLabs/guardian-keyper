@@ -20,16 +20,14 @@ class _LoadingPageState extends State<LoadingPage> {
     final presenter = context.read<VaultGuardianAddPresenter>();
     presenter.startRequest().then((message) async {
       if (message.isAccepted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          buildSnackBar(
-            context,
-            textSpans: [
-              const TextSpan(text: 'You have successfully added '),
-              TextSpan(text: message.peerId.name, style: styleW600),
-              const TextSpan(text: 'as a Guardian for '),
-              TextSpan(text: presenter.vaultId.name, style: styleW600),
-            ],
-          ),
+        showSnackBar(
+          context,
+          textSpans: [
+            const TextSpan(text: 'You have successfully added '),
+            TextSpan(text: message.peerId.name, style: styleW600),
+            const TextSpan(text: 'as a Guardian for '),
+            TextSpan(text: presenter.vaultId.name, style: styleW600),
+          ],
         );
       } else if (message.isRejected) {
         await OnRejectDialog.show(context);

@@ -268,7 +268,7 @@ class DotColored extends StatelessWidget {
       );
 }
 
-SnackBar buildSnackBar(
+ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
   BuildContext context, {
   String? text,
   List<TextSpan>? textSpans,
@@ -277,7 +277,7 @@ SnackBar buildSnackBar(
   bool isError = false,
 }) {
   final theme = Theme.of(context);
-  return SnackBar(
+  return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     duration: duration,
     behavior: isFloating ? SnackBarBehavior.floating : null,
     margin: paddingAll20,
@@ -294,5 +294,5 @@ SnackBar buildSnackBar(
             : theme.snackBarTheme.contentTextStyle,
       ),
     ),
-  );
+  ));
 }

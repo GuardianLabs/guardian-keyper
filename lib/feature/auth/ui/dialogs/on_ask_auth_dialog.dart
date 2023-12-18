@@ -42,12 +42,12 @@ class OnAskAuthDialog extends AuthDialogBase {
         },
         onError: (_) {
           authManager.vibrate();
-          ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+          showSnackBar(
             context,
             text: 'Wrong passcode!',
             isFloating: true,
             isError: true,
-          ));
+          );
         },
       );
     }

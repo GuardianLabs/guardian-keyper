@@ -82,11 +82,7 @@ class ShowSecretPage extends StatelessWidget {
                               final isOk = await presenter.tryCopy();
                               if (context.mounted) {
                                 if (isOk) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(buildSnackBar(
-                                    context,
-                                    text: _snack,
-                                  ));
+                                  showSnackBar(context, text: _snack);
                                 } else {
                                   await OnAskAuthDialog.show(
                                     context,
@@ -94,11 +90,7 @@ class ShowSecretPage extends StatelessWidget {
                                       final isCopied =
                                           await presenter.onUnlockedCopy();
                                       if (isCopied && context.mounted) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(buildSnackBar(
-                                          context,
-                                          text: _snack,
-                                        ));
+                                        showSnackBar(context, text: _snack);
                                       }
                                     },
                                   );
