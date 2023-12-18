@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
@@ -10,26 +9,15 @@ import 'vault_presenter_base.dart';
 abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
   VaultGuardianPresenterBase({required super.pageCount});
 
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
+
+  MessageModel? _qrCode;
+
   VaultId? get vaultId;
 
   MessageCode get messageCode;
 
   MessageModel? get qrCode => _qrCode;
-
-  bool get canUseClipboard => _canUseClipboard;
-
-  void checkClipboard() => _vaultInteractor.hasStringsInClipboard().then(
-        (hasStrings) {
-          _canUseClipboard = hasStrings;
-          notifyListeners();
-        },
-      );
-
-  Future<String?> getCodeFromClipboard() {
-    _canUseClipboard = false;
-    notifyListeners();
-    return _vaultInteractor.getCodeFromClipboard();
-  }
 
   bool isNotValidMessage(MessageModel message, VaultId? vaultId) {
     if (isNotWaiting) return true;
@@ -44,6 +32,8 @@ abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
 
   void setCode(String? code) {
     if (code == null || _qrCode != null) return;
+    if (code.isEmpty) throw const SetCodeEmptyException();
+
     final message = MessageModel.tryFromBase64(code);
 
     if (message == null || message.code != messageCode || message.isExpired) {
@@ -69,23 +59,14 @@ abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
     _qrCode = message;
     nextPage();
   }
+}
 
-  // Private
-  final _vaultInteractor = GetIt.I<VaultInteractor>();
-
-  bool _canUseClipboard = false;
-
-  MessageModel? _qrCode;
+class SetCodeEmptyException implements Exception {
+  const SetCodeEmptyException();
 }
 
 class SetCodeFailException implements Exception {
   const SetCodeFailException();
-}
-
-class SetCodeDuplicateException implements Exception {
-  const SetCodeDuplicateException(this.message);
-
-  final MessageModel message;
 }
 
 class SetCodeVersionLowException implements Exception {
@@ -94,4 +75,10 @@ class SetCodeVersionLowException implements Exception {
 
 class SetCodeVersionHighException implements Exception {
   const SetCodeVersionHighException();
+}
+
+class SetCodeDuplicateException implements Exception {
+  const SetCodeDuplicateException(this.message);
+
+  final MessageModel message;
 }

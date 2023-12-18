@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:flutter/services.dart';
 
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
@@ -85,10 +86,13 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
   }
 
   Future<bool> tryCopy() async {
-    if (_isAuthorized) {
-      return _vaultInteractor.copyToClipboard(secret);
+    if (!_isAuthorized) return false;
+    try {
+      await Clipboard.setData(ClipboardData(text: secret));
+      return true;
+    } catch (_) {
+      return false;
     }
-    return false;
   }
 
   Future<bool> onUnlockedCopy() {

@@ -1,84 +1,73 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_scan_dialog.dart';
+import 'package:guardian_keyper/feature/vault/ui/dialogs/on_version_low.dart';
+import 'package:guardian_keyper/feature/vault/ui/dialogs/on_version_high.dart';
+import 'package:guardian_keyper/feature/vault/ui/dialogs/on_invalid_dialog.dart';
+import 'package:guardian_keyper/feature/vault/ui/dialogs/on_code_input_dialog.dart';
 
 import '../vault_restore_presenter.dart';
 import '../dialogs/on_duplicate_dialog.dart';
-import '../../dialogs/on_version_high.dart';
-import '../../dialogs/on_version_low.dart';
 import '../dialogs/on_fail_dialog.dart';
 
-class GetCodePage extends StatefulWidget {
+class GetCodePage extends StatelessWidget {
   const GetCodePage({super.key});
 
   @override
-  State<GetCodePage> createState() => _GetCodePageState();
-}
-
-class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
-  late final _presenter = context.read<VaultRestorePresenter>();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _presenter.checkClipboard();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) _presenter.checkClipboard();
-  }
-
-  @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          // Header
-          const HeaderBar(
-            caption: 'Restore a Vault',
-            closeButton: HeaderBarCloseButton(),
-          ),
-          // Body
-          const PageTitle(
-            title: 'Add a Guardian to restore the Vault',
-            subtitle: 'Ask a Guardian to find your Vault in the app'
-                ' and click “Change Vault’s Owner” to show their QR code'
-                ' or share Text  code.',
-          ),
-          Padding(
-            padding: paddingH20,
-            child: PrimaryButton(
-              text: 'Add via a QR Code',
-              onPressed: () => QRCodeScanDialog.show(
+  Widget build(BuildContext context) {
+    final presenter = context.read<VaultRestorePresenter>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Header
+        const HeaderBar(
+          caption: 'Restore my Vault',
+          closeButton: HeaderBarCloseButton(),
+        ),
+        // Body
+        const PageTitle(
+          title: 'Add a Guardian to start a Vault recovery',
+          subtitle: 'Ask a Guardian to tap “Assist with Vault” in the app, '
+              'select the Vault you need, and provide their '
+              'Assistance QR code or text code.',
+        ),
+        // Scan QR
+        Padding(
+          padding: paddingH20,
+          child: FilledButton(
+            onPressed: () async {
+              final code = await QRCodeScanDialog.show(
                 context,
                 caption: 'Scan the Assistance QR',
-              ).then(_setCode),
-            ),
+              );
+              if (context.mounted) _setCode(context, presenter, code);
+            },
+            child: const Text('Add via a QR Code'),
           ),
-          Padding(
-            padding: paddingAll20,
-            child: Selector<VaultRestorePresenter, bool>(
-              selector: (_, presenter) => presenter.canUseClipboard,
-              builder: (_, canUseClipboard, __) => PrimaryButton(
-                text: 'Add via a Text Code',
-                onPressed: canUseClipboard
-                    ? () => _presenter.getCodeFromClipboard().then(_setCode)
-                    : null,
-              ),
-            ),
+        ),
+        // Input QR
+        Padding(
+          padding: paddingAll20,
+          child: OutlinedButton(
+            onPressed: () async {
+              final code = await OnCodeInputDialog.show(context);
+              if (context.mounted) _setCode(context, presenter, code);
+            },
+            child: const Text('Add via a Text Code'),
           ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
 
-  void _setCode(String? code) {
+  void _setCode(
+    BuildContext context,
+    VaultRestorePresenter presenter,
+    String? code,
+  ) {
     try {
-      _presenter.setCode(code);
+      presenter.setCode(code);
+    } on SetCodeEmptyException {
+      OnInvalidDialog.show(context);
     } on SetCodeFailException {
       OnFailDialog.show(context);
     } on SetCodeVersionLowException {

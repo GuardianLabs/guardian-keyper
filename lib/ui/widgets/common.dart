@@ -217,38 +217,11 @@ class PrimaryButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) => Material(
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: borderRadius8,
-            gradient: onPressed == null
-                ? const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFF548BB4), Color(0xFF2E68AC)],
-                  )
-                : const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFF7BE7FF), Color(0xFF3AABF0)],
-                  ),
-          ),
-          height: 48,
-          child: InkWell(
-            borderRadius: borderRadius8,
-            onTap: onPressed,
-            splashColor: clBlue,
-            child: Center(
-              child: Text(
-                text,
-                overflow: TextOverflow.clip,
-                maxLines: 1,
-                style: stylePoppins616.copyWith(
-                  color: onPressed == null ? const Color(0xFF8FB1D0) : clWhite,
-                ),
-              ),
-            ),
-          ),
+  Widget build(BuildContext context) => SizedBox(
+        width: double.infinity,
+        child: FilledButton(
+          onPressed: onPressed,
+          child: Text(text),
         ),
       );
 }
@@ -277,7 +250,11 @@ class BottomSheetWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (icon != null) Padding(padding: paddingB32, child: icon),
+            if (icon != null)
+              Padding(
+                padding: paddingB32,
+                child: icon,
+              ),
             if (titleString != null)
               Padding(
                 padding: paddingB12,
@@ -300,7 +277,11 @@ class BottomSheetWidget extends StatelessWidget {
                 ),
               ),
             if (body != null) body!,
-            if (footer != null) Padding(padding: paddingV20, child: footer),
+            if (footer != null)
+              Padding(
+                padding: paddingV20,
+                child: footer,
+              ),
           ],
         ),
       );

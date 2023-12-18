@@ -12,22 +12,8 @@ class PlatformService {
 
   Future<void> wakelockDisable() => WakelockPlus.disable();
 
-  Future<bool> hasStringsInClipboard() => Clipboard.hasStrings();
-
   Future<bool> openMarket() =>
       launchUrl(Uri.parse(Platform.isAndroid ? urlPlayMarket : urlAppStore));
-
-  Future<String?> copyFromClipboard() async =>
-      (await Clipboard.getData(Clipboard.kTextPlain))?.text;
-
-  Future<bool> copyToClipboard(String text) async {
-    try {
-      await Clipboard.setData(ClipboardData(text: text));
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
 
   Future<void> share(
     String text, {

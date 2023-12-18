@@ -232,8 +232,12 @@ class IconOf extends StatelessWidget {
       width: actualSize,
       child: SvgPicture.asset(
         icon,
-        colorFilter:
-            color == null ? null : ColorFilter.mode(color!, BlendMode.srcIn),
+        colorFilter: color == null
+            ? null
+            : ColorFilter.mode(
+                color!,
+                BlendMode.srcIn,
+              ),
       ),
     );
     if (bage == null) return iconWidget;
@@ -270,11 +274,12 @@ class IconOf extends StatelessWidget {
       case _:
     }
 
-    return SizedBox(
-      height: actualSize,
-      width: actualSize,
+    return SizedBox.square(
+      dimension: actualSize,
       child: Stack(
+        alignment: Alignment.center,
         clipBehavior: Clip.none,
+        fit: StackFit.expand,
         children: [
           iconWidget,
           Positioned(

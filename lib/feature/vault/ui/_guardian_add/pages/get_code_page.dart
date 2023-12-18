@@ -1,92 +1,81 @@
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_scan_dialog.dart';
+import 'package:guardian_keyper/feature/vault/ui/dialogs/on_version_low.dart';
+import 'package:guardian_keyper/feature/vault/ui/dialogs/on_version_high.dart';
+import 'package:guardian_keyper/feature/vault/ui/dialogs/on_invalid_dialog.dart';
+import 'package:guardian_keyper/feature/vault/ui/dialogs/on_code_input_dialog.dart';
 
 import '../vault_guardian_add_presenter.dart';
 import '../dialogs/on_duplicate_dialog.dart';
-import '../../dialogs/on_version_high.dart';
-import '../../dialogs/on_version_low.dart';
 import '../dialogs/on_fail_dialog.dart';
 
-class GetCodePage extends StatefulWidget {
+class GetCodePage extends StatelessWidget {
   const GetCodePage({super.key});
 
   @override
-  State<GetCodePage> createState() => _GetCodePageState();
-}
-
-class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
-  late final _presenter = context.read<VaultGuardianAddPresenter>();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _presenter.checkClipboard();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) _presenter.checkClipboard();
-  }
-
-  @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          // Header
-          HeaderBar(
-            captionSpans: buildTextWithId(name: _presenter.vaultId.name),
-            closeButton: const HeaderBarCloseButton(),
-          ),
-          // Body
-          PageTitle(
-            title: 'Add your Guardians',
-            subtitleSpans: [
-              TextSpan(
-                style: styleSourceSansPro616Purple,
-                text: 'Add Guardian(s) ',
-              ),
-              TextSpan(
-                style: styleSourceSansPro416Purple,
-                text: 'to enable your Vault and secure your Secrets.',
-              ),
-            ],
-          ),
-          Padding(
-            padding: paddingH20,
-            child: PrimaryButton(
-              text: 'Add via a QR Code',
-              onPressed: () => QRCodeScanDialog.show(
+  Widget build(BuildContext context) {
+    final presenter = context.read<VaultGuardianAddPresenter>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Header
+        HeaderBar(
+          captionSpans: buildTextWithId(name: presenter.vaultId.name),
+          closeButton: const HeaderBarCloseButton(),
+        ),
+        // Body
+        PageTitle(
+          title: 'Add your Guardians',
+          subtitleSpans: [
+            TextSpan(
+              style: styleSourceSansPro616Purple,
+              text: 'Add Guardian(s) ',
+            ),
+            TextSpan(
+              style: styleSourceSansPro416Purple,
+              text: 'to enable your Vault and secure your Secrets.',
+            ),
+          ],
+        ),
+        // Scan QR
+        Padding(
+          padding: paddingH20,
+          child: FilledButton(
+            onPressed: () async {
+              final code = await QRCodeScanDialog.show(
                 context,
                 caption: 'Scan the Guardian QR',
-              ).then(_setCode),
-            ),
+              );
+              if (context.mounted) _setCode(context, presenter, code);
+            },
+            child: const Text('Add via a QR Code'),
           ),
-          Padding(
-            padding: paddingAll20,
-            child: Selector<VaultGuardianAddPresenter, bool>(
-              selector: (_, presenter) => presenter.canUseClipboard,
-              builder: (_, canUseClipboard, __) => PrimaryButton(
-                text: 'Add via a Text Code',
-                onPressed: canUseClipboard
-                    ? () => _presenter.getCodeFromClipboard().then(_setCode)
-                    : null,
-              ),
-            ),
+        ),
+        // Input QR
+        Padding(
+          padding: paddingAll20,
+          child: OutlinedButton(
+            onPressed: () async {
+              final code = await OnCodeInputDialog.show(context);
+              if (context.mounted) _setCode(context, presenter, code);
+            },
+            child: const Text('Add via a Text Code'),
           ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
 
-  void _setCode(String? code) {
+  void _setCode(
+    BuildContext context,
+    VaultGuardianAddPresenter presenter,
+    String? code,
+  ) {
     try {
-      _presenter.setCode(code);
+      presenter.setCode(code);
+    } on SetCodeEmptyException {
+      OnInvalidDialog.show(context);
     } on SetCodeFailException {
       OnFailDialog.show(context);
     } on SetCodeVersionLowException {
