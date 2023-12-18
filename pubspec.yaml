@@ -2,11 +2,11 @@ name: guardian_keyper
 description: "A Guardian Network-based secrets backup app"
 publish_to: 'none'
 
-version: 2.2.1
+version: 2.2.0
 
 environment:
   sdk: ">=3.2.0 <4.0.0"
-  flutter: ^3.16.2
+  flutter: ^3.16.3
 
 dependencies:
   flutter:
@@ -38,7 +38,7 @@ dependencies:
   vibration: ^1.8.4
   sodium: ^2.3.0
   hive: ^2.2.3
-  nsd: ^2.3.1
+  nsd: ^3.0.0
 
   # Analytics
   sentry_flutter: ^7.13.2
