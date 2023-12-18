@@ -4,19 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 part 'theme_dark.dart';
 
-const clIndigo900 = Color(0xFF1A0244);
-const clIndigo700 = Color(0xFF3C089F);
-const clIndigo500 = Color(0xFF570FE4);
-const clIndigo300 = Color(0xFFA066F5);
-const clSurface = Color(0xFF24035F);
 const clRed = Color(0xFFEC5F59);
 const clGreen = Color(0xFF62D6CB);
 const clGreenDark = Color(0xFF004D45);
-const clBlue = Color(0xFF54BAF9);
 const clYellow = Color(0xFFF19C38);
-const clPurpleLight = Color(0xFFE6DEF8);
 const clWhite = Colors.white;
-const clBlack = Colors.black;
 
 const paddingAll8 = EdgeInsets.all(8);
 const paddingAll20 = EdgeInsets.all(20);
@@ -36,12 +28,6 @@ const radius8 = Radius.circular(8);
 
 final borderRadius8 = BorderRadius.circular(8);
 
-// TBD: remove
-final boxDecoration = BoxDecoration(
-  borderRadius: borderRadius8,
-  color: clSurface,
-);
-
 const styleW600 = TextStyle(fontWeight: FontWeight.w600);
 
 final styleSourceSansPro412 = GoogleFonts.sourceSans3(
@@ -55,7 +41,7 @@ final styleSourceSansPro414 = GoogleFonts.sourceSans3(
 );
 
 final styleSourceSansPro414Purple = GoogleFonts.sourceSans3(
-  color: clPurpleLight,
+  color: colorSchemeDark.onSurface,
   fontSize: 14,
   fontWeight: FontWeight.w400,
 );
@@ -66,7 +52,7 @@ final styleSourceSansPro416 = GoogleFonts.sourceSans3(
 );
 
 final styleSourceSansPro416Purple = GoogleFonts.sourceSans3(
-  color: clPurpleLight,
+  color: colorSchemeDark.onSurface,
   fontSize: 16,
   fontWeight: FontWeight.w400,
 );
@@ -77,7 +63,7 @@ final styleSourceSansPro612 = GoogleFonts.sourceSans3(
 );
 
 final styleSourceSansPro612Purple = GoogleFonts.sourceSans3(
-  color: clPurpleLight,
+  color: colorSchemeDark.onSurface,
   fontSize: 12,
   fontWeight: FontWeight.w600,
 );
@@ -93,7 +79,7 @@ final styleSourceSansPro616 = GoogleFonts.sourceSans3(
 );
 
 final styleSourceSansPro616Purple = GoogleFonts.sourceSans3(
-  color: clPurpleLight,
+  color: colorSchemeDark.onSurface,
   fontSize: 16,
   fontWeight: FontWeight.w600,
 );

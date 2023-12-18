@@ -23,7 +23,7 @@ class OnAskAuthDialog extends AuthDialogBase {
     if (context.mounted) {
       return screenLock(
         context: context,
-        config: AuthDialogBase.screenLockConfig,
+        config: AuthDialogBase.getScreenLockConfig(context),
         keyPadConfig: AuthDialogBase.keyPadConfig,
         secretsConfig: AuthDialogBase.secretsConfig,
         correctString: authManager.passCode,

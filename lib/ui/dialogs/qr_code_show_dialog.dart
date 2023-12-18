@@ -47,7 +47,7 @@ class QRCodeShowDialog extends StatefulWidget {
 }
 
 class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
-  late final _clSurface = Theme.of(context).colorScheme.surface;
+  late final _colorScheme = Theme.of(context).colorScheme;
 
   @override
   void initState() {
@@ -86,7 +86,7 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
               padding: paddingAll20,
               decoration: BoxDecoration(
                 borderRadius: borderRadius8,
-                color: Theme.of(context).colorScheme.surface,
+                color: _colorScheme.surface,
               ),
               width: double.infinity,
               child: ConstrainedBox(
@@ -100,12 +100,12 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
                     QrImageView(
                       data: widget.qrCode,
                       errorCorrectionLevel: QrErrorCorrectLevel.M,
-                      dataModuleStyle: const QrDataModuleStyle(
-                        color: clPurpleLight,
+                      dataModuleStyle: QrDataModuleStyle(
+                        color: _colorScheme.surface,
                         dataModuleShape: QrDataModuleShape.square,
                       ),
-                      eyeStyle: const QrEyeStyle(
-                        color: clPurpleLight,
+                      eyeStyle: QrEyeStyle(
+                        color: _colorScheme.surface,
                         eyeShape: QrEyeShape.square,
                       ),
                       padding: paddingAll20,
@@ -119,7 +119,7 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(24),
-                          color: _clSurface,
+                          color: _colorScheme.surface,
                         ),
                         padding: paddingAll8,
                         child: const SvgPicture(
@@ -149,10 +149,10 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
                     child: Container(
                       alignment: Alignment.center,
                       decoration: ShapeDecoration(
-                        color: _clSurface,
-                        shape: const RoundedRectangleBorder(
-                          side: BorderSide(color: clIndigo700),
-                          borderRadius: BorderRadius.only(
+                        color: _colorScheme.surface,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: _colorScheme.secondary),
+                          borderRadius: const BorderRadius.only(
                             topLeft: radius8,
                             bottomLeft: radius8,
                           ),
@@ -170,9 +170,9 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
                     ),
                   ),
                   Container(
-                    decoration: const ShapeDecoration(
-                      color: clIndigo500,
-                      shape: RoundedRectangleBorder(
+                    decoration: ShapeDecoration(
+                      color: _colorScheme.primary,
+                      shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topRight: radius8,
                           bottomRight: radius8,

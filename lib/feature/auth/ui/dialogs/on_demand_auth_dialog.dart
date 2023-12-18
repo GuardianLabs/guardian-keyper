@@ -20,7 +20,7 @@ class OnDemandAuthDialog {
       return screenLock(
         context: context,
         canCancel: false,
-        config: AuthDialogBase.screenLockConfig,
+        config: AuthDialogBase.getScreenLockConfig(context),
         keyPadConfig: AuthDialogBase.keyPadConfig,
         secretsConfig: AuthDialogBase.secretsConfig,
         correctString: authManager.passCode,

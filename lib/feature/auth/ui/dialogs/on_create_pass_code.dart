@@ -16,7 +16,7 @@ class OnCreatePassCodeDialog {
       context: context,
       canCancel: false,
       digits: passCodeLength,
-      config: AuthDialogBase.screenLockConfig,
+      config: AuthDialogBase.getScreenLockConfig(context),
       keyPadConfig: AuthDialogBase.keyPadConfig,
       secretsConfig: AuthDialogBase.secretsConfig,
       inputController: inputController,

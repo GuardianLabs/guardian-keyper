@@ -88,10 +88,8 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
           TextSpan(text: widget.message.vaultId.name),
         ],
         // Card
-        body: Padding(
-          padding: paddingV20,
-          child: Container(
-            decoration: boxDecoration,
+        body: Card(
+          child: Padding(
             padding: paddingAll20,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

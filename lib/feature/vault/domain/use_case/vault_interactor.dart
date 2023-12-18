@@ -81,6 +81,9 @@ class VaultInteractor
 
   Future<void> takeVaultOwnership(VaultId vaultId) => _vaultRepository.put(
         vaultId.asKey,
-        _vaultRepository.get(vaultId.asKey)!.copyWith(ownerId: selfId),
+        _vaultRepository.get(vaultId.asKey)!.copyWith(
+          ownerId: selfId,
+          guardians: {selfId: ''},
+        ),
       );
 }

@@ -8,7 +8,7 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import '../intro_presenter.dart';
 
 class IntrosPage extends StatelessWidget {
-  static const _pictures = [
+  static const slides = [
     SvgPicture(AssetBytesLoader('assets/images/intro_1.svg.vec')),
     SvgPicture(AssetBytesLoader('assets/images/intro_2.svg.vec')),
     SvgPicture(AssetBytesLoader('assets/images/intro_3.svg.vec')),
@@ -33,18 +33,17 @@ class IntrosPage extends StatelessWidget {
         ' Even in case you’ve lost access to your device.',
   ];
 
-  static final _slideCount = _pictures.length;
-
   const IntrosPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final presenter = context.watch<IntroPresenter>();
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onHorizontalDragEnd: (details) {
         if (details.velocity.pixelsPerSecond.dx < -5) {
-          presenter.nextSlide(_slideCount);
+          presenter.nextSlide();
         } else if (details.velocity.pixelsPerSecond.dx > 5) {
           presenter.previousSlide();
         }
@@ -57,7 +56,7 @@ class IntrosPage extends StatelessWidget {
             // Slide
             Padding(
               padding: paddingB32,
-              child: IntrosPage._pictures[presenter.introStep],
+              child: IntrosPage.slides[presenter.introStep],
             ),
             Padding(
               padding: paddingB12,
@@ -82,7 +81,10 @@ class IntrosPage extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: presenter.nextPage,
-                  child: Text('Skip', style: stylePoppins616),
+                  child: Text(
+                    'Skip',
+                    style: stylePoppins616,
+                  ),
                 ),
                 // Dots
                 Row(
@@ -92,15 +94,19 @@ class IntrosPage extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(right: 8),
                         child: DotColored(
-                          color:
-                              i == presenter.introStep ? clBlue : clIndigo700,
+                          color: i == presenter.introStep
+                              ? colorScheme.tertiary
+                              : colorScheme.secondary,
                         ),
                       ),
                   ],
                 ),
                 TextButton(
-                  onPressed: () => presenter.nextSlide(_slideCount),
-                  child: Text('Next', style: stylePoppins616),
+                  onPressed: presenter.nextSlide,
+                  child: Text(
+                    'Next',
+                    style: stylePoppins616,
+                  ),
                 ),
               ],
             ),

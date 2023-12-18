@@ -26,10 +26,8 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
         titleString: getTitle(message),
-        body: Padding(
-          padding: paddingV20,
-          child: Container(
-            decoration: boxDecoration,
+        body: Card(
+          child: Padding(
             padding: paddingAll20,
             child: Column(
               mainAxisSize: MainAxisSize.min,

@@ -27,8 +27,7 @@ class HomeVaultsPage extends StatelessWidget {
                   subtitle: 'The Vaults is a place where you can securely keep '
                       'your secrets such as seed phrases or passwords.',
                 ),
-              Container(
-                color: clIndigo900,
+              Padding(
                 padding: paddingV20,
                 child: FilledButton(
                   child: const Text('Add a new Vault'),

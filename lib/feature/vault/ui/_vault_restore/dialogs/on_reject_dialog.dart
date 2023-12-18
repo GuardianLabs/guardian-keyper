@@ -10,7 +10,10 @@ class OnRejectDialog extends StatelessWidget {
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (_) => OnRejectDialog(peerName: peerId, vaultName: vaultId),
+        builder: (_) => OnRejectDialog(
+          peerName: peerId,
+          vaultName: vaultId,
+        ),
       );
 
   const OnRejectDialog({
@@ -33,10 +36,8 @@ class OnRejectDialog extends StatelessWidget {
           ),
           TextSpan(text: vaultName, style: styleW600),
         ],
-        body: Padding(
-          padding: paddingV20,
-          child: Container(
-            decoration: boxDecoration,
+        body: Card(
+          child: Padding(
             padding: paddingAll20,
             child: Text(
               'Since Guardian rejected ownership transfer, '

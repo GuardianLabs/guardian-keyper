@@ -260,12 +260,17 @@ class BottomSheetWidget extends StatelessWidget {
                   ),
                 ),
               ),
-            if (body != null) body!,
+            if (body != null)
+              Padding(
+                padding: paddingT20,
+                child: body,
+              ),
             if (footer != null)
               Padding(
-                padding: paddingV20,
+                padding: paddingT20,
                 child: footer,
               ),
+            const Padding(padding: paddingB20),
           ],
         ),
       );

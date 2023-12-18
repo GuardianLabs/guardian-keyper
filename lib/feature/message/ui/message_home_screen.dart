@@ -29,7 +29,7 @@ class MessageHomeScreen extends StatelessWidget {
             // Body
             body: Column(
               children: [
-                const Divider(color: clIndigo500, height: 2, thickness: 2),
+                const Divider(height: 2),
                 Container(
                   height: 20,
                   color: Theme.of(context).colorScheme.background,

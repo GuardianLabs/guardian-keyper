@@ -87,7 +87,7 @@ class _ScannerOverlay extends CustomPainter {
     ..strokeWidth = 8;
 
   final _maskPaint = Paint()
-    ..color = clIndigo900.withOpacity(0.5)
+    ..color = Colors.black54
     ..style = PaintingStyle.fill
     ..blendMode = BlendMode.dstOut;
 

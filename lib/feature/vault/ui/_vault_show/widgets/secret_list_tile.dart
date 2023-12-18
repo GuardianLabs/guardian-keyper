@@ -17,7 +17,6 @@ class SecretListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        enabled: vault.isNotRestricted,
         title: Text(secretId.name),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,

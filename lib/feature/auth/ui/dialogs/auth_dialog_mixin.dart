@@ -33,20 +33,6 @@ abstract class AuthDialogBase {
     ),
   );
 
-  static final screenLockConfig = ScreenLockConfig(
-    backgroundColor: clIndigo900,
-    textStyle: stylePoppins616,
-    titleTextStyle: stylePoppins620,
-    buttonStyle: ButtonStyle(
-      backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
-      foregroundColor: const MaterialStatePropertyAll(Colors.white),
-      side: const MaterialStatePropertyAll<BorderSide>(BorderSide.none),
-      textStyle: MaterialStatePropertyAll(
-        stylePoppins616.copyWith(overflow: TextOverflow.visible),
-      ),
-    ),
-  );
-
   static final wrongPassCodeSnackbar = buildSnackBar(
     text: 'Wrong passcode!',
     isFloating: true,
@@ -58,4 +44,21 @@ abstract class AuthDialogBase {
       (ScreenSize.get(MediaQuery.of(context).size) is ScreenSmall
           ? paddingV12
           : paddingV32);
+
+  static ScreenLockConfig getScreenLockConfig(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return ScreenLockConfig(
+      backgroundColor: colorScheme.background,
+      textStyle: stylePoppins616,
+      titleTextStyle: stylePoppins620,
+      buttonStyle: ButtonStyle(
+        backgroundColor: MaterialStatePropertyAll(colorScheme.background),
+        foregroundColor: MaterialStatePropertyAll(colorScheme.onBackground),
+        side: const MaterialStatePropertyAll<BorderSide>(BorderSide.none),
+        textStyle: MaterialStatePropertyAll(
+          stylePoppins616.copyWith(overflow: TextOverflow.visible),
+        ),
+      ),
+    );
+  }
 }

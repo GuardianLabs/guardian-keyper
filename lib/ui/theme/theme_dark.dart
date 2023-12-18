@@ -1,57 +1,64 @@
 part of 'theme.dart';
 
 const systemStyleDark = SystemUiOverlayStyle(
-  statusBarColor: clIndigo900,
+  statusBarColor: Color(0xFF1A0244),
   statusBarBrightness: Brightness.dark,
   statusBarIconBrightness: Brightness.light,
 );
 
+final colorSchemeDark = ColorScheme.fromSeed(
+  brightness: Brightness.dark,
+  seedColor: const Color(0xFF570FE4),
+  primary: const Color(0xFF570FE4),
+  onPrimary: clWhite,
+  secondary: const Color(0xFF3C089F),
+  onSecondary: clWhite,
+  tertiary: const Color(0xFFA066F5),
+  onTertiary: clWhite,
+  error: clRed,
+  onError: clYellow,
+  background: const Color(0xFF1A0244),
+  onBackground: clWhite,
+  surface: const Color(0xFF24035F),
+  onSurface: const Color(0xFFE6DEF8),
+);
+
 final themeDark = ThemeData(
   // Color Scheme
-  colorScheme: ColorScheme.fromSeed(
-    brightness: Brightness.dark,
-    seedColor: clIndigo500,
-    primary: clIndigo500,
-    onPrimary: clWhite,
-    secondary: clIndigo700,
-    onSecondary: clWhite,
-    tertiary: clIndigo300,
-    onTertiary: clWhite,
-    error: clRed,
-    onError: clYellow,
-    background: clIndigo900,
-    onBackground: clWhite,
-    surface: clSurface,
-    onSurface: clWhite,
-  ),
-  scaffoldBackgroundColor: clIndigo900,
-  canvasColor: clIndigo900,
+  colorScheme: colorSchemeDark,
+  canvasColor: colorSchemeDark.background,
+  scaffoldBackgroundColor: colorSchemeDark.background,
   // AppBar
   appBarTheme: AppBarTheme(
-    backgroundColor: clIndigo900,
+    backgroundColor: colorSchemeDark.background,
     centerTitle: true,
     titleTextStyle: stylePoppins616,
     toolbarHeight: 68,
   ),
   // Bottom Navigation Bar
-  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
-    backgroundColor: clIndigo900,
+    backgroundColor: colorSchemeDark.background,
     selectedItemColor: clGreen,
   ),
   // Bottom Sheet
-  bottomSheetTheme: const BottomSheetThemeData(
-    backgroundColor: clIndigo900,
-    shape: RoundedRectangleBorder(
+  bottomSheetTheme: BottomSheetThemeData(
+    backgroundColor: colorSchemeDark.background,
+    shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
     ),
   ),
   // Card
   cardTheme: CardTheme(
-    color: clSurface,
+    color: colorSchemeDark.surface,
     elevation: 0,
     margin: EdgeInsets.zero,
     shape: _shapeBorder,
+  ),
+  // Divider
+  dividerTheme: DividerThemeData(
+    color: colorSchemeDark.primary,
+    thickness: 2,
   ),
   // Expansion Panel
   expansionTileTheme: ExpansionTileThemeData(
@@ -69,8 +76,9 @@ final themeDark = ThemeData(
       shape: _buttonShape,
       textStyle: MaterialStateProperty.all<TextStyle>(stylePoppins616),
       backgroundColor: MaterialStateProperty.resolveWith<Color>(
-        (states) =>
-            states.contains(MaterialState.disabled) ? clIndigo700 : clIndigo500,
+        (states) => states.contains(MaterialState.disabled)
+            ? colorSchemeDark.secondary
+            : colorSchemeDark.primary,
       ),
     ),
   ),
@@ -80,8 +88,8 @@ final themeDark = ThemeData(
   inputDecorationTheme: InputDecorationTheme(
     border: OutlineInputBorder(
       borderRadius: borderRadius8,
-      borderSide: const BorderSide(
-        color: clIndigo300,
+      borderSide: BorderSide(
+        color: colorSchemeDark.tertiary,
         width: 2,
       ),
     ),
@@ -89,7 +97,7 @@ final themeDark = ThemeData(
   ),
   // ListTile
   listTileTheme: ListTileThemeData(
-    tileColor: clSurface,
+    tileColor: colorSchemeDark.surface,
     shape: _shapeBorder,
   ),
   // Outlined Button
@@ -101,7 +109,7 @@ final themeDark = ThemeData(
       (states) => BorderSide(
           color: states.contains(MaterialState.disabled)
               ? const Color(0xFF2E4283)
-              : clIndigo500),
+              : colorSchemeDark.primary),
     ),
     shape: _buttonShape,
     textStyle: MaterialStateProperty.all<TextStyle>(stylePoppins616),
@@ -116,15 +124,18 @@ final themeDark = ThemeData(
   switchTheme: SwitchThemeData(
     thumbColor: MaterialStateProperty.all<Color>(clWhite),
     trackColor: MaterialStateProperty.resolveWith<Color>((states) =>
-        states.contains(MaterialState.selected) ? clIndigo300 : clIndigo700),
-    trackOutlineColor: MaterialStateProperty.all<Color>(clIndigo700),
+        states.contains(MaterialState.selected)
+            ? colorSchemeDark.tertiary
+            : colorSchemeDark.secondary),
+    trackOutlineColor:
+        MaterialStateProperty.all<Color>(colorSchemeDark.secondary),
     trackOutlineWidth: MaterialStateProperty.all<double>(0),
   ),
   // TabBar
-  tabBarTheme: const TabBarTheme(
+  tabBarTheme: TabBarTheme(
     indicator: BoxDecoration(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-      color: clIndigo700,
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+      color: colorSchemeDark.secondary,
     ),
     indicatorSize: TabBarIndicatorSize.tab,
     labelPadding: EdgeInsets.zero,
@@ -133,8 +144,8 @@ final themeDark = ThemeData(
   ),
   // Text
   textTheme: TextTheme(
-    bodySmall: const TextStyle(
-      color: clPurpleLight,
+    bodySmall: TextStyle(
+      color: colorSchemeDark.onSurface,
       fontSize: 10,
       fontWeight: FontWeight.w600,
       overflow: TextOverflow.ellipsis,

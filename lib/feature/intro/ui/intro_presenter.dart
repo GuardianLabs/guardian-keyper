@@ -5,6 +5,8 @@ import 'package:guardian_keyper/ui/presenters/page_presenter_base.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 
+import 'pages/intros_page.dart';
+
 export 'package:provider/provider.dart';
 
 class IntroPresenter extends PagePresenterBase {
@@ -32,8 +34,8 @@ class IntroPresenter extends PagePresenterBase {
 
   bool get hasBiometrics => _hasBiometrics;
 
-  void nextSlide(int pageCount) {
-    if (_introStep == pageCount - 1) {
+  void nextSlide() {
+    if (_introStep == IntrosPage.slides.length - 1) {
       nextPage();
     } else {
       _introStep++;

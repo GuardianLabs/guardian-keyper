@@ -57,21 +57,21 @@ class IconOf extends StatelessWidget {
   }) : icon = 'assets/icons/passcode.svg';
 
   @override
-  Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-          color: bgColor ?? Theme.of(context).colorScheme.surface,
-          shape: BoxShape.circle,
-        ),
-        height: size,
-        width: size,
-        child: SvgPicture.asset(
-          icon,
-          colorFilter: color == null
-              ? null
-              : ColorFilter.mode(
-                  color!,
-                  BlendMode.srcIn,
-                ),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final iconAsset = SvgPicture.asset(
+      icon,
+      colorFilter:
+          color == null ? null : ColorFilter.mode(color!, BlendMode.srcIn),
+      height: size,
+      width: size,
+    );
+    return bgColor == null
+        ? iconAsset
+        : Container(
+            decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
+            height: size,
+            width: size,
+            child: iconAsset,
+          );
+  }
 }

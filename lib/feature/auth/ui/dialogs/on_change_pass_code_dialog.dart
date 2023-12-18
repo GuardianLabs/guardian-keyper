@@ -13,7 +13,7 @@ class OnChangePassCodeDialog {
     final padding = AuthDialogBase.getPadding(context);
     return screenLock(
       context: context,
-      config: AuthDialogBase.screenLockConfig,
+      config: AuthDialogBase.getScreenLockConfig(context),
       keyPadConfig: AuthDialogBase.keyPadConfig,
       secretsConfig: AuthDialogBase.secretsConfig,
       correctString: authManager.passCode,
@@ -34,7 +34,7 @@ class OnChangePassCodeDialog {
         screenLockCreate(
           context: context,
           digits: passCodeLength,
-          config: AuthDialogBase.screenLockConfig,
+          config: AuthDialogBase.getScreenLockConfig(context),
           keyPadConfig: AuthDialogBase.keyPadConfig,
           secretsConfig: AuthDialogBase.secretsConfig,
           inputController: inputController,

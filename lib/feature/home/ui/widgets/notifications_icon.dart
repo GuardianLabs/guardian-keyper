@@ -43,7 +43,7 @@ class NotificationsIcon extends StatelessWidget {
                     child: Text(
                       count > 9 ? '$count+' : count.toString(),
                       style: styleSourceSansPro612.copyWith(
-                        color: clIndigo900,
+                        color: Theme.of(context).colorScheme.background,
                       ),
                     ),
                   ),
