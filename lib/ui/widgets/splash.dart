@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 class Splash extends StatefulWidget {
@@ -12,7 +13,10 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> with TickerProviderStateMixin {
   late final _logoSize = MediaQuery.of(context).size.width / 3;
 
-  late final _backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+  late final _backgroundColor =
+      MediaQuery.of(context).platformBrightness == Brightness.light
+          ? themeLight.canvasColor
+          : themeDark.canvasColor;
 
   late final _controller = AnimationController(
     duration: const Duration(seconds: 2),

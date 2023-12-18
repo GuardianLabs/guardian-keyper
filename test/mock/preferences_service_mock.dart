@@ -5,7 +5,10 @@ class PreferencesServiceMock implements PreferencesService {
   late String pathAppDir;
 
   @override
-  Future<T?> get<T extends Object>(PreferencesKeys key) {
+  Future<T?> get<T extends Object>(
+    PreferencesKeys key, [
+    T? defaultValue,
+  ]) {
     throw UnimplementedError();
   }
 
@@ -18,7 +21,7 @@ class PreferencesServiceMock implements PreferencesService {
   String get pathDataDir => throw UnimplementedError();
 
   @override
-  Future<void> set<T extends Object>(PreferencesKeys key, T value) {
+  Future<T> set<T extends Object>(PreferencesKeys key, T value) {
     throw UnimplementedError();
   }
 

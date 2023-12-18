@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:guardian_keyper/data/services/platform_service.dart';
 import 'package:guardian_keyper/data/services/analytics_service.dart';
 import 'package:guardian_keyper/data/services/preferences_service.dart';
+import 'package:guardian_keyper/feature/settings/data/settings_repository.dart';
 
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
@@ -13,12 +14,15 @@ import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.d
 import 'package:guardian_keyper/feature/message/data/message_repository.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
-abstract final class DI {
+class DI {
   static bool _isInited = false;
 
-  static bool get isInited => _isInited;
+  const DI();
 
-  static Future<void> init() async {
+  bool get isInited => _isInited;
+  bool get isNotInited => !_isInited;
+
+  Future<void> init() async {
     if (_isInited) return;
 
     // Services
@@ -31,7 +35,12 @@ abstract final class DI {
     GetIt.I.registerSingleton<AuthManager>(await AuthManager().init());
     GetIt.I.registerSingleton<NetworkManager>(await NetworkManager().init());
     // Repositories
-    GetIt.I.registerSingleton<VaultRepository>(await VaultRepository().init());
+    GetIt.I.registerSingleton<SettingsRepository>(
+      await SettingsRepository().init(),
+    );
+    GetIt.I.registerSingleton<VaultRepository>(
+      await VaultRepository().init(),
+    );
     GetIt.I.registerSingleton<MessageRepository>(
       await MessageRepository().init(),
     );

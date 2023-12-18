@@ -152,7 +152,7 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           items: HomeScreen._buildNavBarItems(
             Theme.of(context).extension<BrandColors>()!.highlightColor,
           ),
-          onTap: _gotoPage,
+          onTap: (int page) => setState(() => _currentTab = page),
         ),
         // ignore: deprecated_member_use
         body: WillPopScope(
@@ -179,12 +179,4 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
         ),
       );
-
-  void gotoVaults() =>
-      _gotoPage(HomeScreen._tabs.indexWhere((e) => e is HomeVaultsPage));
-
-  void gotoShards() =>
-      _gotoPage(HomeScreen._tabs.indexWhere((e) => e is HomeShardsPage));
-
-  void _gotoPage(int page) => setState(() => _currentTab = page);
 }

@@ -12,8 +12,11 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isSystemThemeDark =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
     return ChangeNotifierProvider(
-      create: (_) => SettingsPresenter(),
+      create: (_) => SettingsPresenter(isSystemThemeDark: isSystemThemeDark),
+      // TBD: Try to use builder
       child: ScaffoldSafe(
         child: Column(
           children: [
@@ -27,7 +30,7 @@ class SettingsScreen extends StatelessWidget {
               child: Consumer<SettingsPresenter>(
                 builder: (context, presenter, __) {
                   final bgColor = theme.colorScheme.secondary;
-                  final items = [
+                  final items = <Widget>[
                     // Change Device Name
                     ListTile(
                       leading: IconOf.user(bgColor: bgColor),
@@ -72,6 +75,39 @@ class SettingsScreen extends StatelessWidget {
                       ),
                       value: presenter.isBootstrapEnabled,
                       onChanged: presenter.setBootstrap,
+                    ),
+                    // Theme Mode
+                    ListTile(
+                      leading: const Icon(
+                        Icons.brightness_medium_outlined,
+                        size: 40,
+                      ),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Theme'),
+                          SegmentedButton<ThemeMode>(
+                            segments: const [
+                              ButtonSegment(
+                                label: Text('Light'),
+                                value: ThemeMode.light,
+                              ),
+                              ButtonSegment(
+                                label: Text('System'),
+                                value: ThemeMode.system,
+                              ),
+                              ButtonSegment(
+                                label: Text('Dark'),
+                                value: ThemeMode.dark,
+                              ),
+                            ],
+                            emptySelectionAllowed: false,
+                            multiSelectionEnabled: false,
+                            selected: presenter.selectedThemeMode,
+                            onSelectionChanged: presenter.setThemeMode,
+                          ),
+                        ],
+                      ),
                     ),
                   ];
                   return ListView.separated(

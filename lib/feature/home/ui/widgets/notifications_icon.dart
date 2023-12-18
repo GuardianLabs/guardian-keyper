@@ -22,19 +22,28 @@ class NotificationsIcon extends StatelessWidget {
     final messageInteractor = GetIt.I<MessageInteractor>();
     return StreamBuilder(
       stream: messageInteractor.watch(),
-      builder: (_, __) => Badge.count(
-        count: messageInteractor.messages.where((e) => e.isReceived).length,
-        backgroundColor: brandColors.dangerColor,
-        textColor: theme.scaffoldBackgroundColor,
-        child: SvgPicture.asset(
+      builder: (_, __) {
+        final count =
+            messageInteractor.messages.where((e) => e.isReceived).length;
+        final icon = SvgPicture.asset(
           'assets/icons/home_notifications.svg',
           colorFilter: isSelected
               ? ColorFilter.mode(brandColors.highlightColor, BlendMode.srcIn)
               : null,
           height: iconSize,
           width: iconSize,
-        ),
-      ),
+        );
+        return count == 0
+            ? icon
+            : Badge.count(
+                count: messageInteractor.messages
+                    .where((e) => e.isReceived)
+                    .length,
+                backgroundColor: brandColors.dangerColor,
+                textColor: theme.scaffoldBackgroundColor,
+                child: icon,
+              );
+      },
     );
   }
 }

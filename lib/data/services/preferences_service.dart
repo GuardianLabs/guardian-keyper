@@ -12,6 +12,7 @@ enum PreferencesKeys {
   keyDeviceName,
   keyIsBootstrapEnabled,
   keyIsBiometricsEnabled,
+  keyIsDarkThemeMode,
 }
 
 class PreferencesService {
@@ -49,36 +50,42 @@ class PreferencesService {
     return this;
   }
 
-  Future<T?> get<T extends Object>(PreferencesKeys key) => _storage
-      .read(
-        key: key.name,
-        aOptions: _aOptions,
-        iOptions: _iOptions,
-      )
-      .then((value) => value == null
-          ? null
-          : switch (T) {
-              const (String) => value as T,
-              const (int) => int.parse(value) as T,
-              const (bool) => bool.parse(value) as T,
-              const (Uint8List) => base64Decode(value) as T,
-              _ => throw const ValueFormatException(),
-            });
+  Future<T?> get<T extends Object>(
+    PreferencesKeys key, [
+    T? defaultValue,
+  ]) async {
+    final value = await _storage.read(
+      key: key.name,
+      aOptions: _aOptions,
+      iOptions: _iOptions,
+    );
+    return value == null
+        ? defaultValue
+        : switch (T) {
+            const (String) => value as T,
+            const (int) => int.parse(value) as T,
+            const (bool) => bool.parse(value) as T,
+            const (Uint8List) => base64Decode(value) as T,
+            _ => throw const ValueFormatException(),
+          };
+  }
 
-  Future<void> set<T extends Object>(PreferencesKeys key, T value) =>
-      switch (T) {
-        const (int) || const (bool) || const (String) => _storage.write(
-            key: key.name,
-            value: value.toString(),
-            aOptions: _aOptions,
-            iOptions: _iOptions,
-          ),
-        const (Uint8List) => _storage.write(
-            key: key.name,
-            value: base64UrlEncode(value as Uint8List),
-          ),
-        _ => throw const ValueFormatException(),
-      };
+  Future<T> set<T extends Object>(PreferencesKeys key, T value) async {
+    await switch (T) {
+      const (int) || const (bool) || const (String) => _storage.write(
+          key: key.name,
+          value: value.toString(),
+          aOptions: _aOptions,
+          iOptions: _iOptions,
+        ),
+      const (Uint8List) => _storage.write(
+          key: key.name,
+          value: base64UrlEncode(value as Uint8List),
+        ),
+      _ => throw const ValueFormatException(),
+    };
+    return value;
+  }
 
   Future<void> delete(PreferencesKeys key) => _storage.delete(key: key.name);
 }
