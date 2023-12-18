@@ -330,24 +330,31 @@ class DotColored extends StatelessWidget {
       );
 }
 
-// TBD: remove
-SnackBar buildSnackBar({
+SnackBar buildSnackBar(
+  BuildContext context, {
   String? text,
   List<TextSpan>? textSpans,
   Duration duration = snackBarDuration,
   bool isFloating = false,
   bool isError = false,
-}) =>
-    SnackBar(
-      duration: duration,
-      behavior: isFloating ? SnackBarBehavior.floating : null,
-      margin: paddingAll20,
-      backgroundColor: isError ? const Color(0xFFEC5F59) : null,
-      content: RichText(
-        text: TextSpan(
-          text: text,
-          children: textSpans,
-          style: TextStyle(color: isError ? Colors.white : null),
-        ),
+}) {
+  final theme = Theme.of(context);
+  return SnackBar(
+    duration: duration,
+    behavior: isFloating ? SnackBarBehavior.floating : null,
+    margin: paddingAll20,
+    backgroundColor:
+        isError ? theme.colorScheme.error : theme.snackBarTheme.backgroundColor,
+    content: RichText(
+      text: TextSpan(
+        text: text,
+        children: textSpans,
+        style: isError
+            ? theme.snackBarTheme.contentTextStyle!.copyWith(
+                color: theme.colorScheme.onError,
+              )
+            : theme.snackBarTheme.contentTextStyle,
       ),
-    );
+    ),
+  );
+}

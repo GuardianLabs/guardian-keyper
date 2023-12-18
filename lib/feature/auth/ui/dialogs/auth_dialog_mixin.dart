@@ -33,12 +33,6 @@ abstract class AuthDialogBase {
     ),
   );
 
-  static final wrongPassCodeSnackbar = buildSnackBar(
-    text: 'Wrong passcode!',
-    isFloating: true,
-    isError: true,
-  );
-
   static EdgeInsets getPadding(BuildContext context) =>
       paddingH20 +
       (ScreenSize.get(MediaQuery.of(context).size) is ScreenSmall

@@ -156,6 +156,7 @@ final themeData = ThemeData(
   // SnackBar
   snackBarTheme: const SnackBarThemeData(
     behavior: SnackBarBehavior.floating,
+    showCloseIcon: true,
   ),
   // Text
   textTheme: textTheme,

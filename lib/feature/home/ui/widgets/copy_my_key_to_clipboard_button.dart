@@ -36,6 +36,7 @@ class _CopyMyKeyToClipboardButtonState
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     buildSnackBar(
+                      context,
                       text: 'Public Key has been copied to clipboard.',
                     ),
                   );

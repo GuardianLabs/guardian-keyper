@@ -1,7 +1,7 @@
-import 'package:flutter_screen_lock/flutter_screen_lock.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 
+import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 
 import 'auth_dialog_mixin.dart';
@@ -42,8 +42,12 @@ class OnAskAuthDialog extends AuthDialogBase {
         },
         onError: (_) {
           authManager.vibrate();
-          ScaffoldMessenger.of(context)
-              .showSnackBar(AuthDialogBase.wrongPassCodeSnackbar);
+          ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+            context,
+            text: 'Wrong passcode!',
+            isFloating: true,
+            isError: true,
+          ));
         },
       );
     }

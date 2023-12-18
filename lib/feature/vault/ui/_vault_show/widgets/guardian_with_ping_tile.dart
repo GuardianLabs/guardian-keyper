@@ -36,10 +36,12 @@ class _GuardianWithPingTileState extends State<GuardianWithPingTile> {
             final msElapsed =
                 DateTime.now().difference(startedAt).inMilliseconds;
             ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+              context,
               text: '${widget.guardian.name} is online. Ping $msElapsed ms.',
             ));
           } else {
             ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+              context,
               text: 'Couldn’t reach out to ${widget.guardian.name}.',
               isError: true,
             ));

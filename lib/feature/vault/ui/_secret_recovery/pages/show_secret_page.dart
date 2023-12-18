@@ -7,13 +7,13 @@ import 'package:guardian_keyper/feature/auth/ui/dialogs/on_ask_auth_dialog.dart'
 import '../vault_secret_recovery_presenter.dart';
 
 class ShowSecretPage extends StatelessWidget {
-  static const _mask = SvgPicture(AssetBytesLoader(
-    'assets/images/secret_mask.svg.vec',
-  ));
-
-  static final _snackBar = buildSnackBar(
-    text: 'Secret is copied to your clipboard.',
+  static const _mask = SvgPicture(
+    AssetBytesLoader(
+      'assets/images/secret_mask.svg.vec',
+    ),
   );
+
+  static const _snack = 'Secret is copied to your clipboard.';
 
   const ShowSecretPage({super.key});
 
@@ -83,7 +83,10 @@ class ShowSecretPage extends StatelessWidget {
                               if (context.mounted) {
                                 if (isOk) {
                                   ScaffoldMessenger.of(context)
-                                      .showSnackBar(_snackBar);
+                                      .showSnackBar(buildSnackBar(
+                                    context,
+                                    text: _snack,
+                                  ));
                                 } else {
                                   await OnAskAuthDialog.show(
                                     context,
@@ -92,7 +95,10 @@ class ShowSecretPage extends StatelessWidget {
                                           await presenter.onUnlockedCopy();
                                       if (isCopied && context.mounted) {
                                         ScaffoldMessenger.of(context)
-                                            .showSnackBar(_snackBar);
+                                            .showSnackBar(buildSnackBar(
+                                          context,
+                                          text: _snack,
+                                        ));
                                       }
                                     },
                                   );

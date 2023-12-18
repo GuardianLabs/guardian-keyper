@@ -22,6 +22,7 @@ class _LoadingPageState extends State<LoadingPage> {
       if (message.isAccepted) {
         ScaffoldMessenger.of(context).showSnackBar(
           buildSnackBar(
+            context,
             textSpans: [
               const TextSpan(text: 'You have successfully added '),
               TextSpan(text: message.peerId.name, style: styleW600),

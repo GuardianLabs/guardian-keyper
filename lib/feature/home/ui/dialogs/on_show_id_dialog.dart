@@ -58,6 +58,7 @@ class OnShowIdDialog extends StatelessWidget {
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
                         buildSnackBar(
+                          context,
                           text: 'Public Key has been copied to clipboard.',
                         ),
                       );

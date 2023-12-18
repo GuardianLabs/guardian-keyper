@@ -160,7 +160,10 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             }
             _lastExitTryAt = now;
             ScaffoldMessenger.of(context).showSnackBar(
-              buildSnackBar(text: 'Tap back again to exit'),
+              buildSnackBar(
+                context,
+                text: 'Tap back again to exit',
+              ),
             );
             return false;
           },
