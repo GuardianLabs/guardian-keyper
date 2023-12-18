@@ -32,7 +32,7 @@ class NetworkService {
       return (await DeviceInfoPlugin().androidInfo).model;
     }
     if (Platform.isIOS) {
-      return (await DeviceInfoPlugin().iosInfo).model ?? undefinedName;
+      return (await DeviceInfoPlugin().iosInfo).model;
     }
     return undefinedName;
   }

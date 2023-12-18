@@ -58,22 +58,22 @@ class PreferencesService {
       .then((value) => value == null
           ? null
           : switch (T) {
-              String => value as T,
-              int => int.tryParse(value) as T,
-              bool => bool.tryParse(value) as T,
-              Uint8List => base64Decode(value) as T,
+              const (String) => value as T,
+              const (int) => int.tryParse(value) as T,
+              const (bool) => bool.tryParse(value) as T,
+              const (Uint8List) => base64Decode(value) as T,
               _ => throw const ValueFormatException(),
             });
 
   Future<void> set<T extends Object>(PreferencesKeys key, T value) =>
       switch (T) {
-        int || bool || String => _storage.write(
+        const (int) || const (bool) || const (String) => _storage.write(
             key: key.name,
             value: value.toString(),
             aOptions: _aOptions,
             iOptions: _iOptions,
           ),
-        Uint8List => _storage.write(
+        const (Uint8List) => _storage.write(
             key: key.name,
             value: base64UrlEncode(value as Uint8List),
           ),

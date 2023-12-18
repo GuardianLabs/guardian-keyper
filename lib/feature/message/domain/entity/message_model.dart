@@ -66,8 +66,8 @@ class MessageModel extends Serializable {
   late final int? payloadTypeId = payload == null
       ? null
       : switch (payload.runtimeType) {
-          Vault => Vault.typeId,
-          SecretShard => SecretShard.typeId,
+          const (Vault) => Vault.typeId,
+          const (SecretShard) => SecretShard.typeId,
           _ => throw const FormatException('Unsupported payload type!'),
         };
 
