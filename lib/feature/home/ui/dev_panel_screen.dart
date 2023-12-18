@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
@@ -33,6 +34,19 @@ class DevPanelScreen extends StatelessWidget {
       ListTile(
         title: const Text('show Intro'),
         onTap: () => Navigator.of(context).pushNamed(routeIntro),
+      ),
+      ListTile(
+        title: const Text('Clear all Settings'),
+        onTap: () async {
+          await GetIt.I<SettingsRepository>().clear();
+          if (context.mounted) {
+            showSnackBar(
+              context,
+              text: 'Settings has been cleared!',
+              isFloating: true,
+            );
+          }
+        },
       ),
     ];
     return ScaffoldSafe(

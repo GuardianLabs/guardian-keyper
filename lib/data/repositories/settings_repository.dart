@@ -65,7 +65,9 @@ class SettingsRepository {
                 isDeleted: e.deleted,
               ));
 
-  Future<void> flush() => _storage.flush().then((value) => _storage.compact());
+  Future<void> clear() => _storage.clear().then((_) => _storage.compact());
+
+  Future<void> flush() => _storage.flush().then((_) => _storage.compact());
 
   Uint8List? _tryParseBase64(String? value) {
     if (value == null) return null;
