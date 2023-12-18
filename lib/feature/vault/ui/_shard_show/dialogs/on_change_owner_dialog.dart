@@ -64,9 +64,9 @@ class OnChangeOwnerDialog extends StatelessWidget {
             const Padding(padding: paddingT20),
             SizedBox(
               width: double.infinity,
-              child: TertiaryButton(
-                text: 'Keep current Owner',
+              child: OutlinedButton(
                 onPressed: Navigator.of(context).pop,
+                child: const Text('Keep current Owner'),
               ),
             ),
           ],

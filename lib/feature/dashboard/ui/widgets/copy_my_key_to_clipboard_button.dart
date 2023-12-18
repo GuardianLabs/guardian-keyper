@@ -5,10 +5,13 @@ import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import '../dashboard_presenter.dart';
-
 class CopyMyKeyToClipboardButton extends StatefulWidget {
-  const CopyMyKeyToClipboardButton({super.key});
+  const CopyMyKeyToClipboardButton({
+    required this.id,
+    super.key,
+  });
+
+  final String id;
 
   @override
   State<CopyMyKeyToClipboardButton> createState() =>
@@ -17,21 +20,19 @@ class CopyMyKeyToClipboardButton extends StatefulWidget {
 
 class _CopyMyKeyToClipboardButtonState
     extends State<CopyMyKeyToClipboardButton> {
-  bool isDisabled = false;
+  bool _isDisabled = false;
 
   @override
   Widget build(BuildContext context) => IconButton(
         icon: const Icon(Icons.copy, size: 20),
-        onPressed: isDisabled
+        onPressed: _isDisabled
             ? null
             : () async {
-                await Clipboard.setData(ClipboardData(
-                  text: context.read<DashboardPresenter>().selfId.asHex,
-                ));
-                setState(() => isDisabled = true);
+                await Clipboard.setData(ClipboardData(text: widget.id));
+                setState(() => _isDisabled = true);
                 Timer(
                   snackBarDuration,
-                  () => setState(() => isDisabled = false),
+                  () => setState(() => _isDisabled = false),
                 );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(

@@ -2,6 +2,7 @@ const maxForwardsLimit = 3;
 const maxStoredHeaders = 10;
 const maxSecretLength = 256;
 const passCodeLength = 6;
+const shortKeyLength = 12;
 const maxNameLength = 25;
 const minNameLength = 3;
 const defaultPort = 2022;

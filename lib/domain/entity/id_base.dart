@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:collection/collection.dart';
 
+import 'package:guardian_keyper/consts.dart';
+
 import 'serializable.dart';
 
 @immutable
@@ -41,7 +43,7 @@ abstract class IdBase extends Serializable {
   @override
   String toString() => asKey;
 
-  String toHexShort([int count = 12]) => asHex.length > count * 2
+  String toHexShort([int count = shortKeyLength]) => asHex.length > count * 2
       // ignore: lines_longer_than_80_chars
       ? '0x${asHex.substring(0, count)}...${asHex.substring(asHex.length - count)}'
       : '0x$asHex';

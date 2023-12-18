@@ -253,30 +253,6 @@ class PrimaryButton extends StatelessWidget {
       );
 }
 
-class TertiaryButton extends StatelessWidget {
-  const TertiaryButton({
-    required this.text,
-    required this.onPressed,
-    super.key,
-  });
-
-  final String text;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) => OutlinedButton(
-        onPressed: onPressed,
-        style: ButtonStyle(
-          side: const MaterialStatePropertyAll(BorderSide(
-            color: clBlue,
-            width: 2,
-          )),
-          textStyle: MaterialStatePropertyAll(stylePoppins616),
-        ),
-        child: Text(text),
-      );
-}
-
 class BottomSheetWidget extends StatelessWidget {
   const BottomSheetWidget({
     super.key,
