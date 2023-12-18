@@ -28,7 +28,7 @@ class OnVaultTransferDialog extends StatelessWidget {
             // Header
             const HeaderBar(
               caption: 'Assist with a Vault',
-              backButton: HeaderBarBackButton(),
+              leftButton: HeaderBarButton.back(),
             ),
             // Body
             const Padding(

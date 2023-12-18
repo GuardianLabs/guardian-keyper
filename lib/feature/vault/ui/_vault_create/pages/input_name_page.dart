@@ -12,10 +12,10 @@ class InputNamePage extends StatelessWidget {
           // Header
           HeaderBar(
             caption: 'Name the Vault',
-            backButton: HeaderBarBackButton(
+            leftButton: HeaderBarButton.back(
               onPressed: context.read<VaultCreatePresenter>().previousPage,
             ),
-            closeButton: const HeaderBarCloseButton(),
+            rightButton: const HeaderBarButton.close(),
           ),
           // Body
           Expanded(

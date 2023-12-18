@@ -35,8 +35,8 @@ class _OnCodeInputDialogState extends State<OnCodeInputDialog> {
           // Header
           HeaderBar(
             caption: 'Add via a Text Code',
-            backButton: const HeaderBarBackButton(),
-            closeButton: HeaderBarCloseButton(
+            leftButton: const HeaderBarButton.back(),
+            rightButton: HeaderBarButton.close(
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();

@@ -30,7 +30,7 @@ class OnSetDeviceNameDialog extends StatelessWidget {
           // Header
           const HeaderBar(
             caption: 'Change Device Name',
-            backButton: HeaderBarBackButton(),
+            leftButton: HeaderBarButton.back(),
           ),
           // Body
           Expanded(

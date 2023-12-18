@@ -15,8 +15,8 @@ class AddSecretPage extends StatelessWidget {
         // Header
         HeaderBar(
           caption: 'Adding a Secret',
-          backButton: HeaderBarBackButton(onPressed: presenter.previousPage),
-          closeButton: const AbortHeaderButton(),
+          leftButton: HeaderBarButton.back(onPressed: presenter.previousPage),
+          rightButton: const AbortHeaderButton(),
         ),
         // Body
         Expanded(

@@ -26,7 +26,7 @@ class ShowSecretPage extends StatelessWidget {
         // Header
         const HeaderBar(
           caption: 'Secret Recovery',
-          closeButton: HeaderBarCloseButton(),
+          rightButton: HeaderBarButton.close(),
         ),
         // Body
         Expanded(

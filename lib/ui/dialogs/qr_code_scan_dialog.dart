@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
@@ -30,6 +31,16 @@ class QRCodeScanDialog extends StatefulWidget {
 class _QRCodeScanDialogState extends State<QRCodeScanDialog> {
   bool _hasResult = false;
   late Rect _scanWindow;
+  late Color _sysOverlay;
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.black54,
+    ));
+    _sysOverlay = Theme.of(context).colorScheme.background;
+  }
 
   @override
   void didChangeDependencies() {
@@ -46,6 +57,14 @@ class _QRCodeScanDialogState extends State<QRCodeScanDialog> {
       width: scanAreaSize,
       height: scanAreaSize,
     );
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: _sysOverlay,
+    ));
+    super.dispose();
   }
 
   @override
@@ -69,7 +88,7 @@ class _QRCodeScanDialogState extends State<QRCodeScanDialog> {
             HeaderBar(
               isTransparent: true,
               caption: widget.caption,
-              closeButton: const HeaderBarCloseButton(),
+              rightButton: const HeaderBarButton.close(),
             ),
           ],
         ),

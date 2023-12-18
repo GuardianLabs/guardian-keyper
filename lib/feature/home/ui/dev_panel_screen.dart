@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:guardian_keyper/consts.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
@@ -13,26 +14,33 @@ class DevPanelScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final networkManager = GetIt.I<NetworkManager>();
-    return ScaffoldSafe(
-        child: ListView(
-      padding: paddingAll20,
-      children: [
-        ListTile(
-          title: const Text('OnMessageActiveDialog'),
-          subtitle: Text(MessageCode.createVault.name),
-          onTap: () => OnMessageActiveDialog.show(
-            context,
-            message: MessageModel(
-              code: MessageCode.createVault,
-              peerId: networkManager.selfId.copyWith(name: 'Myself'),
-              payload: Vault(
-                ownerId: networkManager.selfId.copyWith(name: 'Himself'),
-                id: VaultId(name: 'Cool Vault'),
-              ),
+    final items = [
+      ListTile(
+        title: const Text('OnMessageActiveDialog'),
+        subtitle: Text(MessageCode.createVault.name),
+        onTap: () => OnMessageActiveDialog.show(
+          context,
+          message: MessageModel(
+            code: MessageCode.createVault,
+            peerId: networkManager.selfId.copyWith(name: 'Myself'),
+            payload: Vault(
+              ownerId: networkManager.selfId.copyWith(name: 'Himself'),
+              id: VaultId(name: 'Cool Vault'),
             ),
           ),
         ),
-      ],
+      ),
+      ListTile(
+        title: const Text('show Intro'),
+        onTap: () => Navigator.of(context).pushNamed(routeIntro),
+      ),
+    ];
+    return ScaffoldSafe(
+        child: ListView.separated(
+      padding: paddingAll20,
+      itemCount: items.length,
+      itemBuilder: (context, index) => items[index],
+      separatorBuilder: (context, index) => const SizedBox(height: 20),
     ));
   }
 }

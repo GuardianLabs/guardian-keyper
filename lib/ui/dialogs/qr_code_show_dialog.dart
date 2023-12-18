@@ -72,8 +72,8 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
             // Header
             HeaderBar(
               caption: widget.caption,
-              backButton: const HeaderBarBackButton(),
-              closeButton: HeaderBarCloseButton(
+              leftButton: const HeaderBarButton.back(),
+              rightButton: HeaderBarButton.close(
                 onPressed: () =>
                     Navigator.of(context).popUntil((r) => r.isFirst),
               ),

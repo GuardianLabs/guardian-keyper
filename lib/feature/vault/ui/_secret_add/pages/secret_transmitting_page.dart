@@ -43,7 +43,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           // Header
           const HeaderBar(
             caption: 'Adding a Secret',
-            closeButton: AbortHeaderButton(),
+            rightButton: AbortHeaderButton(),
           ),
           // Body
           Expanded(

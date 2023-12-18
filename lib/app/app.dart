@@ -37,7 +37,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
         title: 'Guardian Keyper',
-        color: Theme.of(context).colorScheme.background,
+        theme: themeLight,
         darkTheme: themeDark,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,

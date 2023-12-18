@@ -24,64 +24,51 @@ class ScaffoldSafe extends StatelessWidget {
 }
 
 class HeaderBar extends StatelessWidget {
-  static const double sideSize = 68;
+  static const double _height = 68;
 
   const HeaderBar({
     super.key,
-    this.caption,
-    this.captionSpans,
-    this.captionWidget,
-    this.backButton,
-    this.closeButton,
+    this.caption = '',
+    this.leftButton,
+    this.rightButton,
     this.isTransparent = false,
   });
 
-  final String? caption;
-  final List<TextSpan>? captionSpans;
-  final Widget? backButton;
-  final Widget? captionWidget;
-  final Widget? closeButton;
+  final String caption;
+  final Widget? leftButton;
+  final Widget? rightButton;
   final bool isTransparent;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      height: sideSize,
+      height: _height,
       color: isTransparent ? Colors.transparent : theme.colorScheme.background,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Left Button
-          Container(
-            height: sideSize,
-            width: sideSize,
-            alignment: Alignment.center,
-            child: backButton,
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: leftButton,
           ),
           // Caption
           Expanded(
-              child: Container(
-            height: sideSize,
-            alignment: Alignment.center,
-            child: captionWidget ??
-                RichText(
-                  maxLines: 1,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
-                    text: caption,
-                    children: captionSpans,
-                    style: theme.textTheme.titleMedium,
-                  ),
-                ),
-          )),
+            child: Center(
+              child: Text(
+                caption,
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleMedium,
+              ),
+            ),
+          ),
           // Right Button
-          Container(
-            height: sideSize,
-            width: sideSize,
-            alignment: Alignment.center,
-            child: closeButton,
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: rightButton,
           ),
         ],
       ),
@@ -89,85 +76,36 @@ class HeaderBar extends StatelessWidget {
   }
 }
 
-class HeaderBarCloseButton extends StatelessWidget {
-  const HeaderBarCloseButton({
-    super.key,
+class HeaderBarButton extends StatelessWidget {
+  const HeaderBarButton({
+    required this.icon,
     this.onPressed,
+    super.key,
   });
 
+  const HeaderBarButton.close({
+    this.onPressed,
+    super.key,
+  }) : icon = Icons.close;
+
+  const HeaderBarButton.back({
+    this.onPressed,
+    super.key,
+  }) : icon = Icons.arrow_back;
+
+  const HeaderBarButton.more({
+    required this.onPressed,
+    super.key,
+  }) : icon = Icons.keyboard_control;
+
+  final IconData icon;
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return GestureDetector(
-      onTap: onPressed ?? Navigator.of(context).pop,
-      behavior: HitTestBehavior.opaque,
-      child: Center(
-        child: CircleAvatar(
-          backgroundColor: colorScheme.secondary,
-          child: Icon(
-            Icons.close,
-            color: colorScheme.onSecondary,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class HeaderBarMoreButton extends StatelessWidget {
-  const HeaderBarMoreButton({
-    super.key,
-    this.onPressed,
-  });
-
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return GestureDetector(
-      onTap: onPressed,
-      behavior: HitTestBehavior.opaque,
-      child: Center(
-        child: CircleAvatar(
-          backgroundColor: colorScheme.secondary,
-          child: Icon(
-            Icons.keyboard_control,
-            color: colorScheme.onSecondary,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class HeaderBarBackButton extends StatelessWidget {
-  const HeaderBarBackButton({
-    super.key,
-    this.onPressed,
-  });
-
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return GestureDetector(
-      onTap: onPressed ?? Navigator.of(context).pop,
-      behavior: HitTestBehavior.opaque,
-      child: Center(
-        child: CircleAvatar(
-          backgroundColor: colorScheme.secondary,
-          child: Icon(
-            Icons.arrow_back,
-            color: colorScheme.onSecondary,
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => IconButton.filledTonal(
+        onPressed: onPressed ?? Navigator.of(context).pop,
+        icon: Icon(icon),
+      );
 }
 
 class PageTitle extends StatelessWidget {

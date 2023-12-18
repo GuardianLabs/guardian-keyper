@@ -27,8 +27,8 @@ class VaultShowScreen extends StatelessWidget {
           // Header
           HeaderBar(
             caption: vaultId.name,
-            backButton: const HeaderBarBackButton(),
-            closeButton: HeaderBarMoreButton(
+            leftButton: const HeaderBarButton.back(),
+            rightButton: HeaderBarButton.more(
               onPressed: () => OnVaultMoreDialog.show(
                 context,
                 vaultId: vaultId,

@@ -20,7 +20,7 @@ class GetCodePage extends StatelessWidget {
           // Header
           const HeaderBar(
             caption: 'Adding a Guardian',
-            closeButton: HeaderBarCloseButton(),
+            rightButton: HeaderBarButton.close(),
           ),
           // Body
           const PageTitle(

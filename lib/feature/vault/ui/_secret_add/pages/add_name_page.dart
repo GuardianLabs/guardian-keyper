@@ -16,7 +16,7 @@ class AddNamePage extends StatelessWidget {
         // Header
         const HeaderBar(
           caption: 'Adding a Secret',
-          closeButton: AbortHeaderButton(),
+          rightButton: AbortHeaderButton(),
         ),
         // Body
         const PageTitle(title: 'Create a name for your Secret'),

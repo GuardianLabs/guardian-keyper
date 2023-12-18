@@ -21,7 +21,7 @@ class GetCodePage extends StatelessWidget {
         // Header
         const HeaderBar(
           caption: 'Restore my Vault',
-          closeButton: HeaderBarCloseButton(),
+          rightButton: HeaderBarButton.close(),
         ),
         // Body
         const PageTitle(

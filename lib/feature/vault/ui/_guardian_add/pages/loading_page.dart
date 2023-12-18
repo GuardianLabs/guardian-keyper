@@ -47,7 +47,7 @@ class _LoadingPageState extends State<LoadingPage> {
           // Header
           const HeaderBar(
             caption: 'Adding a Guardian',
-            closeButton: HeaderBarCloseButton(),
+            rightButton: HeaderBarButton.close(),
           ),
           // Body
           const Padding(padding: paddingT32),

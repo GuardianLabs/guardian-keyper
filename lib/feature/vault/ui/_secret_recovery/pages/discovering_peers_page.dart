@@ -33,7 +33,7 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
           // Header
           const HeaderBar(
             caption: 'Secret Recovery',
-            closeButton: HeaderBarCloseButton(),
+            rightButton: HeaderBarButton.close(),
           ),
           // Body
           Expanded(

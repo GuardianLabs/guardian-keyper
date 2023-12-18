@@ -6,7 +6,7 @@ class AbortHeaderButton extends StatelessWidget {
   const AbortHeaderButton({super.key});
 
   @override
-  Widget build(BuildContext context) => HeaderBarCloseButton(
+  Widget build(BuildContext context) => HeaderBarButton.close(
         onPressed: () async {
           final wantExit = await OnAbortDialog.show(context);
           if ((wantExit ?? false) && context.mounted) {

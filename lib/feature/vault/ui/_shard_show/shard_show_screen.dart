@@ -19,7 +19,7 @@ class ShardShowScreen extends StatelessWidget {
           // Header
           HeaderBar(
             caption: vault.id.name,
-            backButton: const HeaderBarBackButton(),
+            leftButton: const HeaderBarButton.back(),
           ),
           // Body
           Padding(

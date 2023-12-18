@@ -12,7 +12,7 @@ class ChooseSizePage extends StatelessWidget {
       // Header
       const HeaderBar(
         caption: 'Select the size of the Vault',
-        closeButton: HeaderBarCloseButton(),
+        rightButton: HeaderBarButton.close(),
       ),
       // Body
       Expanded(

@@ -20,7 +20,7 @@ class SettingsScreen extends StatelessWidget {
             // Header
             const HeaderBar(
               caption: 'Settings',
-              closeButton: HeaderBarCloseButton(),
+              rightButton: HeaderBarButton.close(),
             ),
             // Body
             Expanded(
