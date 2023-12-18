@@ -5,7 +5,6 @@ import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 import '../../data/vault_repository.dart';
 import '../entity/secret_id.dart';
 import '../entity/vault_id.dart';
-import '../entity/vault.dart';
 import 'vault_analytics_mixin.dart';
 import 'vault_platform_mixin.dart';
 import 'vault_network_mixin.dart';

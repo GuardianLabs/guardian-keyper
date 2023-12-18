@@ -1,7 +1,7 @@
 part of 'theme.dart';
 
 const systemStyleDark = SystemUiOverlayStyle(
-  statusBarColor: Color(0xFF1A0244),
+  statusBarColor: clIndigo900,
   statusBarBrightness: Brightness.dark,
   statusBarIconBrightness: Brightness.light,
 );
@@ -53,22 +53,36 @@ final themeDark = ThemeData.dark().copyWith(
   ),
   // Elevated Button
   elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ButtonStyle(
-    fixedSize: _fixedSizeHeight48,
-    foregroundColor: _buttonForegroundColor,
-    shape: _buttonShape,
-    textStyle: MaterialStateProperty.all<TextStyle>(stylePoppins616),
-    backgroundColor: MaterialStateProperty.resolveWith<Color>((states) =>
-        states.contains(MaterialState.disabled)
-            ? const Color(0xFF320784)
-            : clIndigo500),
-  )),
+    style: ButtonStyle(
+      fixedSize: _fixedSizeHeight48,
+      foregroundColor: _buttonForegroundColor,
+      shape: _buttonShape,
+      textStyle: MaterialStateProperty.all<TextStyle>(stylePoppins616),
+      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+        (states) =>
+            states.contains(MaterialState.disabled) ? clIndigo800 : clIndigo500,
+      ),
+    ),
+  ),
   // Expansion Panel
   expansionTileTheme: const ExpansionTileThemeData(
     backgroundColor: clSurface,
     childrenPadding: paddingAll20,
     collapsedIconColor: clWhite,
     iconColor: clWhite,
+  ),
+  // Filled Button
+  filledButtonTheme: FilledButtonThemeData(
+    style: ButtonStyle(
+      fixedSize: _fixedSizeHeight48,
+      foregroundColor: _buttonForegroundColor,
+      shape: _buttonShape,
+      textStyle: MaterialStateProperty.all<TextStyle>(stylePoppins616),
+      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+        (states) =>
+            states.contains(MaterialState.disabled) ? clIndigo800 : clIndigo500,
+      ),
+    ),
   ),
   // Icon
   iconTheme: const IconThemeData(color: clWhite),

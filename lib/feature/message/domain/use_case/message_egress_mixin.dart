@@ -4,7 +4,6 @@ import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
 abstract mixin class MessageEgressMixin {
   final _networkManager = GetIt.I<NetworkManager>();

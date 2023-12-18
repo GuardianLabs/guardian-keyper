@@ -14,6 +14,7 @@ class QRCodeShowDialog extends StatefulWidget {
     BuildContext context, {
     required String qrCode,
     required String caption,
+    required String title,
     required String subtitle,
   }) =>
       Navigator.of(context).push(MaterialPageRoute(
@@ -22,22 +23,7 @@ class QRCodeShowDialog extends StatefulWidget {
         builder: (_) => QRCodeShowDialog(
           qrCode: qrCode,
           caption: caption,
-          subtitle: subtitle,
-        ),
-      ));
-
-  static Future<void> showAsReplacement(
-    BuildContext context, {
-    required String qrCode,
-    required String caption,
-    required String subtitle,
-  }) =>
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        fullscreenDialog: true,
-        settings: _routeSettings,
-        builder: (_) => QRCodeShowDialog(
-          qrCode: qrCode,
-          caption: caption,
+          title: title,
           subtitle: subtitle,
         ),
       ));
@@ -47,12 +33,14 @@ class QRCodeShowDialog extends StatefulWidget {
   const QRCodeShowDialog({
     required this.qrCode,
     required this.caption,
+    required this.title,
     required this.subtitle,
     super.key,
   });
 
   final String qrCode;
   final String caption;
+  final String title;
   final String subtitle;
 
   @override
@@ -79,11 +67,15 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
             // Header
             HeaderBar(
               caption: widget.caption,
-              closeButton: const HeaderBarCloseButton(),
+              backButton: const HeaderBarBackButton(),
+              closeButton: HeaderBarCloseButton(
+                onPressed: () =>
+                    Navigator.of(context).popUntil((r) => r.isFirst),
+              ),
             ),
             // Body
             PageTitle(
-              title: 'Your one-time Code',
+              title: widget.title,
               subtitle: widget.subtitle,
             ),
             // QR Code

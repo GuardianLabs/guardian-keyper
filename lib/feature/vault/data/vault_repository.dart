@@ -5,6 +5,14 @@ import 'package:get_it/get_it.dart';
 import 'package:guardian_keyper/data/services/preferences_service.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
+export 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+
+typedef VaultRepositoryEvent = ({
+  String key,
+  Vault? vault,
+  bool isDeleted,
+});
+
 /// Depends on [PreferencesService]
 class VaultRepository {
   late final flush = _storage.flush;
@@ -33,7 +41,7 @@ class VaultRepository {
 
   Future<void> delete(String key) => _storage.delete(key);
 
-  Stream<({String key, Vault? vault, bool isDeleted})> watch([String? key]) =>
+  Stream<VaultRepositoryEvent> watch([String? key]) =>
       _storage.watch(key: key).map((e) => (
             key: e.key as String,
             vault: e.value as Vault?,

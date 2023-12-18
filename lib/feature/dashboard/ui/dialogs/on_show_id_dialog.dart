@@ -25,7 +25,7 @@ class OnShowIdDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        titleString: 'Guardian ID',
+        titleString: 'ID',
         textSpan: [
           const TextSpan(text: '0x'),
           TextSpan(

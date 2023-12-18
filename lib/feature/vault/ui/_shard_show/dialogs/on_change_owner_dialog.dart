@@ -1,6 +1,5 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
@@ -15,7 +14,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
   }) =>
       showModalBottomSheet(
         context: context,
-        isDismissible: false,
+        isDismissible: true,
         isScrollControlled: true,
         builder: (_) => OnChangeOwnerDialog(vaultId: vaultId),
       );
@@ -29,45 +28,43 @@ class OnChangeOwnerDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
+        // TBD: change Icon
         icon: const IconOf.owner(
           isBig: true,
           bage: BageType.warning,
         ),
-        titleString: 'Change Owner',
-        textSpan: buildTextWithId(
-          leadingText: 'Are you sure you want to change owner for vault ',
-          name: vaultId.name,
-          trailingText: '? This action cannot be undone.',
-        ),
+        titleString: 'Confirm Identity!',
+        textString: 'Helping with Vault recovery or changing ownership?\n'
+            'Please verify if the person is the current '
+            'Owner or a newly approved one.\n\n'
+            'Assisting a malicious individual could lead to asset loss!',
         footer: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            PrimaryButton(
-              text: 'Confirm',
+            FilledButton(
+              child: const Text('Confirm'),
               onPressed: () async {
                 Navigator.of(context).pop();
                 final message = await GetIt.I<MessageInteractor>()
                     .createTakeVaultCode(vaultId);
                 if (context.mounted) {
-                  QRCodeShowDialog.showAsReplacement(
+                  QRCodeShowDialog.show(
                     context,
                     qrCode: message.toBase64url(),
-                    caption: 'Change owner',
+                    caption: vaultId.name,
+                    title: 'Assistance QR',
                     subtitle:
-                        // ignore: lines_longer_than_80_chars
-                        'This is a one-time for changing the owner of the Vault. '
-                        'You can either show it directly as a QR Code '
-                        'or Share as a Text via any messenger.',
+                        'Only display this Assistance QR to the current or '
+                        'a new designated Vault Owner. If sharing QR is not '
+                        'possible, try sharing a text-code instead.',
                   );
                 }
               },
             ),
             const Padding(padding: paddingT20),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: Navigator.of(context).pop,
-                child: const Text('Keep current Owner'),
-              ),
+            FilledButton(
+              onPressed: Navigator.of(context).pop,
+              child: const Text('Cancel'),
             ),
           ],
         ),
