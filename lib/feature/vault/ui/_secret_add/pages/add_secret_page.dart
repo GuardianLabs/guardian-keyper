@@ -1,5 +1,5 @@
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../vault_secret_add_presenter.dart';
@@ -28,7 +28,7 @@ class AddSecretPage extends StatelessWidget {
               PageTitle(
                 titleSpans: buildTextWithId(
                   leadingText: 'Add your Secret for ',
-                  id: presenter.vault.id,
+                  name: presenter.vault.id.name,
                 ),
                 subtitle: 'Make sure no one can see your screen.',
               ),

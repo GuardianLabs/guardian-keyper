@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../../domain/entity/vault.dart';
@@ -16,7 +16,7 @@ class ShardShowScreen extends StatelessWidget {
         children: [
           // Header
           HeaderBar(
-            captionSpans: buildTextWithId(id: vault.id),
+            captionSpans: buildTextWithId(name: vault.id.name),
             backButton: const HeaderBarBackButton(),
           ),
           // Body
@@ -29,7 +29,7 @@ class ShardShowScreen extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     style: styleSourceSansPro414Purple,
-                    children: buildTextWithId(id: vault.ownerId),
+                    children: buildTextWithId(name: vault.ownerId.name),
                   ),
                 ),
                 Padding(
@@ -37,7 +37,7 @@ class ShardShowScreen extends StatelessWidget {
                   child: RichText(
                     text: TextSpan(
                       style: stylePoppins616,
-                      children: buildTextWithId(id: vault.id),
+                      children: buildTextWithId(name: vault.id.name),
                     ),
                   ),
                 ),

@@ -1,5 +1,5 @@
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'shard_home_presenter.dart';
@@ -39,7 +39,7 @@ class ShardHomeScreen extends StatelessWidget {
                       title: RichText(
                         text: TextSpan(
                           style: styleSourceSansPro614,
-                          children: buildTextWithId(id: vault.id),
+                          children: buildTextWithId(name: vault.id.name),
                         ),
                       ),
                       isThreeLine: true,
@@ -52,7 +52,9 @@ class ShardHomeScreen extends StatelessWidget {
                           children: [
                             TextSpan(
                               style: styleSourceSansPro414Purple,
-                              children: buildTextWithId(id: vault.ownerId),
+                              children: buildTextWithId(
+                                name: vault.ownerId.name,
+                              ),
                             ),
                             TextSpan(
                               style: styleSourceSansPro414Purple,

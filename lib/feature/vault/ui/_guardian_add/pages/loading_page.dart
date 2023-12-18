@@ -1,5 +1,4 @@
 import 'package:guardian_keyper/ui/utils/utils.dart';
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../vault_guardian_add_presenter.dart';
@@ -25,11 +24,11 @@ class _LoadingPageState extends State<LoadingPage> {
           buildSnackBar(
             textSpans: [
               ...buildTextWithId(
-                id: message.peerId,
+                name: message.peerId.name,
                 leadingText: 'You have successfully added ',
               ),
               ...buildTextWithId(
-                id: _presenter.vaultId,
+                name: _presenter.vaultId.name,
                 leadingText: 'as a Guardian for ',
               ),
             ],
@@ -77,7 +76,7 @@ class _LoadingPageState extends State<LoadingPage> {
                         style: styleSourceSansPro616,
                         children: buildTextWithId(
                           leadingText: 'Awaiting ',
-                          id: _presenter.qrCode!.peerId,
+                          name: _presenter.qrCode!.peerId.name,
                           trailingText: '’s response',
                         ),
                       ),

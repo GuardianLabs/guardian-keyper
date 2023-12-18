@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
@@ -32,7 +32,7 @@ class OnRejectDialog extends StatelessWidget {
         titleString: 'Guardian rejected the recovery of your Secret',
         textSpan: buildTextWithId(
           leadingText: 'Secret Recovery process for ',
-          id: vaultId,
+          name: vaultId.name,
           trailingText: ' has been terminated by your Guardians.',
         ),
         footer: Padding(

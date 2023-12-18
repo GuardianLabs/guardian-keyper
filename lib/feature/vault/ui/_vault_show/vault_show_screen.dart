@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../../domain/entity/vault_id.dart';
@@ -23,7 +23,7 @@ class VaultShowScreen extends StatelessWidget {
             children: [
               // Header
               HeaderBar(
-                captionSpans: buildTextWithId(id: vaultId),
+                captionSpans: buildTextWithId(name: vaultId.name),
                 backButton: const HeaderBarBackButton(),
                 closeButton: HeaderBarMoreButton(
                   onPressed: () => OnVaultMoreDialog.show(context, presenter),

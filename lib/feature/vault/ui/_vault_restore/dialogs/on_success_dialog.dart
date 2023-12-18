@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
@@ -34,7 +34,7 @@ class OnSuccessDialog extends StatelessWidget {
           titleString: 'Ownership Changed',
           textSpan: buildTextWithId(
             leadingText: 'The ownership of the Vault ',
-            id: vault.id,
+            name: vault.id.name,
             trailingText: ' has been transferred to your device.',
           ),
           footer: PrimaryButton(
@@ -47,11 +47,11 @@ class OnSuccessDialog extends StatelessWidget {
           titleString: 'Ownership Transfer Approved',
           textSpan: [
             ...buildTextWithId(
-              id: peerId,
+              name: peerId.name,
               trailingText:
                   ' approved the transfer of ownership for the Vault ',
             ),
-            ...buildTextWithId(id: vault.id),
+            ...buildTextWithId(name: vault.id.name),
           ],
           footer: PrimaryButton(
             text: 'Add another Guardian',

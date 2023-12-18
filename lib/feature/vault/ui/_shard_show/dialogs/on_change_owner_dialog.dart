@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
@@ -36,7 +36,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
         titleString: 'Change Owner',
         textSpan: buildTextWithId(
           leadingText: 'Are you sure you want to change owner for vault ',
-          id: vaultId,
+          name: vaultId.name,
           trailingText: '? This action cannot be undone.',
         ),
         footer: Column(

@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
@@ -29,7 +29,7 @@ class OnSuccessDialog extends StatelessWidget {
         titleString: 'Your Secret has been split',
         textSpan: [
           const TextSpan(text: 'Now you can restore your '),
-          ...buildTextWithId(id: vaultId),
+          ...buildTextWithId(name: vaultId.name),
           const TextSpan(text: ' Secret with the help of Guardians.'),
         ],
         footer: Padding(

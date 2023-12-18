@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
@@ -38,7 +38,7 @@ class GuardianListTile extends StatelessWidget {
           text: TextSpan(
             style: styleSourceSansPro614.copyWith(height: 1.5),
             children: buildTextWithId(
-              id: guardian,
+              name: guardian.name,
               style: TextStyle(
                 color: guardian.token.isEmpty
                     ? clRed

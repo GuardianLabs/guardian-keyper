@@ -1,5 +1,5 @@
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'dashboard_presenter.dart';
@@ -22,7 +22,7 @@ class DashboardScreen extends StatelessWidget {
               builder: (_, presenter, __) => RichText(
                 text: TextSpan(
                   style: stylePoppins620,
-                  children: buildTextWithId(id: presenter.selfId),
+                  children: buildTextWithId(name: presenter.selfId.name),
                 ),
               ),
             ),

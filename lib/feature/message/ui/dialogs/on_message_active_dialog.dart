@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../../domain/entity/message_model.dart';
@@ -79,11 +79,11 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
   Widget build(BuildContext context) => BottomSheetWidget(
         titleString: widget.getTitle(widget.message),
         textSpan: [
-          ...buildTextWithId(id: widget.message.peerId),
+          ...buildTextWithId(name: widget.message.peerId.name),
           TextSpan(
             text: widget.getSubtitle(widget.message),
           ),
-          ...buildTextWithId(id: widget.message.vaultId),
+          ...buildTextWithId(name: widget.message.vaultId.name),
         ],
         body: Padding(
           padding: paddingV20,

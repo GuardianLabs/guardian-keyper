@@ -1,5 +1,5 @@
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../vault_restore_presenter.dart';
@@ -83,10 +83,11 @@ class _LoadingPageState extends State<LoadingPage> {
                         style: styleSourceSansPro416,
                         children: buildTextWithId(
                           leadingText: 'Awaiting ',
-                          id: context
+                          name: context
                               .read<VaultRestorePresenter>()
                               .qrCode!
-                              .peerId,
+                              .peerId
+                              .name,
                           trailingText: '’s response',
                         ),
                       ),

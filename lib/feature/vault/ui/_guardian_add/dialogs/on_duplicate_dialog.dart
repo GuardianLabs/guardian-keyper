@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
@@ -27,7 +27,7 @@ class OnDuplicateDialog extends StatelessWidget {
         titleString: 'You can’t add the same Guardian twice',
         textSpan: [
           const TextSpan(text: 'Seems like you’ve already added '),
-          ...buildTextWithId(id: peerId),
+          ...buildTextWithId(name: peerId.name),
           const TextSpan(
             text: ' to this Vault. Try adding a different Guardian.',
           ),

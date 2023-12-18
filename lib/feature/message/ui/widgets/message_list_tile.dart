@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../../domain/entity/message_model.dart';
@@ -37,7 +37,7 @@ class MessageListTile extends StatelessWidget with MessageTitlesMixin {
             style: styleSourceSansPro414Purple,
             children: buildTextWithId(
               leadingText: '${_roundedAgo()} · from ',
-              id: message.peerId,
+              name: message.peerId.name,
             ),
           ),
         ),

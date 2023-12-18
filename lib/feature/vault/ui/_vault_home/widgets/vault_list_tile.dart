@@ -1,5 +1,5 @@
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
@@ -19,7 +19,7 @@ class VaultListTile extends StatelessWidget {
         title: RichText(
           text: TextSpan(
             style: styleSourceSansPro614,
-            children: buildTextWithId(id: vault.id),
+            children: buildTextWithId(name: vault.id.name),
           ),
         ),
         subtitle: _buildSubtitle(vault),

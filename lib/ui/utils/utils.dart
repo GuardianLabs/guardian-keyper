@@ -1,5 +1,5 @@
-import '../../consts.dart';
-import '../widgets/common.dart';
+import 'package:guardian_keyper/consts.dart';
+import 'package:guardian_keyper/ui/widgets/common.dart';
 
 SnackBar buildSnackBar({
   String? text,
@@ -21,3 +21,15 @@ SnackBar buildSnackBar({
         ),
       ),
     );
+
+List<TextSpan> buildTextWithId({
+  required String name,
+  String? leadingText,
+  String? trailingText,
+  TextStyle style = const TextStyle(fontWeight: FontWeight.w600),
+}) =>
+    [
+      if (leadingText != null) TextSpan(text: leadingText),
+      TextSpan(text: '$name  ', style: style),
+      if (trailingText != null) TextSpan(text: trailingText),
+    ];

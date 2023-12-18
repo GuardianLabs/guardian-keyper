@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
@@ -33,10 +33,10 @@ class OnRejectDialog extends StatelessWidget {
         titleString: 'Ownership Transfer Rejected',
         textSpan: [
           ...buildTextWithId(
-            id: peerId,
+            name: peerId.name,
             trailingText: ' rejected the transfer of ownership for the Vault ',
           ),
-          ...buildTextWithId(id: vaultId),
+          ...buildTextWithId(name: vaultId.name),
         ],
         body: Padding(
           padding: paddingV20,

@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_scan_dialog.dart';
 
@@ -42,7 +42,7 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
         children: [
           // Header
           HeaderBar(
-            captionSpans: buildTextWithId(id: _presenter.vaultId),
+            captionSpans: buildTextWithId(name: _presenter.vaultId.name),
             closeButton: const HeaderBarCloseButton(),
           ),
           // Body

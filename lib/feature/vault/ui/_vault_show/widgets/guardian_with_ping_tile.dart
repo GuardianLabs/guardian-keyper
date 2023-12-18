@@ -1,6 +1,5 @@
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 
@@ -40,12 +39,12 @@ class _GuardianWithPingTileState extends State<GuardianWithPingTile> {
                   isError: !hasPong,
                   textSpans: hasPong
                       ? [
-                          ...buildTextWithId(id: widget.guardian),
+                          ...buildTextWithId(name: widget.guardian.name),
                           TextSpan(text: ' is online.\nPing $msElapsed ms.'),
                         ]
                       : [
                           const TextSpan(text: 'Couldn’t reach out to '),
-                          ...buildTextWithId(id: widget.guardian),
+                          ...buildTextWithId(name: widget.guardian.name),
                           const TextSpan(text: '. Connection timeout.'),
                         ],
                 ));

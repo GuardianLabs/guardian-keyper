@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/widgets/emoji.dart';
+import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
@@ -56,7 +56,7 @@ class RequestPanel extends StatelessWidget {
                     ),
                     ...buildTextWithId(
                       leadingText: '. Ask ',
-                      id: peerId,
+                      name: peerId.name,
                       trailingText: ' to log in.',
                     ),
                   ],
