@@ -6,18 +6,18 @@ class SettingsThemeCase {
   late final _settingsRepository = GetIt.I<SettingsRepository>();
 
   Stream<bool?> get events => _settingsRepository
-      .watch(SettingsRepositoryKeys.keyIsDarkModeOn)
-      .map<bool?>((e) => bool.tryParse((e.value as String?) ?? ''));
+      .watch<bool>(SettingsRepositoryKeys.keyIsDarkModeOn)
+      .map<bool?>((e) => e.value);
 
-  bool? get isDarkMode => bool.tryParse(
-      _settingsRepository.get(SettingsRepositoryKeys.keyIsDarkModeOn) ?? '');
+  bool? get isDarkMode =>
+      _settingsRepository.get<bool>(SettingsRepositoryKeys.keyIsDarkModeOn);
 
   Future<void> setIsDarkMode(bool? isDarkModeOn) {
     return isDarkModeOn == null
         ? _settingsRepository.delete(SettingsRepositoryKeys.keyIsDarkModeOn)
-        : _settingsRepository.put(
+        : _settingsRepository.put<bool>(
             SettingsRepositoryKeys.keyIsDarkModeOn,
-            isDarkModeOn.toString(),
+            isDarkModeOn,
           );
   }
 }

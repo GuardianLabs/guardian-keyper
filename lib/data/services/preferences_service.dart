@@ -65,7 +65,7 @@ class PreferencesService {
             const (int) => int.parse(value) as T,
             const (bool) => bool.parse(value) as T,
             const (Uint8List) => base64Decode(value) as T,
-            _ => throw const ValueFormatException(),
+            _ => throw const PreferencesValueFormatException(),
           };
   }
 
@@ -81,7 +81,7 @@ class PreferencesService {
           key: key.name,
           value: base64UrlEncode(value as Uint8List),
         ),
-      _ => throw const ValueFormatException(),
+      _ => throw const PreferencesValueFormatException(),
     };
     return value;
   }
@@ -89,6 +89,6 @@ class PreferencesService {
   Future<void> delete(PreferencesKeys key) => _storage.delete(key: key.name);
 }
 
-class ValueFormatException extends FormatException {
-  const ValueFormatException() : super('Unsupported value type');
+class PreferencesValueFormatException extends FormatException {
+  const PreferencesValueFormatException() : super('Unsupported value type');
 }

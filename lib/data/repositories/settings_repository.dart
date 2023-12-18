@@ -1,13 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:hive/hive.dart';
 
 enum SettingsRepositoryKeys {
   keyIsDarkModeOn,
+  keyIsUnderstandingShardsHidden,
 }
 
-typedef SettingsRepositoryEvent = ({
+typedef SettingsRepositoryEvent<T extends Object> = ({
   String key,
-  Object? value,
+  T? value,
   bool isDeleted,
 });
 
@@ -19,21 +22,52 @@ class SettingsRepository {
     return this;
   }
 
-  String? get(SettingsRepositoryKeys key, {String? defaultValue}) =>
-      _storage.get(key.toString(), defaultValue: defaultValue);
+  T? get<T extends Object>(
+    SettingsRepositoryKeys key, {
+    T? defaultValue,
+  }) {
+    final value = _storage.get(key.toString());
+    return value == null
+        ? defaultValue
+        : switch (T) {
+            const (String) => value as T,
+            const (int) => int.parse(value) as T,
+            const (bool) => bool.parse(value) as T,
+            const (Uint8List) => base64Decode(value) as T,
+            _ => throw const SettingsValueFormatException(),
+          };
+  }
 
-  Future<void> put(SettingsRepositoryKeys key, String value) =>
-      _storage.put(key.toString(), value);
+  Future<T> put<T extends Object>(SettingsRepositoryKeys key, T value) async {
+    await switch (T) {
+      const (int) ||
+      const (bool) ||
+      const (String) =>
+        _storage.put(key.name, value.toString()),
+      const (Uint8List) =>
+        _storage.put(key.name, base64UrlEncode(value as Uint8List)),
+      _ => throw const SettingsValueFormatException(),
+    };
+    return value;
+  }
 
   Future<void> delete(SettingsRepositoryKeys key) =>
       _storage.delete(key.toString());
 
-  Stream<SettingsRepositoryEvent> watch([SettingsRepositoryKeys? key]) =>
-      _storage.watch(key: key.toString()).map((e) => (
-            key: e.key as String,
-            value: e.value as Object?,
-            isDeleted: e.deleted,
-          ));
+  Stream<SettingsRepositoryEvent<T>> watch<T extends Object>([
+    SettingsRepositoryKeys? key,
+  ]) =>
+      _storage
+          .watch(key: key.toString())
+          .map<SettingsRepositoryEvent<T>>((e) => (
+                key: e.key as String,
+                value: e.value as T?,
+                isDeleted: e.deleted,
+              ));
 
   Future<void> flush() => _storage.flush().then((value) => _storage.compact());
+}
+
+class SettingsValueFormatException extends FormatException {
+  const SettingsValueFormatException() : super('Unsupported value type');
 }
