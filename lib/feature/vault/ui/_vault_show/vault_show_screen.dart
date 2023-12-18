@@ -69,13 +69,15 @@ class VaultShowScreen extends StatelessWidget {
                             vault: vault,
                             initiallyExpanded: vault.hasNoSecrets,
                           ),
-                          Padding(
-                            padding: paddingV20,
-                            child: Text(
-                              'Secrets',
-                              style: stylePoppins620,
+                          if (vault.hasSecrets || vault.isFull)
+                            Padding(
+                              padding: paddingV20,
+                              child: Text(
+                                'Secrets',
+                                style: stylePoppins620,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
                           // Button
                           if (vault.isFull)
                             Padding(

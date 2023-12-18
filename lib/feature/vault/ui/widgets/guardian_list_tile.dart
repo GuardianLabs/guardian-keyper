@@ -51,16 +51,8 @@ class GuardianListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
         leading: leading,
-        title: Text(
-          title,
-          maxLines: 1,
-          style: styleSourceSansPro616,
-        ),
-        subtitle: Text(
-          subtitle,
-          maxLines: 1,
-          style: styleSourceSansPro414Purple,
-        ),
+        title: Text(title, maxLines: 1),
+        subtitle: Text(subtitle, maxLines: 1),
         trailing: isWaiting ? const CircularProgressIndicator.adaptive() : null,
         onTap: onTap,
         onLongPress: onLongPress,
@@ -106,10 +98,7 @@ class _GuardianPendingIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
-          border: Border.all(
-            color: Theme.of(context).colorScheme.primary,
-            width: 2,
-          ),
+          color: Theme.of(context).colorScheme.secondary,
           shape: BoxShape.circle,
         ),
         height: 40,

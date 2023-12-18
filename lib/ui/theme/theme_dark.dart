@@ -34,12 +34,10 @@ final themeDark = ThemeData(
     toolbarHeight: 68,
   ),
   // Bottom Navigation Bar
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
     backgroundColor: clIndigo900,
-    selectedItemColor: clWhite,
-    selectedLabelStyle: styleSourceSansPro612.copyWith(height: 2.5),
-    unselectedLabelStyle: styleSourceSansPro412.copyWith(height: 2.5),
+    selectedItemColor: clGreen,
   ),
   // Bottom Sheet
   bottomSheetTheme: const BottomSheetThemeData(
@@ -60,6 +58,7 @@ final themeDark = ThemeData(
     childrenPadding: paddingAll20,
     collapsedIconColor: clWhite,
     collapsedShape: _shapeBorder,
+    iconColor: clWhite,
     shape: _shapeBorder,
   ),
   // Filled Button
@@ -75,8 +74,8 @@ final themeDark = ThemeData(
       ),
     ),
   ),
-  // Icon
-  iconTheme: const IconThemeData(color: clWhite),
+  // Font family
+  fontFamily: GoogleFonts.sourceSans3().fontFamily,
   // Input
   inputDecorationTheme: InputDecorationTheme(
     border: OutlineInputBorder(
@@ -86,16 +85,12 @@ final themeDark = ThemeData(
         width: 2,
       ),
     ),
-    // focusColor: clIndigo300,
-
     floatingLabelStyle: const TextStyle(color: clWhite),
   ),
   // ListTile
   listTileTheme: ListTileThemeData(
     tileColor: clSurface,
     shape: _shapeBorder,
-    titleTextStyle: styleSourceSansPro616,
-    subtitleTextStyle: styleSourceSansPro414Purple,
   ),
   // Outlined Button
   outlinedButtonTheme: OutlinedButtonThemeData(
@@ -111,10 +106,6 @@ final themeDark = ThemeData(
     shape: _buttonShape,
     textStyle: MaterialStateProperty.all<TextStyle>(stylePoppins616),
   )),
-  // Radio
-  radioTheme: RadioThemeData(
-    fillColor: MaterialStateProperty.all<Color>(clWhite),
-  ),
   // SnackBar
   snackBarTheme: const SnackBarThemeData(
     backgroundColor: clGreen,
@@ -130,17 +121,15 @@ final themeDark = ThemeData(
     trackOutlineWidth: MaterialStateProperty.all<double>(0),
   ),
   // TabBar
-  tabBarTheme: TabBarTheme(
-    indicator: const BoxDecoration(
+  tabBarTheme: const TabBarTheme(
+    indicator: BoxDecoration(
       borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
       color: clIndigo700,
     ),
     indicatorSize: TabBarIndicatorSize.tab,
     labelPadding: EdgeInsets.zero,
     labelColor: clWhite,
-    labelStyle: styleSourceSansPro614,
     unselectedLabelColor: clWhite,
-    unselectedLabelStyle: styleSourceSansPro614,
   ),
   // Text
   textTheme: TextTheme(
@@ -151,17 +140,10 @@ final themeDark = ThemeData(
       overflow: TextOverflow.ellipsis,
     ),
     titleLarge: stylePoppins620,
-    titleMedium: styleSourceSansPro614,
-    bodyMedium: styleSourceSansPro414,
   ),
+  // TextSelection
   textSelectionTheme: const TextSelectionThemeData(
     cursorColor: clWhite,
-  ),
-  // Text Button
-  textButtonTheme: TextButtonThemeData(
-    style: ButtonStyle(
-      foregroundColor: MaterialStateProperty.all<Color>(clWhite),
-    ),
   ),
 );
 

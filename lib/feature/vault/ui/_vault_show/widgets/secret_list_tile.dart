@@ -23,21 +23,28 @@ class SecretListTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              onPressed: () => OnRemoveSecretDialog.show(
-                context,
-                vault: vault,
-                secretId: secretId,
+              onPressed: vault.isRestricted
+                  ? null
+                  : () => OnRemoveSecretDialog.show(
+                        context,
+                        vault: vault,
+                        secretId: secretId,
+                      ),
+              icon: Icon(
+                Icons.delete_outlined,
+                color: vault.isRestricted ? clRed.withOpacity(0.5) : clRed,
               ),
-              icon: const Icon(Icons.delete_outlined, color: clRed),
             ),
             IconButton(
-              onPressed: () => Navigator.of(context).pushNamed(
-                routeVaultSecretRecovery,
-                arguments: (
-                  vaultId: vault.id,
-                  secretId: secretId,
-                ),
-              ),
+              onPressed: vault.isRestricted
+                  ? null
+                  : () => Navigator.of(context).pushNamed(
+                        routeVaultSecretRecovery,
+                        arguments: (
+                          vaultId: vault.id,
+                          secretId: secretId,
+                        ),
+                      ),
               icon: const Icon(Icons.visibility_outlined),
             ),
           ],

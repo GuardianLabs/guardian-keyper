@@ -85,7 +85,10 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
             Container(
               margin: paddingAll20,
               padding: paddingAll20,
-              decoration: boxDecoration,
+              decoration: BoxDecoration(
+                borderRadius: borderRadius8,
+                color: Theme.of(context).colorScheme.surface,
+              ),
               width: double.infinity,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(

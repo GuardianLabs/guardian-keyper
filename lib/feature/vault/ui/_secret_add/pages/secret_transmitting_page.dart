@@ -66,41 +66,42 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                Container(
-                  decoration: boxDecoration,
-                  padding: paddingT20,
-                  child: Consumer<VaultSecretAddPresenter>(
-                    builder: (context, presenter, _) => Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: paddingH20,
-                          child: Text(
-                            'Guardians',
-                            style: styleSourceSansPro616,
+                Card(
+                  child: Padding(
+                    padding: paddingT20,
+                    child: Consumer<VaultSecretAddPresenter>(
+                      builder: (context, presenter, _) => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: paddingH20,
+                            child: Text(
+                              'Guardians',
+                              style: styleSourceSansPro616,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: paddingH20,
-                          child: Text(
-                            'Ask Guardians to open the app and accept a Secret '
-                            'Shard. Make sure they keep the app open until '
-                            'the Shard splitting is complete.',
-                            style: styleSourceSansPro414Purple,
+                          Padding(
+                            padding: paddingH20,
+                            child: Text(
+                              'Ask Guardians to open the app and accept a '
+                              'Secret Shard. Make sure they keep the app open '
+                              'until the Shard splitting is complete.',
+                              style: styleSourceSansPro414Purple,
+                            ),
                           ),
-                        ),
-                        for (final message in presenter.messages)
-                          message.peerId == presenter.selfId
-                              ? const GuardianListTile.my()
-                              : message.isAccepted
-                                  ? GuardianListTile(
-                                      guardian: message.peerId,
-                                    )
-                                  : GuardianListTile.pending(
-                                      guardian: message.peerId,
-                                    )
-                      ],
+                          for (final message in presenter.messages)
+                            message.peerId == presenter.selfId
+                                ? const GuardianListTile.my()
+                                : message.isAccepted
+                                    ? GuardianListTile(
+                                        guardian: message.peerId,
+                                      )
+                                    : GuardianListTile.pending(
+                                        guardian: message.peerId,
+                                      )
+                        ],
+                      ),
                     ),
                   ),
                 ),

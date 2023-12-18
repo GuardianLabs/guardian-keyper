@@ -1,13 +1,13 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
+
 import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
-
-import '../../domain/entity/secret_id.dart';
-import '../../domain/entity/secret_shard.dart';
-import '../../domain/use_case/vault_interactor.dart';
-import '../vault_secret_presenter_base.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
+import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
+import 'package:guardian_keyper/feature/vault/ui/vault_secret_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 
@@ -90,8 +90,6 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
       requestCompleter.complete(updatedMessage);
     }
   }
-
-  bool isMyself(PeerId peerId) => peerId == _vaultInteractor.selfId;
 
   void setSecret(String value) {
     _secret = value;

@@ -25,6 +25,8 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
 
   late final vault = _vaultInteractor.getVaultById(vaultId)!;
 
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
+
   @override
   void requestWorker([Timer? timer]) {
     if (messages.where((m) => m.hasResponse).length == vault.maxSize) {
@@ -56,7 +58,4 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
     notifyListeners();
     return updatedMessage;
   }
-
-  // Private
-  final _vaultInteractor = GetIt.I<VaultInteractor>();
 }
