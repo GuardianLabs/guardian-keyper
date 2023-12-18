@@ -55,7 +55,10 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
             padding: paddingH20,
             child: PrimaryButton(
               text: 'Add via a QR Code',
-              onPressed: () => QRCodeScanDialog.show(context).then(_setCode),
+              onPressed: () => QRCodeScanDialog.show(
+                context,
+                caption: 'Scan the Assistance QR',
+              ).then(_setCode),
             ),
           ),
           Padding(

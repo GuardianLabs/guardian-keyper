@@ -1,6 +1,4 @@
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:vector_graphics/vector_graphics.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/utils/screen_size.dart';
@@ -8,14 +6,22 @@ import 'package:guardian_keyper/ui/utils/screen_size.dart';
 class QRCodeScanDialog extends StatefulWidget {
   static const route = '/qrcode/scan';
 
-  static Future<String?> show(BuildContext context) =>
+  static Future<String?> show(
+    BuildContext context, {
+    required String caption,
+  }) =>
       Navigator.of(context).push(MaterialPageRoute(
         fullscreenDialog: true,
         settings: const RouteSettings(name: route),
-        builder: (_) => const QRCodeScanDialog(),
+        builder: (_) => QRCodeScanDialog(caption: caption),
       ));
 
-  const QRCodeScanDialog({super.key});
+  const QRCodeScanDialog({
+    required this.caption,
+    super.key,
+  });
+
+  final String caption;
 
   @override
   State<QRCodeScanDialog> createState() => _QRCodeScanDialogState();
@@ -58,26 +64,12 @@ class _QRCodeScanDialogState extends State<QRCodeScanDialog> {
                 }
               },
             ),
-            CustomPaint(painter: _ScannerOverlay(scanWindow: _scanWindow)),
-            Positioned.fromRect(
-              rect: _scanWindow,
-              child: SizedBox(
-                height: _scanWindow.height,
-                width: _scanWindow.width,
-                child: const SvgPicture(
-                  AssetBytesLoader('assets/images/frame.svg.vec'),
-                ),
-              ),
-            ),
-            const Column(
-              children: [
-                // Header
-                HeaderBar(
-                  isTransparent: true,
-                  caption: 'Scan the QR Code',
-                  closeButton: HeaderBarCloseButton(),
-                ),
-              ],
+            CustomPaint(painter: _ScannerOverlay(frame: _scanWindow)),
+            // Header
+            HeaderBar(
+              isTransparent: true,
+              caption: widget.caption,
+              closeButton: const HeaderBarCloseButton(),
             ),
           ],
         ),
@@ -85,23 +77,56 @@ class _QRCodeScanDialogState extends State<QRCodeScanDialog> {
 }
 
 class _ScannerOverlay extends CustomPainter {
-  final Rect scanWindow;
+  _ScannerOverlay({required this.frame});
 
-  const _ScannerOverlay({required this.scanWindow});
+  final Rect frame;
+
+  final _framePaint = Paint()
+    ..color = clWhite
+    ..strokeCap = StrokeCap.round
+    ..strokeWidth = 8;
+
+  final _maskPaint = Paint()
+    ..color = clIndigo900.withOpacity(0.5)
+    ..style = PaintingStyle.fill
+    ..blendMode = BlendMode.dstOut;
+
+  late final _maskPath = Path.combine(
+    PathOperation.difference,
+    Path()..addRect(Rect.largest),
+    Path()..addRect(frame),
+  );
+
+  late final _frameSize = frame.height / 5;
+
+  late final _leftTop = Offset(frame.left, frame.top);
+  late final _leftTopH = Offset(frame.left + _frameSize, frame.top);
+  late final _leftTopV = Offset(frame.left, frame.top + _frameSize);
+
+  late final _rightTop = Offset(frame.right, frame.top);
+  late final _rightTopH = Offset(frame.right - _frameSize, frame.top);
+  late final _rightTopV = Offset(frame.right, frame.top + _frameSize);
+
+  late final _leftBottom = Offset(frame.left, frame.bottom);
+  late final _leftBottomH = Offset(frame.left + _frameSize, frame.bottom);
+  late final _leftBottomV = Offset(frame.left, frame.bottom - _frameSize);
+
+  late final _rightBottom = Offset(frame.right, frame.bottom);
+  late final _rightBottomH = Offset(frame.right - _frameSize, frame.bottom);
+  late final _rightBottomV = Offset(frame.right, frame.bottom - _frameSize);
 
   @override
   bool shouldRepaint(_) => false;
 
   @override
-  void paint(Canvas canvas, Size size) => canvas.drawPath(
-        Path.combine(
-          PathOperation.difference,
-          Path()..addRect(Rect.largest),
-          Path()..addRect(scanWindow),
-        ),
-        Paint()
-          ..color = clIndigo900.withOpacity(0.5)
-          ..style = PaintingStyle.fill
-          ..blendMode = BlendMode.dstOut,
-      );
+  void paint(Canvas canvas, Size size) => canvas
+    ..drawPath(_maskPath, _maskPaint)
+    ..drawLine(_leftTop, _leftTopH, _framePaint)
+    ..drawLine(_leftTop, _leftTopV, _framePaint)
+    ..drawLine(_rightTop, _rightTopH, _framePaint)
+    ..drawLine(_rightTop, _rightTopV, _framePaint)
+    ..drawLine(_leftBottom, _leftBottomH, _framePaint)
+    ..drawLine(_leftBottom, _leftBottomV, _framePaint)
+    ..drawLine(_rightBottom, _rightBottomH, _framePaint)
+    ..drawLine(_rightBottom, _rightBottomV, _framePaint);
 }

@@ -40,6 +40,7 @@ class App extends StatelessWidget {
         color: clIndigo900,
         darkTheme: themeDark,
         themeMode: ThemeMode.dark,
+        debugShowCheckedModeBanner: false,
         navigatorObservers: [SentryNavigatorObserver()],
         home: FutureBuilder(
           future: _init(),

@@ -63,6 +63,7 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             // Header
             HeaderBar(
@@ -79,79 +80,123 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
               subtitle: widget.subtitle,
             ),
             // QR Code
-            Expanded(
-              child: Padding(
-                padding: paddingH20,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxHeight: 400,
-                    maxWidth: 400,
-                  ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        decoration: boxDecoration,
-                        child: QrImageView(
-                          data: widget.qrCode,
-                          errorCorrectionLevel: QrErrorCorrectLevel.M,
-                          dataModuleStyle: const QrDataModuleStyle(
-                            color: clPurpleLight,
-                            dataModuleShape: QrDataModuleShape.square,
-                          ),
-                          eyeStyle: const QrEyeStyle(
-                            color: clPurpleLight,
-                            eyeShape: QrEyeShape.square,
-                          ),
-                          padding: paddingAll20,
-                        ),
+            Container(
+              margin: paddingAll20,
+              padding: paddingAll20,
+              decoration: boxDecoration,
+              width: double.infinity,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxHeight: 400,
+                  maxWidth: 400,
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    QrImageView(
+                      data: widget.qrCode,
+                      errorCorrectionLevel: QrErrorCorrectLevel.M,
+                      dataModuleStyle: const QrDataModuleStyle(
+                        color: clPurpleLight,
+                        dataModuleShape: QrDataModuleShape.square,
                       ),
-                      LayoutBuilder(builder: (_, constraints) {
-                        final logoSize = constraints.biggest.shortestSide / 4;
-                        return Container(
-                          constraints: BoxConstraints.expand(
-                            height: logoSize,
-                            width: logoSize,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24),
-                            color: clSurface,
-                          ),
-                          padding: paddingAll8,
-                          child: const SvgPicture(
-                            AssetBytesLoader('assets/images/logo.svg.vec'),
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
+                      eyeStyle: const QrEyeStyle(
+                        color: clPurpleLight,
+                        eyeShape: QrEyeShape.square,
+                      ),
+                      padding: paddingAll20,
+                    ),
+                    LayoutBuilder(builder: (_, constraints) {
+                      final logoSize = constraints.biggest.shortestSide / 4;
+                      return Container(
+                        constraints: BoxConstraints.expand(
+                          height: logoSize,
+                          width: logoSize,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24),
+                          color: clSurface,
+                        ),
+                        padding: paddingAll8,
+                        child: const SvgPicture(
+                          AssetBytesLoader('assets/images/logo.svg.vec'),
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    }),
+                  ],
                 ),
               ),
             ),
             // Share Button
-            Container(
-              padding: paddingAll20,
-              width: double.infinity,
-              child: Builder(
-                builder: (context) => ElevatedButton.icon(
-                  icon: const IconOf.share(
-                    bgColor: clIndigo500,
-                    size: 20,
+            Padding(
+              padding: paddingAll8,
+              child: Text(
+                'Text Code',
+                style: styleSourceSansPro414Purple,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: paddingH20,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: const ShapeDecoration(
+                        color: clSurface,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: clIndigo700),
+                          borderRadius: BorderRadius.only(
+                            topLeft: radius8,
+                            bottomLeft: radius8,
+                          ),
+                        ),
+                      ),
+                      height: 48,
+                      child: Padding(
+                        padding: paddingAll8,
+                        child: Text(
+                          widget.qrCode,
+                          style: styleSourceSansPro414Purple,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
                   ),
-                  label: const Text('Share Code'),
-                  onPressed: () {
-                    final box = context.findRenderObject() as RenderBox?;
-                    GetIt.I<PlatformService>().share(
-                      'This is a SINGLE-USE authentication token'
-                      ' for Guardian Keyper. DO NOT REUSE IT! \n '
-                      '${widget.qrCode}',
-                      subject: 'Guardian Code',
-                      sharePositionOrigin:
-                          box!.localToGlobal(Offset.zero) & box.size,
-                    );
-                  },
-                ),
+                  Container(
+                    decoration: const ShapeDecoration(
+                      color: clIndigo500,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: radius8,
+                          bottomRight: radius8,
+                        ),
+                      ),
+                    ),
+                    height: 48,
+                    child: Builder(
+                      builder: (context) => IconButton(
+                        icon: const IconOf.share(
+                          bgColor: clIndigo500,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          final box = context.findRenderObject() as RenderBox?;
+                          GetIt.I<PlatformService>().share(
+                            'This is a SINGLE-USE authentication token'
+                            ' for Guardian Keyper. DO NOT REUSE IT! \n '
+                            '${widget.qrCode}',
+                            subject: 'Guardian Code',
+                            sharePositionOrigin:
+                                box!.localToGlobal(Offset.zero) & box.size,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
