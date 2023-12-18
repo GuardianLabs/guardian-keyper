@@ -2,23 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'brand_colors.dart';
+
 part 'theme_dark.dart';
 part 'theme_light.dart';
-
-const paddingAll20 = EdgeInsets.all(20);
-const paddingH20 = EdgeInsets.symmetric(horizontal: 20);
-const paddingV6 = EdgeInsets.symmetric(vertical: 6);
-const paddingV12 = EdgeInsets.symmetric(vertical: 12);
-const paddingV20 = EdgeInsets.symmetric(vertical: 20);
-const paddingV32 = EdgeInsets.symmetric(vertical: 32);
-const paddingT12 = EdgeInsets.only(top: 12);
-const paddingT20 = EdgeInsets.only(top: 20);
-const paddingT32 = EdgeInsets.only(top: 32);
-const paddingB12 = EdgeInsets.only(bottom: 12);
-const paddingB20 = EdgeInsets.only(bottom: 20);
-const paddingB32 = EdgeInsets.only(bottom: 32);
-
-const styleW600 = TextStyle(fontWeight: FontWeight.w600);
 
 final textTheme = TextTheme(
   bodyLarge: const TextStyle(
@@ -104,7 +91,7 @@ final themeData = ThemeData(
   ),
   // Expansion Panel
   expansionTileTheme: ExpansionTileThemeData(
-    childrenPadding: paddingAll20,
+    childrenPadding: const EdgeInsets.all(20),
     collapsedShape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8),
     ),
@@ -161,49 +148,3 @@ final themeData = ThemeData(
   // Text
   textTheme: textTheme,
 );
-
-@immutable
-class BrandColors extends ThemeExtension<BrandColors> {
-  const BrandColors({
-    this.highlightColor = const Color(0xFF62D6CB),
-    this.warningColor = const Color(0xFFF19C38),
-    this.dangerColor = const Color(0xFFEC5F59),
-  });
-
-  final Color highlightColor;
-  final Color warningColor;
-  final Color dangerColor;
-
-  @override
-  BrandColors copyWith({
-    Color? highlightColor,
-    Color? warningColor,
-    Color? dangerColor,
-  }) =>
-      BrandColors(
-        highlightColor: highlightColor ?? this.highlightColor,
-        warningColor: warningColor ?? this.warningColor,
-        dangerColor: dangerColor ?? this.dangerColor,
-      );
-
-  @override
-  BrandColors lerp(BrandColors? other, double t) => other == null
-      ? this
-      : BrandColors(
-          highlightColor: Color.lerp(
-            highlightColor,
-            other.highlightColor,
-            t,
-          )!,
-          warningColor: Color.lerp(
-            warningColor,
-            other.warningColor,
-            t,
-          )!,
-          dangerColor: Color.lerp(
-            dangerColor,
-            other.dangerColor,
-            t,
-          )!,
-        );
-}

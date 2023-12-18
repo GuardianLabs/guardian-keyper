@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 
 class OnShowIdDialog extends StatelessWidget {
   static Future<void> show(

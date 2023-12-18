@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
 
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
