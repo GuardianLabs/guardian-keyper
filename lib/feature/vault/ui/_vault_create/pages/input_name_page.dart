@@ -32,7 +32,7 @@ class InputNamePage extends StatelessWidget {
                 ),
                 // Footer
                 Padding(
-                  padding: paddingV32,
+                  padding: const EdgeInsets.symmetric(vertical: 32),
                   child: Selector<VaultCreatePresenter, bool>(
                     selector: (context, presenter) =>
                         presenter.isVaultNameTooShort,

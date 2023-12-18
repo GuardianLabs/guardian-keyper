@@ -8,15 +8,11 @@ export 'package:flutter/material.dart';
 const paddingAll20 = EdgeInsets.all(20);
 const paddingH20 = EdgeInsets.symmetric(horizontal: 20);
 const paddingV6 = EdgeInsets.symmetric(vertical: 6);
-const paddingV12 = EdgeInsets.symmetric(vertical: 12);
 const paddingV20 = EdgeInsets.symmetric(vertical: 20);
-const paddingV32 = EdgeInsets.symmetric(vertical: 32);
 const paddingT12 = EdgeInsets.only(top: 12);
 const paddingT20 = EdgeInsets.only(top: 20);
-const paddingT32 = EdgeInsets.only(top: 32);
 const paddingB12 = EdgeInsets.only(bottom: 12);
 const paddingB20 = EdgeInsets.only(bottom: 20);
-const paddingB32 = EdgeInsets.only(bottom: 32);
 
 const styleW600 = TextStyle(fontWeight: FontWeight.w600);
 
@@ -36,8 +32,6 @@ class ScaffoldSafe extends StatelessWidget {
 }
 
 class HeaderBar extends StatelessWidget {
-  static const double _height = 68;
-
   const HeaderBar({
     super.key,
     this.caption = '',
@@ -55,7 +49,7 @@ class HeaderBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      height: _height,
+      height: toolbarHeight,
       color: isTransparent ? Colors.transparent : theme.colorScheme.background,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -137,7 +131,7 @@ class PageTitle extends StatelessWidget {
     final paddingTop = switch (ScreenSize.get(MediaQuery.of(context).size)) {
       ScreenSmall _ => paddingT12,
       ScreenMedium _ => paddingT20,
-      _ => paddingT32,
+      _ => const EdgeInsets.only(top: 32),
     };
     final theme = Theme.of(context);
     return Padding(
@@ -210,7 +204,7 @@ class BottomSheetWidget extends StatelessWidget {
           // Icon
           if (icon != null)
             Padding(
-              padding: paddingB32,
+              padding: const EdgeInsets.only(bottom: 32),
               child: icon,
             ),
           // Title
@@ -237,47 +231,14 @@ class BottomSheetWidget extends StatelessWidget {
               ),
             ),
           // Body
-          if (body != null)
-            Padding(
-              padding: paddingT20,
-              child: body,
-            ),
+          if (body != null) Padding(padding: paddingT20, child: body),
           // Footer
-          if (footer != null)
-            Padding(
-              padding: paddingT20,
-              child: footer,
-            ),
+          if (footer != null) Padding(padding: paddingT20, child: footer),
           const Padding(padding: paddingB20),
         ],
       ),
     );
   }
-}
-
-// TBD: remove
-class DotColored extends StatelessWidget {
-  const DotColored({
-    required this.color,
-    this.size = 8,
-    this.child,
-    super.key,
-  });
-
-  final Widget? child;
-  final Color color;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-        ),
-        height: size,
-        width: size,
-        child: child,
-      );
 }
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(

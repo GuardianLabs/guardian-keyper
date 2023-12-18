@@ -35,9 +35,8 @@ class HomeScreen extends StatefulWidget {
   static const _vaultsSvg = 'assets/icons/home_vaults.svg';
   static const _shardsSvg = 'assets/icons/home_shards.svg';
 
-  static List<BottomNavigationBarItem> _buildNavBarItems(ThemeData theme) {
-    final highlightColor = theme.extension<BrandColors>()!.highlightColor;
-    final colorFilter = ColorFilter.mode(highlightColor, BlendMode.srcIn);
+  static List<BottomNavigationBarItem> _buildNavBarItems(Color color) {
+    final colorFilter = ColorFilter.mode(color, BlendMode.srcIn);
     return [
       BottomNavigationBarItem(
         // Home
@@ -130,9 +129,9 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         GetIt.I<NetworkManager>().start();
 
       case AppLifecycleState.paused:
-        GetIt.I<MessageInteractor>().flush();
-        GetIt.I<VaultInteractor>().flush();
         GetIt.I<NetworkManager>().stop();
+        GetIt.I<VaultInteractor>().flush();
+        GetIt.I<MessageInteractor>().flush();
 
       case _:
     }
@@ -149,7 +148,9 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         resizeToAvoidBottomInset: true,
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentTab,
-          items: HomeScreen._buildNavBarItems(Theme.of(context)),
+          items: HomeScreen._buildNavBarItems(
+            Theme.of(context).extension<BrandColors>()!.highlightColor,
+          ),
           onTap: _gotoPage,
         ),
         // ignore: deprecated_member_use

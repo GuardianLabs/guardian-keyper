@@ -23,7 +23,7 @@ class ShardShowScreen extends StatelessWidget {
           ),
           // Body
           Padding(
-            padding: paddingT32 + paddingH20,
+            padding: const EdgeInsets.only(top: 32, left: 20, right: 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -67,7 +67,7 @@ class ShardShowScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: paddingT32,
+                  padding: const EdgeInsets.only(top: 32),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

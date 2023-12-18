@@ -2,79 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'brand_colors.dart';
+import 'package:guardian_keyper/consts.dart';
+import 'package:guardian_keyper/ui/theme/brand_colors.dart';
+import 'package:guardian_keyper/ui/widgets/common.dart';
 
 part 'theme_dark.dart';
 part 'theme_light.dart';
 
-final textTheme = TextTheme(
-  bodyLarge: const TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
-  ),
-  bodyMedium: const TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-  ),
-  bodySmall: const TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-  ),
-  headlineLarge: GoogleFonts.poppins(
-    fontSize: 32,
-    fontWeight: FontWeight.w600,
-  ),
-  headlineMedium: GoogleFonts.poppins(
-    fontSize: 30,
-    fontWeight: FontWeight.w500,
-  ),
-  headlineSmall: GoogleFonts.poppins(
-    fontSize: 28,
-    fontWeight: FontWeight.w400,
-  ),
-  labelLarge: const TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-  ),
-  labelMedium: const TextStyle(
-    fontSize: 12,
-    fontWeight: FontWeight.w400,
-  ),
-  labelSmall: const TextStyle(
-    fontSize: 10,
-    fontWeight: FontWeight.w400,
-  ),
-  titleLarge: GoogleFonts.poppins(
-    fontSize: 20,
-    fontWeight: FontWeight.w600,
-  ),
-  titleMedium: GoogleFonts.poppins(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-  ),
-  titleSmall: GoogleFonts.poppins(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-  ),
-);
+final textTheme = ThemeData().textTheme.copyWith(
+      headlineLarge: GoogleFonts.poppins(
+        fontSize: 32,
+        fontWeight: FontWeight.w600,
+      ),
+      headlineMedium: GoogleFonts.poppins(
+        fontSize: 30,
+        fontWeight: FontWeight.w500,
+      ),
+      headlineSmall: GoogleFonts.poppins(
+        fontSize: 28,
+        fontWeight: FontWeight.w400,
+      ),
+      titleLarge: GoogleFonts.poppins(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+      ),
+      titleMedium: GoogleFonts.poppins(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+      ),
+      titleSmall: GoogleFonts.poppins(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+      ),
+    );
 
 final themeData = ThemeData(
   // AppBar
-  appBarTheme: AppBarTheme(
+  appBarTheme: const AppBarTheme(
     centerTitle: true,
-    titleTextStyle: textTheme.titleMedium,
-    toolbarHeight: 68,
+    toolbarHeight: toolbarHeight,
   ),
   // Bottom Navigation Bar
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
-    selectedLabelStyle: textTheme.labelMedium,
-    unselectedLabelStyle: textTheme.labelSmall,
   ),
   // Bottom Sheet
   bottomSheetTheme: const BottomSheetThemeData(
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(cornerRadius)),
     ),
   ),
   // Card
@@ -82,7 +57,7 @@ final themeData = ThemeData(
     elevation: 0,
     margin: EdgeInsets.zero,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(cornerRadius),
     ),
   ),
   // Divider
@@ -93,18 +68,21 @@ final themeData = ThemeData(
   expansionTileTheme: ExpansionTileThemeData(
     childrenPadding: const EdgeInsets.all(20),
     collapsedShape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(cornerRadius),
     ),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(cornerRadius),
     ),
   ),
   // Filled Button
   filledButtonTheme: FilledButtonThemeData(
     style: ButtonStyle(
-      fixedSize: const MaterialStatePropertyAll(Size(double.infinity, 48)),
+      fixedSize: const MaterialStatePropertyAll(Size(
+        double.infinity,
+        buttonSize,
+      )),
       shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(cornerRadius),
       )),
       textStyle: MaterialStatePropertyAll(textTheme.titleMedium),
     ),
@@ -114,29 +92,31 @@ final themeData = ThemeData(
   // Input
   inputDecorationTheme: InputDecorationTheme(
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
-      borderSide: const BorderSide(
-        width: 2,
-      ),
+      borderRadius: BorderRadius.circular(cornerRadius),
+      borderSide: const BorderSide(width: 2),
     ),
     floatingLabelStyle: textTheme.labelMedium,
   ),
   // ListTile
   listTileTheme: ListTileThemeData(
     titleTextStyle: textTheme.bodyMedium?.copyWith(
+      fontWeight: FontWeight.w600,
       overflow: TextOverflow.ellipsis,
     ),
     subtitleTextStyle: textTheme.bodySmall,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(cornerRadius),
     ),
   ),
   // Outlined Button
   outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(
-    fixedSize: const MaterialStatePropertyAll(Size(double.infinity, 48)),
+    fixedSize: const MaterialStatePropertyAll(Size(
+      double.infinity,
+      buttonSize,
+    )),
     shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(cornerRadius),
     )),
     textStyle: MaterialStatePropertyAll(textTheme.titleMedium),
   )),

@@ -22,7 +22,7 @@ class AddNamePage extends StatelessWidget {
         const PageTitle(title: 'Create a name for your Secret'),
         // Input
         Padding(
-          padding: paddingT32 + paddingH20,
+          padding: const EdgeInsets.only(top: 32, left: 20, right: 20),
           child: TextFormField(
             autofocus: true,
             decoration: const InputDecoration(labelText: ' Secret name '),
@@ -34,7 +34,7 @@ class AddNamePage extends StatelessWidget {
         ),
         // Footer
         Padding(
-          padding: paddingT32 + paddingH20,
+          padding: const EdgeInsets.only(top: 32, left: 20, right: 20),
           child: Selector<VaultSecretAddPresenter, bool>(
             selector: (_, p) => p.isNameTooShort,
             builder: (context, isNameTooShort, _) => FilledButton(

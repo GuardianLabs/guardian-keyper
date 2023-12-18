@@ -27,18 +27,19 @@ class SetDeviceNamePage extends StatelessWidget {
           ),
         ),
         Padding(
-            padding: paddingV20,
-            child: TextFormField(
-              autofocus: true,
-              initialValue: presenter.deviceName,
-              onChanged: (value) => presenter.deviceName = value,
-              keyboardType: TextInputType.text,
-              maxLength: maxNameLength,
-              decoration: const InputDecoration(
-                labelText: ' Guardian name ',
-                helperText: 'Minimum $minNameLength characters',
-              ),
-            )),
+          padding: paddingV20,
+          child: TextFormField(
+            autofocus: true,
+            initialValue: presenter.deviceName,
+            onChanged: (value) => presenter.deviceName = value,
+            keyboardType: TextInputType.text,
+            maxLength: maxNameLength,
+            decoration: const InputDecoration(
+              labelText: ' Guardian name ',
+              helperText: 'Minimum $minNameLength characters',
+            ),
+          ),
+        ),
         Padding(
           padding: paddingV20,
           child: Consumer<IntroPresenter>(

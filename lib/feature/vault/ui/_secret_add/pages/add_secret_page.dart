@@ -35,7 +35,7 @@ class AddSecretPage extends StatelessWidget {
               ),
               // Footer
               Padding(
-                padding: paddingV32,
+                padding: const EdgeInsets.symmetric(vertical: 32),
                 child: Selector<VaultSecretAddPresenter, String>(
                   selector: (_, p) => p.secret,
                   builder: (_, secret, __) => FilledButton(

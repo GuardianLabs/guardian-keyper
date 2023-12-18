@@ -1,12 +1,12 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/feature/network/data/network_manager.dart';
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/message/data/message_repository.dart';
+import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 
-import '../../data/message_repository.dart';
-import '../entity/message_model.dart';
 import 'message_ingress_mixin.dart';
 import 'message_egress_mixin.dart';
 
@@ -16,12 +16,6 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
   MessageInteractor() {
     _networkManager.messageStream.listen(onMessage);
   }
-
-  late final flush = _messageRepository.flush;
-  late final watch = _messageRepository.watch;
-  late final pruneMessages = _messageRepository.prune;
-  late final getPeerStatus = _networkManager.getPeerStatus;
-  late final pingPeer = _networkManager.pingPeer;
 
   final _networkManager = GetIt.I<NetworkManager>();
   final _messageRepository = GetIt.I<MessageRepository>();
@@ -38,6 +32,17 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
       message,
     );
   }
+
+  Future<void> flush() => _messageRepository.flush();
+
+  Future<void> pruneMessages() => _messageRepository.prune();
+
+  Future<bool> pingPeer(PeerId peerId) => _networkManager.pingPeer(peerId);
+
+  bool getPeerStatus(PeerId peerId) => _networkManager.getPeerStatus(peerId);
+
+  Stream<MessageRepositoryEvent> watch([String? key]) =>
+      _messageRepository.watch(key);
 
   /// Create ticket to join vault
   Future<MessageModel> createJoinVaultCode() async {

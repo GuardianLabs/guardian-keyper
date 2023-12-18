@@ -27,71 +27,58 @@ class SettingsScreen extends StatelessWidget {
               child: Consumer<SettingsPresenter>(
                 builder: (context, presenter, __) {
                   final bgColor = theme.colorScheme.secondary;
-                  return ListView(
+                  final items = [
+                    // Change Device Name
+                    ListTile(
+                      leading: IconOf.user(bgColor: bgColor),
+                      title: const Text('Change Guardian name'),
+                      subtitle: Text(presenter.deviceName),
+                      trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                      onTap: () => OnSetDeviceNameDialog.show(
+                        context,
+                        presenter: presenter,
+                      ),
+                    ),
+                    // Change PassCode
+                    ListTile(
+                      leading: IconOf.passcode(bgColor: bgColor),
+                      title: const Text('Passcode'),
+                      subtitle: const Text(
+                        'Change authentication passcode',
+                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                      onTap: () => OnChangePassCodeDialog.show(context),
+                    ),
+                    // Toggle Biometrics
+                    if (presenter.hasBiometrics)
+                      SwitchListTile.adaptive(
+                        secondary: const Icon(
+                          Icons.fingerprint,
+                          size: 40,
+                        ),
+                        title: const Text('Biometric login'),
+                        subtitle: const Text(
+                          'Easier, faster authentication with biometry',
+                        ),
+                        value: presenter.isBiometricsEnabled,
+                        onChanged: presenter.setBiometrics,
+                      ),
+                    // Toggle Bootstrap
+                    SwitchListTile.adaptive(
+                      secondary: IconOf.connection(bgColor: bgColor),
+                      title: const Text('Proxy connection'),
+                      subtitle: const Text(
+                        'Connect through Keyper-operated proxy server',
+                      ),
+                      value: presenter.isBootstrapEnabled,
+                      onChanged: presenter.setBootstrap,
+                    ),
+                  ];
+                  return ListView.separated(
                     padding: paddingAll20,
-                    children: [
-                      // Change Device Name
-                      Padding(
-                        padding: paddingV6,
-                        child: ListTile(
-                          leading: IconOf.user(bgColor: bgColor),
-                          title: const Text('Change Guardian name'),
-                          subtitle: Text(
-                            presenter.deviceName,
-                            style: theme.textTheme.bodySmall,
-                          ),
-                          trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                          onTap: () => OnSetDeviceNameDialog.show(
-                            context,
-                            presenter: presenter,
-                          ),
-                        ),
-                      ),
-                      // Change PassCode
-                      Padding(
-                        padding: paddingV6,
-                        child: ListTile(
-                          leading: IconOf.passcode(bgColor: bgColor),
-                          title: const Text('Passcode'),
-                          subtitle: Text(
-                            'Change authentication passcode',
-                            style: theme.textTheme.bodySmall,
-                          ),
-                          trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                          onTap: () => OnChangePassCodeDialog.show(context),
-                        ),
-                      ),
-                      // Toggle Biometrics
-                      if (presenter.hasBiometrics)
-                        Padding(
-                          padding: paddingV6,
-                          child: SwitchListTile.adaptive(
-                            secondary: const Icon(
-                              Icons.fingerprint,
-                              size: 40,
-                            ),
-                            title: const Text('Biometric login'),
-                            subtitle: const Text(
-                              'Easier, faster authentication with biometry',
-                            ),
-                            value: presenter.isBiometricsEnabled,
-                            onChanged: presenter.setBiometrics,
-                          ),
-                        ),
-                      // Toggle Bootstrap
-                      Padding(
-                        padding: paddingV6,
-                        child: SwitchListTile.adaptive(
-                          secondary: IconOf.connection(bgColor: bgColor),
-                          title: const Text('Proxy connection'),
-                          subtitle: const Text(
-                            'Connect through Keyper-operated proxy server',
-                          ),
-                          value: presenter.isBootstrapEnabled,
-                          onChanged: presenter.setBootstrap,
-                        ),
-                      ),
-                    ],
+                    itemCount: items.length,
+                    itemBuilder: (_, i) => items[i],
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
                   );
                 },
               ),

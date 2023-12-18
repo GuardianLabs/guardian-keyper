@@ -102,7 +102,7 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
                         style: _theme.textTheme.bodyMedium,
                       ),
                       const Padding(
-                        padding: paddingV12,
+                        padding: EdgeInsets.symmetric(vertical: 12),
                         child: Text('Something went wrong. Please try again.'),
                       ),
                       LinearProgressIndicator(
@@ -116,7 +116,7 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
                         style: _theme.textTheme.bodySmall,
                       ),
                       Padding(
-                        padding: paddingV12,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                         child: _isPeerOnline
                             ? Text(
                                 'Online',

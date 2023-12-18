@@ -55,7 +55,7 @@ class IntrosPage extends StatelessWidget {
             const Spacer(),
             // Slide
             Padding(
-              padding: paddingB32,
+              padding: const EdgeInsets.only(bottom: 32),
               child: IntrosPage.slides[presenter.introStep],
             ),
             Padding(
@@ -93,10 +93,15 @@ class IntrosPage extends StatelessWidget {
                     for (var i = 0; i < _titles.length; i++)
                       Padding(
                         padding: const EdgeInsets.only(right: 8),
-                        child: DotColored(
-                          color: i == presenter.introStep
-                              ? theme.colorScheme.tertiary
-                              : theme.colorScheme.secondary,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: i == presenter.introStep
+                                ? theme.colorScheme.onSecondary
+                                : theme.colorScheme.secondary,
+                            shape: BoxShape.circle,
+                          ),
+                          height: 8,
+                          width: 8,
                         ),
                       ),
                   ],

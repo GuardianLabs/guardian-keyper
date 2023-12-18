@@ -4,13 +4,12 @@ import 'dart:convert';
 import 'package:nsd/nsd.dart' as nsd;
 import 'package:flutter/foundation.dart';
 
-import 'package:guardian_keyper/consts.dart';
-
 class MdnsService {
   static const _mdnsPeerId = 'peerId';
   static const _mdnsType = '_guardianKeyper._udp';
   static const _utf8Encoder = Utf8Encoder();
   static const _utf8Decoder = Utf8Decoder();
+  static const _initTimeout = Duration(seconds: 5);
 
   late final void Function(
     Uint8List peerId,
@@ -32,7 +31,7 @@ class MdnsService {
               _mdnsPeerId: _utf8Encoder.convert(base64Encode(peerId)),
             },
           ))
-          .timeout(initTimeout);
+          .timeout(_initTimeout);
     } on TimeoutException catch (e) {
       if (kDebugMode) print(e);
     }
@@ -49,7 +48,7 @@ class MdnsService {
     try {
       _discovery ??= await nsd
           .startDiscovery(_mdnsType, ipLookupType: nsd.IpLookupType.any)
-          .timeout(initTimeout)
+          .timeout(_initTimeout)
         ..addServiceListener(_onEvent);
     } on TimeoutException catch (e) {
       if (kDebugMode) print(e);

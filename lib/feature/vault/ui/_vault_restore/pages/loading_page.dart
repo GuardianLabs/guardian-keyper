@@ -60,7 +60,7 @@ class _LoadingPageState extends State<LoadingPage> {
             rightButton: HeaderBarButton.close(),
           ),
           // Body
-          const Padding(padding: paddingT32),
+          const Padding(padding: EdgeInsets.only(top: 32)),
           Padding(
             padding: paddingH20,
             child: Card(

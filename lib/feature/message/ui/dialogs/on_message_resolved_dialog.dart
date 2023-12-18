@@ -142,11 +142,15 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: DotColored(
-                            color: message.isAccepted
-                                ? brandColors.highlightColor
-                                : brandColors.dangerColor,
-                            size: 10,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: message.isAccepted
+                                  ? brandColors.highlightColor
+                                  : brandColors.dangerColor,
+                              shape: BoxShape.circle,
+                            ),
+                            height: 8,
+                            width: 8,
                           ),
                         ),
                       ],

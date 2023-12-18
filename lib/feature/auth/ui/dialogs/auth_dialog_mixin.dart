@@ -36,8 +36,8 @@ abstract class AuthDialogBase {
   static EdgeInsets getPadding(BuildContext context) =>
       paddingH20 +
       (ScreenSize.get(MediaQuery.of(context).size) is ScreenSmall
-          ? paddingV12
-          : paddingV32);
+          ? const EdgeInsets.symmetric(vertical: 12)
+          : const EdgeInsets.symmetric(vertical: 32));
 
   static ScreenLockConfig getScreenLockConfig(BuildContext context) {
     final theme = Theme.of(context);

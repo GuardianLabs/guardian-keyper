@@ -50,7 +50,7 @@ class ChooseSizePage extends StatelessWidget {
               ),
               onTap: () => presenter.setVaultSize(5, 3),
             ),
-            const Padding(padding: paddingB32),
+            const Padding(padding: EdgeInsets.only(bottom: 32)),
             ListTile(
               isThreeLine: true,
               title: const Text('Turn this device into a Guardian'),
@@ -68,7 +68,7 @@ class ChooseSizePage extends StatelessWidget {
             ),
             // Footer
             Padding(
-              padding: paddingV32,
+              padding: const EdgeInsets.symmetric(vertical: 32),
               child: FilledButton(
                 onPressed: context.read<VaultCreatePresenter>().nextPage,
                 child: const Text('Continue'),

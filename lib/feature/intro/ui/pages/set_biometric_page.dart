@@ -20,7 +20,7 @@ class SetBiometricPage extends StatelessWidget {
             'assets/images/intro_biometrics.svg.vec',
           )),
           Padding(
-            padding: paddingT32,
+            padding: const EdgeInsets.only(top: 32),
             child: Text(
               'Enable biometric authentication?',
               style: theme.textTheme.headlineMedium,

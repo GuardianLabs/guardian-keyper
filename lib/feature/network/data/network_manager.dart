@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/data/services/preferences_service.dart';
@@ -52,7 +52,7 @@ class NetworkManager {
   late PeerId _selfId;
   late bool _isBootstrapEnabled;
 
-  int port = defaultPort;
+  int port = bsPort;
 
   NetworkManagerStatus _status = NetworkManagerStatus.uninited;
 

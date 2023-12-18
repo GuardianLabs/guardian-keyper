@@ -24,7 +24,7 @@ class VaultCreatedPage extends StatelessWidget {
             const Spacer(),
             // Footer
             Padding(
-              padding: paddingV32,
+              padding: const EdgeInsets.symmetric(vertical: 32),
               child: FilledButton(
                 onPressed: () => Navigator.popAndPushNamed(
                   context,

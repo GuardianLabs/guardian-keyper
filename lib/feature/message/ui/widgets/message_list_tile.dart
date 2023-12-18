@@ -30,7 +30,14 @@ class MessageListTile extends StatelessWidget with MessageTextMixin {
           if (message.isReceived)
             Padding(
               padding: const EdgeInsets.only(left: 4),
-              child: DotColored(color: brandColors.dangerColor),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: brandColors.dangerColor,
+                  shape: BoxShape.circle,
+                ),
+                height: 8,
+                width: 8,
+              ),
             ),
         ],
       ),
