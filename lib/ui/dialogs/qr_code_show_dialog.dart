@@ -47,7 +47,10 @@ class QRCodeShowDialog extends StatefulWidget {
 }
 
 class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
+  static const _radius8 = Radius.circular(8);
+
   late final _colorScheme = Theme.of(context).colorScheme;
+  late final _textTheme = Theme.of(context).textTheme;
 
   @override
   void initState() {
@@ -85,7 +88,7 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
               margin: paddingAll20,
               padding: paddingAll20,
               decoration: BoxDecoration(
-                borderRadius: borderRadius8,
+                borderRadius: BorderRadius.circular(8),
                 color: _colorScheme.surface,
               ),
               width: double.infinity,
@@ -121,7 +124,7 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
                           borderRadius: BorderRadius.circular(24),
                           color: _colorScheme.surface,
                         ),
-                        padding: paddingAll8,
+                        padding: const EdgeInsets.all(8),
                         child: const SvgPicture(
                           AssetBytesLoader('assets/images/logo.svg.vec'),
                           fit: BoxFit.cover,
@@ -134,10 +137,10 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
             ),
             // Share Button
             Padding(
-              padding: paddingAll8,
+              padding: const EdgeInsets.all(8),
               child: Text(
                 'Text Code',
-                style: styleSourceSansPro414Purple,
+                style: _textTheme.bodySmall,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -153,17 +156,17 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
                         shape: RoundedRectangleBorder(
                           side: BorderSide(color: _colorScheme.secondary),
                           borderRadius: const BorderRadius.only(
-                            topLeft: radius8,
-                            bottomLeft: radius8,
+                            topLeft: _radius8,
+                            bottomLeft: _radius8,
                           ),
                         ),
                       ),
                       height: 48,
                       child: Padding(
-                        padding: paddingAll8,
+                        padding: const EdgeInsets.all(8),
                         child: Text(
                           widget.qrCode,
-                          style: styleSourceSansPro414Purple,
+                          style: _textTheme.bodySmall,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -174,8 +177,8 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
                       color: _colorScheme.primary,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
-                          topRight: radius8,
-                          bottomRight: radius8,
+                          topRight: _radius8,
+                          bottomRight: _radius8,
                         ),
                       ),
                     ),

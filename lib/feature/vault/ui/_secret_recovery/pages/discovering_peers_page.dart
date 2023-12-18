@@ -13,6 +13,7 @@ class DiscoveringPeersPage extends StatefulWidget {
 }
 
 class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
+  late final _theme = Theme.of(context);
   late final _presenter = context.read<VaultSecretRecoveryPresenter>();
 
   @override
@@ -67,7 +68,7 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
                             child: Text(
                               'Get at least ${_presenter.needAtLeast}'
                               ' approvals to access your Secret.',
-                              style: styleSourceSansPro414Purple,
+                              style: _theme.textTheme.bodySmall,
                             ),
                           ),
                           for (final message in presenter.messages)

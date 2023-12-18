@@ -38,7 +38,7 @@ class IntrosPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final presenter = context.watch<IntroPresenter>();
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onHorizontalDragEnd: (details) {
@@ -62,7 +62,7 @@ class IntrosPage extends StatelessWidget {
               padding: paddingB12,
               child: Text(
                 _titles[presenter.introStep],
-                style: stylePoppins620.copyWith(fontSize: 30),
+                style: theme.textTheme.titleLarge?.copyWith(fontSize: 30),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -81,10 +81,7 @@ class IntrosPage extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: presenter.nextPage,
-                  child: Text(
-                    'Skip',
-                    style: stylePoppins616,
-                  ),
+                  child: Text('Skip', style: theme.textTheme.titleMedium),
                 ),
                 // Dots
                 Row(
@@ -95,18 +92,15 @@ class IntrosPage extends StatelessWidget {
                         padding: const EdgeInsets.only(right: 8),
                         child: DotColored(
                           color: i == presenter.introStep
-                              ? colorScheme.tertiary
-                              : colorScheme.secondary,
+                              ? theme.colorScheme.tertiary
+                              : theme.colorScheme.secondary,
                         ),
                       ),
                   ],
                 ),
                 TextButton(
                   onPressed: presenter.nextSlide,
-                  child: Text(
-                    'Next',
-                    style: stylePoppins616,
-                  ),
+                  child: Text('Next', style: theme.textTheme.titleMedium),
                 ),
               ],
             ),

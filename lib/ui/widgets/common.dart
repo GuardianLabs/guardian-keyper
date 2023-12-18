@@ -18,7 +18,6 @@ class ScaffoldSafe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        // backgroundColor: clIndigo900,
         resizeToAvoidBottomInset: true,
         body: SafeArea(child: child),
       );
@@ -45,48 +44,49 @@ class HeaderBar extends StatelessWidget {
   final bool isTransparent;
 
   @override
-  Widget build(BuildContext context) => Container(
-        height: sideSize,
-        color: isTransparent
-            ? Colors.transparent
-            : Theme.of(context).colorScheme.background,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Left Button
-            Container(
-              height: sideSize,
-              width: sideSize,
-              alignment: Alignment.center,
-              child: backButton,
-            ),
-            // Caption
-            Expanded(
-                child: Container(
-              height: sideSize,
-              alignment: Alignment.center,
-              child: captionWidget ??
-                  RichText(
-                    maxLines: 1,
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
-                      text: caption,
-                      children: captionSpans,
-                      style: stylePoppins616,
-                    ),
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      height: sideSize,
+      color: isTransparent ? Colors.transparent : theme.colorScheme.background,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Left Button
+          Container(
+            height: sideSize,
+            width: sideSize,
+            alignment: Alignment.center,
+            child: backButton,
+          ),
+          // Caption
+          Expanded(
+              child: Container(
+            height: sideSize,
+            alignment: Alignment.center,
+            child: captionWidget ??
+                RichText(
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    text: caption,
+                    children: captionSpans,
+                    style: theme.textTheme.titleMedium,
                   ),
-            )),
-            // Right Button
-            Container(
-              height: sideSize,
-              width: sideSize,
-              alignment: Alignment.center,
-              child: closeButton,
-            ),
-          ],
-        ),
-      );
+                ),
+          )),
+          // Right Button
+          Container(
+            height: sideSize,
+            width: sideSize,
+            alignment: Alignment.center,
+            child: closeButton,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class HeaderBarCloseButton extends StatelessWidget {
@@ -98,16 +98,22 @@ class HeaderBarCloseButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: onPressed ?? Navigator.of(context).pop,
-        behavior: HitTestBehavior.opaque,
-        child: Center(
-          child: CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.secondary,
-            child: const Icon(Icons.close, color: clWhite),
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return GestureDetector(
+      onTap: onPressed ?? Navigator.of(context).pop,
+      behavior: HitTestBehavior.opaque,
+      child: Center(
+        child: CircleAvatar(
+          backgroundColor: colorScheme.secondary,
+          child: Icon(
+            Icons.close,
+            color: colorScheme.onSecondary,
           ),
         ),
-      );
+      ),
+    );
+  }
 }
 
 class HeaderBarMoreButton extends StatelessWidget {
@@ -119,16 +125,22 @@ class HeaderBarMoreButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: onPressed,
-        behavior: HitTestBehavior.opaque,
-        child: Center(
-          child: CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.secondary,
-            child: const Icon(Icons.keyboard_control, color: clWhite),
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return GestureDetector(
+      onTap: onPressed,
+      behavior: HitTestBehavior.opaque,
+      child: Center(
+        child: CircleAvatar(
+          backgroundColor: colorScheme.secondary,
+          child: Icon(
+            Icons.keyboard_control,
+            color: colorScheme.onSecondary,
           ),
         ),
-      );
+      ),
+    );
+  }
 }
 
 class HeaderBarBackButton extends StatelessWidget {
@@ -140,30 +152,34 @@ class HeaderBarBackButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: onPressed ?? Navigator.of(context).pop,
-        behavior: HitTestBehavior.opaque,
-        child: Center(
-          child: CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.secondary,
-            child: const Icon(Icons.arrow_back, color: clWhite),
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return GestureDetector(
+      onTap: onPressed ?? Navigator.of(context).pop,
+      behavior: HitTestBehavior.opaque,
+      child: Center(
+        child: CircleAvatar(
+          backgroundColor: colorScheme.secondary,
+          child: Icon(
+            Icons.arrow_back,
+            color: colorScheme.onSecondary,
           ),
         ),
-      );
+      ),
+    );
+  }
 }
 
 class PageTitle extends StatelessWidget {
   const PageTitle({
     super.key,
     this.title,
-    this.titleSpans,
     this.subtitle,
     this.subtitleSpans,
   });
 
   final String? title;
   final String? subtitle;
-  final List<TextSpan>? titleSpans;
   final List<TextSpan>? subtitleSpans;
 
   @override
@@ -173,21 +189,24 @@ class PageTitle extends StatelessWidget {
       ScreenMedium _ => paddingT20,
       _ => paddingT32,
     };
+    final theme = Theme.of(context);
     return Padding(
       padding: paddingH20,
       child: Column(
         children: [
-          Padding(
-            padding: paddingTop,
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                text: title,
-                children: titleSpans,
-                style: stylePoppins620,
+          // Title
+          if (title != null)
+            Padding(
+              padding: paddingTop,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: title,
+                  style: theme.textTheme.titleLarge,
+                ),
               ),
             ),
-          ),
+          // Subtitle
           if (subtitle != null || subtitleSpans != null)
             Padding(
               padding: paddingT20,
@@ -196,8 +215,10 @@ class PageTitle extends StatelessWidget {
                 text: TextSpan(
                   text: subtitle,
                   children: subtitleSpans,
-                  style: styleSourceSansPro416Purple.copyWith(
+                  style: const TextStyle(
                     height: 1.5,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
@@ -228,60 +249,68 @@ class BottomSheetWidget extends StatelessWidget {
   final Widget? footer;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: paddingAll20,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (icon != null)
-              Padding(
-                padding: paddingB32,
-                child: icon,
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Padding(
+      padding: paddingAll20,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Icon
+          if (icon != null)
+            Padding(
+              padding: paddingB32,
+              child: icon,
+            ),
+          // Title
+          if (titleString != null)
+            Padding(
+              padding: paddingB12,
+              child: Text(
+                titleString!,
+                style: textTheme.titleLarge,
+                textAlign: TextAlign.center,
               ),
-            if (titleString != null)
-              Padding(
-                padding: paddingB12,
-                child: Text(
-                  titleString!,
-                  style: stylePoppins620,
-                  textAlign: TextAlign.center,
+            ),
+          // Text
+          if (textString != null || textSpan != null)
+            Padding(
+              padding: paddingB12,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: textTheme.bodyMedium,
+                  text: textString,
+                  children: textSpan,
                 ),
               ),
-            if (textString != null || textSpan != null)
-              Padding(
-                padding: paddingB12,
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    style: styleSourceSansPro616Purple,
-                    text: textString,
-                    children: textSpan,
-                  ),
-                ),
-              ),
-            if (body != null)
-              Padding(
-                padding: paddingT20,
-                child: body,
-              ),
-            if (footer != null)
-              Padding(
-                padding: paddingT20,
-                child: footer,
-              ),
-            const Padding(padding: paddingB20),
-          ],
-        ),
-      );
+            ),
+          // Body
+          if (body != null)
+            Padding(
+              padding: paddingT20,
+              child: body,
+            ),
+          // Footer
+          if (footer != null)
+            Padding(
+              padding: paddingT20,
+              child: footer,
+            ),
+          const Padding(padding: paddingB20),
+        ],
+      ),
+    );
+  }
 }
 
 class DotColored extends StatelessWidget {
   const DotColored({
-    super.key,
-    this.child,
-    this.color = clWhite,
+    required this.color,
     this.size = 8,
+    this.child,
+    super.key,
   });
 
   final Widget? child;
@@ -290,7 +319,10 @@ class DotColored extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+        ),
         height: size,
         width: size,
         child: child,
@@ -313,7 +345,7 @@ SnackBar buildSnackBar({
         text: TextSpan(
           text: text,
           children: textSpans,
-          style: TextStyle(color: isError ? clWhite : clGreenDark),
+          style: TextStyle(color: isError ? Colors.white : clGreenDark),
         ),
       ),
     );

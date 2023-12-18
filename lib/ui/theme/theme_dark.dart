@@ -10,17 +10,38 @@ final colorSchemeDark = ColorScheme.fromSeed(
   brightness: Brightness.dark,
   seedColor: const Color(0xFF570FE4),
   primary: const Color(0xFF570FE4),
-  onPrimary: clWhite,
+  onPrimary: Colors.white,
   secondary: const Color(0xFF3C089F),
-  onSecondary: clWhite,
+  onSecondary: const Color(0xFFE6DEF8),
   tertiary: const Color(0xFFA066F5),
-  onTertiary: clWhite,
+  onTertiary: Colors.white,
   error: clRed,
   onError: clYellow,
   background: const Color(0xFF1A0244),
-  onBackground: clWhite,
+  onBackground: Colors.white,
   surface: const Color(0xFF24035F),
   onSurface: const Color(0xFFE6DEF8),
+);
+
+final textThemeDark = TextTheme(
+  bodyMedium: TextStyle(
+    color: colorSchemeDark.onSurface,
+    // fontSize: 16,
+    // fontWeight: FontWeight.w400,
+  ),
+  bodySmall: TextStyle(
+    color: colorSchemeDark.onSurface,
+    // fontSize: 10,
+    // fontWeight: FontWeight.w400,
+  ),
+  titleLarge: GoogleFonts.poppins(
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+  ),
+  titleMedium: GoogleFonts.poppins(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  ),
 );
 
 final themeDark = ThemeData(
@@ -32,7 +53,7 @@ final themeDark = ThemeData(
   appBarTheme: AppBarTheme(
     backgroundColor: colorSchemeDark.background,
     centerTitle: true,
-    titleTextStyle: stylePoppins616,
+    titleTextStyle: textThemeDark.titleMedium,
     toolbarHeight: 68,
   ),
   // Bottom Navigation Bar
@@ -53,7 +74,9 @@ final themeDark = ThemeData(
     color: colorSchemeDark.surface,
     elevation: 0,
     margin: EdgeInsets.zero,
-    shape: _shapeBorder,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
   ),
   // Divider
   dividerTheme: DividerThemeData(
@@ -63,18 +86,30 @@ final themeDark = ThemeData(
   // Expansion Panel
   expansionTileTheme: ExpansionTileThemeData(
     childrenPadding: paddingAll20,
-    collapsedIconColor: clWhite,
-    collapsedShape: _shapeBorder,
-    iconColor: clWhite,
-    shape: _shapeBorder,
+    collapsedIconColor: colorSchemeDark.onPrimary,
+    collapsedShape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
+    iconColor: colorSchemeDark.onPrimary,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
   ),
   // Filled Button
   filledButtonTheme: FilledButtonThemeData(
     style: ButtonStyle(
-      fixedSize: _fixedSizeHeight48,
-      foregroundColor: _buttonForegroundColor,
-      shape: _buttonShape,
-      textStyle: MaterialStateProperty.all<TextStyle>(stylePoppins616),
+      fixedSize: const MaterialStatePropertyAll(Size(double.infinity, 48)),
+      foregroundColor: MaterialStateProperty.resolveWith<Color>(
+        (states) => states.contains(MaterialState.disabled)
+            ? const Color(0xFF76678F)
+            : colorSchemeDark.onPrimary,
+      ),
+      shape: MaterialStatePropertyAll(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      textStyle: MaterialStatePropertyAll(textThemeDark.titleMedium),
       backgroundColor: MaterialStateProperty.resolveWith<Color>(
         (states) => states.contains(MaterialState.disabled)
             ? colorSchemeDark.secondary
@@ -87,32 +122,46 @@ final themeDark = ThemeData(
   // Input
   inputDecorationTheme: InputDecorationTheme(
     border: OutlineInputBorder(
-      borderRadius: borderRadius8,
+      borderRadius: BorderRadius.circular(8),
       borderSide: BorderSide(
         color: colorSchemeDark.tertiary,
         width: 2,
       ),
     ),
-    floatingLabelStyle: const TextStyle(color: clWhite),
+    floatingLabelStyle: TextStyle(color: colorSchemeDark.onPrimary),
   ),
   // ListTile
   listTileTheme: ListTileThemeData(
     tileColor: colorSchemeDark.surface,
-    shape: _shapeBorder,
+    titleTextStyle: styleSourceSansPro614,
+    subtitleTextStyle: styleSourceSansPro414.copyWith(
+      color: colorSchemeDark.onSecondary,
+    ),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
   ),
   // Outlined Button
   outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(
-    fixedSize: _fixedSizeHeight48,
-    foregroundColor: _buttonForegroundColor,
+    fixedSize: const MaterialStatePropertyAll(Size(double.infinity, 48)),
+    foregroundColor: MaterialStateProperty.resolveWith<Color>(
+      (states) => states.contains(MaterialState.disabled)
+          ? const Color(0xFF76678F)
+          : colorSchemeDark.onPrimary,
+    ),
     side: MaterialStateProperty.resolveWith<BorderSide>(
       (states) => BorderSide(
           color: states.contains(MaterialState.disabled)
               ? const Color(0xFF2E4283)
               : colorSchemeDark.primary),
     ),
-    shape: _buttonShape,
-    textStyle: MaterialStateProperty.all<TextStyle>(stylePoppins616),
+    shape: MaterialStatePropertyAll(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    ),
+    textStyle: MaterialStatePropertyAll(textThemeDark.titleMedium),
   )),
   // SnackBar
   snackBarTheme: const SnackBarThemeData(
@@ -122,54 +171,31 @@ final themeDark = ThemeData(
   ),
   // Switch
   switchTheme: SwitchThemeData(
-    thumbColor: MaterialStateProperty.all<Color>(clWhite),
+    thumbColor: MaterialStatePropertyAll(colorSchemeDark.onPrimary),
     trackColor: MaterialStateProperty.resolveWith<Color>((states) =>
         states.contains(MaterialState.selected)
             ? colorSchemeDark.tertiary
             : colorSchemeDark.secondary),
-    trackOutlineColor:
-        MaterialStateProperty.all<Color>(colorSchemeDark.secondary),
-    trackOutlineWidth: MaterialStateProperty.all<double>(0),
+    trackOutlineColor: MaterialStatePropertyAll(colorSchemeDark.secondary),
+    trackOutlineWidth: const MaterialStatePropertyAll(0),
   ),
   // TabBar
   tabBarTheme: TabBarTheme(
     indicator: BoxDecoration(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+      borderRadius: const BorderRadius.vertical(
+        top: Radius.circular(10),
+      ),
       color: colorSchemeDark.secondary,
     ),
     indicatorSize: TabBarIndicatorSize.tab,
     labelPadding: EdgeInsets.zero,
-    labelColor: clWhite,
-    unselectedLabelColor: clWhite,
+    labelColor: colorSchemeDark.onPrimary,
+    unselectedLabelColor: colorSchemeDark.onSecondary,
   ),
   // Text
-  textTheme: TextTheme(
-    bodySmall: TextStyle(
-      color: colorSchemeDark.onSurface,
-      fontSize: 10,
-      fontWeight: FontWeight.w600,
-      overflow: TextOverflow.ellipsis,
-    ),
-    titleLarge: stylePoppins620,
-  ),
+  textTheme: textThemeDark,
   // TextSelection
-  textSelectionTheme: const TextSelectionThemeData(
-    cursorColor: clWhite,
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: colorSchemeDark.onPrimary,
   ),
-);
-
-final _fixedSizeHeight48 = MaterialStateProperty.all<Size>(
-  const Size(double.infinity, 48),
-);
-
-final _shapeBorder = RoundedRectangleBorder(borderRadius: borderRadius8);
-
-final _buttonShape = MaterialStateProperty.all<OutlinedBorder>(
-  RoundedRectangleBorder(borderRadius: borderRadius8),
-);
-
-final _buttonForegroundColor = MaterialStateProperty.resolveWith<Color>(
-  (states) => states.contains(MaterialState.disabled)
-      ? const Color(0xFF76678F)
-      : clWhite,
 );

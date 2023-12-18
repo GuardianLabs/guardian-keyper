@@ -20,6 +20,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final selfId = GetIt.I<NetworkManager>().selfId;
     final vaultRepository = GetIt.I<VaultRepository>();
     return ListView(
@@ -30,7 +31,7 @@ class HomePage extends StatelessWidget {
           stream: GetIt.I<NetworkManager>().state,
           builder: (context, snapshot) => Text(
             snapshot.data?.peerId.name ?? selfId.name,
-            style: stylePoppins620,
+            style: theme.textTheme.titleLarge,
           ),
         ),
         Row(
@@ -38,7 +39,7 @@ class HomePage extends StatelessWidget {
             // My Key
             Text(
               selfId.toHexShort(),
-              style: styleSourceSansPro414Purple,
+              style: theme.textTheme.bodySmall,
             ),
             // Copy to Clipboard
             CopyMyKeyToClipboardButton(id: selfId.asHex),

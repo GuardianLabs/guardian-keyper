@@ -46,17 +46,18 @@ abstract class AuthDialogBase {
           : paddingV32);
 
   static ScreenLockConfig getScreenLockConfig(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
     return ScreenLockConfig(
-      backgroundColor: colorScheme.background,
-      textStyle: stylePoppins616,
-      titleTextStyle: stylePoppins620,
+      backgroundColor: theme.colorScheme.background,
+      textStyle: theme.textTheme.titleMedium,
+      titleTextStyle: theme.textTheme.titleLarge,
       buttonStyle: ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll(colorScheme.background),
-        foregroundColor: MaterialStatePropertyAll(colorScheme.onBackground),
-        side: const MaterialStatePropertyAll<BorderSide>(BorderSide.none),
+        backgroundColor: MaterialStatePropertyAll(theme.colorScheme.background),
+        foregroundColor:
+            MaterialStatePropertyAll(theme.colorScheme.onBackground),
+        side: const MaterialStatePropertyAll(BorderSide.none),
         textStyle: MaterialStatePropertyAll(
-          stylePoppins616.copyWith(overflow: TextOverflow.visible),
+          theme.textTheme.titleMedium?.copyWith(overflow: TextOverflow.visible),
         ),
       ),
     );

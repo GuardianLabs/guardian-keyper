@@ -1,6 +1,7 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import '../../domain/entity/vault.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+
 import 'dialogs/on_become_owner_dialog.dart';
 import 'dialogs/on_change_owner_dialog.dart';
 
@@ -9,6 +10,7 @@ class ShardShowScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final vault = ModalRoute.of(context)!.settings.arguments! as Vault;
     return ScaffoldSafe(
       child: Column(
@@ -29,14 +31,14 @@ class ShardShowScreen extends StatelessWidget {
                 // Owner name
                 Text(
                   vault.ownerId.name,
-                  style: styleSourceSansPro414Purple,
+                  style: theme.textTheme.bodySmall,
                 ),
                 // Vault name
                 Padding(
                   padding: paddingV6,
                   child: Text(
                     vault.id.name,
-                    style: stylePoppins616,
+                    style: theme.textTheme.titleMedium,
                   ),
                 ),
                 // Vault ID
@@ -71,11 +73,11 @@ class ShardShowScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Secret Shards',
-                        style: stylePoppins620,
+                        style: theme.textTheme.titleLarge,
                       ),
                       Text(
                         vault.secrets.length.toString(),
-                        style: stylePoppins620,
+                        style: theme.textTheme.titleLarge,
                       ),
                     ],
                   ),

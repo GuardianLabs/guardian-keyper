@@ -9,6 +9,7 @@ class SetDeviceNamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final presenter = context.read<IntroPresenter>();
     return ListView(
       padding: paddingAll20,
@@ -22,7 +23,7 @@ class SetDeviceNamePage extends StatelessWidget {
           child: Text(
             'Create your Guardian name',
             textAlign: TextAlign.center,
-            style: stylePoppins620,
+            style: theme.textTheme.titleLarge,
           ),
         ),
         Padding(

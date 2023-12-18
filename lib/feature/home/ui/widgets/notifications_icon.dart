@@ -16,6 +16,7 @@ class NotificationsIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final messageInteractor = GetIt.I<MessageInteractor>();
     return StreamBuilder(
       stream: messageInteractor.watch(),
@@ -28,7 +29,7 @@ class NotificationsIcon extends StatelessWidget {
             SvgPicture.asset(
               'assets/icons/home_notifications.svg',
               // ignore: deprecated_member_use
-              color: isSelected ? clGreen : clWhite,
+              color: isSelected ? clGreen : Colors.white,
               height: iconSize,
               width: iconSize,
             ),
@@ -42,8 +43,8 @@ class NotificationsIcon extends StatelessWidget {
                   child: Center(
                     child: Text(
                       count > 9 ? '$count+' : count.toString(),
-                      style: styleSourceSansPro612.copyWith(
-                        color: Theme.of(context).colorScheme.background,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.background,
                       ),
                     ),
                   ),

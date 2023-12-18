@@ -15,6 +15,7 @@ class HomeShardsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final vaultInteractor = GetIt.I<VaultInteractor>();
     return StreamBuilder<Object>(
       stream: vaultInteractor.watch(),
@@ -58,7 +59,7 @@ class HomeShardsPage extends StatelessWidget {
                                 '${vault.secrets.length} Shard(s)',
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: styleSourceSansPro414Purple,
+                                style: theme.textTheme.bodySmall,
                                 strutStyle: const StrutStyle(height: 1.5),
                               ),
                               trailing: Container(

@@ -22,6 +22,7 @@ class OnSetDeviceNameDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final presenter = context.read<SettingsPresenter>();
     return ScaffoldSafe(
       child: Column(
@@ -41,7 +42,7 @@ class OnSetDeviceNameDialog extends StatelessWidget {
                   child: Text(
                     'Create new Device name',
                     textAlign: TextAlign.center,
-                    style: stylePoppins620,
+                    style: theme.textTheme.titleLarge,
                   ),
                 ),
                 Padding(

@@ -31,12 +31,11 @@ class OnVaultTransferDialog extends StatelessWidget {
               backButton: HeaderBarBackButton(),
             ),
             // Body
-            Padding(
+            const Padding(
               padding: paddingAll20,
               child: Text(
-                'Select a Vault to assist with its recovery\n'
-                ' or ownership transfer.',
-                style: styleSourceSansPro416Purple,
+                'Select a Vault to assist with its recovery '
+                'or ownership transfer.',
                 textAlign: TextAlign.center,
               ),
             ),

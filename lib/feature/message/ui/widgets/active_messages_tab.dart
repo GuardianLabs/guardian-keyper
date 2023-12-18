@@ -12,11 +12,10 @@ class ActiveMessagesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final presenter = context.watch<MessageHomePresenter>();
     return presenter.activeMessages.isEmpty
-        ? Center(
+        ? const Center(
             child: Text(
               'You don’t have any active notifications',
               textAlign: TextAlign.center,
-              style: styleSourceSansPro414,
               softWrap: true,
             ),
           )
@@ -30,10 +29,7 @@ class ActiveMessagesTab extends StatelessWidget {
                       color: Theme.of(context).colorScheme.background,
                       height: double.infinity,
                       padding: paddingH20,
-                      child: Text(
-                        'Move to Resolved',
-                        style: styleSourceSansPro416Purple,
-                      ),
+                      child: const Text('Move to Resolved'),
                     ),
                     direction: DismissDirection.startToEnd,
                     confirmDismiss: (_) =>

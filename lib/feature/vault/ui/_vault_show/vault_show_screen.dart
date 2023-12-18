@@ -17,6 +17,7 @@ class VaultShowScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final vaultId = ModalRoute.of(context)!.settings.arguments! as VaultId;
     final vaultInteractor = GetIt.I<VaultInteractor>();
     return ScaffoldSafe(
@@ -74,7 +75,7 @@ class VaultShowScreen extends StatelessWidget {
                               padding: paddingV20,
                               child: Text(
                                 'Secrets',
-                                style: stylePoppins620,
+                                style: theme.textTheme.titleLarge,
                                 textAlign: TextAlign.center,
                               ),
                             ),

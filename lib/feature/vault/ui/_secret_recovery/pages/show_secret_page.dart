@@ -19,6 +19,7 @@ class ShowSecretPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final presenter = context.watch<VaultSecretRecoveryPresenter>();
     return Column(
       children: [
@@ -52,7 +53,7 @@ class ShowSecretPage extends StatelessWidget {
                             ? _mask
                             : Text(
                                 presenter.secret,
-                                style: styleSourceSansPro414Purple,
+                                style: theme.textTheme.bodySmall,
                               ),
                       ),
                       Row(children: [

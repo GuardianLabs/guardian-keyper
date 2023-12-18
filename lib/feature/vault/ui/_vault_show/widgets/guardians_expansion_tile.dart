@@ -17,41 +17,44 @@ class GuardiansExpansionTile extends StatelessWidget {
   final bool initiallyExpanded;
 
   @override
-  Widget build(BuildContext context) => ExpansionTile(
-        initiallyExpanded: initiallyExpanded,
-        childrenPadding: EdgeInsets.zero,
-        title: Text(
-          'Vault’s Guardians',
-          style: styleSourceSansPro614,
-        ),
-        subtitle: vault.isFull
-            ? Text(
-                '${vault.size} out of ${vault.maxSize}',
-                style: styleSourceSansPro414Purple,
-              )
-            : Row(
-                children: [
-                  const Icon(Icons.info, color: Colors.orange, size: 16),
-                  Text(
-                    '  ${vault.size} out of ${vault.maxSize}',
-                    style: styleSourceSansPro414Purple,
-                  ),
-                ],
-              ),
-        children: [
-          for (final guardian in vault.guardians.keys)
-            guardian == vault.ownerId
-                ? const GuardianListTile.my()
-                : GuardianWithPingTile(guardian: guardian),
-          for (var i = vault.size; i < vault.maxSize; i++)
-            GuardianListTile.empty(
-              onTap: () => vault.isRestricted
-                  ? Navigator.of(context).pushNamed(routeVaultRestore)
-                  : Navigator.of(context).pushNamed(
-                      routeVaultGuardianAdd,
-                      arguments: vault.id,
-                    ),
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ExpansionTile(
+      initiallyExpanded: initiallyExpanded,
+      childrenPadding: EdgeInsets.zero,
+      title: Text(
+        'Vault’s Guardians',
+        style: styleSourceSansPro614,
+      ),
+      subtitle: vault.isFull
+          ? Text(
+              '${vault.size} out of ${vault.maxSize}',
+              style: theme.textTheme.bodySmall,
+            )
+          : Row(
+              children: [
+                const Icon(Icons.info, color: Colors.orange, size: 16),
+                Text(
+                  '  ${vault.size} out of ${vault.maxSize}',
+                  style: theme.textTheme.bodySmall,
+                ),
+              ],
             ),
-        ],
-      );
+      children: [
+        for (final guardian in vault.guardians.keys)
+          guardian == vault.ownerId
+              ? const GuardianListTile.my()
+              : GuardianWithPingTile(guardian: guardian),
+        for (var i = vault.size; i < vault.maxSize; i++)
+          GuardianListTile.empty(
+            onTap: () => vault.isRestricted
+                ? Navigator.of(context).pushNamed(routeVaultRestore)
+                : Navigator.of(context).pushNamed(
+                    routeVaultGuardianAdd,
+                    arguments: vault.id,
+                  ),
+          ),
+      ],
+    );
+  }
 }

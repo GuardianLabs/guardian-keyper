@@ -82,7 +82,7 @@ class _ScannerOverlay extends CustomPainter {
   final Rect frame;
 
   final _framePaint = Paint()
-    ..color = clWhite
+    ..color = Colors.white
     ..strokeCap = StrokeCap.round
     ..strokeWidth = 8;
 

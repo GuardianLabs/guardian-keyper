@@ -36,13 +36,12 @@ class OnRejectDialog extends StatelessWidget {
           ),
           TextSpan(text: vaultName, style: styleW600),
         ],
-        body: Card(
+        body: const Card(
           child: Padding(
             padding: paddingAll20,
             child: Text(
               'Since Guardian rejected ownership transfer, '
               'it is impossible to restore the Vault.',
-              style: styleSourceSansPro416Purple,
               textAlign: TextAlign.center,
             ),
           ),

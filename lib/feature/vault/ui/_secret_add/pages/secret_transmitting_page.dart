@@ -16,6 +16,7 @@ class SecretTransmittingPage extends StatefulWidget {
 }
 
 class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
+  late final _theme = Theme.of(context);
   @override
   void initState() {
     super.initState();
@@ -53,9 +54,9 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                 ),
                 // Warning
                 Container(
-                  decoration: ShapeDecoration(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
                     color: const Color(0x26F19C38),
-                    shape: RoundedRectangleBorder(borderRadius: borderRadius8),
                   ),
                   padding: paddingAll20,
                   child: const Text(
@@ -87,7 +88,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                               'Ask Guardians to open the app and accept a '
                               'Secret Shard. Make sure they keep the app open '
                               'until the Shard splitting is complete.',
-                              style: styleSourceSansPro414Purple,
+                              style: _theme.textTheme.bodySmall,
                             ),
                           ),
                           for (final message in presenter.messages)
