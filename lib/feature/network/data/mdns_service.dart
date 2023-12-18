@@ -32,7 +32,7 @@ class MdnsService {
             },
           ))
           .timeout(_initTimeout);
-    } on TimeoutException catch (e) {
+    } catch (e) {
       if (kDebugMode) print(e);
     }
   }
