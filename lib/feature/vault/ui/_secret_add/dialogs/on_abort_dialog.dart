@@ -15,23 +15,20 @@ class OnAbortDialog extends StatelessWidget {
         titleString: 'Quitting the process',
         textString: 'All progress will be lost, you’ll have to start '
             'from the beginning. Are you sure?',
-        footer: Padding(
-          padding: paddingV20,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              FilledButton(
-                onPressed: Navigator.of(context).pop,
-                child: const Text('Back to process'),
-              ),
-              const SizedBox(height: 20),
-              OutlinedButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Discard & Exit'),
-              ),
-            ],
-          ),
+        footer: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            FilledButton(
+              onPressed: Navigator.of(context).pop,
+              child: const Text('Back to process'),
+            ),
+            const SizedBox(height: 20),
+            OutlinedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Discard & Exit'),
+            ),
+          ],
         ),
       );
 }
