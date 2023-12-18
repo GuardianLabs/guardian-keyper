@@ -16,7 +16,7 @@ class ShardShowScreen extends StatelessWidget {
         children: [
           // Header
           HeaderBar(
-            captionSpans: buildTextWithId(name: vault.id.name),
+            caption: vault.id.name,
             backButton: const HeaderBarBackButton(),
           ),
           // Body
@@ -26,12 +26,12 @@ class ShardShowScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: TextSpan(
-                    style: styleSourceSansPro414Purple,
-                    children: buildTextWithId(name: vault.ownerId.name),
-                  ),
+                // Owner name
+                Text(
+                  vault.ownerId.name,
+                  style: styleSourceSansPro414Purple,
                 ),
+                // Vault name
                 Padding(
                   padding: paddingV6,
                   child: RichText(
@@ -41,14 +41,15 @@ class ShardShowScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                // Vault ID
                 Text(
-                  vault.id.toHexShort(),
+                  'ID: ${vault.id.toHexShort()}',
                   style: styleSourceSansPro414,
                 ),
                 Padding(
                   padding: paddingT12,
                   child: PrimaryButton(
-                    text: 'Change Vault’s Owner',
+                    text: 'Show Assistance QR',
                     onPressed: () => OnChangeOwnerDialog.show(
                       context,
                       vaultId: vault.id,

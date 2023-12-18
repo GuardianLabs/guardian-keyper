@@ -1,5 +1,4 @@
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'shard_home_presenter.dart';
@@ -17,7 +16,6 @@ class ShardHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        key: const Key('ShardHomePresenter'),
         create: (_) => ShardHomePresenter(),
         child: Consumer<ShardHomePresenter>(
           builder: (context, presenter, __) => ListView(
@@ -36,32 +34,20 @@ class ShardHomeScreen extends StatelessWidget {
                   Padding(
                     padding: paddingV6,
                     child: ListTile(
-                      title: RichText(
-                        text: TextSpan(
-                          style: styleSourceSansPro614,
-                          children: buildTextWithId(name: vault.id.name),
-                        ),
-                      ),
                       isThreeLine: true,
-                      subtitle: RichText(
+                      visualDensity: VisualDensity.standard,
+                      title: Text(
+                        vault.id.name,
+                        style: styleSourceSansPro614,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Text(
+                        'Owner: ${vault.ownerId.name}\n'
+                        '${vault.secrets.length} Shard(s)',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
+                        style: styleSourceSansPro414Purple,
                         strutStyle: const StrutStyle(height: 1.5),
-                        text: TextSpan(
-                          style: styleSourceSansPro414Purple,
-                          children: [
-                            TextSpan(
-                              style: styleSourceSansPro414Purple,
-                              children: buildTextWithId(
-                                name: vault.ownerId.name,
-                              ),
-                            ),
-                            TextSpan(
-                              style: styleSourceSansPro414Purple,
-                              text: '\n${vault.secrets.length} Shard(s)',
-                            ),
-                          ],
-                        ),
                       ),
                       trailing: Container(
                         width: 0,
@@ -69,7 +55,6 @@ class ShardHomeScreen extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         child: const Icon(Icons.arrow_forward_ios),
                       ),
-                      visualDensity: VisualDensity.standard,
                       onTap: () => Navigator.of(context).pushNamed(
                         routeShardShow,
                         arguments: vault,
