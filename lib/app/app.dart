@@ -34,10 +34,12 @@ class App extends StatelessWidget with ThemeModeMapper {
               SystemChrome.setSystemUIOverlayStyle(switch (snapshot.data) {
                 ThemeMode.dark => systemStyleDark,
                 ThemeMode.light => systemStyleLight,
+                // TBD: light color scheme
                 _ =>
                   MediaQuery.of(context).platformBrightness == Brightness.dark
                       ? systemStyleDark
-                      : systemStyleLight,
+                      : systemStyleDark,
+                // : systemStyleLight,
               });
               return MaterialApp(
                 title: 'Guardian Keyper',

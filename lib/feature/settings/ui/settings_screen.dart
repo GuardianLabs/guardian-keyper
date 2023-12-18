@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
@@ -11,10 +12,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => SettingsPresenter(
-          isSystemThemeDark:
-              MediaQuery.of(context).platformBrightness == Brightness.dark,
-        ),
+        create: (_) => SettingsPresenter(),
         child: ScaffoldSafe(
           child: Column(
             children: [
@@ -75,38 +73,39 @@ class SettingsScreen extends StatelessWidget {
                         onChanged: presenter.setBootstrap,
                       ),
                       // Theme Mode
-                      ListTile(
-                        leading: const Icon(
-                          Icons.brightness_medium_outlined,
-                          size: 40,
+                      if (kDebugMode)
+                        ListTile(
+                          leading: const Icon(
+                            Icons.brightness_medium_outlined,
+                            size: 40,
+                          ),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Theme'),
+                              SegmentedButton<ThemeMode>(
+                                segments: const [
+                                  ButtonSegment(
+                                    label: Text('Light'),
+                                    value: ThemeMode.light,
+                                  ),
+                                  ButtonSegment(
+                                    label: Text('System'),
+                                    value: ThemeMode.system,
+                                  ),
+                                  ButtonSegment(
+                                    label: Text('Dark'),
+                                    value: ThemeMode.dark,
+                                  ),
+                                ],
+                                emptySelectionAllowed: false,
+                                multiSelectionEnabled: false,
+                                selected: presenter.selectedThemeMode,
+                                onSelectionChanged: presenter.setThemeMode,
+                              ),
+                            ],
+                          ),
                         ),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text('Theme'),
-                            SegmentedButton<ThemeMode>(
-                              segments: const [
-                                ButtonSegment(
-                                  label: Text('Light'),
-                                  value: ThemeMode.light,
-                                ),
-                                ButtonSegment(
-                                  label: Text('System'),
-                                  value: ThemeMode.system,
-                                ),
-                                ButtonSegment(
-                                  label: Text('Dark'),
-                                  value: ThemeMode.dark,
-                                ),
-                              ],
-                              emptySelectionAllowed: false,
-                              multiSelectionEnabled: false,
-                              selected: presenter.selectedThemeMode,
-                              onSelectionChanged: presenter.setThemeMode,
-                            ),
-                          ],
-                        ),
-                      ),
                     ];
                     return ListView.separated(
                       padding: paddingAll20,

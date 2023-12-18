@@ -11,9 +11,7 @@ import 'package:guardian_keyper/feature/settings/domain/use_case/settings_theme_
 export 'package:provider/provider.dart';
 
 class SettingsPresenter extends ChangeNotifier with ThemeModeMapper {
-  SettingsPresenter({
-    required this.isSystemThemeDark,
-  }) {
+  SettingsPresenter() {
     _authManager.getHasBiometrics().then((hasBiometrics) {
       if (hasBiometrics != _hasBiometrics) {
         _hasBiometrics = hasBiometrics;
@@ -21,8 +19,6 @@ class SettingsPresenter extends ChangeNotifier with ThemeModeMapper {
       }
     });
   }
-
-  final bool isSystemThemeDark;
 
   final _themeModeHandler = SettingsThemeCase();
 
