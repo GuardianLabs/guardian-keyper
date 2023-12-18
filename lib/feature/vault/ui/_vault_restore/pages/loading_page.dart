@@ -26,7 +26,7 @@ class _LoadingPageState extends State<LoadingPage> {
           vault: message.vault,
         );
         if (context.mounted) {
-          wantAddAnother == true
+          wantAddAnother ?? false
               ? Navigator.of(context).pushReplacementNamed(
                   routeVaultRestore,
                   arguments: message.vaultId,

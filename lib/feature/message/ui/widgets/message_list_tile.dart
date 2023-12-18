@@ -8,8 +8,8 @@ import '../dialogs/message_titles_mixin.dart';
 
 class MessageListTile extends StatelessWidget with MessageTitlesMixin {
   const MessageListTile({
-    super.key,
     required this.message,
+    super.key,
   });
 
   final MessageModel message;

@@ -21,6 +21,7 @@ enum MessageStatus {
 
 enum MessageCode { createVault, getShard, setShard, takeVault }
 
+@immutable
 class MessageModel extends Serializable {
   static const currentVersion = 1;
   static const typeId = 10;
@@ -43,11 +44,11 @@ class MessageModel extends Serializable {
   }
 
   MessageModel({
+    required this.code,
+    required this.peerId,
     this.version = currentVersion,
     MessageId? id,
     DateTime? timestamp,
-    required this.peerId,
-    required this.code,
     this.status = MessageStatus.created,
     this.payload,
   })  : id = id ?? MessageId(),
@@ -81,20 +82,20 @@ class MessageModel extends Serializable {
   int get hashCode => Object.hash(runtimeType, id.hashCode);
 
   bool get containsVault => payload is Vault;
-  Vault get vault => payload as Vault;
+  Vault get vault => payload! as Vault;
 
   bool get containsSecretShard => payload is SecretShard;
-  SecretShard get secretShard => payload as SecretShard;
+  SecretShard get secretShard => payload! as SecretShard;
 
   PeerId get ownerId => switch (payload) {
-        Vault vault => vault.ownerId,
-        SecretShard shard => shard.ownerId,
+        final Vault vault => vault.ownerId,
+        final SecretShard shard => shard.ownerId,
         _ => throw const FormatException('Payload have no ownerId!'),
       };
 
   VaultId get vaultId => switch (payload) {
-        Vault vault => vault.id,
-        SecretShard shard => shard.vaultId,
+        final Vault vault => vault.id,
+        final SecretShard shard => shard.vaultId,
         _ => throw const FormatException('Payload have no vaultId!'),
       };
 
@@ -176,6 +177,6 @@ class MessageModel extends Serializable {
         timestamp: timestamp,
         peerId: peerId ?? this.peerId,
         status: status ?? this.status,
-        payload: emptyPayload == true ? null : payload ?? this.payload,
+        payload: emptyPayload ?? false ? null : payload ?? this.payload,
       );
 }

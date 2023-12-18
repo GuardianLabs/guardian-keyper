@@ -3,16 +3,16 @@ import 'package:get_it/get_it.dart';
 import 'package:guardian_keyper/data/services/analytics_service.dart';
 
 mixin class VaultAnalyticsMixin {
-  late final logStartCreateVault = _analyticsService.logStartCreateVault;
-  late final logFinishCreateVault = _analyticsService.logFinishCreateVault;
-  late final logStartAddGuardian = _analyticsService.logStartAddGuardian;
-  late final logFinishAddGuardian = _analyticsService.logFinishAddGuardian;
-  late final logStartRestoreVault = _analyticsService.logStartRestoreVault;
-  late final logFinishRestoreVault = _analyticsService.logFinishRestoreVault;
-  late final logStartAddSecret = _analyticsService.logStartAddSecret;
-  late final logFinishAddSecret = _analyticsService.logFinishAddSecret;
-  late final logStartRestoreSecret = _analyticsService.logStartRestoreSecret;
-  late final logFinishRestoreSecret = _analyticsService.logFinishRestoreSecret;
-
   final _analyticsService = GetIt.I<AnalyticsService>();
+
+  void logStartCreateVault() => _analyticsService.logStartCreateVault();
+  void logFinishCreateVault() => _analyticsService.logFinishCreateVault();
+  void logStartAddGuardian() => _analyticsService.logStartAddGuardian();
+  void logFinishAddGuardian() => _analyticsService.logFinishAddGuardian();
+  void logStartRestoreVault() => _analyticsService.logStartRestoreVault();
+  void logFinishRestoreVault() => _analyticsService.logFinishRestoreVault();
+  void logStartAddSecret() => _analyticsService.logStartAddSecret();
+  void logFinishAddSecret() => _analyticsService.logFinishAddSecret();
+  void logStartRestoreSecret() => _analyticsService.logStartRestoreSecret();
+  void logFinishRestoreSecret() => _analyticsService.logFinishRestoreSecret();
 }

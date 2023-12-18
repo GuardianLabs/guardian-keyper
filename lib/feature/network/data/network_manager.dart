@@ -143,7 +143,7 @@ class NetworkManager {
     _updateState();
   }
 
-  Future<void> setDeviceName(final String value) async {
+  Future<void> setDeviceName(String value) async {
     _selfId = _selfId.copyWith(name: value);
     await _preferencesService.set<String>(
       PreferencesKeys.keyDeviceName,
@@ -152,7 +152,7 @@ class NetworkManager {
     _updateState();
   }
 
-  Future<void> setIsBootstrapEnabled(final bool value) async {
+  Future<void> setIsBootstrapEnabled(bool value) async {
     _isBootstrapEnabled = value;
     await _preferencesService.set<bool>(
       PreferencesKeys.keyIsBootstrapEnabled,

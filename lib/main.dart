@@ -3,19 +3,9 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'app/app.dart';
 
-Future<void> main() async {
-  const sentryUrl = String.fromEnvironment('SENTRY_URL');
-  sentryUrl.isEmpty
-      ? await appRunner()
-      : await SentryFlutter.init(
-          (options) => options
-            ..dsn = sentryUrl
-            ..tracesSampleRate = 1.0,
-          appRunner: appRunner,
-        );
-}
-
-Future<void> appRunner() async {
-  await App.init();
-  runApp(const App());
-}
+Future<void> main() => SentryFlutter.init(
+      (options) => options
+        ..dsn = const String.fromEnvironment('SENTRY_URL')
+        ..tracesSampleRate = 1.0,
+      appRunner: () async => runApp(await App.init()),
+    );

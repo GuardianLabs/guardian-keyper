@@ -31,7 +31,7 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) _presenter.checkClipboard();
   }
@@ -74,7 +74,7 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
         ],
       );
 
-  void _setCode(final String? code) {
+  void _setCode(String? code) {
     try {
       _presenter.setCode(code);
     } on SetCodeFailException {

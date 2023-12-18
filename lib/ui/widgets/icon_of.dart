@@ -222,7 +222,7 @@ class IconOf extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final actualSize = (size ?? 40) * (isBig == true ? 2 : 1);
+    final actualSize = (size ?? 40) * (isBig ?? false ? 2 : 1);
     final iconWidget = Container(
       decoration: BoxDecoration(
         color: bgColor ?? Theme.of(context).colorScheme.secondary,
@@ -250,7 +250,7 @@ class IconOf extends StatelessWidget {
           color: clWhite,
           size: bageSize,
         );
-        break;
+
       case BageType.warning:
         bageColor = clYellow;
         bageWidget = Icon(
@@ -258,7 +258,7 @@ class IconOf extends StatelessWidget {
           color: clWhite,
           size: bageSize,
         );
-        break;
+
       case BageType.error:
         bageColor = clRed;
         bageWidget = Icon(
@@ -266,8 +266,8 @@ class IconOf extends StatelessWidget {
           color: clWhite,
           size: bageSize,
         );
-        break;
-      default:
+
+      case _:
     }
 
     return SizedBox(

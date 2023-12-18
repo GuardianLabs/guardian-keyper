@@ -12,7 +12,6 @@ class RouterService {
       : _router = router ??
             p2p.RouterL2(
               transports: [],
-              messageTTL: retryNetworkTimeout,
               keepalivePeriod: keepalivePeriod,
               logger: kDebugMode ? print : null,
             )
@@ -82,7 +81,7 @@ class RouterService {
   void toggleBootstrap([bool? isActive]) {
     if (bsPeerId.isEmpty) return;
     final peerId = p2p.PeerId(value: base64Decode(bsPeerId));
-    if (isActive == true) {
+    if (isActive ?? false) {
       final addressProperties = p2p.AddressProperties(isStatic: true);
       if (bsAddressV4.isNotEmpty) {
         _router.addPeerAddress(

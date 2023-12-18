@@ -42,7 +42,7 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
   int get needAtLeast => vault.threshold - (vault.isSelfGuarded ? 1 : 0);
 
   @override
-  void responseHandler(MessageModel message) async {
+  Future<void> responseHandler(MessageModel message) async {
     final updatedMessage = checkAndUpdateMessage(message, MessageCode.getShard);
     if (updatedMessage == null) return;
     if (messages.where((m) => m.isAccepted).length >= vault.threshold) {

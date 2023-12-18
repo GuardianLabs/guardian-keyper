@@ -23,8 +23,8 @@ class OnMessageActiveDialog extends StatefulWidget with MessageTitlesMixin {
       );
 
   const OnMessageActiveDialog({
-    super.key,
     required this.message,
+    super.key,
   });
 
   final MessageModel message;

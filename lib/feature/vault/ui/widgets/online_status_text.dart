@@ -11,7 +11,10 @@ import '../../domain/use_case/vault_interactor.dart';
 class OnlineStatusText extends StatefulWidget {
   final PeerId peerId;
 
-  const OnlineStatusText({super.key, required this.peerId});
+  const OnlineStatusText({
+    required this.peerId,
+    super.key,
+  });
 
   @override
   State<OnlineStatusText> createState() => _OnlineStatusTextState();
@@ -44,9 +47,9 @@ class _OnlineStatusTextState extends State<OnlineStatusText> {
             .map((e) => e.$2),
         builder: (
           BuildContext context,
-          final AsyncSnapshot<bool> snapshot,
+          AsyncSnapshot<bool> snapshot,
         ) =>
-            snapshot.data == true
+            snapshot.data ?? false
                 ? Text(
                     'Online',
                     style: styleSourceSansPro412.copyWith(color: clGreen),

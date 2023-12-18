@@ -7,24 +7,27 @@ import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 import 'secret_id.dart';
 import 'vault_id.dart';
 
+@immutable
 class SecretShard extends Serializable {
   static const currentVersion = 1;
   static const typeId = 11;
 
   SecretShard({
-    this.version = currentVersion,
     required this.id,
+    required this.shard,
     required this.ownerId,
     required this.vaultId,
     required this.vaultSize,
     required this.vaultThreshold,
-    required this.shard,
+    this.version = currentVersion,
   });
 
   final SecretId id;
   final PeerId ownerId;
   final VaultId vaultId;
-  final int version, vaultSize, vaultThreshold;
+  final int version;
+  final int vaultSize;
+  final int vaultThreshold;
   final String shard;
 
   late final String aKey = id.asKey;

@@ -22,8 +22,8 @@ class OnChangeOwnerDialog extends StatelessWidget {
       );
 
   const OnChangeOwnerDialog({
-    super.key,
     required this.vaultId,
+    super.key,
   });
 
   final VaultId vaultId;

@@ -8,7 +8,10 @@ import '../vault_show_presenter.dart';
 import '../../widgets/guardian_list_tile.dart';
 
 class GuardianWithPingTile extends StatefulWidget {
-  const GuardianWithPingTile({super.key, required this.guardian});
+  const GuardianWithPingTile({
+    required this.guardian,
+    super.key,
+  });
 
   final PeerId guardian;
 

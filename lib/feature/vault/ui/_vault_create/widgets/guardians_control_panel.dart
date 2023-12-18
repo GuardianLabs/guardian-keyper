@@ -17,7 +17,7 @@ class GuardiansControlPanel extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(12),
             child: Row(
               children: [
                 Expanded(
@@ -39,7 +39,7 @@ class GuardiansControlPanel extends StatelessWidget {
           ),
           const Divider(height: 1, thickness: 1),
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(12),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

@@ -17,7 +17,7 @@ class VaultSecretRecoveryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)!.settings.arguments as ({
+    final arguments = ModalRoute.of(context)!.settings.arguments! as ({
       VaultId vaultId,
       SecretId secretId,
     });

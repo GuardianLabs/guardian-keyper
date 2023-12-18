@@ -14,7 +14,6 @@ class OnChangePassCodeDialog {
     final padding = AuthDialogBase.getPadding(context);
     return screenLock(
       context: context,
-      canCancel: true,
       config: AuthDialogBase.screenLockConfig,
       keyPadConfig: AuthDialogBase.keyPadConfig,
       secretsConfig: AuthDialogBase.secretsConfig,
@@ -35,7 +34,6 @@ class OnChangePassCodeDialog {
         final inputController = InputController();
         screenLockCreate(
           context: context,
-          canCancel: true,
           digits: passCodeLength,
           config: AuthDialogBase.screenLockConfig,
           keyPadConfig: AuthDialogBase.keyPadConfig,
@@ -65,7 +63,6 @@ class OnChangePassCodeDialog {
               ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
                 text: 'Your login passcode was changed successfully!',
                 isFloating: true,
-                isError: false,
               ));
             }
           },

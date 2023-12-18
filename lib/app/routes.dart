@@ -13,7 +13,7 @@ import 'package:guardian_keyper/feature/vault/ui/_vault_restore/vault_restore_sc
 import 'package:guardian_keyper/feature/vault/ui/_guardian_add/vault_guardian_add_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_secret_recovery/vault_secret_recovery_screen.dart';
 
-Route? onGenerateRoute(RouteSettings settings) => MaterialPageRoute(
+Route<dynamic>? onGenerateRoute(RouteSettings settings) => MaterialPageRoute(
       settings: settings,
       fullscreenDialog: true,
       builder: (_) => switch (settings.name) {

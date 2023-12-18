@@ -38,9 +38,8 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
         child: Stack(
           children: [
             MobileScanner(
-              fit: BoxFit.cover,
               scanWindow: _scanWindow,
-              onDetect: (final BarcodeCapture captured) {
+              onDetect: (BarcodeCapture captured) {
                 if (captured.barcodes.isEmpty) return;
                 if (_hasResult) return;
                 if (context.mounted) {
@@ -82,10 +81,10 @@ class _ScannerOverlay extends CustomPainter {
   const _ScannerOverlay({required this.scanWindow});
 
   @override
-  bool shouldRepaint(covariant final CustomPainter _) => false;
+  bool shouldRepaint(_) => false;
 
   @override
-  void paint(final Canvas canvas, final Size size) => canvas.drawPath(
+  void paint(Canvas canvas, Size size) => canvas.drawPath(
         Path.combine(
           PathOperation.difference,
           Path()..addRect(Rect.largest),

@@ -4,7 +4,6 @@ import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 class OnAbortDialog extends StatelessWidget {
   static Future<bool?> show(BuildContext context) => showModalBottomSheet<bool>(
         context: context,
-        isDismissible: true,
         isScrollControlled: true,
         builder: (_) => const OnAbortDialog(),
       );

@@ -1,10 +1,11 @@
 import 'dart:math';
 import 'dart:convert';
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:collection/collection.dart';
 
 import 'serializable.dart';
 
+@immutable
 abstract class IdBase extends Serializable {
   static const _listEq = ListEquality<int>();
 
@@ -30,8 +31,9 @@ abstract class IdBase extends Serializable {
 
   @override
   bool operator ==(Object other) =>
+      other is IdBase &&
       runtimeType == other.runtimeType &&
-      _listEq.equals(token, (other as IdBase).token);
+      _listEq.equals(token, other.token);
 
   @override
   int get hashCode => Object.hash(runtimeType, _listEq.hash(token));

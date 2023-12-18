@@ -59,7 +59,7 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
   }
 
   @override
-  void responseHandler(MessageModel message) async {
+  Future<void> responseHandler(MessageModel message) async {
     final updatedMessage = checkAndUpdateMessage(message, MessageCode.setShard);
     if (updatedMessage == null) return;
     if (updatedMessage.isAccepted) {
@@ -104,7 +104,7 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
   // Private
   final _vaultInteractor = GetIt.I<VaultInteractor>();
 
-  String _secretName = '', _secret = '';
-
+  String _secret = '';
+  String _secretName = '';
   bool _isSecretObscure = true;
 }

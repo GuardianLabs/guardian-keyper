@@ -21,9 +21,9 @@ class OnRemoveSecretDialog extends StatelessWidget {
       );
 
   const OnRemoveSecretDialog({
-    super.key,
     required this.secretId,
     required this.presenter,
+    super.key,
   });
 
   final SecretId secretId;

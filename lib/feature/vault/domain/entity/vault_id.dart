@@ -6,8 +6,10 @@ import 'package:guardian_keyper/domain/entity/id_base.dart';
 class VaultId extends IdBase {
   static const currentVersion = 1;
 
-  VaultId({super.name, Uint8List? token})
-      : super(token: token ?? IdBase.getNewToken(length: 8));
+  VaultId({
+    super.name,
+    Uint8List? token,
+  }) : super(token: token ?? IdBase.getNewToken());
 
   factory VaultId.fromBytes(List<int> token) {
     final u = Unpacker(token is Uint8List ? token : Uint8List.fromList(token));

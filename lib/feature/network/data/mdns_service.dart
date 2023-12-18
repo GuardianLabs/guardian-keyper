@@ -33,9 +33,6 @@ class MdnsService {
             },
           ))
           .timeout(initTimeout);
-    } on nsd.NsdError catch (e) {
-      if (kDebugMode) print(e);
-      rethrow;
     } on TimeoutException catch (e) {
       if (kDebugMode) print(e);
     }
@@ -54,9 +51,6 @@ class MdnsService {
           .startDiscovery(_mdnsType, ipLookupType: nsd.IpLookupType.any)
           .timeout(initTimeout)
         ..addServiceListener(_onEvent);
-    } on nsd.NsdError catch (e) {
-      if (kDebugMode) print(e);
-      rethrow;
     } on TimeoutException catch (e) {
       if (kDebugMode) print(e);
     }
@@ -69,8 +63,6 @@ class MdnsService {
     try {
       await nsd.stopDiscovery(discovery);
       discovery.dispose();
-    } on nsd.NsdError catch (e) {
-      if (kDebugMode) print(e);
     } on TimeoutException catch (e) {
       if (kDebugMode) print(e);
     }

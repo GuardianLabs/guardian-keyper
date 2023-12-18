@@ -25,9 +25,9 @@ mixin MessageTitlesMixin {
     MessageCode.takeVault: ' asks you to approve a change of ownership for ',
   };
 
-  IconOf getIcon(final MessageModel message) => _icons[message.code]!;
+  IconOf getIcon(MessageModel message) => _icons[message.code]!;
 
-  String getTitle(final MessageModel message) => _titles[message.code]!;
+  String getTitle(MessageModel message) => _titles[message.code]!;
 
-  String getSubtitle(final MessageModel message) => _subtitles[message.code]!;
+  String getSubtitle(MessageModel message) => _subtitles[message.code]!;
 }

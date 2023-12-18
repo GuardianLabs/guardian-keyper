@@ -41,55 +41,55 @@ final boxDecoration = BoxDecoration(
   color: clSurface,
 );
 
-final styleSourceSansPro412 = GoogleFonts.sourceSansPro(
+final styleSourceSansPro412 = GoogleFonts.sourceSans3(
   fontSize: 12,
   fontWeight: FontWeight.w400,
 );
 
-final styleSourceSansPro414 = GoogleFonts.sourceSansPro(
+final styleSourceSansPro414 = GoogleFonts.sourceSans3(
   fontSize: 14,
   fontWeight: FontWeight.w400,
 );
 
-final styleSourceSansPro414Purple = GoogleFonts.sourceSansPro(
+final styleSourceSansPro414Purple = GoogleFonts.sourceSans3(
   color: clPurpleLight,
   fontSize: 14,
   fontWeight: FontWeight.w400,
 );
 
-final styleSourceSansPro416 = GoogleFonts.sourceSansPro(
+final styleSourceSansPro416 = GoogleFonts.sourceSans3(
   fontSize: 16,
   fontWeight: FontWeight.w400,
 );
 
-final styleSourceSansPro416Purple = GoogleFonts.sourceSansPro(
+final styleSourceSansPro416Purple = GoogleFonts.sourceSans3(
   color: clPurpleLight,
   fontSize: 16,
   fontWeight: FontWeight.w400,
 );
 
-final styleSourceSansPro612 = GoogleFonts.sourceSansPro(
+final styleSourceSansPro612 = GoogleFonts.sourceSans3(
   fontSize: 12,
   fontWeight: FontWeight.w600,
 );
 
-final styleSourceSansPro612Purple = GoogleFonts.sourceSansPro(
+final styleSourceSansPro612Purple = GoogleFonts.sourceSans3(
   color: clPurpleLight,
   fontSize: 12,
   fontWeight: FontWeight.w600,
 );
 
-final styleSourceSansPro614 = GoogleFonts.sourceSansPro(
+final styleSourceSansPro614 = GoogleFonts.sourceSans3(
   fontSize: 14,
   fontWeight: FontWeight.w600,
 );
 
-final styleSourceSansPro616 = GoogleFonts.sourceSansPro(
+final styleSourceSansPro616 = GoogleFonts.sourceSans3(
   fontSize: 16,
   fontWeight: FontWeight.w600,
 );
 
-final styleSourceSansPro616Purple = GoogleFonts.sourceSansPro(
+final styleSourceSansPro616Purple = GoogleFonts.sourceSans3(
   color: clPurpleLight,
   fontSize: 16,
   fontWeight: FontWeight.w600,

@@ -17,8 +17,8 @@ class OnFailDialog extends StatelessWidget {
       );
 
   const OnFailDialog({
-    super.key,
     required this.vaultId,
+    super.key,
   });
 
   final VaultId vaultId;

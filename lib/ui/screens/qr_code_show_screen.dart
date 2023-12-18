@@ -17,7 +17,7 @@ class QRCodeShowScreen extends StatefulWidget {
 class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
   final _platformService = GetIt.I<PlatformService>();
 
-  late final arguments = ModalRoute.of(context)!.settings.arguments as ({
+  late final arguments = ModalRoute.of(context)!.settings.arguments! as ({
     String qrCode,
     String caption,
     String subtitle,

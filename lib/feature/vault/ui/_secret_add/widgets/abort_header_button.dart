@@ -9,7 +9,7 @@ class AbortHeaderButton extends StatelessWidget {
   Widget build(BuildContext context) => HeaderBarCloseButton(
         onPressed: () async {
           final wantExit = await OnAbortDialog.show(context);
-          if (wantExit == true && context.mounted) {
+          if ((wantExit ?? false) && context.mounted) {
             Navigator.of(context).pop();
           }
         },

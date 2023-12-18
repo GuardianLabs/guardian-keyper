@@ -37,7 +37,7 @@ class AddSecretPage extends StatelessWidget {
                 selector: (_, p) => p.isSecretObscure,
                 builder: (_, isSecretObscure, __) => TextFormField(
                   enableInteractiveSelection: true,
-                  contextMenuBuilder: (_, final editableTextState) =>
+                  contextMenuBuilder: (_, editableTextState) =>
                       AdaptiveTextSelectionToolbar.buttonItems(
                     anchors: editableTextState.contextMenuAnchors,
                     buttonItems: editableTextState.contextMenuButtonItems,

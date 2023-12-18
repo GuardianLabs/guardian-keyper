@@ -1,12 +1,11 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/screens/splash_screen.dart';
-
 import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
@@ -17,10 +16,11 @@ import 'theme.dart';
 import 'routes.dart';
 
 class App extends StatefulWidget {
-  static Future<void> init() async {
+  static Future<App> init() async {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setSystemUIOverlayStyle(systemStyleDark);
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    return const App();
   }
 
   const App({
@@ -47,7 +47,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (kDebugMode) print(state);
     if (widget.di.isNotInited) return;
@@ -55,13 +55,13 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         _networkManager.start();
-        break;
+
       case AppLifecycleState.paused:
         _messagesInteractor.flush();
         _vaultInteractor.flush();
         _networkManager.stop();
-        break;
-      default:
+
+      case _:
     }
   }
 

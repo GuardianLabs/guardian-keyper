@@ -20,7 +20,6 @@ mixin class VaultNetworkMixin {
   Future<void> sendToGuardian(MessageModel message) =>
       _networkManager.sendToPeer(
         message.peerId,
-        isConfirmable: false,
         message: message.copyWith(peerId: _networkManager.selfId),
       );
 }

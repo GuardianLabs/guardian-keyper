@@ -7,23 +7,26 @@ import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 import 'secret_id.dart';
 import 'vault_id.dart';
 
+@immutable
 class Vault extends Serializable {
   static const currentVersion = 1;
   static const typeId = 12;
 
   Vault({
-    this.version = currentVersion,
-    VaultId? id,
     required this.ownerId,
+    VaultId? id,
     this.maxSize = 0,
     this.threshold = 0,
-    this.guardians = const {},
     this.secrets = const {},
+    this.guardians = const {},
+    this.version = currentVersion,
   }) : id = id ?? VaultId();
 
   final VaultId id;
   final PeerId ownerId;
-  final int version, maxSize, threshold;
+  final int version;
+  final int maxSize;
+  final int threshold;
   final Map<PeerId, String> guardians;
   final Map<SecretId, String> secrets;
 
@@ -63,9 +66,9 @@ class Vault extends Serializable {
           threshold: u.unpackInt()!,
           ownerId: PeerId.fromBytes(u.unpackBinary()),
           guardians: u.unpackMap().map<PeerId, String>((k, v) =>
-              MapEntry(PeerId.fromBytes(k as List<int>), v as String)),
+              MapEntry(PeerId.fromBytes(k! as List<int>), v! as String)),
           secrets: u.unpackMap().map<SecretId, String>((k, v) =>
-              MapEntry(SecretId.fromBytes(k as List<int>), v as String)),
+              MapEntry(SecretId.fromBytes(k! as List<int>), v! as String)),
         ),
       _ => throw const FormatException('Unsupported version of Vault!'),
     };
@@ -78,16 +81,18 @@ class Vault extends Serializable {
       ..packBinary(id.toBytes())
       ..packInt(maxSize)
       ..packInt(threshold)
-      ..packBinary(ownerId.toBytes());
-    p.packMapLength(guardians.length);
+      ..packBinary(ownerId.toBytes())
+      ..packMapLength(guardians.length);
     for (final e in guardians.entries) {
-      p.packBinary(e.key.toBytes());
-      p.packString(e.value);
+      p
+        ..packBinary(e.key.toBytes())
+        ..packString(e.value);
     }
     p.packMapLength(secrets.length);
     for (final e in secrets.entries) {
-      p.packBinary(e.key.toBytes());
-      p.packString(e.value);
+      p
+        ..packBinary(e.key.toBytes())
+        ..packString(e.value);
     }
     return p.takeBytes();
   }

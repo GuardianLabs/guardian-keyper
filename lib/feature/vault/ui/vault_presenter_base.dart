@@ -15,7 +15,7 @@ abstract class VaultPresenterBase extends PagePresenterBase {
 
   final requestCompleter = Completer<MessageModel>();
 
-  bool get isWaiting => _timer?.isActive == true;
+  bool get isWaiting => _timer?.isActive ?? false;
 
   bool get isNotWaiting => !isWaiting;
 

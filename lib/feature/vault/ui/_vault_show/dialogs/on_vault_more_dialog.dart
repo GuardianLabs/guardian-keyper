@@ -16,8 +16,8 @@ class OnVaultMoreDialog extends StatelessWidget {
       );
 
   const OnVaultMoreDialog({
-    super.key,
     required this.presenter,
+    super.key,
   });
 
   final VaultShowPresenter presenter;
@@ -34,7 +34,7 @@ class OnVaultMoreDialog extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.of(context).pop();
-            showModalBottomSheet(
+            showModalBottomSheet<void>(
               context: context,
               useSafeArea: true,
               isScrollControlled: true,

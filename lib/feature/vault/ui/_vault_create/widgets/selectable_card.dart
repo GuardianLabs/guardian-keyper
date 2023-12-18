@@ -7,9 +7,9 @@ class SelectableCard extends StatelessWidget {
   final bool isSelected;
 
   const SelectableCard({
-    super.key,
     required this.child,
     this.isSelected = false,
+    super.key,
   });
 
   @override

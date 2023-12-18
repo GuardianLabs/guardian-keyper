@@ -19,9 +19,9 @@ class OnSuccessDialog extends StatelessWidget {
       );
 
   const OnSuccessDialog({
-    super.key,
     required this.vault,
     required this.peerId,
+    super.key,
   });
 
   final PeerId peerId;

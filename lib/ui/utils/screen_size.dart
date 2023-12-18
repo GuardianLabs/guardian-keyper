@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 sealed class ScreenSize {
-  static ScreenSize get(final Size size) => switch (size.height) {
+  static ScreenSize get(Size size) => switch (size.height) {
         < ScreenSmall.height => const ScreenSmall(),
         < ScreenMedium.height => const ScreenMedium(),
         < ScreenLarge.height => const ScreenLarge(),

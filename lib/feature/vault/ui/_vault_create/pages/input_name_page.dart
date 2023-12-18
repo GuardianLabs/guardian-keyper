@@ -36,13 +36,13 @@ class InputNamePage extends StatelessWidget {
                   child: Selector<VaultCreatePresenter, bool>(
                     selector: (
                       BuildContext context,
-                      final VaultCreatePresenter presenter,
+                      VaultCreatePresenter presenter,
                     ) =>
                         presenter.isVaultNameTooShort,
                     builder: (
                       BuildContext context,
-                      final bool isGroupNameToolShort,
-                      final Widget? widget,
+                      bool isGroupNameToolShort,
+                      Widget? widget,
                     ) =>
                         PrimaryButton(
                       text: 'Continue',

@@ -3,13 +3,19 @@ import 'package:get_it/get_it.dart';
 import 'package:guardian_keyper/data/services/platform_service.dart';
 
 mixin class VaultPlatformMixin {
-  late final openMarket = _platformService.openMarket;
-  late final wakelockEnable = _platformService.wakelockEnable;
-  late final wakelockDisable = _platformService.wakelockDisable;
-  late final copyToClipboard = _platformService.copyToClipboard;
-  late final hasStringsInClipboard = _platformService.hasStringsInClipboard;
-
   final _platformService = GetIt.I<PlatformService>();
+
+  Future<bool> openMarket() => _platformService.openMarket();
+
+  Future<void> wakelockEnable() => _platformService.wakelockEnable();
+
+  Future<void> wakelockDisable() => _platformService.wakelockDisable();
+
+  Future<bool> copyToClipboard(String text) =>
+      _platformService.copyToClipboard(text);
+
+  Future<bool> hasStringsInClipboard() =>
+      _platformService.hasStringsInClipboard();
 
   Future<String?> getCodeFromClipboard() async {
     var code = await _platformService.copyFromClipboard();

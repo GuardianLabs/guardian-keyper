@@ -13,9 +13,9 @@ final tokenA = IdBase.getNewToken(length: 64);
 final tokenB = IdBase.getNewToken(length: 64);
 final tokenAA = tokenA;
 
-final peerIdA = PeerId(token: IdBase.getNewToken(length: 64), name: "Alice");
-final peerIdB = PeerId(token: IdBase.getNewToken(length: 64), name: "Bob");
-final peerIdC = PeerId(token: IdBase.getNewToken(length: 64), name: "Carol");
+final peerIdA = PeerId(token: IdBase.getNewToken(length: 64), name: 'Alice');
+final peerIdB = PeerId(token: IdBase.getNewToken(length: 64), name: 'Bob');
+final peerIdC = PeerId(token: IdBase.getNewToken(length: 64), name: 'Carol');
 
 final vaultIdA = VaultId(name: 'VaultA');
 final vaultIdB = VaultId(name: 'VaultB');
@@ -56,7 +56,6 @@ final p2pPacketA = MessageModel(
   peerId: peerIdA,
   timestamp: now,
   code: MessageCode.getShard,
-  status: MessageStatus.created,
   payload: secretShardA,
 );
 
@@ -86,12 +85,12 @@ final secretShardB = SecretShard(
   vaultThreshold: 2,
 );
 final secretShardC = SecretShard(
-      id: SecretId(name: 'SecretC'),
-      shard: 'TopSecretC',
-      ownerId: peerIdC,
-      vaultId: vaultIdC,
-      vaultSize: 3,
-      vaultThreshold: 2,
-    );
-    
+  id: SecretId(name: 'SecretC'),
+  shard: 'TopSecretC',
+  ownerId: peerIdC,
+  vaultId: vaultIdC,
+  vaultSize: 3,
+  vaultThreshold: 2,
+);
+
 final clearedSecretSecretShardA = secretShardA.copyWith(shard: '');

@@ -17,8 +17,8 @@ class OnSuccessDialog extends StatelessWidget {
       );
 
   const OnSuccessDialog({
-    super.key,
     required this.vaultId,
+    super.key,
   });
 
   final VaultId vaultId;

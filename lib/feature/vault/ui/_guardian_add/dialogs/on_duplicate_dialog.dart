@@ -16,8 +16,8 @@ class OnDuplicateDialog extends StatelessWidget {
       );
 
   const OnDuplicateDialog({
-    super.key,
     required this.peerId,
+    super.key,
   });
 
   final PeerId peerId;

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
@@ -25,11 +26,11 @@ class VaultGuardianAddPresenter extends VaultGuardianPresenterBase {
   MessageCode get messageCode => MessageCode.createVault;
 
   @override
-  void requestWorker([timer]) =>
+  void requestWorker([Timer? timer]) =>
       _vaultInteractor.sendToGuardian(_messageToSend);
 
   @override
-  void responseHandler(MessageModel message) async {
+  Future<void> responseHandler(MessageModel message) async {
     if (isNotValidMessage(message, vaultId)) return;
     stopListenResponse();
     if (message.isAccepted) {

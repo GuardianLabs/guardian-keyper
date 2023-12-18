@@ -17,41 +17,42 @@ class RestrictedVaultPage extends StatelessWidget {
       shrinkWrap: true,
       children: [
         // Title
-        vault.isRestricted
-            ? PageTitle(
-                title: 'Restricted usage',
-                subtitleSpans: [
-                  TextSpan(
-                    text: 'You are able to recover all Secrets belonging '
-                        'to this Vault, however you can’t add new ones until ',
-                    style: styleSourceSansPro416Purple,
-                  ),
-                  TextSpan(
-                    text: '${vault.maxSize} out of ${vault.maxSize} '
-                        'Guardians are added.',
-                    style: styleSourceSansPro616Purple.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              )
-            : PageTitle(
-                title: 'Complete the recovery',
-                subtitleSpans: [
-                  TextSpan(
-                    // TBD: i18n
-                    text: 'Add ${vault.missed} more Guardian(s) ',
-                    style: styleSourceSansPro616Purple.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'which were previously added to this '
-                        'Vault via QR Code to complete the recovery.',
-                    style: styleSourceSansPro416Purple,
-                  ),
-                ],
+        if (vault.isRestricted)
+          PageTitle(
+            title: 'Restricted usage',
+            subtitleSpans: [
+              TextSpan(
+                text: 'You are able to recover all Secrets belonging '
+                    'to this Vault, however you can’t add new ones until ',
+                style: styleSourceSansPro416Purple,
               ),
+              TextSpan(
+                text: '${vault.maxSize} out of ${vault.maxSize} '
+                    'Guardians are added.',
+                style: styleSourceSansPro616Purple.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          )
+        else
+          PageTitle(
+            title: 'Complete the recovery',
+            subtitleSpans: [
+              TextSpan(
+                // TBD: i18n
+                text: 'Add ${vault.missed} more Guardian(s) ',
+                style: styleSourceSansPro616Purple.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextSpan(
+                text: 'which were previously added to this '
+                    'Vault via QR Code to complete the recovery.',
+                style: styleSourceSansPro416Purple,
+              ),
+            ],
+          ),
         // Action Button
         Padding(
           padding: paddingB32,

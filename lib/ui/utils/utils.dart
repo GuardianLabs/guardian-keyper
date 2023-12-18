@@ -2,11 +2,11 @@ import '../../consts.dart';
 import '../widgets/common.dart';
 
 SnackBar buildSnackBar({
-  final String? text,
-  final List<TextSpan>? textSpans,
-  final Duration duration = snackBarDuration,
-  final bool isFloating = false,
-  final bool isError = false,
+  String? text,
+  List<TextSpan>? textSpans,
+  Duration duration = snackBarDuration,
+  bool isFloating = false,
+  bool isError = false,
 }) =>
     SnackBar(
       duration: duration,

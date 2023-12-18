@@ -17,7 +17,7 @@ class CopyMyKeyToClipboardButton extends StatefulWidget {
 
 class _CopyMyKeyToClipboardButtonState
     extends State<CopyMyKeyToClipboardButton> {
-  var isDisabled = false;
+  bool isDisabled = false;
 
   @override
   Widget build(BuildContext context) => IconButton(

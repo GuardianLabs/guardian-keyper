@@ -35,7 +35,7 @@ class PreferencesService {
   Future<PreferencesService> init() async {
     pathAppDir = (await getApplicationDocumentsDirectory()).path;
     final flagFile = File('$pathAppDir/flags.txt');
-    final hasFlag = await flagFile.exists();
+    final hasFlag = flagFile.existsSync();
     final lastStart = await get<int>(PreferencesKeys.keyLastStart);
 
     // Error while reading SharedPreferences
@@ -59,8 +59,8 @@ class PreferencesService {
           ? null
           : switch (T) {
               const (String) => value as T,
-              const (int) => int.tryParse(value) as T,
-              const (bool) => bool.tryParse(value) as T,
+              const (int) => int.parse(value) as T,
+              const (bool) => bool.parse(value) as T,
               const (Uint8List) => base64Decode(value) as T,
               _ => throw const ValueFormatException(),
             });

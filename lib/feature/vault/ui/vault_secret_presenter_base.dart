@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
@@ -10,10 +11,10 @@ import 'vault_presenter_base.dart';
 
 abstract class VaultSecretPresenterBase extends VaultPresenterBase {
   VaultSecretPresenterBase({
-    super.currentPage,
     required super.pageCount,
     required this.vaultId,
     required this.secretId,
+    super.currentPage,
   });
 
   SecretId secretId;
@@ -25,7 +26,7 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
   late final vault = _vaultInteractor.getVaultById(vaultId)!;
 
   @override
-  void requestWorker([timer]) {
+  void requestWorker([Timer? timer]) {
     if (messages.where((m) => m.hasResponse).length == vault.maxSize) {
       stopListenResponse();
     } else {

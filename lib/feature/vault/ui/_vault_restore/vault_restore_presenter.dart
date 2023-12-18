@@ -1,3 +1,6 @@
+// ignore_for_file: parameter_assignments
+
+import 'dart:async';
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
@@ -27,10 +30,11 @@ class VaultRestorePresenter extends VaultGuardianPresenterBase {
   MessageCode get messageCode => MessageCode.takeVault;
 
   @override
-  void requestWorker([timer]) => _vaultInteractor.sendToGuardian(qrCode!);
+  void requestWorker([Timer? timer]) =>
+      _vaultInteractor.sendToGuardian(qrCode!);
 
   @override
-  void responseHandler(MessageModel message) async {
+  Future<void> responseHandler(MessageModel message) async {
     if (isNotValidMessage(message, vaultId)) return;
     stopListenResponse();
 

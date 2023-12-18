@@ -2,7 +2,7 @@ include: package:very_good_analysis/analysis_options.yaml
 
 linter:
   rules:
-    no_default_cases: false
+    unawaited_futures: false
     directives_ordering: false
     combinators_ordering: false
     sort_pub_dependencies: false
@@ -12,4 +12,7 @@ linter:
     unnecessary_raw_strings: false
     always_use_package_imports: false
     lines_longer_than_80_chars: false
+    no_adjacent_strings_in_list: false
     use_setters_to_change_properties: false
+    avoid_positional_boolean_parameters: false
+    missing_whitespace_between_adjacent_strings: false

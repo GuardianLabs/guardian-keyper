@@ -28,18 +28,18 @@ class VaultCreatePresenter extends PagePresenterBase {
 
   bool get isVaultNameTooShort => _vaultName.length < minNameLength;
 
-  void setVaultSize(final int size, final int vaultThreshold) {
+  void setVaultSize(int size, int vaultThreshold) {
     _vaultSize = size;
     _vaultThreshold = vaultThreshold;
     notifyListeners();
   }
 
-  void setVaultName(final String value) {
+  void setVaultName(String value) {
     _vaultName = value;
     notifyListeners();
   }
 
-  void setVaultMembership(final bool value) {
+  void setVaultMembership(bool value) {
     _isVaultMember = value;
     notifyListeners();
   }
@@ -52,7 +52,7 @@ class VaultCreatePresenter extends PagePresenterBase {
       ownerId: _vaultInteractor.selfId,
       guardians: {if (_isVaultMember) _vaultInteractor.selfId: ''},
     ));
-    await _vaultInteractor.logFinishCreateVault();
+    _vaultInteractor.logFinishCreateVault();
     notifyListeners();
     return vault;
   }

@@ -6,7 +6,10 @@ import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import '../../domain/use_case/message_interactor.dart';
 
 class MessageNotifyIcon extends StatelessWidget {
-  const MessageNotifyIcon({super.key, required this.isSelected});
+  const MessageNotifyIcon({
+    required this.isSelected,
+    super.key,
+  });
 
   final bool isSelected;
 
@@ -21,9 +24,10 @@ class MessageNotifyIcon extends StatelessWidget {
         return Stack(
           clipBehavior: Clip.none,
           children: [
-            isSelected
-                ? const IconOf.navBarBellSelected()
-                : const IconOf.navBarBell(),
+            if (isSelected)
+              const IconOf.navBarBellSelected()
+            else
+              const IconOf.navBarBell(),
             if (count > 0)
               Positioned(
                 top: -3,

@@ -11,7 +11,6 @@ void main() {
       peerId: peerIdA,
       timestamp: now,
       code: MessageCode.getShard,
-      status: MessageStatus.created,
       payload: secretShardA,
     );
 
@@ -28,7 +27,6 @@ void main() {
       peerId: peerIdA,
       timestamp: now,
       code: MessageCode.getShard,
-      status: MessageStatus.created,
       payload: secretShardA,
     );
 
@@ -76,7 +74,7 @@ void main() {
     final hasExpired =
         now.subtract(MessageModel.requestExpires + const Duration(seconds: 1));
 
-    for (var i in MessageStatus.values) {
+    for (final i in MessageStatus.values) {
       final m = MessageModel(
         peerId: peerId,
         code: MessageCode.createVault,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
@@ -62,7 +64,7 @@ class HomeScreenState extends State<HomeScreen> {
       if (GetIt.I<AuthManager>().passCode.isEmpty) {
         await Navigator.of(context).pushNamed(routeIntro);
       } else {
-        _messagesInteractor.pruneMessages();
+        unawaited(_messagesInteractor.pruneMessages());
         await OnDemandAuthDialog.show(context);
       }
       await _networkManager.start();

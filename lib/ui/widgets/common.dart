@@ -9,15 +9,14 @@ export '../theme/theme.dart';
 
 class ScaffoldSafe extends StatelessWidget {
   const ScaffoldSafe({
-    super.key,
     required this.child,
+    super.key,
   });
 
   final Widget child;
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        primary: true,
         backgroundColor: clIndigo900,
         resizeToAvoidBottomInset: true,
         body: SafeArea(child: child),
@@ -39,7 +38,9 @@ class HeaderBar extends StatelessWidget {
 
   final String? caption;
   final List<TextSpan>? captionSpans;
-  final Widget? backButton, captionWidget, closeButton;
+  final Widget? backButton;
+  final Widget? captionWidget;
+  final Widget? closeButton;
   final bool isTransparent;
 
   @override
@@ -172,7 +173,6 @@ class PageTitle extends StatelessWidget {
     return Padding(
       padding: paddingH20,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
             padding: paddingTop,
@@ -208,9 +208,9 @@ class PageTitle extends StatelessWidget {
 
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
-    super.key,
     required this.text,
     required this.onPressed,
+    super.key,
   });
 
   final String text;
@@ -255,9 +255,9 @@ class PrimaryButton extends StatelessWidget {
 
 class TertiaryButton extends StatelessWidget {
   const TertiaryButton({
-    super.key,
     required this.text,
     required this.onPressed,
+    super.key,
   });
 
   final String text;
@@ -316,8 +316,6 @@ class BottomSheetWidget extends StatelessWidget {
                 padding: paddingB12,
                 child: RichText(
                   textAlign: TextAlign.center,
-                  softWrap: true,
-                  overflow: TextOverflow.clip,
                   text: TextSpan(
                     style: styleSourceSansPro616Purple,
                     text: textString,
@@ -334,13 +332,13 @@ class BottomSheetWidget extends StatelessWidget {
 
 class InfoPanel extends StatelessWidget {
   const InfoPanel({
-    super.key,
+    required this.color,
     this.title,
     this.text,
     this.textSpan,
     this.icon,
-    required this.color,
     this.animationController,
+    super.key,
   });
 
   const InfoPanel.info({

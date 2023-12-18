@@ -16,18 +16,19 @@ class VaultPage extends StatelessWidget {
       shrinkWrap: true,
       children: [
         // Title
-        vault.hasSecrets
-            ? const PageTitle(
-                title: 'The Vault is ready to use',
-                subtitle:
-                    'Add and recover Secrets with the help of your Guaridans.',
-              )
-            : PageTitle(
-                title: 'Add your Secret',
-                subtitle: 'In order to restore your Secret in the future '
-                    'you’d have to get an approval from at least '
-                    '${vault.threshold} Guardians of this Vault.',
-              ),
+        if (vault.hasSecrets)
+          const PageTitle(
+            title: 'The Vault is ready to use',
+            subtitle:
+                'Add and recover Secrets with the help of your Guaridans.',
+          )
+        else
+          PageTitle(
+            title: 'Add your Secret',
+            subtitle: 'In order to restore your Secret in the future '
+                'you’d have to get an approval from at least '
+                '${vault.threshold} Guardians of this Vault.',
+          ),
         // Action Button
         Padding(
           padding: paddingB32,

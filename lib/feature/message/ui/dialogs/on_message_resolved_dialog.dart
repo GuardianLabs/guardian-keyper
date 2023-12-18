@@ -19,8 +19,8 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
       );
 
   const OnMessageResolvedDialog({
-    super.key,
     required this.message,
+    super.key,
   });
 
   final MessageModel message;

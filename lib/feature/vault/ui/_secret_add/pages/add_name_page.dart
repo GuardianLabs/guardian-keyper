@@ -23,7 +23,6 @@ class AddNamePage extends StatelessWidget {
             padding: paddingT32 + paddingH20,
             child: TextFormField(
               keyboardType: TextInputType.name,
-              maxLines: 1,
               maxLength: maxNameLength,
               style: styleSourceSansPro416,
               decoration: InputDecoration(
@@ -41,8 +40,8 @@ class AddNamePage extends StatelessWidget {
               selector: (_, presenter) => presenter.isNameTooShort,
               builder: (
                 BuildContext context,
-                final bool isNameTooShort,
-                final Widget? widget,
+                bool isNameTooShort,
+                Widget? widget,
               ) =>
                   PrimaryButton(
                 text: 'Continue',

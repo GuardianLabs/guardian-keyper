@@ -19,9 +19,9 @@ class OnRejectDialog extends StatelessWidget {
       );
 
   const OnRejectDialog({
-    super.key,
     required this.peerId,
     required this.vaultId,
+    super.key,
   });
 
   final PeerId peerId;

@@ -12,8 +12,7 @@ abstract mixin class MessageEgressMixin {
 
   Future<void> archivateMessage(MessageModel message);
 
-  Future<void> sendRespone(final MessageModel message) =>
-      switch (message.code) {
+  Future<void> sendRespone(MessageModel message) => switch (message.code) {
         MessageCode.createVault => _sendCreateVaultResponse(message),
         MessageCode.takeVault => _sendTakeVaultResponse(message),
         MessageCode.getShard => _sendGetShardResponse(message),

@@ -17,8 +17,8 @@ class OnRejectDialog extends StatelessWidget {
       );
 
   const OnRejectDialog({
-    super.key,
     required this.vaultId,
+    super.key,
   });
 
   final VaultId vaultId;

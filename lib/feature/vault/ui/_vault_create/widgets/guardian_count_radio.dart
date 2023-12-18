@@ -14,13 +14,14 @@ class GuardianCountRadio extends StatelessWidget {
   );
 
   final bool isChecked;
-  final int vaultSize, vaultThreshold;
+  final int vaultSize;
+  final int vaultThreshold;
 
   const GuardianCountRadio({
-    super.key,
     required this.isChecked,
     required this.vaultSize,
     required this.vaultThreshold,
+    super.key,
   });
 
   @override

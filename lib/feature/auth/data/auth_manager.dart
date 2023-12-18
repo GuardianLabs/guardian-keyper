@@ -50,7 +50,7 @@ class AuthManager {
     }
   }
 
-  Future<void> setPassCode(final String value) {
+  Future<void> setPassCode(String value) {
     _passCode = value;
     return _preferencesService.set<String>(
       PreferencesKeys.keyPassCode,
@@ -58,7 +58,7 @@ class AuthManager {
     );
   }
 
-  Future<void> setIsBiometricsEnabled(final bool value) {
+  Future<void> setIsBiometricsEnabled(bool value) {
     _isBiometricsEnabled = value;
     return _preferencesService.set<bool>(
       PreferencesKeys.keyIsBiometricsEnabled,

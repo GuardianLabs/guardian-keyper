@@ -7,8 +7,8 @@ import '../../../domain/entity/vault.dart';
 
 class VaultListTile extends StatelessWidget {
   const VaultListTile({
-    super.key,
     required this.vault,
+    super.key,
   });
 
   final Vault vault;

@@ -30,7 +30,7 @@ class SettingsPresenter extends ChangeNotifier {
   bool get isBootstrapEnabled => _networkManager.isBootstrapEnabled;
   bool get hasMinimumDeviceNameLength => _deviceName.length >= minNameLength;
 
-  set deviceName(final String value) {
+  set deviceName(String value) {
     _deviceName = value;
     notifyListeners();
   }
@@ -41,12 +41,12 @@ class SettingsPresenter extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setIsBootstrapEnabled(final bool value) async {
+  Future<void> setIsBootstrapEnabled(bool value) async {
     await _networkManager.setIsBootstrapEnabled(value);
     notifyListeners();
   }
 
-  Future<void> setIsBiometricsEnabled(final bool value) async {
+  Future<void> setIsBiometricsEnabled(bool value) async {
     await _authManager.setIsBiometricsEnabled(value);
     notifyListeners();
   }

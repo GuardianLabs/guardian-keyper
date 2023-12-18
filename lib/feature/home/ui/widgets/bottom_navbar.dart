@@ -28,9 +28,9 @@ class BottomNavbar extends StatelessWidget {
   ];
 
   const BottomNavbar({
-    super.key,
-    required this.onTap,
     required this.currentPage,
+    required this.onTap,
+    super.key,
   });
 
   final int currentPage;

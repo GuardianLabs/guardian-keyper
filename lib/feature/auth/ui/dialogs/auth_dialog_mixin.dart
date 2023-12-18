@@ -37,7 +37,6 @@ abstract class AuthDialogBase {
       borderSize: 0,
       borderColor: Colors.transparent,
       disabledColor: Colors.white38,
-      enabledColor: Colors.white,
     ),
   );
 

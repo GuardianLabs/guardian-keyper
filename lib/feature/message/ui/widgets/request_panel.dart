@@ -5,9 +5,9 @@ import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 
 class RequestPanel extends StatelessWidget {
   const RequestPanel({
-    super.key,
     required this.peerId,
     required this.isPeerOnline,
+    super.key,
   });
 
   final bool isPeerOnline;
@@ -43,7 +43,6 @@ class RequestPanel extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 20),
               child: RichText(
-                softWrap: true,
                 text: TextSpan(
                   style: styleSourceSansPro416Purple,
                   children: [

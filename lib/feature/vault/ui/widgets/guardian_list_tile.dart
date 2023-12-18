@@ -12,11 +12,11 @@ class GuardianListTile extends StatelessWidget {
   final bool checkStatus;
 
   const GuardianListTile({
-    super.key,
     required this.guardian,
     this.isSuccess,
     this.isWaiting = false,
     this.checkStatus = false,
+    super.key,
   });
 
   @override
@@ -67,7 +67,7 @@ class GuardianListTile extends StatelessWidget {
         color: clWhite,
         bgColor: isSuccess == null
             ? null
-            : isSuccess == true
+            : isSuccess ?? false
                 ? clGreen
                 : clRed,
       );

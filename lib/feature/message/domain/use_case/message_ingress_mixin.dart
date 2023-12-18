@@ -21,7 +21,6 @@ mixin class MessageIngressMixin {
         if (message.code != ticket.code) return;
         // vault already exists
         if (_vaultRepository.containsKey(message.vaultId.asKey)) return;
-        break;
 
       case MessageCode.takeVault:
         // qrCode was not generated
@@ -29,8 +28,9 @@ mixin class MessageIngressMixin {
         // qrCode was processed already
         if (message.isNotRequested) return;
         if (message.code != ticket.code) return;
+        // TBD: refactor to satisfy linter
+        // ignore: parameter_assignments
         message = message.copyWith(payload: ticket.payload);
-        break;
 
       case MessageCode.setShard:
         if (message.payload == null) return;
@@ -43,7 +43,6 @@ mixin class MessageIngressMixin {
         if (vault.ownerId != message.peerId) return;
         // already have this Secret
         if (vault.secrets.containsKey(message.secretShard.id)) return;
-        break;
 
       case MessageCode.getShard:
         if (message.payload == null) return;
@@ -56,7 +55,6 @@ mixin class MessageIngressMixin {
         if (vault.ownerId != message.peerId) return;
         // Have no such Secret
         if (!vault.secrets.containsKey(message.secretShard.id)) return;
-        break;
     }
     _messageRepository.put(
       message.aKey,

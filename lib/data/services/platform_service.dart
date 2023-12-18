@@ -8,10 +8,14 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:guardian_keyper/consts.dart';
 
 class PlatformService {
-  final share = Share.share;
-  final wakelockEnable = WakelockPlus.enable;
-  final wakelockDisable = WakelockPlus.disable;
-  final hasStringsInClipboard = Clipboard.hasStrings;
+  Future<void> wakelockEnable() => WakelockPlus.enable();
+
+  Future<void> wakelockDisable() => WakelockPlus.disable();
+
+  Future<bool> hasStringsInClipboard() => Clipboard.hasStrings();
+
+  Future<bool> openMarket() =>
+      launchUrl(Uri.parse(Platform.isAndroid ? urlPlayMarket : urlAppStore));
 
   Future<String?> copyFromClipboard() async =>
       (await Clipboard.getData(Clipboard.kTextPlain))?.text;
@@ -25,6 +29,14 @@ class PlatformService {
     }
   }
 
-  Future<bool> openMarket() =>
-      launchUrl(Uri.parse(Platform.isAndroid ? urlPlayMarket : urlAppStore));
+  Future<void> share(
+    String text, {
+    String? subject,
+    Rect? sharePositionOrigin,
+  }) =>
+      Share.share(
+        text,
+        subject: subject,
+        sharePositionOrigin: sharePositionOrigin,
+      );
 }

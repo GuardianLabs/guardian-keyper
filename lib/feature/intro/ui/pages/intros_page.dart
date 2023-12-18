@@ -51,10 +51,7 @@ class IntrosPage extends StatelessWidget {
         padding: paddingAll20,
         child: Column(
           children: [
-            Expanded(
-              flex: 1,
-              child: Container(),
-            ),
+            const Spacer(),
             // Slide
             Padding(
               padding: paddingB32,
@@ -76,10 +73,7 @@ class IntrosPage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            Expanded(
-              flex: 2,
-              child: Container(),
-            ),
+            const Spacer(flex: 2),
             // Control bar
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -9,7 +9,7 @@ class ShardShowScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vault = ModalRoute.of(context)!.settings.arguments as Vault;
+    final vault = ModalRoute.of(context)!.settings.arguments! as Vault;
     return ScaffoldSafe(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
