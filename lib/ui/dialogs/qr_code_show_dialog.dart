@@ -7,31 +7,68 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/data/services/platform_service.dart';
 
-class QRCodeShowScreen extends StatefulWidget {
-  const QRCodeShowScreen({super.key});
+class QRCodeShowDialog extends StatefulWidget {
+  static const route = '/qrcode/show';
 
-  @override
-  State<QRCodeShowScreen> createState() => _QRCodeShowScreenState();
-}
+  static Future<void> show(
+    BuildContext context, {
+    required String qrCode,
+    required String caption,
+    required String subtitle,
+  }) =>
+      Navigator.of(context).push(MaterialPageRoute(
+        fullscreenDialog: true,
+        settings: _routeSettings,
+        builder: (_) => QRCodeShowDialog(
+          qrCode: qrCode,
+          caption: caption,
+          subtitle: subtitle,
+        ),
+      ));
 
-class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
-  final _platformService = GetIt.I<PlatformService>();
+  static Future<void> showAsReplacement(
+    BuildContext context, {
+    required String qrCode,
+    required String caption,
+    required String subtitle,
+  }) =>
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        fullscreenDialog: true,
+        settings: _routeSettings,
+        builder: (_) => QRCodeShowDialog(
+          qrCode: qrCode,
+          caption: caption,
+          subtitle: subtitle,
+        ),
+      ));
 
-  late final arguments = ModalRoute.of(context)!.settings.arguments! as ({
-    String qrCode,
-    String caption,
-    String subtitle,
+  static const _routeSettings = RouteSettings(name: route);
+
+  const QRCodeShowDialog({
+    required this.qrCode,
+    required this.caption,
+    required this.subtitle,
+    super.key,
   });
 
+  final String qrCode;
+  final String caption;
+  final String subtitle;
+
+  @override
+  State<QRCodeShowDialog> createState() => _QRCodeShowDialogState();
+}
+
+class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
   @override
   void initState() {
     super.initState();
-    _platformService.wakelockEnable();
+    GetIt.I<PlatformService>().wakelockEnable();
   }
 
   @override
   void dispose() {
-    _platformService.wakelockDisable();
+    GetIt.I<PlatformService>().wakelockDisable();
     super.dispose();
   }
 
@@ -41,13 +78,13 @@ class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
           children: [
             // Header
             HeaderBar(
-              caption: arguments.caption,
+              caption: widget.caption,
               closeButton: const HeaderBarCloseButton(),
             ),
             // Body
             PageTitle(
               title: 'Your one-time Code',
-              subtitle: arguments.subtitle,
+              subtitle: widget.subtitle,
             ),
             // QR Code
             Expanded(
@@ -64,7 +101,7 @@ class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
                       Container(
                         decoration: boxDecoration,
                         child: QrImageView(
-                          data: arguments.qrCode,
+                          data: widget.qrCode,
                           errorCorrectionLevel: QrErrorCorrectLevel.M,
                           dataModuleStyle: const QrDataModuleStyle(
                             color: clPurpleLight,
@@ -113,10 +150,10 @@ class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
                   label: const Text('Share Code'),
                   onPressed: () {
                     final box = context.findRenderObject() as RenderBox?;
-                    _platformService.share(
+                    GetIt.I<PlatformService>().share(
                       'This is a SINGLE-USE authentication token'
                       ' for Guardian Keyper. DO NOT REUSE IT! \n '
-                      '${arguments.qrCode}',
+                      '${widget.qrCode}',
                       subject: 'Guardian Code',
                       sharePositionOrigin:
                           box!.localToGlobal(Offset.zero) & box.size,

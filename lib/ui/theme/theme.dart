@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+part 'theme_dark.dart';
 
 const clIndigo900 = Color(0xFF1A0244);
 const clIndigo800 = Color(0xFF300077);

@@ -79,6 +79,8 @@ class PreferencesService {
           ),
         _ => throw const ValueFormatException(),
       };
+
+  Future<void> delete(PreferencesKeys key) => _storage.delete(key: key.name);
 }
 
 class ValueFormatException extends FormatException {

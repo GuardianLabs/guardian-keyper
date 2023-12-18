@@ -5,14 +5,23 @@ import 'package:vector_graphics/vector_graphics.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/utils/screen_size.dart';
 
-class QRCodeScanScreen extends StatefulWidget {
-  const QRCodeScanScreen({super.key});
+class QRCodeScanDialog extends StatefulWidget {
+  static const route = '/qrcode/scan';
+
+  static Future<String?> show(BuildContext context) =>
+      Navigator.of(context).push(MaterialPageRoute(
+        fullscreenDialog: true,
+        settings: const RouteSettings(name: route),
+        builder: (_) => const QRCodeScanDialog(),
+      ));
+
+  const QRCodeScanDialog({super.key});
 
   @override
-  State<QRCodeScanScreen> createState() => _QRCodeScanScreenState();
+  State<QRCodeScanDialog> createState() => _QRCodeScanDialogState();
 }
 
-class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
+class _QRCodeScanDialogState extends State<QRCodeScanDialog> {
   bool _hasResult = false;
   late Rect _scanWindow;
 

@@ -24,10 +24,6 @@ const bsPort = int.fromEnvironment('BS_PORT', defaultValue: defaultPort);
 // Routes
 const routeIntro = '/intro';
 const routeSettings = '/settings';
-
-const routeQrCodeShow = '/qrcode/show';
-const routeQrCodeScan = '/qrcode/scan';
-
 const routeVaultShow = '/vault/show';
 const routeVaultCreate = '/vault/create';
 const routeVaultRestore = '/vault/restore';

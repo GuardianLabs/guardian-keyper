@@ -21,4 +21,9 @@ class PreferencesServiceMock implements PreferencesService {
   Future<void> set<T extends Object>(PreferencesKeys key, T value) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> delete(PreferencesKeys key) {
+    throw UnimplementedError();
+  }
 }

@@ -4,7 +4,7 @@ import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/feature/auth/ui/dialogs/on_change_pass_code_dialog.dart';
 
 import 'settings_presenter.dart';
-import 'dialogs/on_set_device_name_page.dart';
+import 'dialogs/on_set_device_name_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});

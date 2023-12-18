@@ -1,5 +1,5 @@
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
 
 import '../dashboard_presenter.dart';
 
@@ -48,17 +48,15 @@ class SharePanel extends StatelessWidget {
                       .read<DashboardPresenter>()
                       .createJoinVaultCode();
                   if (context.mounted) {
-                    await Navigator.of(context).pushNamed(
-                      routeQrCodeShow,
-                      arguments: (
-                        qrCode: message.toBase64url(),
-                        caption: 'Become a Guardian',
-                        subtitle:
-                            // ignore: lines_longer_than_80_chars
-                            'This is a one-time for joining a Vault as a Guardian. '
-                            'You can either show it directly as a QR Code '
-                            'or Share as a Text via any messenger.',
-                      ),
+                    await QRCodeShowDialog.show(
+                      context,
+                      qrCode: message.toBase64url(),
+                      caption: 'Become a Guardian',
+                      subtitle:
+                          // ignore: lines_longer_than_80_chars
+                          'This is a one-time for joining a Vault as a Guardian. '
+                          'You can either show it directly as a QR Code '
+                          'or Share as a Text via any messenger.',
                     );
                   }
                 },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/icon_of.dart';
+import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

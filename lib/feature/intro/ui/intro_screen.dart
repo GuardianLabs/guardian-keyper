@@ -20,16 +20,12 @@ class IntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (_) => IntroPresenter(pageCount: _pages.length),
-        // ignore: deprecated_member_use
-        child: WillPopScope(
-          onWillPop: () async => false,
-          child: ScaffoldSafe(
-            child: Selector<IntroPresenter, int>(
-              selector: (_, presenter) => presenter.currentPage,
-              builder: (_, currentPage, __) => AnimatedSwitcher(
-                duration: pageChangeDuration,
-                child: _pages[currentPage],
-              ),
+        child: ScaffoldSafe(
+          child: Selector<IntroPresenter, int>(
+            selector: (_, presenter) => presenter.currentPage,
+            builder: (_, currentPage, __) => AnimatedSwitcher(
+              duration: pageChangeDuration,
+              child: _pages[currentPage],
             ),
           ),
         ),

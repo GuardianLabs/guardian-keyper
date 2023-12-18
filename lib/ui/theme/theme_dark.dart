@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import 'package:guardian_keyper/ui/theme/theme.dart';
+part of 'theme.dart';
 
 const systemStyleDark = SystemUiOverlayStyle(
   statusBarColor: Color(0xFF1A0244),
@@ -9,9 +6,9 @@ const systemStyleDark = SystemUiOverlayStyle(
   statusBarIconBrightness: Brightness.light,
 );
 
-final themeLight = ThemeData.light();
-
 final themeDark = ThemeData.dark().copyWith(
+  // ignore: deprecated_member_use
+  useMaterial3: false,
   // Color Scheme
   colorScheme: const ColorScheme(
     brightness: Brightness.dark,

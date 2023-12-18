@@ -1,13 +1,12 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
 
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
-
-import '../../../domain/entity/vault_id.dart';
 
 class OnChangeOwnerDialog extends StatelessWidget {
   static Future<void> show(
@@ -49,17 +48,15 @@ class OnChangeOwnerDialog extends StatelessWidget {
                 final message = await GetIt.I<MessageInteractor>()
                     .createTakeVaultCode(vaultId);
                 if (context.mounted) {
-                  Navigator.of(context).pushReplacementNamed(
-                    routeQrCodeShow,
-                    arguments: (
-                      qrCode: message.toBase64url(),
-                      caption: 'Change owner',
-                      subtitle:
-                          // ignore: lines_longer_than_80_chars
-                          'This is a one-time for changing the owner of the Vault. '
-                          'You can either show it directly as a QR Code '
-                          'or Share as a Text via any messenger.',
-                    ),
+                  QRCodeShowDialog.showAsReplacement(
+                    context,
+                    qrCode: message.toBase64url(),
+                    caption: 'Change owner',
+                    subtitle:
+                        // ignore: lines_longer_than_80_chars
+                        'This is a one-time for changing the owner of the Vault. '
+                        'You can either show it directly as a QR Code '
+                        'or Share as a Text via any messenger.',
                   );
                 }
               },

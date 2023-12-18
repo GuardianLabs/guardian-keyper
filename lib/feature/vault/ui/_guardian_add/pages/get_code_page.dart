@@ -1,6 +1,6 @@
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/emoji.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/ui/dialogs/qr_code_scan_dialog.dart';
 
 import '../vault_guardian_add_presenter.dart';
 import '../dialogs/on_duplicate_dialog.dart';
@@ -63,9 +63,7 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
             padding: paddingH20,
             child: PrimaryButton(
               text: 'Add via a QR Code',
-              onPressed: () => Navigator.of(context)
-                  .pushNamed(routeQrCodeScan)
-                  .then(_setCode),
+              onPressed: () => QRCodeScanDialog.show(context).then(_setCode),
             ),
           ),
           Padding(
@@ -83,9 +81,9 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
         ],
       );
 
-  void _setCode(Object? code) {
+  void _setCode(String? code) {
     try {
-      _presenter.setCode(code as String?);
+      _presenter.setCode(code);
     } on SetCodeFailException {
       OnFailDialog.show(context);
     } on SetCodeVersionLowException {
