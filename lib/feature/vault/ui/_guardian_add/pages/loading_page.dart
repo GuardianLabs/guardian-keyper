@@ -21,14 +21,10 @@ class _LoadingPageState extends State<LoadingPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           buildSnackBar(
             textSpans: [
-              ...buildTextWithId(
-                name: message.peerId.name,
-                leadingText: 'You have successfully added ',
-              ),
-              ...buildTextWithId(
-                name: presenter.vaultId.name,
-                leadingText: 'as a Guardian for ',
-              ),
+              const TextSpan(text: 'You have successfully added '),
+              TextSpan(text: message.peerId.name, style: styleW600),
+              const TextSpan(text: 'as a Guardian for '),
+              TextSpan(text: presenter.vaultId.name, style: styleW600),
             ],
           ),
         );

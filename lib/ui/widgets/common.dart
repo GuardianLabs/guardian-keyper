@@ -209,26 +209,6 @@ class PageTitle extends StatelessWidget {
   }
 }
 
-class PrimaryButton extends StatelessWidget {
-  const PrimaryButton({
-    required this.text,
-    required this.onPressed,
-    super.key,
-  });
-
-  final String text;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) => SizedBox(
-        width: double.infinity,
-        child: FilledButton(
-          onPressed: onPressed,
-          child: Text(text),
-        ),
-      );
-}
-
 class BottomSheetWidget extends StatelessWidget {
   const BottomSheetWidget({
     super.key,
@@ -252,6 +232,7 @@ class BottomSheetWidget extends StatelessWidget {
         padding: paddingAll20,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (icon != null)
               Padding(
@@ -331,15 +312,3 @@ SnackBar buildSnackBar({
         ),
       ),
     );
-
-List<TextSpan> buildTextWithId({
-  required String name,
-  String? leadingText,
-  String? trailingText,
-  TextStyle style = const TextStyle(fontWeight: FontWeight.w600),
-}) =>
-    [
-      if (leadingText != null) TextSpan(text: leadingText),
-      TextSpan(text: '$name  ', style: style),
-      if (trailingText != null) TextSpan(text: trailingText),
-    ];

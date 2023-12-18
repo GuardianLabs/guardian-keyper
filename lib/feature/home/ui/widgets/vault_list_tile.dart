@@ -1,6 +1,5 @@
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
@@ -16,7 +15,15 @@ class VaultListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        leading: const IconOf.shield(color: clWhite),
+        leading: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary,
+            shape: BoxShape.circle,
+          ),
+          height: 40,
+          width: 40,
+          child: const Icon(Icons.shield_outlined),
+        ),
         title: Text(vault.id.name),
         subtitle: vault.isRestricted
             ? (vault.hasQuorum

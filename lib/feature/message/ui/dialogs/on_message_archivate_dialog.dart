@@ -1,8 +1,8 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import 'message_titles_mixin.dart';
+import 'message_text_mixin.dart';
 
-class OnMessageArchivateDialog extends StatelessWidget with MessageTitlesMixin {
+class OnMessageArchivateDialog extends StatelessWidget with MessageTextMixin {
   static Future<bool?> show(BuildContext context) => showModalBottomSheet<bool>(
         context: context,
         useSafeArea: true,

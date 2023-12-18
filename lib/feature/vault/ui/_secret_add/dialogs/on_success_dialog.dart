@@ -1,42 +1,24 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-
-import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 
 class OnSuccessDialog extends StatelessWidget {
-  static Future<void> show(
-    BuildContext context, {
-    required VaultId vaultId,
-  }) =>
-      showModalBottomSheet(
+  static Future<void> show(BuildContext context) => showModalBottomSheet(
         context: context,
         isDismissible: true,
         isScrollControlled: true,
-        builder: (_) => OnSuccessDialog(vaultId: vaultId),
+        builder: (_) => const OnSuccessDialog(),
       );
 
-  const OnSuccessDialog({
-    required this.vaultId,
-    super.key,
-  });
-
-  final VaultId vaultId;
+  const OnSuccessDialog({super.key});
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.splitAndShare(isBig: true, bage: BageType.ok),
-        titleString: 'Your Secret has been split',
-        textSpan: [
-          const TextSpan(text: 'Now you can restore your '),
-          ...buildTextWithId(name: vaultId.name),
-          const TextSpan(text: ' Secret with the help of Guardians.'),
-        ],
-        footer: Padding(
-          padding: paddingV20,
-          child: PrimaryButton(
-            text: 'Done',
-            onPressed: Navigator.of(context).pop,
-          ),
+        icon: const Icon(Icons.check_circle, size: 80),
+        titleString: 'Secret Added Successfully!',
+        textString: 'Your Secret has been safely placed in the Vault, '
+            'with each Guardian receiving a Shard for enhanced security.',
+        footer: FilledButton(
+          onPressed: Navigator.of(context).pop,
+          child: const Text('Go to Vault'),
         ),
       );
 }

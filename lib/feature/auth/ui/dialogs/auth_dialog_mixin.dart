@@ -1,7 +1,6 @@
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/ui/utils/screen_size.dart';
 
 abstract class AuthDialogBase {
@@ -25,11 +24,6 @@ abstract class AuthDialogBase {
 
   static const currentPassCodeTitle =
       Text('Please enter your current passcode');
-
-  static const biometricsIcon = IconOf.biometricLogon(
-    bgColor: Colors.transparent,
-    size: 48,
-  );
 
   static const secretsConfig = SecretsConfig(
     secretConfig: SecretConfig(

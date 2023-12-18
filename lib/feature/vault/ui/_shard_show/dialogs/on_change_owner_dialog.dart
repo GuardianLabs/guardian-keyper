@@ -28,10 +28,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.shardOwner(
-          isBig: true,
-          bage: BageType.warning,
-        ),
+        icon: const IconOf.confirmIdentity(size: 80),
         titleString: 'Confirm Identity!',
         textString: 'Helping with Vault recovery or changing ownership?\n'
             'Please verify if the person is the current '

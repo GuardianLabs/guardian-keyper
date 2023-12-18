@@ -21,8 +21,9 @@ class _LoadingPageState extends State<LoadingPage> {
       if (message.isAccepted) {
         final wantAddAnother = await OnSuccessDialog.show(
           context,
-          peerId: message.peerId,
-          vault: message.vault,
+          peerName: message.peerId.name,
+          vaultName: message.vault.id.name,
+          isFull: message.vault.isFull,
         );
         if (context.mounted) {
           wantAddAnother ?? false
@@ -39,8 +40,8 @@ class _LoadingPageState extends State<LoadingPage> {
         message.isRejected
             ? await OnRejectDialog.show(
                 context,
-                peerId: message.peerId,
-                vaultId: message.vaultId,
+                peerId: message.peerId.name,
+                vaultId: message.vaultId.name,
               )
             : await OnFailDialog.show(context);
       }
@@ -79,16 +80,19 @@ class _LoadingPageState extends State<LoadingPage> {
                     padding: paddingAll20,
                     child: RichText(
                       text: TextSpan(
+                        children: [
+                          const TextSpan(text: 'Awaiting '),
+                          TextSpan(
+                            text: context
+                                .read<VaultRestorePresenter>()
+                                .qrCode!
+                                .peerId
+                                .name,
+                            style: styleW600,
+                          ),
+                          const TextSpan(text: '’s response'),
+                        ],
                         style: styleSourceSansPro416,
-                        children: buildTextWithId(
-                          leadingText: 'Awaiting ',
-                          name: context
-                              .read<VaultRestorePresenter>()
-                              .qrCode!
-                              .peerId
-                              .name,
-                          trailingText: '’s response',
-                        ),
                       ),
                     ),
                   ),

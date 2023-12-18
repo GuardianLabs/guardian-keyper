@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/data/services/platform_service.dart';
 
 class QRCodeShowDialog extends StatefulWidget {
@@ -183,9 +182,9 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
                     height: 48,
                     child: Builder(
                       builder: (context) => IconButton(
-                        icon: const IconOf.share(
-                          bgColor: clIndigo500,
-                          size: 20,
+                        icon: Transform.flip(
+                          flipX: true,
+                          child: const Icon(Icons.reply, size: 30),
                         ),
                         onPressed: () {
                           final box = context.findRenderObject() as RenderBox?;

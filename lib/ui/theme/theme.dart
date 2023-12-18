@@ -36,10 +36,13 @@ const radius8 = Radius.circular(8);
 
 final borderRadius8 = BorderRadius.circular(8);
 
+// TBD: remove
 final boxDecoration = BoxDecoration(
   borderRadius: borderRadius8,
-  color: clIndigo700,
+  color: clSurface,
 );
+
+const styleW600 = TextStyle(fontWeight: FontWeight.w600);
 
 final styleSourceSansPro412 = GoogleFonts.sourceSans3(
   fontSize: 12,

@@ -15,7 +15,7 @@ class SetDeviceNamePage extends StatelessWidget {
       children: [
         const Padding(
           padding: paddingV20,
-          child: IconOf.app(isBig: true),
+          child: IconOf.app(size: 80),
         ),
         Padding(
           padding: paddingV20,
@@ -41,10 +41,10 @@ class SetDeviceNamePage extends StatelessWidget {
         Padding(
           padding: paddingV20,
           child: Consumer<IntroPresenter>(
-            builder: (_, presenter, ___) => PrimaryButton(
-              text: 'Proceed',
+            builder: (_, presenter, ___) => FilledButton(
               onPressed:
                   presenter.canSaveName ? presenter.saveDeviceName : null,
+              child: const Text('Proceed'),
             ),
           ),
         ),

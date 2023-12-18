@@ -62,14 +62,14 @@ class OnSetDeviceNameDialog extends StatelessWidget {
                 Padding(
                   padding: paddingV20,
                   child: Consumer<SettingsPresenter>(
-                    builder: (context, presenter, __) => PrimaryButton(
-                      text: 'Proceed',
+                    builder: (context, presenter, __) => FilledButton(
                       onPressed: presenter.hasMinimumDeviceNameLength
                           ? () async {
                               await presenter.setDeviceName();
                               if (context.mounted) Navigator.of(context).pop();
                             }
                           : null,
+                      child: const Text('Proceed'),
                     ),
                   ),
                 ),

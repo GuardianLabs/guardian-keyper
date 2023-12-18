@@ -29,7 +29,7 @@ class OnDemandAuthDialog {
           child: AuthDialogBase.currentPassCodeTitle,
         ),
         customizedButtonChild:
-            authBio == null ? null : AuthDialogBase.biometricsIcon,
+            authBio == null ? null : const Icon(Icons.fingerprint, size: 48),
         customizedButtonTap: authBio,
         onOpened: authBio,
         onUnlocked: Navigator.of(context).pop,

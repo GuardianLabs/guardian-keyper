@@ -23,11 +23,11 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
       (message) async {
         if (!mounted) return;
         if (message.isAccepted) {
-          await OnSuccessDialog.show(context, vaultId: message.vaultId);
+          await OnSuccessDialog.show(context);
         } else if (message.isRejected) {
-          await OnRejectDialog.show(context, vaultId: message.vaultId);
+          await OnRejectDialog.show(context, vaultName: message.vaultId.name);
         } else {
-          await OnFailDialog.show(context, vaultId: message.vaultId);
+          await OnFailDialog.show(context);
         }
         if (context.mounted) Navigator.of(context).pop();
       },

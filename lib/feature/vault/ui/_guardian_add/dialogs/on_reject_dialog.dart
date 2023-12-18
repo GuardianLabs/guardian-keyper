@@ -1,5 +1,4 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 class OnRejectDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showModalBottomSheet(
@@ -13,15 +12,12 @@ class OnRejectDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
+        icon: const Icon(Icons.cancel, size: 80),
         titleString: 'Request has been rejected',
         textString: 'Guardian rejected your request to join Vault.',
-        icon: const IconOf.shield(isBig: true, bage: BageType.error),
-        footer: SizedBox(
-          width: double.infinity,
-          child: FilledButton(
-            onPressed: Navigator.of(context).pop,
-            child: const Text('Close'),
-          ),
+        footer: FilledButton(
+          onPressed: Navigator.of(context).pop,
+          child: const Text('Close'),
         ),
       );
 }

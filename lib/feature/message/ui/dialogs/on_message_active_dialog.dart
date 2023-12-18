@@ -4,11 +4,12 @@ import 'package:get_it/get_it.dart';
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import '../../domain/entity/message_model.dart';
-import '../../domain/use_case/message_interactor.dart';
-import 'message_titles_mixin.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
-class OnMessageActiveDialog extends StatefulWidget with MessageTitlesMixin {
+import 'message_text_mixin.dart';
+
+class OnMessageActiveDialog extends StatefulWidget with MessageTextMixin {
   static Future<bool?> show(
     BuildContext context, {
     required MessageModel message,

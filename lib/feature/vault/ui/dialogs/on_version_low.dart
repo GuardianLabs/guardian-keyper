@@ -1,9 +1,8 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
-import '../../domain/use_case/vault_interactor.dart';
+import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 
 class OnVersionLowDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showModalBottomSheet(
@@ -17,26 +16,22 @@ class OnVersionLowDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.shield(isBig: true, bage: BageType.error),
+        icon: const Icon(Icons.file_upload_outlined, size: 80),
         titleString: 'Update the app',
         textString: 'Seems like your Guardian is using the latest '
             'version of the Guardian Keyper. Please update the app.',
         footer: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: Navigator.of(context).pop,
-                child: const Text('Close'),
-              ),
+            FilledButton(
+              onPressed: GetIt.I<VaultInteractor>().openMarket,
+              child: const Text('Update'),
             ),
             const Padding(padding: paddingT20),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: GetIt.I<VaultInteractor>().openMarket,
-                child: const Text('Update'),
-              ),
+            OutlinedButton(
+              onPressed: Navigator.of(context).pop,
+              child: const Text('Close, I’ll update it later'),
             ),
           ],
         ),

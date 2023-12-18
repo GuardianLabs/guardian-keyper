@@ -48,7 +48,7 @@ class _OnCodeInputDialogState extends State<OnCodeInputDialog> {
             padding: paddingAll20,
             child: TextField(
               controller: _controller,
-              decoration: const InputDecoration(labelText: 'Code'),
+              decoration: const InputDecoration(labelText: ' Code '),
             ),
           ),
           // Buttons

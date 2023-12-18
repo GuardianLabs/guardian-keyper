@@ -1,5 +1,4 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 class OnFailDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showModalBottomSheet(
@@ -16,13 +15,10 @@ class OnFailDialog extends StatelessWidget {
         titleString: 'Invalid Code',
         textString: 'Seems like the Code you’ve just used is not valid. '
             'Ask Guardian to share a new code.',
-        icon: const IconOf.shield(isBig: true, bage: BageType.error),
-        footer: SizedBox(
-          width: double.infinity,
-          child: FilledButton(
-            onPressed: Navigator.of(context).pop,
-            child: const Text('Close'),
-          ),
+        icon: const Icon(Icons.cancel, size: 80),
+        footer: FilledButton(
+          onPressed: Navigator.of(context).pop,
+          child: const Text('Close'),
         ),
       );
 }

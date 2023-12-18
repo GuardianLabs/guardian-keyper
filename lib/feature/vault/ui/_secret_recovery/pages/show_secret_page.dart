@@ -76,8 +76,7 @@ class ShowSecretPage extends StatelessWidget {
                         ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: PrimaryButton(
-                            text: 'Copy',
+                          child: FilledButton(
                             onPressed: () async {
                               final isOk = await presenter.tryCopy();
                               if (context.mounted) {
@@ -99,6 +98,7 @@ class ShowSecretPage extends StatelessWidget {
                                 }
                               }
                             },
+                            child: const Text('Copy'),
                           ),
                         ),
                       ]),

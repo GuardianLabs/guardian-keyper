@@ -1,59 +1,74 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
 class OnSuccessDialog extends StatelessWidget {
   static Future<bool?> show(
     BuildContext context, {
-    required Vault vault,
-    required PeerId peerId,
+    required bool isFull,
+    required String vaultName,
+    required String peerName,
   }) =>
       showModalBottomSheet<bool>(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (_) => OnSuccessDialog(peerId: peerId, vault: vault),
+        builder: (_) => OnSuccessDialog(
+          peerName: peerName,
+          vaultName: vaultName,
+          isFull: isFull,
+        ),
       );
 
   const OnSuccessDialog({
-    required this.vault,
-    required this.peerId,
+    required this.vaultName,
+    required this.peerName,
+    required this.isFull,
     super.key,
   });
 
-  final PeerId peerId;
-  final Vault vault;
+  final String peerName;
+  final String vaultName;
+  final bool isFull;
 
   @override
-  Widget build(BuildContext context) => vault.isFull
+  Widget build(BuildContext context) => isFull
       ? BottomSheetWidget(
-          icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
+          icon: const Icon(Icons.check_circle, size: 80),
           titleString: 'Ownership Changed',
-          textSpan: buildTextWithId(
-            leadingText: 'The ownership of the Vault ',
-            name: vault.id.name,
-            trailingText: ' has been transferred to your device.',
-          ),
-          footer: PrimaryButton(
-            text: 'Done',
+          textSpan: [
+            const TextSpan(
+              text: 'The ownership of the Vault ',
+            ),
+            TextSpan(
+              text: vaultName,
+              style: styleW600,
+            ),
+            const TextSpan(
+              text: ' has been transferred to your device.',
+            ),
+          ],
+          footer: FilledButton(
             onPressed: Navigator.of(context).pop,
+            child: const Text('Done'),
           ),
         )
       : BottomSheetWidget(
-          icon: const IconOf.secrets(isBig: true, bage: BageType.ok),
+          icon: const Icon(Icons.check_circle, size: 80),
           titleString: 'Ownership Transfer Approved',
           textSpan: [
-            ...buildTextWithId(
-              name: peerId.name,
-              trailingText:
-                  ' approved the transfer of ownership for the Vault ',
+            TextSpan(
+              text: peerName,
+              style: styleW600,
             ),
-            ...buildTextWithId(name: vault.id.name),
+            const TextSpan(
+              text: ' approved the transfer of ownership for the Vault ',
+            ),
+            TextSpan(
+              text: vaultName,
+              style: styleW600,
+            ),
           ],
-          footer: PrimaryButton(
-            text: 'Add another Guardian',
+          footer: FilledButton(
+            child: const Text('Add another Guardian'),
             onPressed: () => Navigator.of(context).pop(true),
           ),
         );

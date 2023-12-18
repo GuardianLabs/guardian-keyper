@@ -1,5 +1,4 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 class OnFailDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showModalBottomSheet(
@@ -13,19 +12,13 @@ class OnFailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.secrets(
-          isBig: true,
-          bage: BageType.error,
-        ),
+        icon: const Icon(Icons.cancel, size: 80),
         titleString: 'Ownership Transfer Failed',
-        textString:
-            'We couldn’t finish scanning the QR Code.\nPlease try again.',
-        footer: SizedBox(
-          width: double.infinity,
-          child: FilledButton(
-            onPressed: Navigator.of(context).pop,
-            child: const Text('Close'),
-          ),
+        textString: 'We couldn’t finish scanning the QR Code.\n'
+            'Please try again.',
+        footer: FilledButton(
+          onPressed: Navigator.of(context).pop,
+          child: const Text('Close'),
         ),
       );
 }

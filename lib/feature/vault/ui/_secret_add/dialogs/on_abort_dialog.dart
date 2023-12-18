@@ -1,5 +1,4 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 class OnAbortDialog extends StatelessWidget {
   static Future<bool?> show(BuildContext context) => showModalBottomSheet<bool>(
@@ -12,26 +11,24 @@ class OnAbortDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.splitAndShare(isBig: true, bage: BageType.error),
-        titleString: 'Cancel adding a Secret?',
+        icon: const Icon(Icons.warning_rounded, size: 80),
+        titleString: 'Quitting the process',
         textString: 'All progress will be lost, you’ll have to start '
             'from the beginning. Are you sure?',
         footer: Padding(
           padding: paddingV20,
-          child: Row(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
-                child: FilledButton(
-                  onPressed: Navigator.of(context).pop,
-                  child: const Text('No'),
-                ),
+              FilledButton(
+                onPressed: Navigator.of(context).pop,
+                child: const Text('Back to process'),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: FilledButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Yes'),
-                ),
+              const SizedBox(height: 20),
+              OutlinedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Discard & Exit'),
               ),
             ],
           ),

@@ -16,6 +16,7 @@ class HomeVaultsPage extends StatelessWidget {
         stream: vaultInteractor.watch(),
         builder: (context, snapshot) {
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Header
               const HeaderBar(caption: 'Vaults'),
@@ -29,10 +30,12 @@ class HomeVaultsPage extends StatelessWidget {
               Container(
                 color: clIndigo900,
                 padding: paddingV20,
-                child: PrimaryButton(
-                  text: 'Add a new Vault',
-                  onPressed: () =>
-                      Navigator.pushNamed(context, routeVaultCreate),
+                child: FilledButton(
+                  child: const Text('Add a new Vault'),
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    routeVaultCreate,
+                  ),
                 ),
               ),
               if (vaultInteractor.vaults.isNotEmpty)

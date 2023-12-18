@@ -1,11 +1,10 @@
-import 'package:intl/intl.dart';
-
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import '../../domain/entity/message_model.dart';
-import 'message_titles_mixin.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
-class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
+import 'message_text_mixin.dart';
+
+class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
   static Future<bool?> show(
     BuildContext context, {
     required MessageModel message,
@@ -16,9 +15,6 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
         isScrollControlled: true,
         builder: (_) => OnMessageResolvedDialog(message: message),
       );
-
-  static final _yamd = DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY);
-  static final _h24ms = DateFormat(DateFormat.HOUR24_MINUTE_SECOND);
 
   const OnMessageResolvedDialog({
     required this.message,
@@ -44,13 +40,9 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('FROM', style: styleSourceSansPro612Purple),
-                      RichText(
-                        text: TextSpan(
-                          children: buildTextWithId(
-                            name: message.peerId.name,
-                            style: styleSourceSansPro616,
-                          ),
-                        ),
+                      Text(
+                        message.peerId.name,
+                        style: styleSourceSansPro616,
                       ),
                     ],
                   ),
@@ -60,7 +52,10 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('KEY', style: styleSourceSansPro612Purple),
+                      Text(
+                        'KEY',
+                        style: styleSourceSansPro612Purple,
+                      ),
                       Text(
                         message.peerId.toHexShort(),
                         style: styleSourceSansPro616,
@@ -74,14 +69,13 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('VAULT', style: styleSourceSansPro612Purple),
-                        RichText(
-                          text: TextSpan(
-                            children: buildTextWithId(
-                              name: message.vaultId.name,
-                              style: styleSourceSansPro616,
-                            ),
-                          ),
+                        Text(
+                          'VAULT',
+                          style: styleSourceSansPro612Purple,
+                        ),
+                        Text(
+                          message.vaultId.name,
+                          style: styleSourceSansPro616,
                         ),
                       ],
                     ),
@@ -92,7 +86,10 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('SHARD', style: styleSourceSansPro612Purple),
+                        Text(
+                          'SHARD',
+                          style: styleSourceSansPro612Purple,
+                        ),
                         Text(
                           message.secretShard.id.name,
                           style: styleSourceSansPro616,
@@ -105,10 +102,13 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('DATE', style: styleSourceSansPro612Purple),
                       Text(
-                        '${_h24ms.format(message.timestamp)} '
-                        '  ${_yamd.format(message.timestamp)}',
+                        'DATE',
+                        style: styleSourceSansPro612Purple,
+                      ),
+                      Text(
+                        '${MessageTextMixin.h24ms.format(message.timestamp)} '
+                        '  ${MessageTextMixin.yamd.format(message.timestamp)}',
                         style: styleSourceSansPro616,
                       ),
                     ],
@@ -117,7 +117,10 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('STATUS', style: styleSourceSansPro612Purple),
+                    Text(
+                      'STATUS',
+                      style: styleSourceSansPro612Purple,
+                    ),
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),

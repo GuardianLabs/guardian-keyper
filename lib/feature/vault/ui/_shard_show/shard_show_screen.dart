@@ -34,11 +34,9 @@ class ShardShowScreen extends StatelessWidget {
                 // Vault name
                 Padding(
                   padding: paddingV6,
-                  child: RichText(
-                    text: TextSpan(
-                      style: stylePoppins616,
-                      children: buildTextWithId(name: vault.id.name),
-                    ),
+                  child: Text(
+                    vault.id.name,
+                    style: stylePoppins616,
                   ),
                 ),
                 // Vault ID

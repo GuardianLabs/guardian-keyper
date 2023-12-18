@@ -1,41 +1,37 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-
-import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 
 class OnRejectDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
-    required PeerId peerId,
-    required VaultId vaultId,
+    required String peerId,
+    required String vaultId,
   }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (_) => OnRejectDialog(peerId: peerId, vaultId: vaultId),
+        builder: (_) => OnRejectDialog(peerName: peerId, vaultName: vaultId),
       );
 
   const OnRejectDialog({
-    required this.peerId,
-    required this.vaultId,
+    required this.peerName,
+    required this.vaultName,
     super.key,
   });
 
-  final PeerId peerId;
-  final VaultId vaultId;
+  final String peerName;
+  final String vaultName;
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.secrets(isBig: true, bage: BageType.error),
+        icon: const Icon(Icons.cancel, size: 80),
         titleString: 'Ownership Transfer Rejected',
         textSpan: [
-          ...buildTextWithId(
-            name: peerId.name,
-            trailingText: ' rejected the transfer of ownership for the Vault ',
+          TextSpan(text: peerName, style: styleW600),
+          const TextSpan(
+            text: ' rejected the transfer of ownership for the Vault ',
           ),
-          ...buildTextWithId(name: vaultId.name),
+          TextSpan(text: vaultName, style: styleW600),
         ],
         body: Padding(
           padding: paddingV20,
@@ -50,9 +46,9 @@ class OnRejectDialog extends StatelessWidget {
             ),
           ),
         ),
-        footer: PrimaryButton(
-          text: 'Close',
+        footer: FilledButton(
           onPressed: Navigator.of(context).pop,
+          child: const Text('Close'),
         ),
       );
 }

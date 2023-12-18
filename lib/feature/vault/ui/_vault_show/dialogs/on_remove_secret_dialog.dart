@@ -1,7 +1,6 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
@@ -34,25 +33,19 @@ class OnRemoveSecretDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.removeVault(
-          isBig: true,
-          bage: BageType.warning,
-        ),
+        icon: const Icon(Icons.warning_rounded, size: 80),
         titleString: 'Do you want to remove this Secret?',
         textString: 'All the Shards of this Secret will not be removed '
             'from Guardians device.',
-        footer: SizedBox(
-          width: double.infinity,
-          child: PrimaryButton(
-            text: 'Yes, remove the Secret',
-            onPressed: () async {
-              await GetIt.I<VaultInteractor>().removeSecret(
-                vault: vault,
-                secretId: secretId,
-              );
-              if (context.mounted) Navigator.of(context).pop();
-            },
-          ),
+        footer: FilledButton(
+          onPressed: () async {
+            await GetIt.I<VaultInteractor>().removeSecret(
+              vault: vault,
+              secretId: secretId,
+            );
+            if (context.mounted) Navigator.of(context).pop();
+          },
+          child: const Text('Yes, remove the Secret'),
         ),
       );
 }

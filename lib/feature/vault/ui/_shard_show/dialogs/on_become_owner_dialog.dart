@@ -27,18 +27,16 @@ class OnBecomeOwnerDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.shardOwner(
-          isBig: true,
-          bage: BageType.warning,
-        ),
-        // TBD: update texts
-        titleString: 'Confirm Action!',
-        textString: 'Taking ownership can not be undone! Are you sure?',
+        icon: const IconOf.moveVault(size: 80),
+        titleString: 'Moving the Vault',
+        textString: 'By taking this action, the Vault will be transferred to '
+            'your device, and you will gain ownership of it. This process is '
+            'similar to recovering a Vault.',
         footer: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             FilledButton(
-              child: const Text('Confirm'),
+              child: const Text('Proceed'),
               onPressed: () async {
                 await GetIt.I<VaultInteractor>().takeVaultOwnership(vaultId);
                 if (context.mounted) {

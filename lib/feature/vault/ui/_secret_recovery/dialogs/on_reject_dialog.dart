@@ -1,45 +1,36 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-
-import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 
 class OnRejectDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
-    required VaultId vaultId,
+    required String vaultName,
   }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: true,
         isScrollControlled: true,
-        builder: (_) => OnRejectDialog(vaultId: vaultId),
+        builder: (_) => OnRejectDialog(vaultName: vaultName),
       );
 
   const OnRejectDialog({
-    required this.vaultId,
+    required this.vaultName,
     super.key,
   });
 
-  final VaultId vaultId;
+  final String vaultName;
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.secretRestoration(
-          isBig: true,
-          bage: BageType.error,
-        ),
+        icon: const Icon(Icons.cancel, size: 80),
         titleString: 'Guardian rejected the recovery of your Secret',
-        textSpan: buildTextWithId(
-          leadingText: 'Secret Recovery process for ',
-          name: vaultId.name,
-          trailingText: ' has been terminated by your Guardians.',
-        ),
-        footer: Padding(
-          padding: paddingV20,
-          child: PrimaryButton(
-            text: 'Done',
-            onPressed: Navigator.of(context).pop,
-          ),
+        textSpan: [
+          const TextSpan(text: 'Secret Recovery process for '),
+          TextSpan(text: vaultName, style: styleW600),
+          const TextSpan(text: ' has been terminated by your Guardians.'),
+        ],
+        footer: FilledButton(
+          onPressed: Navigator.of(context).pop,
+          child: const Text('Done'),
         ),
       );
 }

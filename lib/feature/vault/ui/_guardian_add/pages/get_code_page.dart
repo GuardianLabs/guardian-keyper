@@ -68,7 +68,7 @@ class GetCodePage extends StatelessWidget {
     } on SetCodeVersionHighException {
       OnVersionHighDialog.show(context);
     } on SetCodeDuplicateException catch (e) {
-      OnDuplicateDialog.show(context, peerId: e.message.peerId);
+      OnDuplicateDialog.show(context, peerName: e.message.peerId.name);
     }
   }
 }

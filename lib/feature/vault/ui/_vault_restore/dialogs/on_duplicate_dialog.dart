@@ -1,5 +1,4 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 class OnDuplicateDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showModalBottomSheet(
@@ -13,13 +12,13 @@ class OnDuplicateDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.owner(isBig: true),
+        icon: const Icon(Icons.check_circle, size: 80),
         titleString: 'The Vault is yours',
         textString: 'Seems like you are the owner of the Vault already. '
             'No recovery required here.',
-        footer: PrimaryButton(
-          text: 'Close',
+        footer: FilledButton(
           onPressed: Navigator.of(context).pop,
+          child: const Text('Close'),
         ),
       );
 }

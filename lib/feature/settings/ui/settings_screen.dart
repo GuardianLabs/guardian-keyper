@@ -23,73 +23,77 @@ class SettingsScreen extends StatelessWidget {
               // Body
               Expanded(
                 child: Consumer<SettingsPresenter>(
-                  builder: (context, presenter, __) => ListView(
-                    padding: paddingAll20,
-                    children: [
-                      // Change Device Name
-                      Padding(
-                        padding: paddingV6,
-                        child: ListTile(
-                          leading: const IconOf.shardOwner(),
-                          title: const Text('Change Guardian name'),
-                          subtitle: Text(
-                            presenter.deviceName,
-                            style: styleSourceSansPro414Purple,
-                          ),
-                          trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                          onTap: () => OnSetDeviceNameDialog.show(
-                            context,
-                            presenter: presenter,
+                  builder: (context, presenter, __) {
+                    final bgColor = Theme.of(context).colorScheme.secondary;
+                    return ListView(
+                      padding: paddingAll20,
+                      children: [
+                        // Change Device Name
+                        Padding(
+                          padding: paddingV6,
+                          child: ListTile(
+                            leading: IconOf.user(bgColor: bgColor),
+                            title: const Text('Change Guardian name'),
+                            subtitle: Text(
+                              presenter.deviceName,
+                              style: styleSourceSansPro414Purple,
+                            ),
+                            trailing:
+                                const Icon(Icons.arrow_forward_ios_rounded),
+                            onTap: () => OnSetDeviceNameDialog.show(
+                              context,
+                              presenter: presenter,
+                            ),
                           ),
                         ),
-                      ),
-                      // Change PassCode
-                      Padding(
-                        padding: paddingV6,
-                        child: ListTile(
-                          leading: const IconOf.passcode(),
-                          title: const Text('Passcode'),
-                          subtitle: Text(
-                            'Change authentication passcode',
-                            style: styleSourceSansPro414Purple,
+                        // Change PassCode
+                        Padding(
+                          padding: paddingV6,
+                          child: ListTile(
+                            leading: IconOf.passcode(bgColor: bgColor),
+                            title: const Text('Passcode'),
+                            subtitle: Text(
+                              'Change authentication passcode',
+                              style: styleSourceSansPro414Purple,
+                            ),
+                            trailing:
+                                const Icon(Icons.arrow_forward_ios_rounded),
+                            onTap: () => OnChangePassCodeDialog.show(context),
                           ),
-                          trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                          onTap: () => OnChangePassCodeDialog.show(context),
                         ),
-                      ),
-                      // Toggle Biometrics
-                      if (presenter.hasBiometrics)
+                        // Toggle Biometrics
+                        if (presenter.hasBiometrics)
+                          Padding(
+                            padding: paddingV6,
+                            child: SwitchListTile.adaptive(
+                              secondary: const Icon(
+                                Icons.fingerprint,
+                                size: 40,
+                              ),
+                              title: const Text('Biometric login'),
+                              subtitle: const Text(
+                                'Easier, faster authentication with biometry',
+                              ),
+                              value: presenter.isBiometricsEnabled,
+                              onChanged: presenter.setBiometrics,
+                            ),
+                          ),
+                        // Toggle Bootstrap
                         Padding(
                           padding: paddingV6,
                           child: SwitchListTile.adaptive(
-                            secondary: const IconOf.biometricLogon(),
-                            title: const Text('Biometric login'),
+                            secondary: IconOf.connection(bgColor: bgColor),
+                            title: const Text('Proxy connection'),
                             subtitle: const Text(
-                              'Easier, faster authentication with biometry',
+                              'Connect through Keyper-operated proxy server',
                             ),
-                            value: presenter.isBiometricsEnabled,
-                            onChanged: (isEnabled) => presenter.setBiometrics(
-                              isEnabled: isEnabled,
-                            ),
+                            value: presenter.isBootstrapEnabled,
+                            onChanged: presenter.setBootstrap,
                           ),
                         ),
-                      // Toggle Bootstrap
-                      Padding(
-                        padding: paddingV6,
-                        child: SwitchListTile.adaptive(
-                          secondary: const IconOf.splitAndShare(),
-                          title: const Text('Proxy connection'),
-                          subtitle: const Text(
-                            'Connect through Keyper-operated proxy server',
-                          ),
-                          value: presenter.isBootstrapEnabled,
-                          onChanged: (isEnabled) => presenter.setBootstrap(
-                            isEnabled: isEnabled,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],

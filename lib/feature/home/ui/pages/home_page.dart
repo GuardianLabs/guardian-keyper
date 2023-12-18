@@ -62,7 +62,6 @@ class HomePage extends StatelessWidget {
         Padding(
           padding: paddingT20,
           child: ActionCard(
-            // TBD: change icon
             icon: const Icon(
               Icons.add,
               color: clGreen,
@@ -78,7 +77,6 @@ class HomePage extends StatelessWidget {
         Padding(
           padding: paddingT20,
           child: ActionCard(
-            // TBD: change icon
             icon: const Icon(
               Icons.replay,
               color: clGreen,
@@ -95,7 +93,6 @@ class HomePage extends StatelessWidget {
           child: ActionCard(
             title: 'Become a Guardian',
             subtitle: 'Safeguard a part of another user`s Vault.',
-            // TBD: change icon
             icon: const Icon(
               Icons.shield_outlined,
               color: clGreen,
@@ -127,7 +124,6 @@ class HomePage extends StatelessWidget {
             child: Padding(
               padding: paddingT20,
               child: ActionCard(
-                // TBD: change icon
                 icon: const Icon(
                   Icons.auto_awesome_outlined,
                   color: clGreen,
