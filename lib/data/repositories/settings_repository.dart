@@ -26,28 +26,28 @@ class SettingsRepository {
     SettingsRepositoryKeys key, {
     T? defaultValue,
   }) {
-    final value = _storage.get(key.toString());
+    final value = _storage.get(key.name);
     return value == null
         ? defaultValue
         : switch (T) {
-            const (String) => value as T,
-            const (int) => int.parse(value) as T,
-            const (bool) => bool.parse(value) as T,
-            const (Uint8List) => base64Decode(value) as T,
+            String => value as T,
+            int => int.tryParse(value) as T?,
+            bool => bool.tryParse(value) as T?,
+            double => double.tryParse(value) as T?,
+            Uint8List => _tryParseBase64(value) as T?,
             _ => throw const SettingsValueFormatException(),
           };
   }
 
   Future<T> put<T extends Object>(SettingsRepositoryKeys key, T value) async {
-    await switch (T) {
-      const (int) ||
-      const (bool) ||
-      const (String) =>
-        _storage.put(key.name, value.toString()),
-      const (Uint8List) =>
-        _storage.put(key.name, base64UrlEncode(value as Uint8List)),
-      _ => throw const SettingsValueFormatException(),
-    };
+    switch (T) {
+      case int || bool || double || String:
+        await _storage.put(key.name, value.toString());
+      case Uint8List:
+        await _storage.put(key.name, base64UrlEncode(value as Uint8List));
+      default:
+        throw const SettingsValueFormatException();
+    }
     return value;
   }
 
@@ -66,6 +66,15 @@ class SettingsRepository {
               ));
 
   Future<void> flush() => _storage.flush().then((value) => _storage.compact());
+
+  Uint8List? _tryParseBase64(String? value) {
+    if (value == null) return null;
+    try {
+      return base64Decode(value);
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 class SettingsValueFormatException extends FormatException {
