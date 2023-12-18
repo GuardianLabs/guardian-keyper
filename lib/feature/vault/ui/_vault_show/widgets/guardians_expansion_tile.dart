@@ -1,31 +1,57 @@
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import '../../widgets/guardian_self_list_tile.dart';
-import '../vault_show_presenter.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+import 'package:guardian_keyper/feature/vault/ui/widgets/guardian_list_tile.dart';
+
 import 'guardian_with_ping_tile.dart';
 
 class GuardiansExpansionTile extends StatelessWidget {
-  const GuardiansExpansionTile({super.key});
+  const GuardiansExpansionTile({
+    required this.vault,
+    this.initiallyExpanded = false,
+    super.key,
+  });
+
+  final Vault vault;
+  final bool initiallyExpanded;
 
   @override
-  Widget build(BuildContext context) {
-    final vault = context.read<VaultShowPresenter>().vault;
-    return ExpansionTile(
-      title: Text(
-        'Vault’s Guardians',
-        style: styleSourceSansPro614,
-      ),
-      subtitle: Text(
-        '${vault.size} Guardians',
-        style: styleSourceSansPro414Purple,
-      ),
-      childrenPadding: EdgeInsets.zero,
-      children: [
-        for (final guardian in vault.guardians.keys)
-          guardian == vault.ownerId
-              ? const GuardianSelfListTile()
-              : GuardianWithPingTile(guardian: guardian),
-      ],
-    );
-  }
+  Widget build(BuildContext context) => ExpansionTile(
+        initiallyExpanded: initiallyExpanded,
+        childrenPadding: EdgeInsets.zero,
+        title: Text(
+          'Vault’s Guardians',
+          style: styleSourceSansPro614,
+        ),
+        subtitle: vault.isFull
+            ? Text(
+                '${vault.size} out of ${vault.maxSize}',
+                style: styleSourceSansPro414Purple,
+              )
+            : Row(
+                children: [
+                  const Icon(Icons.info, color: Colors.orange, size: 16),
+                  Text(
+                    '  ${vault.size} out of ${vault.maxSize}',
+                    style: styleSourceSansPro414Purple,
+                  ),
+                ],
+              ),
+        children: [
+          for (final guardian in vault.guardians.keys)
+            guardian == vault.ownerId
+                ? const GuardianListTile.my()
+                : GuardianWithPingTile(guardian: guardian),
+          for (var i = vault.size; i < vault.maxSize; i++)
+            GuardianListTile.empty(
+              onTap: () => vault.isRestricted
+                  ? Navigator.of(context).pushNamed(routeVaultRestore)
+                  : Navigator.of(context).pushNamed(
+                      routeVaultGuardianAdd,
+                      arguments: vault.id,
+                    ),
+            ),
+        ],
+      );
 }

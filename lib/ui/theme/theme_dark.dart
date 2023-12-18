@@ -12,8 +12,8 @@ final themeDark = ThemeData.dark().copyWith(
   // Color Scheme
   colorScheme: const ColorScheme(
     brightness: Brightness.dark,
-    primary: clWhite,
-    onPrimary: clIndigo600,
+    primary: clIndigo500,
+    onPrimary: clWhite,
     secondary: clIndigo700,
     onSecondary: clWhite,
     error: clRed,
@@ -52,11 +52,14 @@ final themeDark = ThemeData.dark().copyWith(
     shape: _shapeBorder,
   ),
   // Expansion Panel
-  expansionTileTheme: const ExpansionTileThemeData(
+  expansionTileTheme: ExpansionTileThemeData(
     backgroundColor: clSurface,
     childrenPadding: paddingAll20,
     collapsedIconColor: clWhite,
+    collapsedShape: _shapeBorder,
+    textColor: clWhite,
     iconColor: clWhite,
+    shape: _shapeBorder,
   ),
   // Filled Button
   filledButtonTheme: FilledButtonThemeData(
@@ -103,7 +106,7 @@ final themeDark = ThemeData.dark().copyWith(
     textColor: clWhite,
     shape: _shapeBorder,
     titleTextStyle: styleSourceSansPro616,
-    subtitleTextStyle: styleSourceSansPro414,
+    subtitleTextStyle: styleSourceSansPro414Purple,
   ),
   // Outlined Button
   outlinedButtonTheme: OutlinedButtonThemeData(

@@ -1,10 +1,10 @@
-import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/utils/utils.dart';
-import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:get_it/get_it.dart';
 
-import '../vault_show_presenter.dart';
-import '../../widgets/guardian_list_tile.dart';
+import 'package:guardian_keyper/ui/widgets/common.dart';
+
+import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
+import 'package:guardian_keyper/feature/vault/ui/widgets/guardian_list_tile.dart';
 
 class GuardianWithPingTile extends StatefulWidget {
   const GuardianWithPingTile({
@@ -22,40 +22,29 @@ class _GuardianWithPingTileState extends State<GuardianWithPingTile> {
   bool _isWaiting = false;
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onLongPress: _isWaiting
-            ? null
-            : () async {
-                setState(() => _isWaiting = true);
-                final startedAt = DateTime.now();
-                final hasPong = await context
-                    .read<VaultShowPresenter>()
-                    .pingPeer(widget.guardian);
-                if (!mounted) return;
-                final msElapsed =
-                    DateTime.now().difference(startedAt).inMilliseconds;
-                setState(() => _isWaiting = false);
-                ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
-                  isError: !hasPong,
-                  textSpans: hasPong
-                      ? [
-                          ...buildTextWithId(name: widget.guardian.name),
-                          TextSpan(text: ' is online.\nPing $msElapsed ms.'),
-                        ]
-                      : [
-                          const TextSpan(text: 'Couldn’t reach out to '),
-                          ...buildTextWithId(name: widget.guardian.name),
-                          const TextSpan(text: '. Connection timeout.'),
-                        ],
-                ));
-                await Future.delayed(
-                  snackBarDuration,
-                  () => mounted ? setState(() => _isWaiting = false) : null,
-                );
-              },
-        child: GuardianListTile(
-          guardian: widget.guardian,
-          isWaiting: _isWaiting,
-        ),
+  Widget build(BuildContext context) => GuardianListTile(
+        guardian: widget.guardian,
+        isWaiting: _isWaiting,
+        onLongPress: () async {
+          if (_isWaiting) return;
+          setState(() => _isWaiting = true);
+          final startedAt = DateTime.now();
+          final hasPong =
+              await GetIt.I<VaultInteractor>().pingPeer(widget.guardian);
+          if (!mounted) return;
+          if (hasPong) {
+            final msElapsed =
+                DateTime.now().difference(startedAt).inMilliseconds;
+            ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+              text: '${widget.guardian.name} is online. Ping $msElapsed ms.',
+            ));
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+              text: 'Couldn’t reach out to ${widget.guardian.name}.',
+              isError: true,
+            ));
+          }
+          setState(() => _isWaiting = false);
+        },
       );
 }

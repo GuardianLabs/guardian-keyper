@@ -13,10 +13,7 @@ class OnInvalidDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.secrets(
-          isBig: true,
-          bage: BageType.error,
-        ),
+        icon: const IconOf.secrets(isBig: true, bage: BageType.error),
         titleString: 'Invalid Code',
         textString: 'Seems like the Code you’ve just used '
             'is not valid. Ask Guardian to share a new code.',

@@ -17,9 +17,12 @@ class OnFailDialog extends StatelessWidget {
         textString: 'Seems like the Code you’ve just used is not valid. '
             'Ask Guardian to share a new code.',
         icon: const IconOf.shield(isBig: true, bage: BageType.error),
-        footer: PrimaryButton(
-          text: 'Close',
-          onPressed: Navigator.of(context).pop,
+        footer: SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: Navigator.of(context).pop,
+            child: const Text('Close'),
+          ),
         ),
       );
 }

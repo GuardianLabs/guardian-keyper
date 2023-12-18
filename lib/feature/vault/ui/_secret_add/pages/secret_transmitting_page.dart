@@ -1,9 +1,9 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+
+import 'package:guardian_keyper/feature/vault/ui/widgets/guardian_list_tile.dart';
 
 import '../vault_secret_add_presenter.dart';
-import '../../widgets/guardian_self_list_tile.dart';
-import '../../widgets/guardian_list_tile.dart';
+import '../../widgets/guardian_list_tile_old.dart';
 import '../widgets/abort_header_button.dart';
 import '../dialogs/on_success_dialog.dart';
 import '../dialogs/on_reject_dialog.dart';
@@ -73,8 +73,20 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                     Padding(
                       padding: paddingV6,
                       child: presenter.isMyself(guardian)
-                          ? const GuardianSelfListTile()
-                          : _getGuardianListTile(guardian),
+                          ? const GuardianListTile.my()
+                          : () {
+                              final message = _presenter.getMessageOf(guardian);
+                              return GuardianListTileOld(
+                                guardian: guardian,
+                                // checkStatus: true,
+                                isWaiting: message.hasNoResponse,
+                                isSuccess: message.isAccepted
+                                    ? true
+                                    : message.hasResponse
+                                        ? false
+                                        : null,
+                              );
+                            }(),
                     )
                 ],
               ),
@@ -82,20 +94,6 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _getGuardianListTile(PeerId guardian) {
-    final message = _presenter.getMessageOf(guardian);
-    return GuardianListTile(
-      guardian: guardian,
-      checkStatus: true,
-      isWaiting: message.hasNoResponse,
-      isSuccess: message.isAccepted
-          ? true
-          : message.hasResponse
-              ? false
-              : null,
     );
   }
 }

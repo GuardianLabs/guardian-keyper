@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:get_it/get_it.dart';
 
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
-import '../../domain/entity/vault_id.dart';
-import '../../domain/use_case/vault_interactor.dart';
 import '../vault_guardian_presenter_base.dart';
 
 export 'package:provider/provider.dart';
@@ -21,6 +21,12 @@ class VaultGuardianAddPresenter extends VaultGuardianPresenterBase {
 
   @override
   final VaultId vaultId;
+
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
+
+  late final _messageToSend = qrCode!.copyWith(
+    payload: _vaultInteractor.getVaultById(vaultId),
+  );
 
   @override
   MessageCode get messageCode => MessageCode.createVault;
@@ -42,11 +48,4 @@ class VaultGuardianAddPresenter extends VaultGuardianPresenterBase {
     }
     requestCompleter.complete(message);
   }
-
-  // Private
-  final _vaultInteractor = GetIt.I<VaultInteractor>();
-
-  late final _messageToSend = qrCode!.copyWith(
-    payload: _vaultInteractor.getVaultById(vaultId),
-  );
 }

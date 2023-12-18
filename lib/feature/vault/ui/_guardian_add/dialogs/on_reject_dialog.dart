@@ -16,9 +16,12 @@ class OnRejectDialog extends StatelessWidget {
         titleString: 'Request has been rejected',
         textString: 'Guardian rejected your request to join Vault.',
         icon: const IconOf.shield(isBig: true, bage: BageType.error),
-        footer: PrimaryButton(
-          text: 'Close',
-          onPressed: Navigator.of(context).pop,
+        footer: SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: Navigator.of(context).pop,
+            child: const Text('Close'),
+          ),
         ),
       );
 }

@@ -19,6 +19,12 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
     _vaultInteractor.logStartAddSecret();
   }
 
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
+
+  String _secret = '';
+  String _secretName = '';
+  bool _isSecretObscure = true;
+
   String get secret => _secret;
 
   bool get isSecretObscure => _isSecretObscure;
@@ -84,6 +90,8 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
     }
   }
 
+  bool isMyself(PeerId peerId) => peerId == _vaultInteractor.selfId;
+
   void setSecret(String value) {
     _secret = value;
     notifyListeners();
@@ -98,13 +106,4 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
     _isSecretObscure = !_isSecretObscure;
     notifyListeners();
   }
-
-  bool isMyself(PeerId peerId) => peerId == _vaultInteractor.selfId;
-
-  // Private
-  final _vaultInteractor = GetIt.I<VaultInteractor>();
-
-  String _secret = '';
-  String _secretName = '';
-  bool _isSecretObscure = true;
 }

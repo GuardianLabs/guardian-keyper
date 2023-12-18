@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../theme/theme.dart';
-import '../utils/screen_size.dart';
+import 'package:guardian_keyper/consts.dart';
+import 'package:guardian_keyper/ui/theme/theme.dart';
+import 'package:guardian_keyper/ui/utils/screen_size.dart';
 
 export 'package:flutter/material.dart';
 
-export '../theme/theme.dart';
+export 'package:guardian_keyper/ui/theme/theme.dart';
 
 class ScaffoldSafe extends StatelessWidget {
   const ScaffoldSafe({
@@ -167,10 +168,11 @@ class PageTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final paddingTop =
-        ScreenSize.get(MediaQuery.of(context).size) is ScreenSmall
-            ? paddingT12
-            : paddingT32;
+    final paddingTop = switch (ScreenSize.get(MediaQuery.of(context).size)) {
+      ScreenSmall _ => paddingT12,
+      ScreenMedium _ => paddingT20,
+      _ => paddingT32,
+    };
     return Padding(
       padding: paddingH20,
       child: Column(
@@ -402,3 +404,36 @@ class DotColored extends StatelessWidget {
         child: child,
       );
 }
+
+SnackBar buildSnackBar({
+  String? text,
+  List<TextSpan>? textSpans,
+  Duration duration = snackBarDuration,
+  bool isFloating = false,
+  bool isError = false,
+}) =>
+    SnackBar(
+      duration: duration,
+      behavior: isFloating ? SnackBarBehavior.floating : null,
+      margin: paddingAll20,
+      backgroundColor: isError ? clRed : clGreen,
+      content: RichText(
+        text: TextSpan(
+          text: text,
+          children: textSpans,
+          style: TextStyle(color: isError ? clWhite : clGreenDark),
+        ),
+      ),
+    );
+
+List<TextSpan> buildTextWithId({
+  required String name,
+  String? leadingText,
+  String? trailingText,
+  TextStyle style = const TextStyle(fontWeight: FontWeight.w600),
+}) =>
+    [
+      if (leadingText != null) TextSpan(text: leadingText),
+      TextSpan(text: '$name  ', style: style),
+      if (trailingText != null) TextSpan(text: trailingText),
+    ];

@@ -1,8 +1,9 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
+import 'package:guardian_keyper/feature/vault/ui/widgets/guardian_list_tile.dart';
+
 import '../vault_secret_recovery_presenter.dart';
-import '../../widgets/guardian_self_list_tile.dart';
-import '../../widgets/guardian_list_tile.dart';
+import '../../widgets/guardian_list_tile_old.dart';
 import '../dialogs/on_reject_dialog.dart';
 
 class DiscoveringPeersPage extends StatefulWidget {
@@ -90,13 +91,13 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
                   Padding(
                     padding: paddingV6,
                     child: guardian == _presenter.vault.ownerId
-                        ? const GuardianSelfListTile()
+                        ? const GuardianListTile.my()
                         : Consumer<VaultSecretRecoveryPresenter>(
                             builder: (_, presenter, __) {
                               final message = presenter.getMessageOf(guardian);
-                              return GuardianListTile(
+                              return GuardianListTileOld(
                                 guardian: guardian,
-                                checkStatus: true,
+                                // checkStatus: true,
                                 isWaiting: message.hasNoResponse,
                                 isSuccess: message.isAccepted
                                     ? true

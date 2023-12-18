@@ -1,12 +1,16 @@
-import 'package:guardian_keyper/ui/utils/utils.dart';
+import 'package:get_it/get_it.dart';
+
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import '../../domain/entity/vault_id.dart';
-import 'vault_show_presenter.dart';
-import 'pages/vault_page.dart';
-import 'pages/new_vault_page.dart';
-import 'pages/restricted_vault_page.dart';
+import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
+
 import 'dialogs/on_vault_more_dialog.dart';
+import 'widgets/guardians_expansion_tile.dart';
+import 'widgets/page_title_restricted.dart';
+import 'widgets/secret_list_tile.dart';
 
 class VaultShowScreen extends StatelessWidget {
   const VaultShowScreen({super.key});
@@ -14,32 +18,86 @@ class VaultShowScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vaultId = ModalRoute.of(context)!.settings.arguments! as VaultId;
-    return ChangeNotifierProvider(
-      create: (_) => VaultShowPresenter(vaultId: vaultId),
-      child: Consumer<VaultShowPresenter>(
-        builder: (_, presenter, __) => ScaffoldSafe(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              HeaderBar(
-                captionSpans: buildTextWithId(name: vaultId.name),
-                backButton: const HeaderBarBackButton(),
-                closeButton: HeaderBarMoreButton(
-                  onPressed: () => OnVaultMoreDialog.show(context, presenter),
-                ),
+    final vaultInteractor = GetIt.I<VaultInteractor>();
+    return ScaffoldSafe(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header
+          HeaderBar(
+            caption: vaultId.name,
+            backButton: const HeaderBarBackButton(),
+            closeButton: HeaderBarMoreButton(
+              onPressed: () => OnVaultMoreDialog.show(
+                context,
+                vaultId: vaultId,
               ),
-              // Body
-              Expanded(
-                child: presenter.vault.isRestricted
-                    ? const RestrictedVaultPage()
-                    : presenter.vault.isNotFull
-                        ? const NewVaultPage()
-                        : const VaultPage(),
-              ),
-            ],
+            ),
           ),
-        ),
+          // Body
+          Expanded(
+            child: StreamBuilder<VaultRepositoryEvent>(
+              initialData: (
+                isDeleted: false,
+                key: vaultId.asKey,
+                vault: vaultInteractor.getVaultById(vaultId),
+              ),
+              stream: vaultInteractor.watch(vaultId.asKey),
+              builder: (context, snapshot) {
+                final vault = snapshot.data?.vault;
+                return vault == null
+                    ? const Offstage()
+                    : ListView(
+                        padding: paddingAll20,
+                        children: [
+                          // Title
+                          if (vault.isRestricted)
+                            PageTitleRestricted(
+                              vault: vault,
+                            )
+                          else if (vault.isNotFull)
+                            PageTitle(
+                              title: 'Guardians',
+                              subtitle: 'Adding ${vault.maxSize} Guardians '
+                                  'will activate your Vault, making it '
+                                  'ready to securely hold your Secrets.',
+                            )
+                          else
+                            const PageTitle(title: 'Guardians'),
+                          // Guardians
+                          GuardiansExpansionTile(
+                            vault: vault,
+                            initiallyExpanded: vault.hasNoSecrets,
+                          ),
+                          Padding(
+                            padding: paddingV20,
+                            child: Text(
+                              'Secrets',
+                              style: stylePoppins620,
+                            ),
+                          ),
+                          // Button
+                          if (vault.isFull)
+                            Padding(
+                              padding: paddingB20,
+                              child: FilledButton(
+                                child: const Text('Add a Secret'),
+                                onPressed: () =>
+                                    Navigator.of(context).pushNamed(
+                                  routeVaultSecretAdd,
+                                  arguments: vault.id,
+                                ),
+                              ),
+                            ),
+                          // Secrets
+                          for (final secretId in vault.secrets.keys)
+                            SecretListTile(vault: vault, secretId: secretId)
+                        ],
+                      );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

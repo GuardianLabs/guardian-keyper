@@ -17,9 +17,12 @@ class OnVersionHighDialog extends StatelessWidget {
         titleString: 'Guardian’s app is outdated',
         textString: 'Seems like your Guardian is using the older '
             'version of the Guardian Keyper. Ask them to update the app.',
-        footer: PrimaryButton(
-          text: 'Close',
-          onPressed: Navigator.of(context).pop,
+        footer: SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: Navigator.of(context).pop,
+            child: const Text('Close'),
+          ),
         ),
       );
 }

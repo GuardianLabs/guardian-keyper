@@ -23,15 +23,21 @@ class OnVersionLowDialog extends StatelessWidget {
             'version of the Guardian Keyper. Please update the app.',
         footer: Column(
           children: [
-            FilledButton(
-              onPressed: Navigator.of(context).pop,
-              child: const Text('Close'),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: Navigator.of(context).pop,
+                child: const Text('Close'),
+              ),
             ),
             const Padding(padding: paddingT20),
-            OutlinedButton(
-              onPressed: GetIt.I<VaultInteractor>().openMarket,
-              child: const Text('Update'),
-            )
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: GetIt.I<VaultInteractor>().openMarket,
+                child: const Text('Update'),
+              ),
+            ),
           ],
         ),
       );

@@ -1,74 +1,119 @@
-import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
+
 import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 
-import 'online_status_text.dart';
-
 class GuardianListTile extends StatelessWidget {
-  final PeerId guardian;
-  final bool? isSuccess;
-  final bool isWaiting;
-  final bool checkStatus;
-
-  const GuardianListTile({
-    required this.guardian,
-    this.isSuccess,
+  GuardianListTile({
+    required PeerId guardian,
+    this.leading = const _GuardianCheckedIcon(),
     this.isWaiting = false,
-    this.checkStatus = false,
+    this.onTap,
+    this.onLongPress,
     super.key,
-  });
+  })  : title = guardian.name,
+        subtitle = 'ID: ${guardian.toHexShort()}';
+
+  const GuardianListTile.my({
+    super.key,
+  })  : onTap = null,
+        onLongPress = null,
+        isWaiting = false,
+        title = 'My device',
+        subtitle = 'Acts as a Guardian',
+        leading = const _GuardianCheckedIcon();
+
+  const GuardianListTile.empty({
+    this.onTap,
+    super.key,
+  })  : isWaiting = false,
+        onLongPress = null,
+        title = 'Guardian Slot',
+        subtitle = 'Tap to Add',
+        leading = const _GuardianEmptyIcon();
+
+  GuardianListTile.pending({
+    required PeerId guardian,
+    super.key,
+  })  : onTap = null,
+        onLongPress = null,
+        isWaiting = false,
+        title = guardian.name,
+        subtitle = 'ID: ${guardian.toHexShort()}',
+        leading = const _GuardianPendingIcon();
+
+  final bool isWaiting;
+  final Widget? leading;
+  final String title;
+  final String subtitle;
+  final void Function()? onTap;
+  final void Function()? onLongPress;
 
   @override
   Widget build(BuildContext context) => ListTile(
-        visualDensity: checkStatus
-            ? const VisualDensity(vertical: VisualDensity.maximumDensity)
-            : null,
-        leading: checkStatus
-            ? Column(children: [
-                _buildLeading(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: OnlineStatusText(peerId: guardian),
-                ),
-              ])
-            : _buildLeading(),
-        title: RichText(
+        leading: leading,
+        title: Text(
+          title,
           maxLines: 1,
-          text: TextSpan(
-            style: styleSourceSansPro614.copyWith(height: 1.5),
-            children: buildTextWithId(
-              name: guardian.name,
-              style: TextStyle(
-                color: guardian.token.isEmpty
-                    ? clRed
-                    : Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          ),
+          style: styleSourceSansPro616,
         ),
         subtitle: Text(
-          guardian.toHexShort(),
+          subtitle,
           maxLines: 1,
           style: styleSourceSansPro414Purple,
         ),
-        trailing: isWaiting
-            ? Container(
-                alignment: Alignment.centerRight,
-                margin: checkStatus ? paddingT20 : null,
-                height: 20,
-                width: 20,
-                child: const CircularProgressIndicator.adaptive(strokeWidth: 2),
-              )
-            : null,
+        trailing: isWaiting ? const CircularProgressIndicator.adaptive() : null,
+        onTap: onTap,
+        onLongPress: onLongPress,
       );
+}
 
-  Widget _buildLeading() => IconOf.shield(
-        color: clWhite,
-        bgColor: isSuccess == null
-            ? null
-            : isSuccess ?? false
-                ? clGreen
-                : clRed,
+class _GuardianCheckedIcon extends StatelessWidget {
+  const _GuardianCheckedIcon();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary,
+            width: 2,
+          ),
+          shape: BoxShape.circle,
+        ),
+        height: 40,
+        width: 40,
+        child: const Icon(Icons.check),
+      );
+}
+
+class _GuardianEmptyIcon extends StatelessWidget {
+  const _GuardianEmptyIcon();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          shape: BoxShape.circle,
+        ),
+        height: 40,
+        width: 40,
+        child: const Icon(Icons.add),
+      );
+}
+
+class _GuardianPendingIcon extends StatelessWidget {
+  const _GuardianPendingIcon();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary,
+            width: 2,
+          ),
+          shape: BoxShape.circle,
+        ),
+        height: 40,
+        width: 40,
+        child: const Icon(Icons.hourglass_bottom),
       );
 }

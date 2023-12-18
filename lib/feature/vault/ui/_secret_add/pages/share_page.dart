@@ -1,8 +1,9 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
+import 'package:guardian_keyper/feature/vault/ui/widgets/guardian_list_tile.dart';
+
 import '../vault_secret_add_presenter.dart';
-import '../../widgets/guardian_self_list_tile.dart';
-import '../../widgets/guardian_list_tile.dart';
+import '../../widgets/guardian_list_tile_old.dart';
 import '../widgets/abort_header_button.dart';
 
 class ShareSecretPage extends StatelessWidget {
@@ -45,8 +46,8 @@ class ShareSecretPage extends StatelessWidget {
                   Padding(
                     padding: paddingV6,
                     child: guardian == presenter.vault.ownerId
-                        ? const GuardianSelfListTile()
-                        : GuardianListTile(guardian: guardian),
+                        ? const GuardianListTile.my()
+                        : GuardianListTileOld(guardian: guardian),
                   )
               ]),
               // Footer

@@ -1,4 +1,3 @@
-import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../vault_guardian_add_presenter.dart';
@@ -13,12 +12,11 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
-  late final _presenter = context.read<VaultGuardianAddPresenter>();
-
   @override
   void initState() {
     super.initState();
-    _presenter.startRequest().then((message) async {
+    final presenter = context.read<VaultGuardianAddPresenter>();
+    presenter.startRequest().then((message) async {
       if (message.isAccepted) {
         ScaffoldMessenger.of(context).showSnackBar(
           buildSnackBar(
@@ -28,7 +26,7 @@ class _LoadingPageState extends State<LoadingPage> {
                 leadingText: 'You have successfully added ',
               ),
               ...buildTextWithId(
-                name: _presenter.vaultId.name,
+                name: presenter.vaultId.name,
                 leadingText: 'as a Guardian for ',
               ),
             ],
@@ -71,15 +69,9 @@ class _LoadingPageState extends State<LoadingPage> {
                   ),
                   Padding(
                     padding: paddingAll20,
-                    child: RichText(
-                      text: TextSpan(
-                        style: styleSourceSansPro616,
-                        children: buildTextWithId(
-                          leadingText: 'Awaiting ',
-                          name: _presenter.qrCode!.peerId.name,
-                          trailingText: '’s response',
-                        ),
-                      ),
+                    child: Text(
+                      'Awaiting Guardian’s response',
+                      style: styleSourceSansPro616,
                     ),
                   ),
                 ],

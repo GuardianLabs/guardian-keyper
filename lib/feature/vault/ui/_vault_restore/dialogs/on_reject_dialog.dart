@@ -1,9 +1,8 @@
-import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 
-import '../../../domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 
 class OnRejectDialog extends StatelessWidget {
   static Future<void> show(

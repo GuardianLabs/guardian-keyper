@@ -1,13 +1,16 @@
+import 'package:get_it/get_it.dart';
+
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
-import '../vault_show_presenter.dart';
-import '../../../domain/entity/secret_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 
 class OnRemoveSecretDialog extends StatelessWidget {
   static Future<void> show(
-    BuildContext context,
-    VaultShowPresenter presenter, {
+    BuildContext context, {
+    required Vault vault,
     required SecretId secretId,
   }) =>
       showModalBottomSheet(
@@ -15,19 +18,19 @@ class OnRemoveSecretDialog extends StatelessWidget {
         useSafeArea: true,
         isScrollControlled: true,
         builder: (_) => OnRemoveSecretDialog(
-          presenter: presenter,
+          vault: vault,
           secretId: secretId,
         ),
       );
 
   const OnRemoveSecretDialog({
+    required this.vault,
     required this.secretId,
-    required this.presenter,
     super.key,
   });
 
+  final Vault vault;
   final SecretId secretId;
-  final VaultShowPresenter presenter;
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
@@ -43,7 +46,10 @@ class OnRemoveSecretDialog extends StatelessWidget {
           child: PrimaryButton(
             text: 'Yes, remove the Secret',
             onPressed: () async {
-              await presenter.removeSecret(secretId);
+              await GetIt.I<VaultInteractor>().removeSecret(
+                vault: vault,
+                secretId: secretId,
+              );
               if (context.mounted) Navigator.of(context).pop();
             },
           ),

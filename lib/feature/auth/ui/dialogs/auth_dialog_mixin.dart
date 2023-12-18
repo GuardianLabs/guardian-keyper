@@ -1,6 +1,5 @@
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 
-import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/ui/utils/screen_size.dart';
