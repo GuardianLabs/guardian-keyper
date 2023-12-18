@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
 
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
@@ -24,6 +23,13 @@ import 'pages/home_shards_page.dart';
 import 'widgets/notifications_icon.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => HomeScreenState();
+}
+
+class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   static const _tabs = [
     HomePage(),
     HomeVaultsPage(),
@@ -36,16 +42,27 @@ class HomeScreen extends StatefulWidget {
   static const _vaultsSvg = 'assets/icons/home_vaults.svg';
   static const _shardsSvg = 'assets/icons/home_shards.svg';
 
-  static List<BottomNavigationBarItem> _buildNavBarItems(Color color) {
-    final colorFilter = ColorFilter.mode(color, BlendMode.srcIn);
+  static List<BottomNavigationBarItem> _buildNavBarItems(
+    Color selectedColor,
+    Color unselectedColor,
+  ) {
+    final selectedColorFilter =
+        ColorFilter.mode(selectedColor, BlendMode.srcIn);
+    final unselectedColorFilter =
+        ColorFilter.mode(unselectedColor, BlendMode.srcIn);
     return [
       BottomNavigationBarItem(
         // Home
         label: 'Home',
-        icon: SvgPicture.asset(_homeSvg, height: _iconSize, width: _iconSize),
+        icon: SvgPicture.asset(
+          _homeSvg,
+          colorFilter: unselectedColorFilter,
+          height: _iconSize,
+          width: _iconSize,
+        ),
         activeIcon: SvgPicture.asset(
           _homeSvg,
-          colorFilter: colorFilter,
+          colorFilter: selectedColorFilter,
           height: _iconSize,
           width: _iconSize,
         ),
@@ -53,10 +70,15 @@ class HomeScreen extends StatefulWidget {
       // Vaults
       BottomNavigationBarItem(
         label: 'Vaults',
-        icon: SvgPicture.asset(_vaultsSvg, height: _iconSize, width: _iconSize),
+        icon: SvgPicture.asset(
+          _vaultsSvg,
+          colorFilter: unselectedColorFilter,
+          height: _iconSize,
+          width: _iconSize,
+        ),
         activeIcon: SvgPicture.asset(
           _vaultsSvg,
-          colorFilter: colorFilter,
+          colorFilter: selectedColorFilter,
           height: _iconSize,
           width: _iconSize,
         ),
@@ -64,10 +86,15 @@ class HomeScreen extends StatefulWidget {
       // Shards
       BottomNavigationBarItem(
         label: 'Shards',
-        icon: SvgPicture.asset(_shardsSvg, height: _iconSize, width: _iconSize),
+        icon: SvgPicture.asset(
+          _shardsSvg,
+          colorFilter: unselectedColorFilter,
+          height: _iconSize,
+          width: _iconSize,
+        ),
         activeIcon: SvgPicture.asset(
           _shardsSvg,
-          colorFilter: colorFilter,
+          colorFilter: selectedColorFilter,
           height: _iconSize,
           width: _iconSize,
         ),
@@ -76,18 +103,14 @@ class HomeScreen extends StatefulWidget {
       const BottomNavigationBarItem(
         label: 'Notifications',
         icon: NotificationsIcon(isSelected: false, iconSize: _iconSize),
-        activeIcon: NotificationsIcon(isSelected: true, iconSize: _iconSize),
+        activeIcon: NotificationsIcon(
+          isSelected: true,
+          iconSize: _iconSize,
+        ),
       ),
     ];
   }
 
-  const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => HomeScreenState();
-}
-
-class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int _currentTab = 0;
   bool _canShowMessage = true;
   DateTime _lastExitTryAt = DateTime.timestamp();
@@ -149,8 +172,9 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         resizeToAvoidBottomInset: true,
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentTab,
-          items: HomeScreen._buildNavBarItems(
-            Theme.of(context).extension<BrandColors>()!.highlightColor,
+          items: _buildNavBarItems(
+            Theme.of(context).bottomNavigationBarTheme.selectedItemColor!,
+            Theme.of(context).bottomNavigationBarTheme.unselectedItemColor!,
           ),
           onTap: (int page) => setState(() => _currentTab = page),
         ),
@@ -173,7 +197,7 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               padding: paddingH20,
               child: IndexedStack(
                 index: _currentTab,
-                children: HomeScreen._tabs,
+                children: _tabs,
               ),
             ),
           ),

@@ -35,6 +35,7 @@ final colorSchemeLight = ColorScheme.fromSwatch(
   onSurface: const Color(0xFF120D23),
   onSurfaceVariant: colorSwatchLight.shade500,
   background: const Color(0xFFF7F7F7),
+  onBackground: Colors.grey,
 );
 
 const colorSchemeExtensionLight = BrandColors(
@@ -49,4 +50,14 @@ final themeLight = themeData.copyWith(
   canvasColor: colorSchemeLight.background,
   scaffoldBackgroundColor: colorSchemeLight.background,
   extensions: [colorSchemeExtensionLight],
+  // AppBar
+  appBarTheme: themeData.appBarTheme.copyWith(
+    backgroundColor: colorSchemeLight.background,
+  ),
+  // Bottom Navigation Bar
+  bottomNavigationBarTheme: themeData.bottomNavigationBarTheme.copyWith(
+    backgroundColor: colorSchemeLight.background,
+    selectedItemColor: colorSchemeLight.primary,
+    unselectedItemColor: colorSchemeLight.onBackground,
+  ),
 );
