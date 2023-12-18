@@ -4,6 +4,7 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 
 import 'vault_secret_add_presenter.dart';
+import 'dialogs/on_abort_dialog.dart';
 import 'pages/add_name_page.dart';
 import 'pages/add_secret_page.dart';
 import 'pages/secret_transmitting_page.dart';
@@ -25,12 +26,18 @@ class VaultSecretAddScreen extends StatelessWidget {
         pageCount: _pages.length,
         vaultId: vaultId,
       ),
-      child: ScaffoldSafe(
-        child: Selector<VaultSecretAddPresenter, int>(
-          selector: (_, presenter) => presenter.currentPage,
-          builder: (_, currentPage, __) => AnimatedSwitcher(
-            duration: pageChangeDuration,
-            child: _pages[currentPage],
+      // ignore: deprecated_member_use
+      child: WillPopScope(
+        onWillPop: () async {
+          return await OnAbortDialog.show(context) ?? false;
+        },
+        child: ScaffoldSafe(
+          child: Selector<VaultSecretAddPresenter, int>(
+            selector: (_, presenter) => presenter.currentPage,
+            builder: (_, currentPage, __) => AnimatedSwitcher(
+              duration: pageChangeDuration,
+              child: _pages[currentPage],
+            ),
           ),
         ),
       ),
