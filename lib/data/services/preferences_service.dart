@@ -12,7 +12,6 @@ enum PreferencesKeys {
   keyDeviceName,
   keyIsBootstrapEnabled,
   keyIsBiometricsEnabled,
-  keyIsDarkThemeMode,
 }
 
 class PreferencesService {

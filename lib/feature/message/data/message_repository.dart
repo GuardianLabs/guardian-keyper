@@ -1,6 +1,4 @@
-import 'dart:typed_data';
 import 'package:hive/hive.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/data/services/preferences_service.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
@@ -17,14 +15,11 @@ class MessageRepository {
 
   Iterable<MessageModel> get values => _storage.values;
 
-  Future<MessageRepository> init() async {
-    final preferences = GetIt.I<PreferencesService>();
-    Hive.init(preferences.pathDataDir);
-    final seed = await preferences.get<Uint8List>(PreferencesKeys.keySeed);
+  Future<MessageRepository> init({required HiveCipher encryptionCipher}) async {
     Hive.registerAdapter<MessageModel>(MessageModelAdapter());
     _storage = await Hive.openBox<MessageModel>(
       'messages',
-      encryptionCipher: HiveAesCipher(seed!),
+      encryptionCipher: encryptionCipher,
     );
     return this;
   }

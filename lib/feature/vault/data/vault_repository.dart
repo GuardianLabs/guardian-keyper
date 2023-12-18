@@ -1,6 +1,4 @@
-import 'dart:typed_data';
 import 'package:hive/hive.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/data/services/preferences_service.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
@@ -21,14 +19,11 @@ class VaultRepository {
 
   Iterable<Vault> get values => _storage.values;
 
-  Future<VaultRepository> init() async {
-    final preferences = GetIt.I<PreferencesService>();
-    Hive.init(preferences.pathDataDir);
-    final seed = await preferences.get<Uint8List>(PreferencesKeys.keySeed);
+  Future<VaultRepository> init({required HiveCipher encryptionCipher}) async {
     Hive.registerAdapter<Vault>(VaultModelAdapter());
     _storage = await Hive.openBox<Vault>(
       'vaults',
-      encryptionCipher: HiveAesCipher(seed!),
+      encryptionCipher: encryptionCipher,
     );
     return this;
   }

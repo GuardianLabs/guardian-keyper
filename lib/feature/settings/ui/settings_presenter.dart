@@ -1,14 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/utils/theme_mode_mapper.dart';
 
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
-import 'package:guardian_keyper/feature/settings/data/settings_repository.dart';
+import 'package:guardian_keyper/feature/settings/domain/use_case/settings_theme_case.dart';
 
 export 'package:provider/provider.dart';
 
@@ -26,11 +24,11 @@ class SettingsPresenter extends ChangeNotifier with ThemeModeMapper {
 
   final bool isSystemThemeDark;
 
+  final _themeModeHandler = SettingsThemeCase();
+
   final _authManager = GetIt.I<AuthManager>();
 
   final _networkManager = GetIt.I<NetworkManager>();
-
-  final _settingsRepository = GetIt.I<SettingsRepository>();
 
   late String _deviceName = _networkManager.selfId.name;
 
@@ -47,7 +45,7 @@ class SettingsPresenter extends ChangeNotifier with ThemeModeMapper {
   bool get hasMinimumDeviceNameLength => _deviceName.length >= minNameLength;
 
   Set<ThemeMode> get selectedThemeMode => {
-        mapBoolToThemeMode(_settingsRepository.isDarkMode),
+        mapBoolToThemeMode(_themeModeHandler.isDarkMode),
       };
 
   set deviceName(String value) {
@@ -72,14 +70,8 @@ class SettingsPresenter extends ChangeNotifier with ThemeModeMapper {
   }
 
   Future<void> setThemeMode(Set<ThemeMode> themeModeSet) async {
-    final themeMode = themeModeSet.first;
-    await _settingsRepository.setIsDarkMode(mapThemeModeToBool(themeMode));
-    SystemChrome.setSystemUIOverlayStyle(switch (themeMode) {
-      ThemeMode.dark => systemStyleDark,
-      ThemeMode.light => systemStyleLight,
-      ThemeMode.system =>
-        isSystemThemeDark ? systemStyleDark : systemStyleLight,
-    });
+    await _themeModeHandler
+        .setIsDarkMode(mapThemeModeToBool(themeModeSet.first));
     notifyListeners();
   }
 }

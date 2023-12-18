@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
@@ -11,17 +12,22 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> with TickerProviderStateMixin {
-  late final _logoSize = MediaQuery.of(context).size.width / 3;
-
-  late final _backgroundColor =
-      MediaQuery.of(context).platformBrightness == Brightness.light
-          ? themeLight.canvasColor
-          : themeDark.canvasColor;
-
   late final _controller = AnimationController(
     duration: const Duration(seconds: 2),
     vsync: this,
   )..repeat();
+
+  late bool _isSystemThemeDark;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _isSystemThemeDark =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
+    SystemChrome.setSystemUIOverlayStyle(
+      _isSystemThemeDark ? systemStyleDark : systemStyleLight,
+    );
+  }
 
   @override
   void dispose() {
@@ -32,10 +38,11 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) => Container(
         alignment: Alignment.center,
-        color: _backgroundColor,
+        color:
+            _isSystemThemeDark ? themeDark.canvasColor : themeLight.canvasColor,
         child: RotationTransition(
           turns: _controller,
-          child: IconOf.app(size: _logoSize),
+          child: IconOf.app(size: MediaQuery.of(context).size.width / 3),
         ),
       );
 }
