@@ -18,15 +18,15 @@ class VaultListTile extends StatelessWidget {
     final brandColors = theme.extension<BrandColors>()!;
     final restrictedStyle = TextStyle(color: brandColors.dangerColor);
     return ListTile(
-      leading: Container(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.secondary,
-          shape: BoxShape.circle,
-        ),
-        height: 40,
-        width: 40,
-        child: const Icon(Icons.shield_outlined),
-      ),
+      // leading: Container(
+      //   decoration: BoxDecoration(
+      //     color: theme.colorScheme.secondary,
+      //     shape: BoxShape.circle,
+      //   ),
+      //   height: 40,
+      //   width: 40,
+      //   child: const Icon(Icons.shield_outlined),
+      // ),
       title: Text(vault.id.name),
       subtitle: vault.isRestricted
           ? (vault.hasQuorum

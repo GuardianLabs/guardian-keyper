@@ -20,13 +20,9 @@ class MessageListTile extends StatelessWidget with MessageTextMixin {
     final theme = Theme.of(context);
     final brandColors = theme.extension<BrandColors>()!;
     return ListTile(
-      trailing: const Icon(Icons.arrow_forward_ios_rounded),
       title: Row(
         children: [
-          Text(
-            getTitle(message),
-            style: theme.textTheme.bodyMedium,
-          ),
+          Text(getTitle(message)),
           if (message.isReceived)
             Padding(
               padding: const EdgeInsets.only(left: 4),
@@ -50,6 +46,7 @@ class MessageListTile extends StatelessWidget with MessageTextMixin {
           ],
         ),
       ),
+      trailing: const Icon(Icons.arrow_forward_ios_rounded),
       onTap: () => message.isReceived
           ? OnMessageActiveDialog.show(context, message: message)
           : OnMessageResolvedDialog.show(context, message: message),

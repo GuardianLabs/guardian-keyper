@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 
 part 'theme_dark.dart';
 part 'theme_light.dart';
