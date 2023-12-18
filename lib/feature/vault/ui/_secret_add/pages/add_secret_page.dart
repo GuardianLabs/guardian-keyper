@@ -3,6 +3,7 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../vault_secret_add_presenter.dart';
 import '../widgets/abort_header_button.dart';
+import '../dialogs/on_secret_sharing_dialog.dart';
 
 class AddSecretPage extends StatelessWidget {
   const AddSecretPage({super.key});
@@ -23,10 +24,15 @@ class AddSecretPage extends StatelessWidget {
           child: ListView(
             padding: paddingH20,
             children: [
-              const PageTitle(title: 'Enter the Secret'),
+              const PageTitle(
+                title: 'Enter the Secret',
+              ),
               // Input
               TextFormField(
-                decoration: const InputDecoration(labelText: ' Your Secret '),
+                autofocus: true,
+                decoration: const InputDecoration(
+                  labelText: ' Your Secret ',
+                ),
                 initialValue: presenter.secret,
                 keyboardType: TextInputType.multiline,
                 maxLength: maxSecretLength,
@@ -39,7 +45,17 @@ class AddSecretPage extends StatelessWidget {
                 child: Selector<VaultSecretAddPresenter, String>(
                   selector: (_, p) => p.secret,
                   builder: (_, secret, __) => FilledButton(
-                    onPressed: secret.isEmpty ? null : presenter.nextPage,
+                    onPressed: secret.isEmpty
+                        ? null
+                        : () {
+                            if (presenter.isUnderstandingShardsHidden) {
+                              presenter.nextPage();
+                            } else {
+                              OnSecretSharingDialog.show(context).then((r) {
+                                if (r ?? false) presenter.nextPage();
+                              });
+                            }
+                          },
                     child: const Text('Continue'),
                   ),
                 ),

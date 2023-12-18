@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
@@ -19,6 +20,7 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
   }
 
   final _vaultInteractor = GetIt.I<VaultInteractor>();
+  final _settingsRepository = GetIt.I<SettingsRepository>();
 
   String _secret = '';
   String _secretName = '';
@@ -28,6 +30,11 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
   String get secretName => _secretName;
 
   bool get isNameTooShort => _secretName.length < minNameLength;
+
+  bool get isUnderstandingShardsHidden =>
+      _settingsRepository
+          .get<bool>(SettingsRepositoryKeys.keyIsUnderstandingShardsHidden) ??
+      false;
 
   @override
   Future<MessageModel> startRequest() async {
@@ -97,4 +104,13 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
     _secretName = value;
     notifyListeners();
   }
+
+  Future<bool?> setIsUnderstandingShardsHidden(bool? value) => value == null
+      ? _settingsRepository
+          .delete(SettingsRepositoryKeys.keyIsUnderstandingShardsHidden)
+          .then((_) => value)
+      : _settingsRepository.put<bool>(
+          SettingsRepositoryKeys.keyIsUnderstandingShardsHidden,
+          value,
+        );
 }
