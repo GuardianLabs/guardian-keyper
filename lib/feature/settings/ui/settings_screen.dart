@@ -92,8 +92,9 @@ class SettingsScreen extends StatelessWidget {
                           ],
                           emptySelectionAllowed: false,
                           multiSelectionEnabled: false,
-                          selected: presenter.selectedThemeMode,
-                          onSelectionChanged: presenter.setThemeMode,
+                          selected: {presenter.selectedThemeMode},
+                          onSelectionChanged: (themeModeSet) =>
+                              presenter.setThemeMode(themeModeSet.first),
                         ),
                     ];
                     return ListView.separated(

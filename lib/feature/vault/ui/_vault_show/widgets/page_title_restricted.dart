@@ -4,6 +4,8 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
+import '../dialogs/on_limited_access_dialog.dart';
+
 class PageTitleRestricted extends StatefulWidget {
   const PageTitleRestricted({
     required this.vault,
@@ -17,36 +19,40 @@ class PageTitleRestricted extends StatefulWidget {
 }
 
 class _PageTitleRestrictedState extends State<PageTitleRestricted> {
-  late TapGestureRecognizer _longPressRecognizer;
+  late final TapGestureRecognizer _tapRecognizer;
+
+  late final _limitedAccessTapable = TextSpan(
+    text: 'limited access',
+    style: const TextStyle(
+      fontWeight: FontWeight.w600,
+      decoration: TextDecoration.underline,
+    ),
+    recognizer: _tapRecognizer,
+  );
 
   @override
   void initState() {
     super.initState();
-    _longPressRecognizer = TapGestureRecognizer()..onTap = () {};
+    _tapRecognizer = TapGestureRecognizer()
+      ..onTap = () => OnLimitedAccessDialog.show(context);
   }
 
   @override
   void dispose() {
-    _longPressRecognizer.dispose();
+    _tapRecognizer.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) => widget.vault.hasQuorum
-      ? const PageTitle(
+      ? PageTitle(
           title: 'Guardians',
           subtitleSpans: [
-            TextSpan(
+            const TextSpan(
               text: 'You`re unable to add a new Secrets '
                   'due to your limited vault access.',
             ),
-            TextSpan(
-              text: 'limited access',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                decoration: TextDecoration.underline,
-              ),
-            ),
+            _limitedAccessTapable,
           ],
         )
       : PageTitle(
@@ -58,13 +64,7 @@ class _PageTitleRestrictedState extends State<PageTitleRestricted> {
                   'Guardian to complete the Recovery. '
                   'This will grant you ',
             ),
-            const TextSpan(
-              text: 'limited access',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                decoration: TextDecoration.underline,
-              ),
-            ),
+            _limitedAccessTapable,
             const TextSpan(text: ' to Vault’s Secrets.'),
           ],
         );

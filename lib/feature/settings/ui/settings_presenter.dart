@@ -40,9 +40,8 @@ class SettingsPresenter extends ChangeNotifier with ThemeModeMapper {
 
   bool get hasMinimumDeviceNameLength => _deviceName.length >= minNameLength;
 
-  Set<ThemeMode> get selectedThemeMode => {
-        mapBoolToThemeMode(_themeModeHandler.isDarkMode),
-      };
+  ThemeMode get selectedThemeMode =>
+      mapBoolToThemeMode(_themeModeHandler.isDarkMode);
 
   set deviceName(String value) {
     _deviceName = value;
@@ -65,9 +64,8 @@ class SettingsPresenter extends ChangeNotifier with ThemeModeMapper {
     notifyListeners();
   }
 
-  Future<void> setThemeMode(Set<ThemeMode> themeModeSet) async {
-    await _themeModeHandler
-        .setIsDarkMode(mapThemeModeToBool(themeModeSet.first));
+  Future<void> setThemeMode(ThemeMode themeMode) async {
+    await _themeModeHandler.setIsDarkMode(mapThemeModeToBool(themeMode));
     notifyListeners();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
-import 'package:guardian_keyper/data/repositories/settings_repository.dart';
+
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 
 class OnSecretRestoreDialog extends StatefulWidget {
   static Future<bool?> show(BuildContext context) => showModalBottomSheet<bool>(
