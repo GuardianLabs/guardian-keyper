@@ -2,10 +2,9 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/services.dart';
 
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
-
-import '../../domain/entity/secret_shard.dart';
-import '../../domain/use_case/vault_interactor.dart';
-import '../vault_secret_presenter_base.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
+import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
+import 'package:guardian_keyper/feature/vault/ui/vault_secret_presenter_base.dart';
 
 export 'package:provider/provider.dart';
 
@@ -35,6 +34,12 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
     }
     _vaultInteractor.logStartRestoreSecret();
   }
+
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
+
+  String _secret = '';
+  bool _isObfuscated = true;
+  bool _isAuthorized = false;
 
   String get secret => _secret;
 
@@ -100,11 +105,4 @@ class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
     notifyListeners();
     return tryCopy();
   }
-
-  // Private
-  final _vaultInteractor = GetIt.I<VaultInteractor>();
-
-  String _secret = '';
-  bool _isObfuscated = true;
-  bool _isAuthorized = false;
 }

@@ -46,7 +46,7 @@ abstract class AuthDialogBase {
     buttonStyle: ButtonStyle(
       backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
       foregroundColor: const MaterialStatePropertyAll(Colors.white),
-      shape: const MaterialStatePropertyAll(CircleBorder()),
+      side: const MaterialStatePropertyAll<BorderSide>(BorderSide.none),
       textStyle: MaterialStatePropertyAll(
         stylePoppins616.copyWith(overflow: TextOverflow.visible),
       ),

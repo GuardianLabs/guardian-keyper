@@ -27,6 +27,8 @@ abstract class VaultSecretPresenterBase extends VaultPresenterBase {
 
   final _vaultInteractor = GetIt.I<VaultInteractor>();
 
+  PeerId get selfId => _vaultInteractor.selfId;
+
   @override
   void requestWorker([Timer? timer]) {
     if (messages.where((m) => m.hasResponse).length == vault.maxSize) {

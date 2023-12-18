@@ -3,7 +3,6 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/feature/vault/ui/widgets/guardian_list_tile.dart';
 
 import '../vault_secret_recovery_presenter.dart';
-import '../../widgets/guardian_list_tile_old.dart';
 import '../dialogs/on_reject_dialog.dart';
 
 class DiscoveringPeersPage extends StatefulWidget {
@@ -40,74 +39,52 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
             child: ListView(
               padding: paddingH20,
               children: [
-                // Card
-                Padding(
-                  padding: paddingV32,
-                  child: Container(
-                    decoration: boxDecoration,
-                    padding: paddingAll20,
-                    child: Column(children: [
-                      Padding(
-                        padding: paddingB12,
-                        child: Text(
-                          'Waiting for Vault’s Guardians ',
-                          style: stylePoppins620,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          style: styleSourceSansPro414Purple,
-                          children: const [
-                            TextSpan(
-                              text:
-                                  // ignore: lines_longer_than_80_chars
-                                  'Ask Guardians to log into the app and approve'
-                                  ' a Secret Recovery. Once they approve,'
-                                  ' their icon will go ',
-                            ),
-                            TextSpan(
-                              text: 'green.',
-                              style: TextStyle(color: clGreen),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: paddingT20,
-                        child: Text(
-                          'You need to get at least ${_presenter.needAtLeast}'
-                          ' approvals from Guardians to recover your Secret.',
-                          style: styleSourceSansPro414Purple,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ]),
-                  ),
+                // Title
+                const PageTitle(
+                  title: 'Awaiting Guardians',
+                  subtitle: 'Ask Guardians to open the app and approve '
+                      'a secret recovery. Once you get enough approvals, '
+                      'the button will become active.',
                 ),
                 // Guardians
-                for (final guardian in _presenter.vault.guardians.keys)
-                  Padding(
-                    padding: paddingV6,
-                    child: guardian == _presenter.vault.ownerId
-                        ? const GuardianListTile.my()
-                        : Consumer<VaultSecretRecoveryPresenter>(
-                            builder: (_, presenter, __) {
-                              final message = presenter.getMessageOf(guardian);
-                              return GuardianListTileOld(
-                                guardian: guardian,
-                                // checkStatus: true,
-                                isWaiting: message.hasNoResponse,
-                                isSuccess: message.isAccepted
-                                    ? true
-                                    : message.hasResponse
-                                        ? false
-                                        : null,
-                              );
-                            },
+                Card(
+                  child: Padding(
+                    padding: paddingT20,
+                    child: Consumer<VaultSecretRecoveryPresenter>(
+                      builder: (context, presenter, _) => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: paddingH20,
+                            child: Text(
+                              'Approvals',
+                              style: styleSourceSansPro616,
+                            ),
                           ),
-                  )
+                          Padding(
+                            padding: paddingH20,
+                            child: Text(
+                              'Get at least ${_presenter.needAtLeast}'
+                              ' approvals to access your Secret.',
+                              style: styleSourceSansPro414Purple,
+                            ),
+                          ),
+                          for (final message in presenter.messages)
+                            message.peerId == presenter.selfId
+                                ? const GuardianListTile.my()
+                                : message.isAccepted
+                                    ? GuardianListTile(
+                                        guardian: message.peerId,
+                                      )
+                                    : GuardianListTile.pending(
+                                        guardian: message.peerId,
+                                      ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

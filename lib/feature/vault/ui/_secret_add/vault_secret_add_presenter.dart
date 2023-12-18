@@ -2,7 +2,6 @@ import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
 
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
@@ -29,8 +28,6 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
   String get secretName => _secretName;
 
   bool get isNameTooShort => _secretName.length < minNameLength;
-
-  PeerId get selfId => _vaultInteractor.selfId;
 
   @override
   Future<MessageModel> startRequest() async {

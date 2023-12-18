@@ -99,7 +99,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                                       )
                                     : GuardianListTile.pending(
                                         guardian: message.peerId,
-                                      )
+                                      ),
                         ],
                       ),
                     ),

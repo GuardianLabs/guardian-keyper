@@ -3,9 +3,9 @@ import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/presenters/page_presenter_base.dart';
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
-import '../domain/use_case/vault_interactor.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 
 abstract class VaultPresenterBase extends PagePresenterBase {
   VaultPresenterBase({
@@ -14,6 +14,13 @@ abstract class VaultPresenterBase extends PagePresenterBase {
   });
 
   final requestCompleter = Completer<MessageModel>();
+
+  final _vaultInteractor = GetIt.I<VaultInteractor>();
+
+  late final _networkSubscription =
+      _vaultInteractor.messageStream.listen(responseHandler);
+
+  Timer? _timer;
 
   bool get isWaiting => _timer?.isActive ?? false;
 
@@ -47,12 +54,4 @@ abstract class VaultPresenterBase extends PagePresenterBase {
     _vaultInteractor.wakelockDisable();
     if (shouldNotify) notifyListeners();
   }
-
-  // Private
-  final _vaultInteractor = GetIt.I<VaultInteractor>();
-
-  late final _networkSubscription =
-      _vaultInteractor.messageStream.listen(responseHandler);
-
-  Timer? _timer;
 }
