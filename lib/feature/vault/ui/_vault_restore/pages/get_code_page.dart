@@ -25,7 +25,7 @@ class GetCodePage extends StatelessWidget {
         ),
         // Body
         const PageTitle(
-          title: 'Add a Guardian to start a Vault recovery',
+          title: 'Add a Guardian to proceed with a Vault recovery',
           subtitle: 'Ask a Guardian to tap “Assist with Vault” in the app, '
               'select the Vault you need, and provide their '
               'Assistance QR code or text code.',

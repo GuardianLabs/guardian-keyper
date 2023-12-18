@@ -19,7 +19,7 @@ mixin MessageTitlesMixin {
   };
 
   static const _subtitles = {
-    MessageCode.createVault: ' asks you to become a Guardian for ',
+    MessageCode.createVault: ' asks you to become a Vault Guardian for ',
     MessageCode.setShard: ' asks you to accept the Secret Shard for ',
     MessageCode.getShard: ' asks you to approve a recovery of Secret for ',
     MessageCode.takeVault: ' asks you to approve a change of ownership for ',

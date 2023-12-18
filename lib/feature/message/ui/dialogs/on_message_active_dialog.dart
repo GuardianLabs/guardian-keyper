@@ -2,12 +2,10 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../../domain/entity/message_model.dart';
 import '../../domain/use_case/message_interactor.dart';
-import '../widgets/request_panel.dart';
 import 'message_titles_mixin.dart';
 
 class OnMessageActiveDialog extends StatefulWidget with MessageTitlesMixin {
@@ -77,24 +75,28 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
+        // Title
         titleString: widget.getTitle(widget.message),
+        // Subtitle
         textSpan: [
-          ...buildTextWithId(name: widget.message.peerId.name),
+          TextSpan(text: widget.message.peerId.name),
           TextSpan(
             text: widget.getSubtitle(widget.message),
+            style: styleSourceSansPro416,
           ),
-          ...buildTextWithId(name: widget.message.vaultId.name),
+          TextSpan(text: widget.message.vaultId.name),
         ],
+        // Card
         body: Padding(
           padding: paddingV20,
           child: Container(
             decoration: boxDecoration,
             padding: paddingAll20,
-            height: 120,
-            child: _isRequestError
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _isRequestError
+                  // Error
+                  ? [
                       Text(
                         'Connection Error',
                         style: styleSourceSansPro616,
@@ -109,14 +111,41 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
                       LinearProgressIndicator(
                         value: _animationController.value,
                       ),
+                    ]
+                  // Peer status
+                  : [
+                      Text(
+                        widget.message.peerId.name,
+                        style: styleSourceSansPro614,
+                      ),
+                      Padding(
+                        padding: paddingV12,
+                        child: _isPeerOnline
+                            ? Text(
+                                'Online',
+                                style: styleSourceSansPro612.copyWith(
+                                  color: clGreen,
+                                ),
+                              )
+                            : Text(
+                                'Offline',
+                                style: styleSourceSansPro612.copyWith(
+                                  color: clRed,
+                                ),
+                              ),
+                      ),
+                      Text(
+                        'To approve or reject the request, both '
+                        'Owner and Guardian must run the app at the same time. '
+                        'Ask the Owner to log into the app.',
+                        style: styleSourceSansPro416Purple,
+                        textAlign: TextAlign.center,
+                      ),
                     ],
-                  )
-                : RequestPanel(
-                    peerId: widget.message.peerId,
-                    isPeerOnline: _isPeerOnline,
-                  ),
+            ),
           ),
         ),
+        // Buttons
         footer: Row(children: [
           Expanded(
             child: FilledButton(

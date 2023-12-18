@@ -1,10 +1,12 @@
 import 'package:get_it/get_it.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
 
+import 'package:guardian_keyper/feature/dev_panel/dev_panel_screen.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
@@ -146,6 +148,20 @@ class DashboardScreen extends StatelessWidget {
             ),
           ),
         ),
+        // Dev panel
+        if (kDebugMode)
+          Padding(
+            padding: paddingT20,
+            child: ActionCard(
+              icon: const Icon(Icons.app_shortcut, color: clRed),
+              title: 'DevPanel',
+              subtitle: 'Shortcut to show mocked dialogs and components',
+              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (context) => const DevPanelScreen(),
+                fullscreenDialog: true,
+              )),
+            ),
+          ),
       ],
     );
   }
