@@ -28,8 +28,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        // TBD: change Icon
-        icon: const IconOf.owner(
+        icon: const IconOf.shardOwner(
           isBig: true,
           bage: BageType.warning,
         ),

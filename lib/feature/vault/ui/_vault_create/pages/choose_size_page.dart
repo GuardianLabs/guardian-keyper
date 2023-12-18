@@ -1,61 +1,82 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../vault_create_presenter.dart';
-import '../widgets/vault_size_info_panel.dart';
-import '../widgets/guardians_control_panel.dart';
 
 class ChooseSizePage extends StatelessWidget {
   const ChooseSizePage({super.key});
 
   @override
-  Widget build(BuildContext context) => Column(children: [
-        // Header
-        HeaderBar(
-          caption: 'Vault Size',
-          backButton: HeaderBarBackButton(
-            onPressed: context.read<VaultCreatePresenter>().previousPage,
-          ),
-          closeButton: const HeaderBarCloseButton(),
+  Widget build(BuildContext context) {
+    final presenter = Provider.of<VaultCreatePresenter>(context);
+    return Column(children: [
+      // Header
+      const HeaderBar(
+        caption: 'Select the size of the Vault',
+        closeButton: HeaderBarCloseButton(),
+      ),
+      // Body
+      Expanded(
+        child: ListView(
+          padding: paddingAll20,
+          children: [
+            const PageTitle(
+              title: 'How many Guardians will be safeguarding the Vault?',
+            ),
+            // Control
+            ListTile(
+              title: const Text('3 Guardians'),
+              subtitle: const Text(
+                'Recovering a Secret will require approval from '
+                'at least 2 out 3 Guardians.',
+              ),
+              trailing: Icon(
+                presenter.vaultSize == 3
+                    ? Icons.radio_button_on
+                    : Icons.radio_button_off,
+              ),
+              onTap: () => presenter.setVaultSize(3, 2),
+            ),
+            const Padding(padding: paddingB12),
+            ListTile(
+              title: const Text('5 Guardians'),
+              subtitle: const Text(
+                'Recovering a Secret will require approval from '
+                'at least 3 out 5 Guardians.',
+              ),
+              trailing: Icon(
+                presenter.vaultSize == 5
+                    ? Icons.radio_button_on
+                    : Icons.radio_button_off,
+              ),
+              onTap: () => presenter.setVaultSize(5, 3),
+            ),
+            const Padding(padding: paddingB32),
+            ListTile(
+              isThreeLine: true,
+              title: const Text('Turn this device into a Guardian'),
+              subtitle: const Text(
+                'The device will count as one Guardian. It will keep parts '
+                'of Secrets and automatically give an approval '
+                'during the Secret recovery.',
+              ),
+              trailing: Icon(
+                presenter.isVaultMember
+                    ? Icons.check_box
+                    : Icons.check_box_outline_blank,
+              ),
+              onTap: presenter.toggleVaultMembership,
+            ),
+            // Footer
+            Padding(
+              padding: paddingV32,
+              child: FilledButton(
+                onPressed: context.read<VaultCreatePresenter>().nextPage,
+                child: const Text('Continue'),
+              ),
+            ),
+          ],
         ),
-        // Body
-        Expanded(
-          child: ListView(
-            padding: paddingAll20,
-            children: [
-              Padding(
-                padding: paddingB20,
-                child: Text(
-                  'Select Guardians amount',
-                  style: stylePoppins620,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Padding(
-                padding: paddingB32,
-                child: Text(
-                  'Pick amount of Guardians which will be responsible '
-                  'for keeping the Shards (parts) of your Secrets.',
-                  style: styleSourceSansPro416,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              // Control
-              const GuardiansControlPanel(),
-              // Info
-              const Padding(
-                padding: paddingT32,
-                child: VaultSizeInfoPanel(),
-              ),
-              // Footer
-              Padding(
-                padding: paddingV32,
-                child: PrimaryButton(
-                  text: 'Continue',
-                  onPressed: context.read<VaultCreatePresenter>().nextPage,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ]);
+      ),
+    ]);
+  }
 }

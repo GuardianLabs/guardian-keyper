@@ -34,32 +34,13 @@ class InputNamePage extends StatelessWidget {
                 Padding(
                   padding: paddingV32,
                   child: Selector<VaultCreatePresenter, bool>(
-                    selector: (
-                      BuildContext context,
-                      VaultCreatePresenter presenter,
-                    ) =>
+                    selector: (context, presenter) =>
                         presenter.isVaultNameTooShort,
-                    builder: (
-                      BuildContext context,
-                      bool isGroupNameToolShort,
-                      Widget? widget,
-                    ) =>
-                        PrimaryButton(
-                      text: 'Continue',
+                    builder: (context, isGroupNameToolShort, _) => FilledButton(
                       onPressed: isGroupNameToolShort
                           ? null
-                          : () async {
-                              final vault = await context
-                                  .read<VaultCreatePresenter>()
-                                  .createVault();
-                              if (context.mounted) {
-                                Navigator.popAndPushNamed(
-                                  context,
-                                  routeVaultShow,
-                                  arguments: vault.id,
-                                );
-                              }
-                            },
+                          : context.read<VaultCreatePresenter>().createVault,
+                      child: const Text('Continue'),
                     ),
                   ),
                 ),

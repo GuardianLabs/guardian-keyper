@@ -102,6 +102,8 @@ final themeDark = ThemeData.dark().copyWith(
     tileColor: clSurface,
     textColor: clWhite,
     shape: _shapeBorder,
+    titleTextStyle: styleSourceSansPro616,
+    subtitleTextStyle: styleSourceSansPro414,
   ),
   // Outlined Button
   outlinedButtonTheme: OutlinedButtonThemeData(

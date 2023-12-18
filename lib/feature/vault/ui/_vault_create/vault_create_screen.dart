@@ -3,14 +3,14 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'vault_create_presenter.dart';
 import 'pages/choose_size_page.dart';
-import 'pages/choose_type_page.dart';
 import 'pages/input_name_page.dart';
+import 'pages/vault_created_page.dart';
 
 class VaultCreateScreen extends StatelessWidget {
   static const _pages = [
-    ChooseTypePage(),
     ChooseSizePage(),
     InputNamePage(),
+    VaultCreatedPage(),
   ];
 
   const VaultCreateScreen({super.key});

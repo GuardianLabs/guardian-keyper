@@ -68,6 +68,7 @@ class HeaderBar extends StatelessWidget {
                   RichText(
                     maxLines: 1,
                     softWrap: false,
+                    overflow: TextOverflow.ellipsis,
                     text: TextSpan(
                       text: caption,
                       children: captionSpans,

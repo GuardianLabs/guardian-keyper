@@ -22,24 +22,6 @@ class IconOf extends StatelessWidget {
     this.bage,
   }) : icon = 'assets/icons/logo.svg';
 
-  const IconOf.yourDevices({
-    super.key,
-    this.size,
-    this.isBig,
-    this.color,
-    this.bgColor,
-    this.bage,
-  }) : icon = 'assets/icons/your_devices_v1.svg';
-
-  const IconOf.fiduciaries({
-    super.key,
-    this.size,
-    this.isBig,
-    this.color,
-    this.bgColor,
-    this.bage,
-  }) : icon = 'assets/icons/fiduciaries_v1.svg';
-
   const IconOf.owner({
     super.key,
     this.size,
