@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:guardian_keyper/consts.dart';
+import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 
