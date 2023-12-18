@@ -2,6 +2,7 @@ import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import '../../domain/entity/vault.dart';
+import 'dialogs/on_become_owner_dialog.dart';
 import 'dialogs/on_change_owner_dialog.dart';
 
 class ShardShowScreen extends StatelessWidget {
@@ -24,7 +25,7 @@ class ShardShowScreen extends StatelessWidget {
             padding: paddingT32 + paddingH20,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Owner name
                 Text(
@@ -48,9 +49,19 @@ class ShardShowScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: paddingT12,
-                  child: PrimaryButton(
-                    text: 'Show Assistance QR',
+                  child: FilledButton(
+                    child: const Text('Show Assistance QR'),
                     onPressed: () => OnChangeOwnerDialog.show(
+                      context,
+                      vaultId: vault.id,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: paddingT12,
+                  child: OutlinedButton(
+                    child: const Text('Move Vault to this Device'),
+                    onPressed: () => OnBecomeOwnerDialog.show(
                       context,
                       vaultId: vault.id,
                     ),

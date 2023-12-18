@@ -43,10 +43,10 @@ class OnChangeOwnerDialog extends StatelessWidget {
             FilledButton(
               child: const Text('Confirm'),
               onPressed: () async {
-                Navigator.of(context).pop();
                 final message = await GetIt.I<MessageInteractor>()
                     .createTakeVaultCode(vaultId);
                 if (context.mounted) {
+                  Navigator.of(context).pop();
                   QRCodeShowDialog.show(
                     context,
                     qrCode: message.toBase64url(),

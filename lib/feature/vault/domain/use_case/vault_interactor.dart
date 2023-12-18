@@ -70,6 +70,11 @@ class VaultInteractor
     required SecretId secretId,
   }) async {
     vault.secrets.remove(secretId);
-    await _vaultRepository.put(vault.aKey, vault);
+    return _vaultRepository.put(vault.aKey, vault);
   }
+
+  Future<void> takeVaultOwnership(VaultId vaultId) => _vaultRepository.put(
+        vaultId.asKey,
+        _vaultRepository.get(vaultId.asKey)!.copyWith(ownerId: selfId),
+      );
 }

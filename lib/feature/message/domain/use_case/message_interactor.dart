@@ -49,8 +49,8 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
     return message;
   }
 
-  /// Create ticket to take vault
-  Future<MessageModel> createTakeVaultCode(VaultId? vaultId) async {
+  /// Create ticket to take vault ownership
+  Future<MessageModel> createTakeVaultCode(VaultId vaultId) async {
     final message = MessageModel(
       code: MessageCode.takeVault,
       peerId: _networkManager.selfId,
