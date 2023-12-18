@@ -104,13 +104,4 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
     _secretName = value;
     notifyListeners();
   }
-
-  Future<bool?> setIsUnderstandingShardsHidden(bool? value) => value == null
-      ? _settingsRepository
-          .delete(SettingsRepositoryKeys.keyIsUnderstandingShardsHidden)
-          .then((_) => value)
-      : _settingsRepository.put<bool>(
-          SettingsRepositoryKeys.keyIsUnderstandingShardsHidden,
-          value,
-        );
 }

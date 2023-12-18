@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 enum SettingsRepositoryKeys {
   keyIsDarkModeOn,
   keyIsUnderstandingShardsHidden,
+  keyIsSecretRestoreExplainerHidden,
 }
 
 typedef SettingsRepositoryEvent<T extends Object> = ({
@@ -51,19 +52,28 @@ class SettingsRepository {
     return value;
   }
 
-  Future<void> delete(SettingsRepositoryKeys key) =>
-      _storage.delete(key.toString());
+  Future<T?> putNullable<T extends Object>(
+    SettingsRepositoryKeys key,
+    T? value,
+  ) async {
+    if (value == null) {
+      await _storage.delete(key.name);
+    } else {
+      await put(key, value);
+    }
+    return value;
+  }
+
+  Future<void> delete(SettingsRepositoryKeys key) => _storage.delete(key.name);
 
   Stream<SettingsRepositoryEvent<T>> watch<T extends Object>([
     SettingsRepositoryKeys? key,
   ]) =>
-      _storage
-          .watch(key: key.toString())
-          .map<SettingsRepositoryEvent<T>>((e) => (
-                key: e.key as String,
-                value: e.value as T?,
-                isDeleted: e.deleted,
-              ));
+      _storage.watch(key: key?.name).map<SettingsRepositoryEvent<T>>((e) => (
+            key: e.key as String,
+            value: e.value as T?,
+            isDeleted: e.deleted,
+          ));
 
   Future<void> clear() => _storage.clear().then((_) => _storage.compact());
 

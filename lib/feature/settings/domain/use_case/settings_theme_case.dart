@@ -12,12 +12,9 @@ class SettingsThemeCase {
   bool? get isDarkMode =>
       _settingsRepository.get<bool>(SettingsRepositoryKeys.keyIsDarkModeOn);
 
-  Future<void> setIsDarkMode(bool? isDarkModeOn) {
-    return isDarkModeOn == null
-        ? _settingsRepository.delete(SettingsRepositoryKeys.keyIsDarkModeOn)
-        : _settingsRepository.put<bool>(
-            SettingsRepositoryKeys.keyIsDarkModeOn,
-            isDarkModeOn,
-          );
-  }
+  Future<void> setIsDarkMode(bool? isDarkModeOn) =>
+      _settingsRepository.putNullable<bool>(
+        SettingsRepositoryKeys.keyIsDarkModeOn,
+        isDarkModeOn,
+      );
 }

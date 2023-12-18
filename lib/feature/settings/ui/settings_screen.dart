@@ -15,6 +15,7 @@ class SettingsScreen extends StatelessWidget {
         create: (_) => SettingsPresenter(),
         child: ScaffoldSafe(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Header
               const HeaderBar(
@@ -74,37 +75,25 @@ class SettingsScreen extends StatelessWidget {
                       ),
                       // Theme Mode
                       if (kDebugMode)
-                        ListTile(
-                          leading: const Icon(
-                            Icons.brightness_medium_outlined,
-                            size: 40,
-                          ),
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('Theme'),
-                              SegmentedButton<ThemeMode>(
-                                segments: const [
-                                  ButtonSegment(
-                                    label: Text('Light'),
-                                    value: ThemeMode.light,
-                                  ),
-                                  ButtonSegment(
-                                    label: Text('System'),
-                                    value: ThemeMode.system,
-                                  ),
-                                  ButtonSegment(
-                                    label: Text('Dark'),
-                                    value: ThemeMode.dark,
-                                  ),
-                                ],
-                                emptySelectionAllowed: false,
-                                multiSelectionEnabled: false,
-                                selected: presenter.selectedThemeMode,
-                                onSelectionChanged: presenter.setThemeMode,
-                              ),
-                            ],
-                          ),
+                        SegmentedButton<ThemeMode>(
+                          segments: const [
+                            ButtonSegment(
+                              label: Text('Light'),
+                              value: ThemeMode.light,
+                            ),
+                            ButtonSegment(
+                              label: Text('System'),
+                              value: ThemeMode.system,
+                            ),
+                            ButtonSegment(
+                              label: Text('Dark'),
+                              value: ThemeMode.dark,
+                            ),
+                          ],
+                          emptySelectionAllowed: false,
+                          multiSelectionEnabled: false,
+                          selected: presenter.selectedThemeMode,
+                          onSelectionChanged: presenter.setThemeMode,
                         ),
                     ];
                     return ListView.separated(
