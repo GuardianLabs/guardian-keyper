@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:guardian_keyper/consts.dart';
+import 'package:guardian_keyper/ui/theme/theme.dart';
+import 'package:guardian_keyper/ui/widgets/splash.dart';
 import 'package:guardian_keyper/data/services/platform_service.dart';
 import 'package:guardian_keyper/data/services/analytics_service.dart';
 import 'package:guardian_keyper/data/services/preferences_service.dart';
 
-import 'package:guardian_keyper/ui/theme/theme.dart';
-import 'package:guardian_keyper/ui/screens/home_screen.dart';
-import 'package:guardian_keyper/ui/screens/splash_screen.dart';
+import 'package:guardian_keyper/feature/home/home.dart';
 import 'package:guardian_keyper/feature/intro/ui/intro_screen.dart';
 import 'package:guardian_keyper/feature/settings/ui/settings_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_vault_show/vault_show_screen.dart';
@@ -45,7 +45,7 @@ class App extends StatelessWidget {
         home: FutureBuilder(
           future: _init(),
           builder: (context, state) =>
-              _isInited ? const HomeScreen() : const SplashScreen(),
+              _isInited ? const Home() : const Splash(),
         ),
         routes: {
           routeIntro: (_) => const IntroScreen(),

@@ -6,18 +6,18 @@ import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
 
-import 'package:guardian_keyper/feature/dev_panel/dev_panel_screen.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
-import 'dialogs/on_show_id_dialog.dart';
-import 'dialogs/on_vault_transfer_dialog.dart';
-import 'widgets/copy_my_key_to_clipboard_button.dart';
-import 'widgets/action_card.dart';
+import '../dialogs/on_show_id_dialog.dart';
+import '../dialogs/on_vault_transfer_dialog.dart';
+import '../widgets/copy_my_key_to_clipboard_button.dart';
+import '../widgets/action_card.dart';
+import 'dev_panel_screen.dart';
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

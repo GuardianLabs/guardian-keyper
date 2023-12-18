@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+class Splash extends StatefulWidget {
+  const Splash({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<Splash> createState() => _SplashState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
+class _SplashState extends State<Splash> with TickerProviderStateMixin {
   late final _logoSize = MediaQuery.of(context).size.width / 3;
 
   late final _backgroundColor = Theme.of(context).scaffoldBackgroundColor;

@@ -1,17 +1,18 @@
 import 'package:get_it/get_it.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
-import '../../domain/use_case/message_interactor.dart';
-
-class MessageNotifyIcon extends StatelessWidget {
-  const MessageNotifyIcon({
+class NotificationsIcon extends StatelessWidget {
+  const NotificationsIcon({
     required this.isSelected,
+    required this.iconSize,
     super.key,
   });
 
   final bool isSelected;
+  final double iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +25,13 @@ class MessageNotifyIcon extends StatelessWidget {
         return Stack(
           clipBehavior: Clip.none,
           children: [
-            if (isSelected)
-              const IconOf.navBarBellSelected()
-            else
-              const IconOf.navBarBell(),
+            SvgPicture.asset(
+              'assets/icons/home_notifications.svg',
+              // ignore: deprecated_member_use
+              color: isSelected ? clGreen : clWhite,
+              height: iconSize,
+              width: iconSize,
+            ),
             if (count > 0)
               Positioned(
                 top: -3,

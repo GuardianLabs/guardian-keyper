@@ -1,9 +1,8 @@
 import 'package:get_it/get_it.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
-
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';

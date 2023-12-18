@@ -1,14 +1,16 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 import 'package:get_it/get_it.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
 
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
-import 'package:guardian_keyper/feature/dashboard/ui/dashboard_screen.dart';
+import 'package:guardian_keyper/feature/home/ui/screens/home_screen.dart';
 
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 import 'package:guardian_keyper/feature/auth/ui/dialogs/on_demand_auth_dialog.dart';
@@ -19,48 +21,73 @@ import 'package:guardian_keyper/feature/vault/ui/_vault_home/vault_home_screen.d
 
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
-import 'package:guardian_keyper/feature/message/ui/widgets/message_notify_icon.dart';
 import 'package:guardian_keyper/feature/message/ui/message_home_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const _pages = [
-    DashboardScreen(),
+import 'ui/widgets/notifications_icon.dart';
+
+class Home extends StatefulWidget {
+  static const _tabs = [
+    HomeScreen(),
     VaultHomeScreen(),
     ShardHomeScreen(),
     MessageHomeScreen(),
   ];
 
-  static const _tabs = [
+  static const _iconSize = 32.0;
+  static const _homeSvg = 'assets/icons/home.svg';
+  static const _vaultsSvg = 'assets/icons/home_vaults.svg';
+  static const _shardsSvg = 'assets/icons/home_shards.svg';
+
+  static final _navBarItems = [
     BottomNavigationBarItem(
-      icon: IconOf.navBarHome(),
-      activeIcon: IconOf.navBarHomeSelected(),
+      // Home
       label: 'Home',
+      icon: SvgPicture.asset(_homeSvg, height: _iconSize, width: _iconSize),
+      activeIcon: SvgPicture.asset(
+        _homeSvg,
+        color: clGreen,
+        height: _iconSize,
+        width: _iconSize,
+      ),
     ),
+    // Vaults
     BottomNavigationBarItem(
-      icon: IconOf.navBarKey(),
-      activeIcon: IconOf.navBarKeySelected(),
       label: 'Vaults',
+      icon: SvgPicture.asset(_vaultsSvg, height: _iconSize, width: _iconSize),
+      activeIcon: SvgPicture.asset(
+        _vaultsSvg,
+        color: clGreen,
+        height: _iconSize,
+        width: _iconSize,
+      ),
     ),
+    // Shards
     BottomNavigationBarItem(
-      icon: IconOf.navBarShield(),
-      activeIcon: IconOf.navBarShieldSelected(),
       label: 'Shards',
+      icon: SvgPicture.asset(_shardsSvg, height: _iconSize, width: _iconSize),
+      activeIcon: SvgPicture.asset(
+        _shardsSvg,
+        color: clGreen,
+        height: _iconSize,
+        width: _iconSize,
+      ),
     ),
-    BottomNavigationBarItem(
-      icon: MessageNotifyIcon(isSelected: false),
-      activeIcon: MessageNotifyIcon(isSelected: true),
-      label: 'Messages',
+    // Notifications
+    const BottomNavigationBarItem(
+      label: 'Notifications',
+      icon: NotificationsIcon(isSelected: false, iconSize: _iconSize),
+      activeIcon: NotificationsIcon(isSelected: true, iconSize: _iconSize),
     ),
   ];
 
-  const HomeScreen({super.key});
+  const Home({super.key});
 
   @override
-  State<HomeScreen> createState() => HomeScreenState();
+  State<Home> createState() => HomeState();
 }
 
-class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
-  int _currentPage = 0;
+class HomeState extends State<Home> with WidgetsBindingObserver {
+  int _currentTab = 0;
   bool _canShowMessage = true;
   DateTime _lastExitTryAt = DateTime.timestamp();
 
@@ -121,11 +148,10 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         backgroundColor: clIndigo900,
         resizeToAvoidBottomInset: true,
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentPage,
-          items: HomeScreen._tabs,
+          currentIndex: _currentTab,
+          items: Home._navBarItems,
           onTap: _gotoPage,
         ),
-        // ignore: deprecated_member_use
         body: WillPopScope(
           onWillPop: () async {
             final now = DateTime.timestamp();
@@ -142,8 +168,8 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             child: Padding(
               padding: paddingH20,
               child: IndexedStack(
-                index: _currentPage,
-                children: HomeScreen._pages,
+                index: _currentTab,
+                children: Home._tabs,
               ),
             ),
           ),
@@ -151,10 +177,10 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       );
 
   void gotoVaults() =>
-      _gotoPage(HomeScreen._pages.indexWhere((e) => e is VaultHomeScreen));
+      _gotoPage(Home._tabs.indexWhere((e) => e is VaultHomeScreen));
 
   void gotoShards() =>
-      _gotoPage(HomeScreen._pages.indexWhere((e) => e is ShardHomeScreen));
+      _gotoPage(Home._tabs.indexWhere((e) => e is ShardHomeScreen));
 
-  void _gotoPage(int page) => setState(() => _currentPage = page);
+  void _gotoPage(int page) => setState(() => _currentTab = page);
 }
