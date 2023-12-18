@@ -23,13 +23,14 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
 
   String _secret = '';
   String _secretName = '';
-  bool _isSecretObscure = true;
 
   String get secret => _secret;
 
-  bool get isSecretObscure => _isSecretObscure;
+  String get secretName => _secretName;
 
   bool get isNameTooShort => _secretName.length < minNameLength;
+
+  PeerId get selfId => _vaultInteractor.selfId;
 
   @override
   Future<MessageModel> startRequest() async {
@@ -99,11 +100,6 @@ class VaultSecretAddPresenter extends VaultSecretPresenterBase {
 
   void setSecretName(String value) {
     _secretName = value;
-    notifyListeners();
-  }
-
-  void toggleIsSecretObscure() {
-    _isSecretObscure = !_isSecretObscure;
     notifyListeners();
   }
 }

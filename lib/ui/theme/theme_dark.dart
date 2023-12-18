@@ -6,20 +6,21 @@ const systemStyleDark = SystemUiOverlayStyle(
   statusBarIconBrightness: Brightness.light,
 );
 
-final themeDark = ThemeData.dark().copyWith(
-  // ignore: deprecated_member_use
-  useMaterial3: false,
+final themeDark = ThemeData(
   // Color Scheme
-  colorScheme: const ColorScheme(
+  colorScheme: ColorScheme.fromSeed(
     brightness: Brightness.dark,
+    seedColor: clIndigo500,
     primary: clIndigo500,
     onPrimary: clWhite,
     secondary: clIndigo700,
     onSecondary: clWhite,
+    tertiary: clIndigo300,
+    onTertiary: clWhite,
     error: clRed,
     onError: clYellow,
     background: clIndigo900,
-    onBackground: clBlue,
+    onBackground: clWhite,
     surface: clSurface,
     onSurface: clWhite,
   ),
@@ -42,7 +43,10 @@ final themeDark = ThemeData.dark().copyWith(
   ),
   // Bottom Sheet
   bottomSheetTheme: const BottomSheetThemeData(
-    shape: RoundedRectangleBorder(borderRadius: borderRadiusTop10),
+    backgroundColor: clIndigo900,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+    ),
   ),
   // Card
   cardTheme: CardTheme(
@@ -53,12 +57,9 @@ final themeDark = ThemeData.dark().copyWith(
   ),
   // Expansion Panel
   expansionTileTheme: ExpansionTileThemeData(
-    backgroundColor: clSurface,
     childrenPadding: paddingAll20,
     collapsedIconColor: clWhite,
     collapsedShape: _shapeBorder,
-    textColor: clWhite,
-    iconColor: clWhite,
     shape: _shapeBorder,
   ),
   // Filled Button
@@ -70,7 +71,7 @@ final themeDark = ThemeData.dark().copyWith(
       textStyle: MaterialStateProperty.all<TextStyle>(stylePoppins616),
       backgroundColor: MaterialStateProperty.resolveWith<Color>(
         (states) =>
-            states.contains(MaterialState.disabled) ? clIndigo800 : clIndigo500,
+            states.contains(MaterialState.disabled) ? clIndigo700 : clIndigo500,
       ),
     ),
   ),
@@ -78,32 +79,20 @@ final themeDark = ThemeData.dark().copyWith(
   iconTheme: const IconThemeData(color: clWhite),
   // Input
   inputDecorationTheme: InputDecorationTheme(
-    border: MaterialStateOutlineInputBorder.resolveWith(
-      (states) {
-        var borderWidth = 1.0;
-        var borderColor = const Color(0x55E9F8FE);
-        if (states.contains(MaterialState.focused)) {
-          borderWidth = 2;
-          borderColor = clBlue;
-        }
-        if (states.contains(MaterialState.error)) {
-          borderColor = clRed;
-        }
-        return OutlineInputBorder(
-          borderRadius: borderRadius8,
-          borderSide: BorderSide(width: borderWidth, color: borderColor),
-        );
-      },
+    border: OutlineInputBorder(
+      borderRadius: borderRadius8,
+      borderSide: const BorderSide(
+        color: clIndigo300,
+        width: 2,
+      ),
     ),
-    counterStyle: styleSourceSansPro412,
-    helperStyle: styleSourceSansPro412,
-    labelStyle: styleSourceSansPro412,
+    // focusColor: clIndigo300,
+
+    floatingLabelStyle: const TextStyle(color: clWhite),
   ),
   // ListTile
   listTileTheme: ListTileThemeData(
-    iconColor: clWhite,
     tileColor: clSurface,
-    textColor: clWhite,
     shape: _shapeBorder,
     titleTextStyle: styleSourceSansPro616,
     subtitleTextStyle: styleSourceSansPro414Purple,
@@ -136,14 +125,17 @@ final themeDark = ThemeData.dark().copyWith(
   switchTheme: SwitchThemeData(
     thumbColor: MaterialStateProperty.all<Color>(clWhite),
     trackColor: MaterialStateProperty.resolveWith<Color>((states) =>
-        states.contains(MaterialState.selected) ? clBlue : clIndigo700),
+        states.contains(MaterialState.selected) ? clIndigo300 : clIndigo700),
+    trackOutlineColor: MaterialStateProperty.all<Color>(clIndigo700),
+    trackOutlineWidth: MaterialStateProperty.all<double>(0),
   ),
   // TabBar
   tabBarTheme: TabBarTheme(
     indicator: const BoxDecoration(
-      borderRadius: borderRadiusTop10,
-      color: clIndigo600,
+      borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+      color: clIndigo700,
     ),
+    indicatorSize: TabBarIndicatorSize.tab,
     labelPadding: EdgeInsets.zero,
     labelColor: clWhite,
     labelStyle: styleSourceSansPro614,
@@ -162,11 +154,15 @@ final themeDark = ThemeData.dark().copyWith(
     titleMedium: styleSourceSansPro614,
     bodyMedium: styleSourceSansPro414,
   ),
+  textSelectionTheme: const TextSelectionThemeData(
+    cursorColor: clWhite,
+  ),
   // Text Button
   textButtonTheme: TextButtonThemeData(
-      style: ButtonStyle(
-    foregroundColor: MaterialStateProperty.all<Color>(clWhite),
-  )),
+    style: ButtonStyle(
+      foregroundColor: MaterialStateProperty.all<Color>(clWhite),
+    ),
+  ),
 );
 
 final _fixedSizeHeight48 = MaterialStateProperty.all<Size>(

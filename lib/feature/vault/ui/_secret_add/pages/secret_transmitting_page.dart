@@ -3,7 +3,6 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/feature/vault/ui/widgets/guardian_list_tile.dart';
 
 import '../vault_secret_add_presenter.dart';
-import '../../widgets/guardian_list_tile_old.dart';
 import '../widgets/abort_header_button.dart';
 import '../dialogs/on_success_dialog.dart';
 import '../dialogs/on_reject_dialog.dart';
@@ -17,13 +16,12 @@ class SecretTransmittingPage extends StatefulWidget {
 }
 
 class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
-  late final _presenter = context.read<VaultSecretAddPresenter>();
-
   @override
   void initState() {
     super.initState();
-    _presenter.startRequest().then(
+    context.read<VaultSecretAddPresenter>().startRequest().then(
       (message) async {
+        if (!mounted) return;
         if (message.isAccepted) {
           await OnSuccessDialog.show(context, vaultId: message.vaultId);
         } else if (message.isRejected) {
@@ -37,63 +35,78 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final presenter = context.watch<VaultSecretAddPresenter>();
-    return Column(
-      children: [
-        // Header
-        const HeaderBar(
-          caption: 'Split Secret',
-          closeButton: AbortHeaderButton(),
-        ),
-        // Body
-        Expanded(
-          child: ListView(
-            padding: paddingH20,
-            children: [
-              const PageTitle(
-                title: 'Waiting for Guardians',
-                subtitleSpans: [
-                  TextSpan(
-                    text: 'Ask each Guardian to log into the app '
-                        'to receive a Secret Shard. Once Shard is received '
-                        'Guardian icon will go ',
-                  ),
-                  TextSpan(
-                    text: 'green.',
-                    style: TextStyle(color: clGreen),
-                  ),
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (final guardian
-                      in presenter.messages.map((e) => e.peerId))
-                    Padding(
-                      padding: paddingV6,
-                      child: presenter.isMyself(guardian)
-                          ? const GuardianListTile.my()
-                          : () {
-                              final message = _presenter.getMessageOf(guardian);
-                              return GuardianListTileOld(
-                                guardian: guardian,
-                                // checkStatus: true,
-                                isWaiting: message.hasNoResponse,
-                                isSuccess: message.isAccepted
-                                    ? true
-                                    : message.hasResponse
-                                        ? false
-                                        : null,
-                              );
-                            }(),
-                    )
-                ],
-              ),
-            ],
+  Widget build(BuildContext context) => Column(
+        children: [
+          // Header
+          const HeaderBar(
+            caption: 'Adding a Secret',
+            closeButton: AbortHeaderButton(),
           ),
-        ),
-      ],
-    );
-  }
+          // Body
+          Expanded(
+            child: ListView(
+              padding: paddingH20,
+              children: [
+                // Title
+                const PageTitle(
+                  title: 'Awaiting Guardians',
+                ),
+                // Warning
+                Container(
+                  decoration: ShapeDecoration(
+                    color: const Color(0x26F19C38),
+                    shape: RoundedRectangleBorder(borderRadius: borderRadius8),
+                  ),
+                  padding: paddingAll20,
+                  child: const Text(
+                    'Do not exit or minimize the app until the end of the '
+                    'process, as you are connected via peer-to-peer (P2P), '
+                    'and doing so could disrupt the progress.',
+                    style: TextStyle(color: clYellow),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Container(
+                  decoration: boxDecoration,
+                  padding: paddingT20,
+                  child: Consumer<VaultSecretAddPresenter>(
+                    builder: (context, presenter, _) => Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: paddingH20,
+                          child: Text(
+                            'Guardians',
+                            style: styleSourceSansPro616,
+                          ),
+                        ),
+                        Padding(
+                          padding: paddingH20,
+                          child: Text(
+                            'Ask Guardians to open the app and accept a Secret '
+                            'Shard. Make sure they keep the app open until '
+                            'the Shard splitting is complete.',
+                            style: styleSourceSansPro414Purple,
+                          ),
+                        ),
+                        for (final message in presenter.messages)
+                          message.peerId == presenter.selfId
+                              ? const GuardianListTile.my()
+                              : message.isAccepted
+                                  ? GuardianListTile(
+                                      guardian: message.peerId,
+                                    )
+                                  : GuardianListTile.pending(
+                                      guardian: message.peerId,
+                                    )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
 }

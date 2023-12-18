@@ -135,7 +135,7 @@ class IconOf extends StatelessWidget {
     final actualSize = (size ?? 40) * (isBig ?? false ? 2 : 1);
     final iconWidget = Container(
       decoration: BoxDecoration(
-        color: bgColor ?? Theme.of(context).colorScheme.secondary,
+        color: bgColor ?? clIndigo700,
         shape: BoxShape.circle,
       ),
       height: actualSize,

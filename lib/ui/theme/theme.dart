@@ -5,10 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 part 'theme_dark.dart';
 
 const clIndigo900 = Color(0xFF1A0244);
-const clIndigo800 = Color(0xFF300077);
 const clIndigo700 = Color(0xFF3C089F);
-const clIndigo600 = Color(0xFF5600D6);
 const clIndigo500 = Color(0xFF570FE4);
+const clIndigo300 = Color(0xFFA066F5);
 const clSurface = Color(0xFF24035F);
 const clRed = Color(0xFFEC5F59);
 const clGreen = Color(0xFF62D6CB);
@@ -35,13 +34,11 @@ const paddingB32 = EdgeInsets.only(bottom: 32);
 
 const radius8 = Radius.circular(8);
 
-const borderRadiusTop10 = BorderRadius.vertical(top: Radius.circular(10));
-
 final borderRadius8 = BorderRadius.circular(8);
 
 final boxDecoration = BoxDecoration(
   borderRadius: borderRadius8,
-  color: clSurface,
+  color: clIndigo700,
 );
 
 final styleSourceSansPro412 = GoogleFonts.sourceSans3(

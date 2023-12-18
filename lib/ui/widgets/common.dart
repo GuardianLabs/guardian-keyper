@@ -18,7 +18,7 @@ class ScaffoldSafe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: clIndigo900,
+        // backgroundColor: clIndigo900,
         resizeToAvoidBottomInset: true,
         body: SafeArea(child: child),
       );
@@ -284,100 +284,6 @@ class BottomSheetWidget extends StatelessWidget {
               Padding(
                 padding: paddingV20,
                 child: footer,
-              ),
-          ],
-        ),
-      );
-}
-
-class InfoPanel extends StatelessWidget {
-  const InfoPanel({
-    required this.color,
-    this.title,
-    this.text,
-    this.textSpan,
-    this.icon,
-    this.animationController,
-    super.key,
-  });
-
-  const InfoPanel.info({
-    super.key,
-    this.title,
-    this.text,
-    this.textSpan,
-    this.icon = Icons.info_outline,
-    this.color = clBlue,
-    this.animationController,
-  });
-
-  const InfoPanel.warning({
-    super.key,
-    this.title,
-    this.text,
-    this.textSpan,
-    this.icon = Icons.error_outline,
-    this.color = clYellow,
-    this.animationController,
-  });
-
-  const InfoPanel.error({
-    super.key,
-    this.title,
-    this.text,
-    this.textSpan,
-    this.icon = Icons.error,
-    this.color = clRed,
-    this.animationController,
-  });
-
-  final AnimationController? animationController;
-  final String? title;
-  final String? text;
-  final List<TextSpan>? textSpan;
-  final IconData? icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) => animationController == null
-      ? buildBody()
-      : DecoratedBoxTransition(
-          decoration: DecorationTween(
-            begin: BoxDecoration(
-              borderRadius: borderRadius8,
-              color: clIndigo500,
-            ),
-            end: boxDecoration,
-          ).animate(animationController!),
-          child: buildBody(),
-        );
-
-  Widget buildBody() => Container(
-        decoration: animationController == null ? boxDecoration : null,
-        padding: paddingAll20,
-        child: Column(
-          children: [
-            if (icon != null) Icon(icon, color: color, size: 20),
-            if (title != null)
-              Padding(
-                padding: paddingT12,
-                child: Text(
-                  title!,
-                  style: styleSourceSansPro616,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            if (text != null || textSpan != null)
-              Padding(
-                padding: paddingT12,
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    text: text,
-                    style: styleSourceSansPro414Purple,
-                    children: textSpan,
-                  ),
-                ),
               ),
           ],
         ),

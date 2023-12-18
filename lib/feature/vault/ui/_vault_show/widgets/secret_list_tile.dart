@@ -19,7 +19,8 @@ class SecretListTile extends StatelessWidget {
   Widget build(BuildContext context) => ListTile(
         enabled: vault.isNotRestricted,
         title: Text(secretId.name),
-        leading: Row(
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
               onPressed: () => OnRemoveSecretDialog.show(

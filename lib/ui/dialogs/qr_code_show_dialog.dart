@@ -48,6 +48,8 @@ class QRCodeShowDialog extends StatefulWidget {
 }
 
 class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
+  late final _clSurface = Theme.of(context).colorScheme.surface;
+
   @override
   void initState() {
     super.initState();
@@ -115,7 +117,7 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(24),
-                          color: clSurface,
+                          color: _clSurface,
                         ),
                         padding: paddingAll8,
                         child: const SvgPicture(
@@ -144,9 +146,9 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
                   Expanded(
                     child: Container(
                       alignment: Alignment.center,
-                      decoration: const ShapeDecoration(
-                        color: clSurface,
-                        shape: RoundedRectangleBorder(
+                      decoration: ShapeDecoration(
+                        color: _clSurface,
+                        shape: const RoundedRectangleBorder(
                           side: BorderSide(color: clIndigo700),
                           borderRadius: BorderRadius.only(
                             topLeft: radius8,

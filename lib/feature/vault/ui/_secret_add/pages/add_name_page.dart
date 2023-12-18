@@ -8,49 +8,42 @@ class AddNamePage extends StatelessWidget {
   const AddNamePage({super.key});
 
   @override
-  Widget build(BuildContext context) => ListView(
-        shrinkWrap: true,
-        children: [
-          // Header
-          const HeaderBar(
-            caption: 'Add a name',
-            closeButton: AbortHeaderButton(),
+  Widget build(BuildContext context) {
+    final presenter = context.read<VaultSecretAddPresenter>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Header
+        const HeaderBar(
+          caption: 'Adding a Secret',
+          closeButton: AbortHeaderButton(),
+        ),
+        // Body
+        const PageTitle(title: 'Create a name for your Secret'),
+        // Input
+        Padding(
+          padding: paddingT32 + paddingH20,
+          child: TextFormField(
+            autofocus: true,
+            decoration: const InputDecoration(labelText: ' Secret name '),
+            initialValue: presenter.secretName,
+            keyboardType: TextInputType.name,
+            maxLength: maxNameLength,
+            onChanged: presenter.setSecretName,
           ),
-          // Body
-          const PageTitle(title: 'Add a name for your Secret'),
-          // Input
-          Padding(
-            padding: paddingT32 + paddingH20,
-            child: TextFormField(
-              keyboardType: TextInputType.name,
-              maxLength: maxNameLength,
-              style: styleSourceSansPro416,
-              decoration: InputDecoration(
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                labelText: ' Secret name ',
-                counterStyle: styleSourceSansPro414Purple,
-              ),
-              onChanged: context.read<VaultSecretAddPresenter>().setSecretName,
+        ),
+        // Footer
+        Padding(
+          padding: paddingT32 + paddingH20,
+          child: Selector<VaultSecretAddPresenter, bool>(
+            selector: (_, p) => p.isNameTooShort,
+            builder: (context, isNameTooShort, _) => FilledButton(
+              onPressed: isNameTooShort ? null : presenter.nextPage,
+              child: const Text('Continue'),
             ),
           ),
-          // Footer
-          Padding(
-            padding: paddingT32 + paddingH20,
-            child: Selector<VaultSecretAddPresenter, bool>(
-              selector: (_, presenter) => presenter.isNameTooShort,
-              builder: (
-                BuildContext context,
-                bool isNameTooShort,
-                Widget? widget,
-              ) =>
-                  PrimaryButton(
-                text: 'Continue',
-                onPressed: isNameTooShort
-                    ? null
-                    : context.read<VaultSecretAddPresenter>().nextPage,
-              ),
-            ),
-          ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
 }

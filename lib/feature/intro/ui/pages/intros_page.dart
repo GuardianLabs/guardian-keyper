@@ -93,7 +93,7 @@ class IntrosPage extends StatelessWidget {
                         padding: const EdgeInsets.only(right: 8),
                         child: DotColored(
                           color:
-                              i == presenter.introStep ? clBlue : clIndigo600,
+                              i == presenter.introStep ? clBlue : clIndigo700,
                         ),
                       ),
                   ],
