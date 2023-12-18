@@ -104,11 +104,11 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
                       data: widget.qrCode,
                       errorCorrectionLevel: QrErrorCorrectLevel.M,
                       dataModuleStyle: QrDataModuleStyle(
-                        color: _colorScheme.surface,
+                        color: _colorScheme.onSurface,
                         dataModuleShape: QrDataModuleShape.square,
                       ),
                       eyeStyle: QrEyeStyle(
-                        color: _colorScheme.surface,
+                        color: _colorScheme.onSurface,
                         eyeShape: QrEyeShape.square,
                       ),
                       padding: paddingAll20,

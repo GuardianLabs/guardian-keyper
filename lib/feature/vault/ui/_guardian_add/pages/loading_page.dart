@@ -12,6 +12,8 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
+  late final _theme = Theme.of(context);
+
   @override
   void initState() {
     super.initState();
@@ -67,7 +69,7 @@ class _LoadingPageState extends State<LoadingPage> {
                     padding: paddingAll20,
                     child: Text(
                       'Awaiting Guardian’s response',
-                      style: styleSourceSansPro616,
+                      style: _theme.textTheme.bodyMedium,
                     ),
                   ),
                 ],

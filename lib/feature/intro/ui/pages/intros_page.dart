@@ -62,7 +62,7 @@ class IntrosPage extends StatelessWidget {
               padding: paddingB12,
               child: Text(
                 _titles[presenter.introStep],
-                style: theme.textTheme.titleLarge?.copyWith(fontSize: 30),
+                style: theme.textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -70,7 +70,7 @@ class IntrosPage extends StatelessWidget {
               padding: paddingB20,
               child: Text(
                 _subtitles[presenter.introStep],
-                style: styleSourceSansPro416,
+                style: theme.textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -81,7 +81,10 @@ class IntrosPage extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: presenter.nextPage,
-                  child: Text('Skip', style: theme.textTheme.titleMedium),
+                  child: Text(
+                    'Skip',
+                    style: theme.textTheme.titleMedium,
+                  ),
                 ),
                 // Dots
                 Row(
@@ -100,7 +103,10 @@ class IntrosPage extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: presenter.nextSlide,
-                  child: Text('Next', style: theme.textTheme.titleMedium),
+                  child: Text(
+                    'Next',
+                    style: theme.textTheme.titleMedium,
+                  ),
                 ),
               ],
             ),

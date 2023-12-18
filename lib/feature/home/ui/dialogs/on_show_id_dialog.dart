@@ -12,15 +12,21 @@ class OnShowIdDialog extends StatelessWidget {
         context: context,
         isDismissible: true,
         isScrollControlled: true,
-        builder: (_) => OnShowIdDialog(id: id),
+        builder: (_) => OnShowIdDialog(
+          id: id,
+          highlightColor:
+              Theme.of(context).extension<BrandColors>()!.highlightColor,
+        ),
       );
 
   const OnShowIdDialog({
     required this.id,
+    required this.highlightColor,
     super.key,
   });
 
   final String id;
+  final Color highlightColor;
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
@@ -29,14 +35,14 @@ class OnShowIdDialog extends StatelessWidget {
           const TextSpan(text: '0x'),
           TextSpan(
             text: id.substring(0, shortKeyLength),
-            style: const TextStyle(color: clGreen),
+            style: TextStyle(color: highlightColor),
           ),
           TextSpan(
             text: id.substring(shortKeyLength, id.length - shortKeyLength),
           ),
           TextSpan(
             text: id.substring(id.length - shortKeyLength),
-            style: const TextStyle(color: clGreen),
+            style: TextStyle(color: highlightColor),
           ),
         ],
         footer: Row(

@@ -17,6 +17,7 @@ class NotificationsIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final brandColors = theme.extension<BrandColors>()!;
     final messageInteractor = GetIt.I<MessageInteractor>();
     return StreamBuilder(
       stream: messageInteractor.watch(),
@@ -28,8 +29,10 @@ class NotificationsIcon extends StatelessWidget {
           children: [
             SvgPicture.asset(
               'assets/icons/home_notifications.svg',
-              // ignore: deprecated_member_use
-              color: isSelected ? clGreen : Colors.white,
+              colorFilter: isSelected
+                  ? ColorFilter.mode(
+                      brandColors.highlightColor, BlendMode.srcIn)
+                  : null,
               height: iconSize,
               width: iconSize,
             ),
@@ -38,7 +41,7 @@ class NotificationsIcon extends StatelessWidget {
                 top: -3,
                 right: -3,
                 child: DotColored(
-                  color: clRed,
+                  color: brandColors.warningColor,
                   size: 17,
                   child: Center(
                     child: Text(

@@ -4,8 +4,6 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
 class VaultListTile extends StatelessWidget {
-  static const _styleRed = TextStyle(color: clRed);
-
   const VaultListTile({
     required this.vault,
     super.key,
@@ -15,11 +13,13 @@ class VaultListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final brandColors = theme.extension<BrandColors>()!;
+    final restrictedStyle = TextStyle(color: brandColors.dangerColor);
     return ListTile(
       leading: Container(
         decoration: BoxDecoration(
-          color: colorScheme.secondary,
+          color: theme.colorScheme.secondary,
           shape: BoxShape.circle,
         ),
         height: 40,
@@ -29,16 +29,16 @@ class VaultListTile extends StatelessWidget {
       title: Text(vault.id.name),
       subtitle: vault.isRestricted
           ? (vault.hasQuorum
-              ? const Text('Restricted usage', style: _styleRed)
-              : const Text('Complete the Recovery', style: _styleRed))
+              ? Text('Restricted usage', style: restrictedStyle)
+              : Text('Complete the Recovery', style: restrictedStyle))
           : (vault.isFull
               ? Text(
                   '${vault.size} Guardians, ${vault.secrets.length} Secrets',
                 )
-              : const Text('Add more Guardians', style: _styleRed)),
+              : Text('Add more Guardians', style: restrictedStyle)),
       trailing: Icon(
         Icons.arrow_forward_ios_rounded,
-        color: colorScheme.onPrimary,
+        color: theme.colorScheme.onPrimary,
       ),
       onTap: () => Navigator.pushNamed(
         context,

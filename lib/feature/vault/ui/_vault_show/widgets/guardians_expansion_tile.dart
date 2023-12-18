@@ -24,7 +24,7 @@ class GuardiansExpansionTile extends StatelessWidget {
       childrenPadding: EdgeInsets.zero,
       title: Text(
         'Vault’s Guardians',
-        style: styleSourceSansPro614,
+        style: theme.textTheme.bodyMedium,
       ),
       subtitle: vault.isFull
           ? Text(

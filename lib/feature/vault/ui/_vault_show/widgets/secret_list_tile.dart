@@ -16,37 +16,42 @@ class SecretListTile extends StatelessWidget {
   final SecretId secretId;
 
   @override
-  Widget build(BuildContext context) => ListTile(
-        title: Text(secretId.name),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              onPressed: vault.isRestricted
-                  ? null
-                  : () => OnRemoveSecretDialog.show(
-                        context,
-                        vault: vault,
+  Widget build(BuildContext context) {
+    final dangerColor = Theme.of(context).extension<BrandColors>()!.dangerColor;
+    return ListTile(
+      title: Text(secretId.name),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            onPressed: vault.isRestricted
+                ? null
+                : () => OnRemoveSecretDialog.show(
+                      context,
+                      vault: vault,
+                      secretId: secretId,
+                    ),
+            icon: Icon(
+              Icons.delete_outlined,
+              color: vault.isRestricted
+                  ? dangerColor.withOpacity(0.5)
+                  : dangerColor,
+            ),
+          ),
+          IconButton(
+            onPressed: vault.isRestricted
+                ? null
+                : () => Navigator.of(context).pushNamed(
+                      routeVaultSecretRecovery,
+                      arguments: (
+                        vaultId: vault.id,
                         secretId: secretId,
                       ),
-              icon: Icon(
-                Icons.delete_outlined,
-                color: vault.isRestricted ? clRed.withOpacity(0.5) : clRed,
-              ),
-            ),
-            IconButton(
-              onPressed: vault.isRestricted
-                  ? null
-                  : () => Navigator.of(context).pushNamed(
-                        routeVaultSecretRecovery,
-                        arguments: (
-                          vaultId: vault.id,
-                          secretId: secretId,
-                        ),
-                      ),
-              icon: const Icon(Icons.visibility_outlined),
-            ),
-          ],
-        ),
-      );
+                    ),
+            icon: const Icon(Icons.visibility_outlined),
+          ),
+        ],
+      ),
+    );
+  }
 }

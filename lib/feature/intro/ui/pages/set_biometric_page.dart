@@ -23,7 +23,7 @@ class SetBiometricPage extends StatelessWidget {
             padding: paddingT32,
             child: Text(
               'Enable biometric authentication?',
-              style: theme.textTheme.titleLarge?.copyWith(fontSize: 30),
+              style: theme.textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
           ),
@@ -31,7 +31,7 @@ class SetBiometricPage extends StatelessWidget {
             padding: paddingT12,
             child: Text(
               'Use biometry for faster, easier and secure access to the app.',
-              style: styleSourceSansPro416,
+              style: theme.textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
           ),

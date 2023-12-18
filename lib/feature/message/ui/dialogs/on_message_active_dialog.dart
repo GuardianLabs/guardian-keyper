@@ -36,6 +36,9 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
     with TickerProviderStateMixin {
   final _messagesInteractor = GetIt.I<MessageInteractor>();
 
+  late final _theme = Theme.of(context);
+  late final _brandColors = _theme.extension<BrandColors>()!;
+
   late final _animationController = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 3),
@@ -75,95 +78,89 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return BottomSheetWidget(
-      // Title
-      titleString: widget.getTitle(widget.message),
-      // Subtitle
-      textSpan: [
-        TextSpan(text: widget.message.peerId.name),
-        TextSpan(
-          text: widget.getSubtitle(widget.message),
-          style: styleSourceSansPro416,
-        ),
-        TextSpan(text: widget.message.vaultId.name),
-      ],
-      // Card
-      body: Card(
-        child: Padding(
-          padding: paddingAll20,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _isRequestError
-                // Error
-                ? [
-                    Text(
-                      'Connection Error',
-                      style: styleSourceSansPro616,
-                    ),
-                    const Padding(
-                      padding: paddingV12,
-                      child: Text('Something went wrong. Please try again.'),
-                    ),
-                    LinearProgressIndicator(
-                      value: _animationController.value,
-                    ),
-                  ]
-                // Peer status
-                : [
-                    Text(
-                      widget.message.peerId.name,
-                      style: styleSourceSansPro614,
-                    ),
-                    Padding(
-                      padding: paddingV12,
-                      child: _isPeerOnline
-                          ? Text(
-                              'Online',
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: clGreen,
+  Widget build(BuildContext context) => BottomSheetWidget(
+        // Title
+        titleString: widget.getTitle(widget.message),
+        // Subtitle
+        textSpan: [
+          TextSpan(text: widget.message.peerId.name, style: styleW600),
+          TextSpan(text: widget.getSubtitle(widget.message)),
+          TextSpan(text: widget.message.vaultId.name, style: styleW600),
+        ],
+        // Card
+        body: Card(
+          child: Padding(
+            padding: paddingAll20,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _isRequestError
+                  // Error
+                  ? [
+                      Text(
+                        'Connection Error',
+                        style: _theme.textTheme.bodyMedium,
+                      ),
+                      const Padding(
+                        padding: paddingV12,
+                        child: Text('Something went wrong. Please try again.'),
+                      ),
+                      LinearProgressIndicator(
+                        value: _animationController.value,
+                      ),
+                    ]
+                  // Peer status
+                  : [
+                      Text(
+                        widget.message.peerId.name,
+                        style: _theme.textTheme.bodySmall,
+                      ),
+                      Padding(
+                        padding: paddingV12,
+                        child: _isPeerOnline
+                            ? Text(
+                                'Online',
+                                style: _theme.textTheme.labelMedium?.copyWith(
+                                  color: _brandColors.highlightColor,
+                                ),
+                              )
+                            : Text(
+                                'Offline',
+                                style: _theme.textTheme.labelMedium?.copyWith(
+                                  color: _brandColors.dangerColor,
+                                ),
                               ),
-                            )
-                          : Text(
-                              'Offline',
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: clRed,
-                              ),
-                            ),
-                    ),
-                    const Text(
-                      'To approve or reject the request, both '
-                      'Owner and Guardian must run the app at the same time. '
-                      'Ask the Owner to log into the app.',
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                      ),
+                      const Text(
+                        'To approve or reject the request, both '
+                        'Owner and Guardian must run the app at the same time. '
+                        'Ask the Owner to log into the app.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+            ),
           ),
         ),
-      ),
-      // Buttons
-      footer: Row(children: [
-        Expanded(
-          child: FilledButton(
-            onPressed: _isPeerOnline && !_isRequestError && !_isRequestActive
-                ? () => _sendRespone(MessageStatus.rejected)
-                : null,
-            child: const Text('Reject'),
+        // Buttons
+        footer: Row(children: [
+          Expanded(
+            child: FilledButton(
+              onPressed: _isPeerOnline && !_isRequestError && !_isRequestActive
+                  ? () => _sendRespone(MessageStatus.rejected)
+                  : null,
+              child: const Text('Reject'),
+            ),
           ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: FilledButton(
-            onPressed: _isPeerOnline && !_isRequestError && !_isRequestActive
-                ? () => _sendRespone(MessageStatus.accepted)
-                : null,
-            child: const Text('Approve'),
+          const SizedBox(width: 12),
+          Expanded(
+            child: FilledButton(
+              onPressed: _isPeerOnline && !_isRequestError && !_isRequestActive
+                  ? () => _sendRespone(MessageStatus.accepted)
+                  : null,
+              child: const Text('Approve'),
+            ),
           ),
-        ),
-      ]),
-    );
-  }
+        ]),
+      );
 
   Future<void> _sendRespone(MessageStatus status) async {
     final response = widget.message.copyWith(status: status);

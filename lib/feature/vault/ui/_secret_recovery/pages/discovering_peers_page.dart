@@ -60,7 +60,7 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
                             padding: paddingH20,
                             child: Text(
                               'Approvals',
-                              style: styleSourceSansPro616,
+                              style: _theme.textTheme.bodyMedium,
                             ),
                           ),
                           Padding(

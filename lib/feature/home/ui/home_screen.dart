@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,47 +34,51 @@ class HomeScreen extends StatefulWidget {
   static const _vaultsSvg = 'assets/icons/home_vaults.svg';
   static const _shardsSvg = 'assets/icons/home_shards.svg';
 
-  static final _navBarItems = [
-    BottomNavigationBarItem(
-      // Home
-      label: 'Home',
-      icon: SvgPicture.asset(_homeSvg, height: _iconSize, width: _iconSize),
-      activeIcon: SvgPicture.asset(
-        _homeSvg,
-        color: clGreen,
-        height: _iconSize,
-        width: _iconSize,
+  static List<BottomNavigationBarItem> _buildNavBarItems(ThemeData theme) {
+    final highlightColor = theme.extension<BrandColors>()!.highlightColor;
+    final colorFilter = ColorFilter.mode(highlightColor, BlendMode.srcIn);
+    return [
+      BottomNavigationBarItem(
+        // Home
+        label: 'Home',
+        icon: SvgPicture.asset(_homeSvg, height: _iconSize, width: _iconSize),
+        activeIcon: SvgPicture.asset(
+          _homeSvg,
+          colorFilter: colorFilter,
+          height: _iconSize,
+          width: _iconSize,
+        ),
       ),
-    ),
-    // Vaults
-    BottomNavigationBarItem(
-      label: 'Vaults',
-      icon: SvgPicture.asset(_vaultsSvg, height: _iconSize, width: _iconSize),
-      activeIcon: SvgPicture.asset(
-        _vaultsSvg,
-        color: clGreen,
-        height: _iconSize,
-        width: _iconSize,
+      // Vaults
+      BottomNavigationBarItem(
+        label: 'Vaults',
+        icon: SvgPicture.asset(_vaultsSvg, height: _iconSize, width: _iconSize),
+        activeIcon: SvgPicture.asset(
+          _vaultsSvg,
+          colorFilter: colorFilter,
+          height: _iconSize,
+          width: _iconSize,
+        ),
       ),
-    ),
-    // Shards
-    BottomNavigationBarItem(
-      label: 'Shards',
-      icon: SvgPicture.asset(_shardsSvg, height: _iconSize, width: _iconSize),
-      activeIcon: SvgPicture.asset(
-        _shardsSvg,
-        color: clGreen,
-        height: _iconSize,
-        width: _iconSize,
+      // Shards
+      BottomNavigationBarItem(
+        label: 'Shards',
+        icon: SvgPicture.asset(_shardsSvg, height: _iconSize, width: _iconSize),
+        activeIcon: SvgPicture.asset(
+          _shardsSvg,
+          colorFilter: colorFilter,
+          height: _iconSize,
+          width: _iconSize,
+        ),
       ),
-    ),
-    // Notifications
-    const BottomNavigationBarItem(
-      label: 'Notifications',
-      icon: NotificationsIcon(isSelected: false, iconSize: _iconSize),
-      activeIcon: NotificationsIcon(isSelected: true, iconSize: _iconSize),
-    ),
-  ];
+      // Notifications
+      const BottomNavigationBarItem(
+        label: 'Notifications',
+        icon: NotificationsIcon(isSelected: false, iconSize: _iconSize),
+        activeIcon: NotificationsIcon(isSelected: true, iconSize: _iconSize),
+      ),
+    ];
+  }
 
   const HomeScreen({super.key});
 
@@ -146,9 +148,10 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         resizeToAvoidBottomInset: true,
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentTab,
-          items: HomeScreen._navBarItems,
+          items: HomeScreen._buildNavBarItems(Theme.of(context)),
           onTap: _gotoPage,
         ),
+        // ignore: deprecated_member_use
         body: WillPopScope(
           onWillPop: () async {
             final now = DateTime.timestamp();

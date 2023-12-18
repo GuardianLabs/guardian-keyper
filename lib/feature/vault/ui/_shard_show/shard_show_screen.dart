@@ -44,7 +44,7 @@ class ShardShowScreen extends StatelessWidget {
                 // Vault ID
                 Text(
                   'ID: ${vault.id.toHexShort()}',
-                  style: styleSourceSansPro414,
+                  style: theme.textTheme.bodySmall,
                 ),
                 Padding(
                   padding: paddingT12,

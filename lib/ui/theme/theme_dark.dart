@@ -6,6 +6,12 @@ const systemStyleDark = SystemUiOverlayStyle(
   statusBarIconBrightness: Brightness.light,
 );
 
+const colorSchemeExtensionDark = BrandColors(
+  highlightColor: Color(0xFF62D6CB),
+  warningColor: Color(0xFFF19C38),
+  dangerColor: Color(0xFFEC5F59),
+);
+
 final colorSchemeDark = ColorScheme.fromSeed(
   brightness: Brightness.dark,
   seedColor: const Color(0xFF570FE4),
@@ -15,187 +21,165 @@ final colorSchemeDark = ColorScheme.fromSeed(
   onSecondary: const Color(0xFFE6DEF8),
   tertiary: const Color(0xFFA066F5),
   onTertiary: Colors.white,
-  error: clRed,
-  onError: clYellow,
+  error: const Color(0xFFEC5F59),
+  onError: const Color(0xFFF19C38),
   background: const Color(0xFF1A0244),
   onBackground: Colors.white,
   surface: const Color(0xFF24035F),
   onSurface: const Color(0xFFE6DEF8),
 );
 
-final textThemeDark = TextTheme(
-  bodyMedium: TextStyle(
-    color: colorSchemeDark.onSurface,
-    // fontSize: 16,
-    // fontWeight: FontWeight.w400,
-  ),
-  bodySmall: TextStyle(
-    color: colorSchemeDark.onSurface,
-    // fontSize: 10,
-    // fontWeight: FontWeight.w400,
-  ),
-  titleLarge: GoogleFonts.poppins(
-    fontSize: 20,
-    fontWeight: FontWeight.w600,
-  ),
-  titleMedium: GoogleFonts.poppins(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-  ),
-);
-
-final themeDark = ThemeData(
-  // Color Scheme
-  colorScheme: colorSchemeDark,
-  canvasColor: colorSchemeDark.background,
-  scaffoldBackgroundColor: colorSchemeDark.background,
-  // AppBar
-  appBarTheme: AppBarTheme(
-    backgroundColor: colorSchemeDark.background,
-    centerTitle: true,
-    titleTextStyle: textThemeDark.titleMedium,
-    toolbarHeight: 68,
-  ),
-  // Bottom Navigation Bar
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    type: BottomNavigationBarType.fixed,
-    backgroundColor: colorSchemeDark.background,
-    selectedItemColor: clGreen,
-  ),
-  // Bottom Sheet
-  bottomSheetTheme: BottomSheetThemeData(
-    backgroundColor: colorSchemeDark.background,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+final themeDark = themeData.copyWith(
+    // Color Scheme
+    colorScheme: colorSchemeDark,
+    canvasColor: colorSchemeDark.background,
+    scaffoldBackgroundColor: colorSchemeDark.background,
+    extensions: [colorSchemeExtensionDark],
+    // AppBar
+    appBarTheme: themeData.appBarTheme.copyWith(
+      backgroundColor: colorSchemeDark.background,
     ),
-  ),
-  // Card
-  cardTheme: CardTheme(
-    color: colorSchemeDark.surface,
-    elevation: 0,
-    margin: EdgeInsets.zero,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
+    // Bottom Navigation Bar
+    bottomNavigationBarTheme: themeData.bottomNavigationBarTheme.copyWith(
+      backgroundColor: colorSchemeDark.background,
+      selectedItemColor: colorSchemeExtensionDark.highlightColor,
+      unselectedItemColor: colorSchemeDark.onBackground,
     ),
-  ),
-  // Divider
-  dividerTheme: DividerThemeData(
-    color: colorSchemeDark.primary,
-    thickness: 2,
-  ),
-  // Expansion Panel
-  expansionTileTheme: ExpansionTileThemeData(
-    childrenPadding: paddingAll20,
-    collapsedIconColor: colorSchemeDark.onPrimary,
-    collapsedShape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
+    // Bottom Sheet
+    bottomSheetTheme: themeData.bottomSheetTheme.copyWith(
+      backgroundColor: colorSchemeDark.background,
     ),
-    iconColor: colorSchemeDark.onPrimary,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
+    // Card
+    cardTheme: themeData.cardTheme.copyWith(
+      color: colorSchemeDark.surface,
     ),
-  ),
-  // Filled Button
-  filledButtonTheme: FilledButtonThemeData(
-    style: ButtonStyle(
-      fixedSize: const MaterialStatePropertyAll(Size(double.infinity, 48)),
-      foregroundColor: MaterialStateProperty.resolveWith<Color>(
-        (states) => states.contains(MaterialState.disabled)
-            ? const Color(0xFF76678F)
-            : colorSchemeDark.onPrimary,
-      ),
-      shape: MaterialStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+    // Divider
+    dividerTheme: themeData.dividerTheme.copyWith(
+      color: colorSchemeDark.primary,
+    ),
+    // Expansion Panel
+    expansionTileTheme: themeData.expansionTileTheme.copyWith(
+      collapsedIconColor: colorSchemeDark.onPrimary,
+      iconColor: colorSchemeDark.onPrimary,
+    ),
+    // Filled Button
+    filledButtonTheme: FilledButtonThemeData(
+      style: themeData.filledButtonTheme.style!.copyWith(
+        foregroundColor: MaterialStateProperty.resolveWith<Color>(
+          (states) => states.contains(MaterialState.disabled)
+              ? colorSchemeDark.onPrimary.withOpacity(0.5)
+              : colorSchemeDark.onPrimary,
+        ),
+        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+          (states) => states.contains(MaterialState.disabled)
+              ? colorSchemeDark.primary.withOpacity(0.5)
+              : colorSchemeDark.primary,
         ),
       ),
-      textStyle: MaterialStatePropertyAll(textThemeDark.titleMedium),
-      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+    ),
+    // Icon
+    iconTheme: IconThemeData(
+      color: colorSchemeDark.onPrimary,
+    ),
+    // Input
+    inputDecorationTheme: themeData.inputDecorationTheme.copyWith(
+      border: themeData.inputDecorationTheme.border!.copyWith(
+        borderSide: themeData.inputDecorationTheme.border!.borderSide.copyWith(
+          color: colorSchemeDark.tertiary,
+        ),
+      ),
+      floatingLabelStyle:
+          themeData.inputDecorationTheme.floatingLabelStyle!.copyWith(
+        color: colorSchemeDark.onSecondary,
+      ),
+    ),
+    // ListTile
+    listTileTheme: themeData.listTileTheme.copyWith(
+      tileColor: colorSchemeDark.surface,
+      titleTextStyle: themeData.listTileTheme.titleTextStyle!.copyWith(
+        color: colorSchemeDark.onSurface,
+      ),
+      subtitleTextStyle: themeData.listTileTheme.subtitleTextStyle!.copyWith(
+        color: colorSchemeDark.onSurface,
+      ),
+    ),
+    // Outlined Button
+    outlinedButtonTheme: OutlinedButtonThemeData(
+        style: themeData.filledButtonTheme.style!.copyWith(
+      foregroundColor: MaterialStateProperty.resolveWith<Color>(
         (states) => states.contains(MaterialState.disabled)
-            ? colorSchemeDark.secondary
-            : colorSchemeDark.primary,
+            ? colorSchemeDark.onPrimary.withOpacity(0.5)
+            : colorSchemeDark.onPrimary,
       ),
-    ),
-  ),
-  // Font family
-  fontFamily: GoogleFonts.sourceSans3().fontFamily,
-  // Input
-  inputDecorationTheme: InputDecorationTheme(
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide(
-        color: colorSchemeDark.tertiary,
-        width: 2,
-      ),
-    ),
-    floatingLabelStyle: TextStyle(color: colorSchemeDark.onPrimary),
-  ),
-  // ListTile
-  listTileTheme: ListTileThemeData(
-    tileColor: colorSchemeDark.surface,
-    titleTextStyle: styleSourceSansPro614,
-    subtitleTextStyle: styleSourceSansPro414.copyWith(
-      color: colorSchemeDark.onSecondary,
-    ),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
-    ),
-  ),
-  // Outlined Button
-  outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(
-    fixedSize: const MaterialStatePropertyAll(Size(double.infinity, 48)),
-    foregroundColor: MaterialStateProperty.resolveWith<Color>(
-      (states) => states.contains(MaterialState.disabled)
-          ? const Color(0xFF76678F)
-          : colorSchemeDark.onPrimary,
-    ),
-    side: MaterialStateProperty.resolveWith<BorderSide>(
-      (states) => BorderSide(
+      side: MaterialStateProperty.resolveWith<BorderSide>(
+        (states) => BorderSide(
           color: states.contains(MaterialState.disabled)
-              ? const Color(0xFF2E4283)
-              : colorSchemeDark.primary),
-    ),
-    shape: MaterialStatePropertyAll(
-      RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+              ? colorSchemeDark.primary.withOpacity(0.5)
+              : colorSchemeDark.primary,
+        ),
       ),
+    )),
+    // SnackBar
+    snackBarTheme: themeData.snackBarTheme.copyWith(
+      backgroundColor: colorSchemeExtensionDark.highlightColor,
+      contentTextStyle: const TextStyle(color: Color(0xFF004D45)),
     ),
-    textStyle: MaterialStatePropertyAll(textThemeDark.titleMedium),
-  )),
-  // SnackBar
-  snackBarTheme: const SnackBarThemeData(
-    backgroundColor: clGreen,
-    behavior: SnackBarBehavior.floating,
-    contentTextStyle: TextStyle(color: clGreenDark),
-  ),
-  // Switch
-  switchTheme: SwitchThemeData(
-    thumbColor: MaterialStatePropertyAll(colorSchemeDark.onPrimary),
-    trackColor: MaterialStateProperty.resolveWith<Color>((states) =>
-        states.contains(MaterialState.selected)
-            ? colorSchemeDark.tertiary
-            : colorSchemeDark.secondary),
-    trackOutlineColor: MaterialStatePropertyAll(colorSchemeDark.secondary),
-    trackOutlineWidth: const MaterialStatePropertyAll(0),
-  ),
-  // TabBar
-  tabBarTheme: TabBarTheme(
-    indicator: BoxDecoration(
-      borderRadius: const BorderRadius.vertical(
-        top: Radius.circular(10),
+    // Switch
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStatePropertyAll(colorSchemeDark.onPrimary),
+      trackColor: MaterialStateProperty.resolveWith<Color>((states) =>
+          states.contains(MaterialState.selected)
+              ? colorSchemeDark.tertiary
+              : colorSchemeDark.secondary),
+      trackOutlineColor: MaterialStatePropertyAll(colorSchemeDark.secondary),
+      trackOutlineWidth: const MaterialStatePropertyAll(0),
+    ),
+    // TabBar
+    tabBarTheme: themeData.tabBarTheme.copyWith(
+      indicatorSize: TabBarIndicatorSize.tab,
+      indicator: BoxDecoration(
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(10),
+        ),
+        color: colorSchemeDark.secondary,
       ),
-      color: colorSchemeDark.secondary,
+      labelPadding: EdgeInsets.zero,
+      labelColor: colorSchemeDark.onPrimary,
+      unselectedLabelColor: colorSchemeDark.onSecondary,
     ),
-    indicatorSize: TabBarIndicatorSize.tab,
-    labelPadding: EdgeInsets.zero,
-    labelColor: colorSchemeDark.onPrimary,
-    unselectedLabelColor: colorSchemeDark.onSecondary,
-  ),
-  // Text
-  textTheme: textThemeDark,
-  // TextSelection
-  textSelectionTheme: TextSelectionThemeData(
-    cursorColor: colorSchemeDark.onPrimary,
-  ),
-);
+    // TextSelection
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: colorSchemeDark.onPrimary,
+    ),
+    textTheme: textTheme.copyWith(
+      bodyLarge: textTheme.bodyLarge!.copyWith(
+        color: colorSchemeDark.onPrimary,
+      ),
+      bodyMedium: textTheme.bodyMedium!.copyWith(
+        color: colorSchemeDark.onSurface,
+      ),
+      bodySmall: textTheme.bodySmall!.copyWith(
+        color: colorSchemeDark.onSurface,
+      ),
+      headlineLarge: textTheme.headlineLarge!.copyWith(
+        color: colorSchemeDark.onPrimary,
+      ),
+      headlineMedium: textTheme.headlineMedium!.copyWith(
+        color: colorSchemeDark.onPrimary,
+      ),
+      labelLarge: textTheme.labelLarge!.copyWith(
+        color: colorSchemeDark.onPrimary,
+      ),
+      labelMedium: textTheme.labelMedium!.copyWith(
+        color: colorSchemeDark.onSurface,
+      ),
+      labelSmall: textTheme.labelSmall!.copyWith(
+        color: colorSchemeDark.onSurface,
+      ),
+      titleLarge: textTheme.titleLarge!.copyWith(
+        color: colorSchemeDark.onPrimary,
+      ),
+      titleMedium: textTheme.titleMedium!.copyWith(
+        color: colorSchemeDark.onPrimary,
+      ),
+    ));

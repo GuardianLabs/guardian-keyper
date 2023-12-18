@@ -305,6 +305,7 @@ class BottomSheetWidget extends StatelessWidget {
   }
 }
 
+// TBD: remove
 class DotColored extends StatelessWidget {
   const DotColored({
     required this.color,
@@ -329,6 +330,7 @@ class DotColored extends StatelessWidget {
       );
 }
 
+// TBD: remove
 SnackBar buildSnackBar({
   String? text,
   List<TextSpan>? textSpans,
@@ -340,12 +342,12 @@ SnackBar buildSnackBar({
       duration: duration,
       behavior: isFloating ? SnackBarBehavior.floating : null,
       margin: paddingAll20,
-      backgroundColor: isError ? clRed : clGreen,
+      backgroundColor: isError ? const Color(0xFFEC5F59) : null,
       content: RichText(
         text: TextSpan(
           text: text,
           children: textSpans,
-          style: TextStyle(color: isError ? Colors.white : clGreenDark),
+          style: TextStyle(color: isError ? Colors.white : null),
         ),
       ),
     );

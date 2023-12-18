@@ -92,7 +92,6 @@ class _LoadingPageState extends State<LoadingPage> {
                           ),
                           const TextSpan(text: '’s response'),
                         ],
-                        style: styleSourceSansPro416,
                       ),
                     ),
                   ),

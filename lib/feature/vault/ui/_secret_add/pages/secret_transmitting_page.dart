@@ -17,6 +17,8 @@ class SecretTransmittingPage extends StatefulWidget {
 
 class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
   late final _theme = Theme.of(context);
+  late final _brandColor = _theme.extension<BrandColors>()!;
+
   @override
   void initState() {
     super.initState();
@@ -56,14 +58,14 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: const Color(0x26F19C38),
+                    color: _brandColor.warningColor.withOpacity(.4),
                   ),
                   padding: paddingAll20,
-                  child: const Text(
+                  child: Text(
                     'Do not exit or minimize the app until the end of the '
                     'process, as you are connected via peer-to-peer (P2P), '
                     'and doing so could disrupt the progress.',
-                    style: TextStyle(color: clYellow),
+                    style: TextStyle(color: _theme.colorScheme.onError),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -79,7 +81,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                             padding: paddingH20,
                             child: Text(
                               'Guardians',
-                              style: styleSourceSansPro616,
+                              style: _theme.textTheme.bodyMedium,
                             ),
                           ),
                           Padding(

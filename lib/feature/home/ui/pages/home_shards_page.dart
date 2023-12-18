@@ -15,7 +15,6 @@ class HomeShardsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final vaultInteractor = GetIt.I<VaultInteractor>();
     return StreamBuilder<Object>(
       stream: vaultInteractor.watch(),
@@ -49,17 +48,12 @@ class HomeShardsPage extends StatelessWidget {
                             child: ListTile(
                               isThreeLine: true,
                               visualDensity: VisualDensity.standard,
-                              title: Text(
-                                vault.id.name,
-                                style: styleSourceSansPro614,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                              title: Text(vault.id.name),
                               subtitle: Text(
                                 'Owner: ${vault.ownerId.name}\n'
                                 '${vault.secrets.length} Shard(s)',
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.bodySmall,
                                 strutStyle: const StrutStyle(height: 1.5),
                               ),
                               trailing: Container(

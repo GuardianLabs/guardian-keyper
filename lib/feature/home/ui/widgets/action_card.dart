@@ -27,10 +27,12 @@ class ActionCard extends StatelessWidget {
             children: [
               Row(
                 children: [
+                  // Leading Icon
                   Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: icon,
                   ),
+                  // Title
                   Text(
                     title,
                     maxLines: 1,
@@ -40,6 +42,7 @@ class ActionCard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8),
+                // Subtitle
                 child: Text(
                   subtitle,
                   style: theme.textTheme.bodyMedium,

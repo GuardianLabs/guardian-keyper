@@ -21,6 +21,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final brandColors = theme.extension<BrandColors>()!;
     final selfId = GetIt.I<NetworkManager>().selfId;
     final vaultRepository = GetIt.I<VaultRepository>();
     return ListView(
@@ -63,9 +64,9 @@ class HomePage extends StatelessWidget {
         Padding(
           padding: paddingT20,
           child: ActionCard(
-            icon: const Icon(
+            icon: Icon(
               Icons.add,
-              color: clGreen,
+              color: brandColors.highlightColor,
               size: 24,
             ),
             title: 'Create a Vault',
@@ -78,9 +79,9 @@ class HomePage extends StatelessWidget {
         Padding(
           padding: paddingT20,
           child: ActionCard(
-            icon: const Icon(
+            icon: Icon(
               Icons.replay,
-              color: clGreen,
+              color: brandColors.highlightColor,
               size: 24,
             ),
             title: 'Restore my Vault',
@@ -94,9 +95,9 @@ class HomePage extends StatelessWidget {
           child: ActionCard(
             title: 'Become a Guardian',
             subtitle: 'Safeguard a part of another user`s Vault.',
-            icon: const Icon(
+            icon: Icon(
               Icons.shield_outlined,
-              color: clGreen,
+              color: brandColors.highlightColor,
               size: 24,
             ),
             onTap: () async {
@@ -125,9 +126,9 @@ class HomePage extends StatelessWidget {
             child: Padding(
               padding: paddingT20,
               child: ActionCard(
-                icon: const Icon(
+                icon: Icon(
                   Icons.auto_awesome_outlined,
-                  color: clGreen,
+                  color: brandColors.highlightColor,
                   size: 24,
                 ),
                 title: 'Assist with a Vault',
@@ -145,7 +146,10 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: paddingT20,
             child: ActionCard(
-              icon: const Icon(Icons.app_shortcut, color: clRed),
+              icon: Icon(
+                Icons.app_shortcut,
+                color: brandColors.dangerColor,
+              ),
               title: 'DevPanel',
               subtitle: 'Shortcut to show mocked dialogs and components',
               onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(

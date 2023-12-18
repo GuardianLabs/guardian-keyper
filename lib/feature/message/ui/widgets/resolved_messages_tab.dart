@@ -10,11 +10,10 @@ class ResolvedMessagesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final messages = context.watch<MessageHomePresenter>().resolvedMessages;
     return messages.isEmpty
-        ? Center(
+        ? const Center(
             child: Text(
               'You don’t have any resolved messages',
               textAlign: TextAlign.center,
-              style: styleSourceSansPro414,
               softWrap: true,
             ),
           )

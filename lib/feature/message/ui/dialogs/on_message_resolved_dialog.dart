@@ -25,12 +25,8 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final style = TextStyle(
-      color: colorScheme.onSecondary,
-      fontWeight: FontWeight.w600,
-      fontSize: 12,
-    );
+    final theme = Theme.of(context);
+    final brandColors = theme.extension<BrandColors>()!;
     return BottomSheetWidget(
       titleString: getTitle(message),
       body: Card(
@@ -44,10 +40,13 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('FROM', style: style),
+                    Text(
+                      'FROM',
+                      style: theme.textTheme.labelMedium,
+                    ),
                     Text(
                       message.peerId.name,
-                      style: styleSourceSansPro616,
+                      style: theme.textTheme.bodyMedium,
                     ),
                   ],
                 ),
@@ -57,10 +56,13 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('KEY', style: style),
+                    Text(
+                      'KEY',
+                      style: theme.textTheme.labelMedium,
+                    ),
                     Text(
                       message.peerId.toHexShort(),
-                      style: styleSourceSansPro616,
+                      style: theme.textTheme.bodyMedium,
                     ),
                   ],
                 ),
@@ -71,10 +73,13 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('VAULT', style: style),
+                      Text(
+                        'VAULT',
+                        style: theme.textTheme.labelMedium,
+                      ),
                       Text(
                         message.vaultId.name,
-                        style: styleSourceSansPro616,
+                        style: theme.textTheme.bodyMedium,
                       ),
                     ],
                   ),
@@ -85,10 +90,13 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('SHARD', style: style),
+                      Text(
+                        'SHARD',
+                        style: theme.textTheme.labelMedium,
+                      ),
                       Text(
                         message.secretShard.id.name,
-                        style: styleSourceSansPro616,
+                        style: theme.textTheme.bodyMedium,
                       ),
                     ],
                   ),
@@ -98,11 +106,14 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('DATE', style: style),
+                    Text(
+                      'DATE',
+                      style: theme.textTheme.labelMedium,
+                    ),
                     Text(
                       '${MessageTextMixin.h24ms.format(message.timestamp)} '
                       '  ${MessageTextMixin.yamd.format(message.timestamp)}',
-                      style: styleSourceSansPro616,
+                      style: theme.textTheme.bodyMedium,
                     ),
                   ],
                 ),
@@ -110,25 +121,30 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('STATUS', style: style),
+                  Text(
+                    'STATUS',
+                    style: theme.textTheme.labelMedium,
+                  ),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       color: message.isAccepted
-                          ? clGreen.withAlpha(56)
-                          : clRed.withAlpha(56),
+                          ? brandColors.highlightColor.withAlpha(56)
+                          : brandColors.dangerColor.withAlpha(56),
                     ),
                     padding: const EdgeInsets.all(4),
                     child: Row(
                       children: [
                         Text(
                           message.isAccepted ? ' Approved' : ' Rejected',
-                          style: styleSourceSansPro616,
+                          style: theme.textTheme.bodyMedium,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: DotColored(
-                            color: message.isAccepted ? clGreen : clRed,
+                            color: message.isAccepted
+                                ? brandColors.highlightColor
+                                : brandColors.dangerColor,
                             size: 10,
                           ),
                         ),

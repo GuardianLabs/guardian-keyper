@@ -17,18 +17,19 @@ class MessageListTile extends StatelessWidget with MessageTextMixin {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final brandColors = theme.extension<BrandColors>()!;
     return ListTile(
       trailing: const Icon(Icons.arrow_forward_ios_rounded),
       title: Row(
         children: [
           Text(
             getTitle(message),
-            style: styleSourceSansPro614,
+            style: theme.textTheme.bodyMedium,
           ),
           if (message.isReceived)
-            const Padding(
-              padding: EdgeInsets.only(left: 4),
-              child: DotColored(color: clRed),
+            Padding(
+              padding: const EdgeInsets.only(left: 4),
+              child: DotColored(color: brandColors.dangerColor),
             ),
         ],
       ),
