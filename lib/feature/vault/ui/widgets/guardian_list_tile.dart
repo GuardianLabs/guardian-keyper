@@ -1,6 +1,7 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 class GuardianListTile extends StatelessWidget {
   GuardianListTile({
@@ -103,6 +104,6 @@ class _GuardianPendingIcon extends StatelessWidget {
         ),
         height: 40,
         width: 40,
-        child: const Icon(Icons.hourglass_bottom),
+        child: const IconOf.waiting(),
       );
 }
