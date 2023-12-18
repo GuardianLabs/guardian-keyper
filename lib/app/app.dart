@@ -9,7 +9,7 @@ import 'package:guardian_keyper/data/services/platform_service.dart';
 import 'package:guardian_keyper/data/services/analytics_service.dart';
 import 'package:guardian_keyper/data/services/preferences_service.dart';
 
-import 'package:guardian_keyper/feature/home/home.dart';
+import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 import 'package:guardian_keyper/feature/intro/ui/intro_screen.dart';
 import 'package:guardian_keyper/feature/settings/ui/settings_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_vault_show/vault_show_screen.dart';
@@ -45,7 +45,7 @@ class App extends StatelessWidget {
         home: FutureBuilder(
           future: _init(),
           builder: (context, state) =>
-              _isInited ? const Home() : const Splash(),
+              _isInited ? const HomeScreen() : const Splash(),
         ),
         routes: {
           routeIntro: (_) => const IntroScreen(),

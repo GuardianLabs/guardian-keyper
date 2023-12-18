@@ -9,27 +9,26 @@ import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
 
-import 'package:guardian_keyper/feature/network/data/network_manager.dart';
-import 'package:guardian_keyper/feature/home/ui/screens/home_screen.dart';
-
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
-import 'package:guardian_keyper/feature/auth/ui/dialogs/on_demand_auth_dialog.dart';
+import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
-import 'package:guardian_keyper/feature/vault/ui/_shard_home/shard_home_screen.dart';
-import 'package:guardian_keyper/feature/vault/ui/_vault_home/vault_home_screen.dart';
-
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
-import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
+
 import 'package:guardian_keyper/feature/message/ui/message_home_screen.dart';
+import 'package:guardian_keyper/feature/auth/ui/dialogs/on_demand_auth_dialog.dart';
+import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
 
-import 'ui/widgets/notifications_icon.dart';
+import 'pages/home_page.dart';
+import 'pages/home_vault_page.dart';
+import 'pages/home_shards_page.dart';
+import 'widgets/notifications_icon.dart';
 
-class Home extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   static const _tabs = [
-    HomeScreen(),
-    VaultHomeScreen(),
-    ShardHomeScreen(),
+    HomePage(),
+    HomeVaultsPage(),
+    HomeShardsPage(),
     MessageHomeScreen(),
   ];
 
@@ -80,13 +79,13 @@ class Home extends StatefulWidget {
     ),
   ];
 
-  const Home({super.key});
+  const HomeScreen({super.key});
 
   @override
-  State<Home> createState() => HomeState();
+  State<HomeScreen> createState() => HomeScreenState();
 }
 
-class HomeState extends State<Home> with WidgetsBindingObserver {
+class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int _currentTab = 0;
   bool _canShowMessage = true;
   DateTime _lastExitTryAt = DateTime.timestamp();
@@ -149,7 +148,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
         resizeToAvoidBottomInset: true,
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentTab,
-          items: Home._navBarItems,
+          items: HomeScreen._navBarItems,
           onTap: _gotoPage,
         ),
         body: WillPopScope(
@@ -169,7 +168,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
               padding: paddingH20,
               child: IndexedStack(
                 index: _currentTab,
-                children: Home._tabs,
+                children: HomeScreen._tabs,
               ),
             ),
           ),
@@ -177,10 +176,10 @@ class HomeState extends State<Home> with WidgetsBindingObserver {
       );
 
   void gotoVaults() =>
-      _gotoPage(Home._tabs.indexWhere((e) => e is VaultHomeScreen));
+      _gotoPage(HomeScreen._tabs.indexWhere((e) => e is HomeVaultsPage));
 
   void gotoShards() =>
-      _gotoPage(Home._tabs.indexWhere((e) => e is ShardHomeScreen));
+      _gotoPage(HomeScreen._tabs.indexWhere((e) => e is HomeShardsPage));
 
   void _gotoPage(int page) => setState(() => _currentTab = page);
 }

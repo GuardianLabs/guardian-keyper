@@ -2,7 +2,6 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/utils/utils.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
 
@@ -14,10 +13,10 @@ import '../dialogs/on_show_id_dialog.dart';
 import '../dialogs/on_vault_transfer_dialog.dart';
 import '../widgets/copy_my_key_to_clipboard_button.dart';
 import '../widgets/action_card.dart';
-import 'dev_panel_screen.dart';
+import '../dev_panel_screen.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +28,9 @@ class HomeScreen extends StatelessWidget {
         // Device Name
         StreamBuilder<NetworkManagerState>(
           stream: GetIt.I<NetworkManager>().state,
-          builder: (context, snapshot) => RichText(
-            text: TextSpan(
-              style: stylePoppins620,
-              children: buildTextWithId(
-                name: snapshot.data?.peerId.name ?? selfId.name,
-              ),
-            ),
+          builder: (context, snapshot) => Text(
+            snapshot.data?.peerId.name ?? selfId.name,
+            style: stylePoppins620,
           ),
         ),
         Row(

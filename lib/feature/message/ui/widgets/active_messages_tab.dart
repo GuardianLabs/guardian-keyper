@@ -14,7 +14,7 @@ class ActiveMessagesTab extends StatelessWidget {
     return presenter.activeMessages.isEmpty
         ? Center(
             child: Text(
-              'You don’t have any active messages',
+              'You don’t have any active notifications',
               textAlign: TextAlign.center,
               style: styleSourceSansPro414,
               softWrap: true,

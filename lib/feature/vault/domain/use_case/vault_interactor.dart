@@ -24,12 +24,18 @@ class VaultInteractor
         VaultSssMixin,
         VaultNetworkMixin,
         VaultPlatformMixin {
-  late final flush = _vaultRepository.flush;
-  late final watch = _vaultRepository.watch;
-
   final _vaultRepository = GetIt.I<VaultRepository>();
 
-  Iterable<Vault> get vaults => _vaultRepository.values;
+  Iterable<Vault> get vaults =>
+      _vaultRepository.values.where((e) => e.ownerId == selfId);
+
+  Iterable<Vault> get shards =>
+      _vaultRepository.values.where((e) => e.ownerId != selfId);
+
+  Future<void> flush() => _vaultRepository.flush();
+
+  Stream<VaultRepositoryEvent> watch([String? key]) =>
+      _vaultRepository.watch(key);
 
   Vault? getVaultById(VaultId vaultId) => _vaultRepository.get(vaultId.asKey);
 

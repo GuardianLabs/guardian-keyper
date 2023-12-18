@@ -5,12 +5,15 @@ import 'widgets/resolved_messages_tab.dart';
 import 'widgets/active_messages_tab.dart';
 
 class MessageHomeScreen extends StatelessWidget {
-  static const _tabs = [ActiveMessagesTab(), ResolvedMessagesTab()];
+  static const _tabs = [
+    ActiveMessagesTab(),
+    ResolvedMessagesTab(),
+  ];
+
   const MessageHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        key: const Key('MessageHomePresenter'),
         create: (_) => MessageHomePresenter(),
         child: DefaultTabController(
           length: _tabs.length,
@@ -18,7 +21,7 @@ class MessageHomeScreen extends StatelessWidget {
             primary: false,
             // Header
             appBar: AppBar(
-              title: const Text('Messages'),
+              title: const Text('Notifications'),
               bottom: const TabBar(
                 tabs: [Tab(text: 'Active'), Tab(text: 'Resolved')],
               ),

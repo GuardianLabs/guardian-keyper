@@ -1,23 +1,26 @@
+import 'package:get_it/get_it.dart';
+
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import 'vault_home_presenter.dart';
-import 'widgets/vault_list_tile.dart';
+import 'package:guardian_keyper/feature/home/ui/widgets/vault_list_tile.dart';
+import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 
-class VaultHomeScreen extends StatelessWidget {
-  const VaultHomeScreen({super.key});
+class HomeVaultsPage extends StatelessWidget {
+  const HomeVaultsPage({super.key});
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        key: const Key('VaultHomePresenter'),
-        create: (_) => VaultHomePresenter(),
-        child: Consumer<VaultHomePresenter>(
-          builder: (context, presenter, __) => Column(
+  Widget build(BuildContext context) {
+    final vaultInteractor = GetIt.I<VaultInteractor>();
+    return StreamBuilder<Object>(
+        stream: vaultInteractor.watch(),
+        builder: (context, snapshot) {
+          return Column(
             children: [
               // Header
               const HeaderBar(caption: 'Vaults'),
               // Body
-              if (presenter.myVaults.isEmpty)
+              if (vaultInteractor.vaults.isEmpty)
                 const PageTitle(
                   title: 'Welcome to Vaults',
                   subtitle: 'The Vaults is a place where you can securely keep '
@@ -32,11 +35,11 @@ class VaultHomeScreen extends StatelessWidget {
                       Navigator.pushNamed(context, routeVaultCreate),
                 ),
               ),
-              if (presenter.myVaults.isNotEmpty)
+              if (vaultInteractor.vaults.isNotEmpty)
                 Expanded(
                   child: ListView(
                     children: [
-                      for (final vault in presenter.myVaults.values)
+                      for (final vault in vaultInteractor.vaults)
                         Padding(
                           padding: paddingV6,
                           child: VaultListTile(vault: vault),
@@ -45,7 +48,7 @@ class VaultHomeScreen extends StatelessWidget {
                   ),
                 ),
             ],
-          ),
-        ),
-      );
+          );
+        });
+  }
 }
