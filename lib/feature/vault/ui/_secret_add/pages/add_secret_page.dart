@@ -51,7 +51,10 @@ class AddSecretPage extends StatelessWidget {
                             if (presenter.isUnderstandingShardsHidden) {
                               presenter.nextPage();
                             } else {
-                              OnSecretSharingDialog.show(context).then((r) {
+                              OnSecretSharingDialog.show(
+                                context,
+                                maxSize: presenter.vault.maxSize,
+                              ).then((r) {
                                 if (r ?? false) presenter.nextPage();
                               });
                             }
