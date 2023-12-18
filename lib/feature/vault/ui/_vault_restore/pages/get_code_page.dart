@@ -47,8 +47,9 @@ class _GetCodePageState extends State<GetCodePage> with WidgetsBindingObserver {
           // Body
           const PageTitle(
             title: 'Add a Guardian to restore the Vault',
-            subtitle: 'Ask a Guardian to find your Vault in the app and click '
-                '“Change Vault’s Owner” to show their QR code or share Text  code.',
+            subtitle: 'Ask a Guardian to find your Vault in the app'
+                ' and click “Change Vault’s Owner” to show their QR code'
+                ' or share Text  code.',
           ),
           Padding(
             padding: paddingH20,

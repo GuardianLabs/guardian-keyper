@@ -41,13 +41,13 @@ class SettingsPresenter extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setIsBootstrapEnabled(bool value) async {
-    await _networkManager.setIsBootstrapEnabled(value);
+  Future<void> setBootstrap({required bool isEnabled}) async {
+    await _networkManager.setBootstrap(isEnabled: isEnabled);
     notifyListeners();
   }
 
-  Future<void> setIsBiometricsEnabled(bool value) async {
-    await _authManager.setIsBiometricsEnabled(value);
+  Future<void> setBiometrics({required bool isEnabled}) async {
+    await _authManager.setBiometrics(isEnabled: isEnabled);
     notifyListeners();
   }
 }

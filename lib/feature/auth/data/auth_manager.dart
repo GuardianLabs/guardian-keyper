@@ -58,11 +58,11 @@ class AuthManager {
     );
   }
 
-  Future<void> setIsBiometricsEnabled(bool value) {
-    _isBiometricsEnabled = value;
+  Future<void> setBiometrics({required bool isEnabled}) {
+    _isBiometricsEnabled = isEnabled;
     return _preferencesService.set<bool>(
       PreferencesKeys.keyIsBiometricsEnabled,
-      value,
+      isEnabled,
     );
   }
 }

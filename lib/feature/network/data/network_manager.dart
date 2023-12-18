@@ -105,7 +105,7 @@ class NetworkManager {
       _updateState();
     });
 
-    toggleBootstrap(_isBootstrapEnabled);
+    toggleBootstrap(isActive: _isBootstrapEnabled);
     _status = NetworkManagerStatus.stopped;
     return this;
   }
@@ -152,11 +152,11 @@ class NetworkManager {
     _updateState();
   }
 
-  Future<void> setIsBootstrapEnabled(bool value) async {
-    _isBootstrapEnabled = value;
+  Future<void> setBootstrap({required bool isEnabled}) async {
+    _isBootstrapEnabled = isEnabled;
     await _preferencesService.set<bool>(
       PreferencesKeys.keyIsBootstrapEnabled,
-      value,
+      isEnabled,
     );
     _updateState();
   }

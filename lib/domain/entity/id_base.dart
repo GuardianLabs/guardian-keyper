@@ -42,6 +42,7 @@ abstract class IdBase extends Serializable {
   String toString() => asKey;
 
   String toHexShort([int count = 12]) => asHex.length > count * 2
+      // ignore: lines_longer_than_80_chars
       ? '0x${asHex.substring(0, count)}...${asHex.substring(asHex.length - count)}'
       : '0x$asHex';
 

@@ -78,7 +78,7 @@ class RouterService {
     }
   }
 
-  void toggleBootstrap([bool? isActive]) {
+  void toggleBootstrap({bool? isActive}) {
     if (bsPeerId.isEmpty) return;
     final peerId = p2p.PeerId(value: base64Decode(bsPeerId));
     if (isActive ?? false) {

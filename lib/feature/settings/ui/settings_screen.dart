@@ -68,7 +68,9 @@ class SettingsScreen extends StatelessWidget {
                               'Easier, faster authentication with biometry',
                             ),
                             value: presenter.isBiometricsEnabled,
-                            onChanged: presenter.setIsBiometricsEnabled,
+                            onChanged: (isEnabled) => presenter.setBiometrics(
+                              isEnabled: isEnabled,
+                            ),
                           ),
                         ),
                       // Toggle Bootstrap
@@ -81,7 +83,9 @@ class SettingsScreen extends StatelessWidget {
                             'Connect through Keyper-operated proxy server',
                           ),
                           value: presenter.isBootstrapEnabled,
-                          onChanged: presenter.setIsBootstrapEnabled,
+                          onChanged: (isEnabled) => presenter.setBootstrap(
+                            isEnabled: isEnabled,
+                          ),
                         ),
                       ),
                     ],

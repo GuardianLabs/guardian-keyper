@@ -76,8 +76,9 @@ class ChooseTypePage extends StatelessWidget {
                     Padding(
                       padding: paddingT12,
                       child: Text(
-                        'Trusted appointed fiduciary third parties appointed to '
-                        'act as Guardians on your behalf on a professional basis.',
+                        'Trusted appointed fiduciary third parties appointed'
+                        ' to act as Guardians on your behalf'
+                        ' on a professional basis.',
                         style: styleSourceSansPro414Purple,
                       ),
                     ),

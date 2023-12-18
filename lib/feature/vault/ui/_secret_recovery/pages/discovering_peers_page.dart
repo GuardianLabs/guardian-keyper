@@ -61,6 +61,7 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
                           children: const [
                             TextSpan(
                               text:
+                                  // ignore: lines_longer_than_80_chars
                                   'Ask Guardians to log into the app and approve'
                                   ' a Secret Recovery. Once they approve,'
                                   ' their icon will go ',

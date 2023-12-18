@@ -114,8 +114,9 @@ class _QRCodeShowScreenState extends State<QRCodeShowScreen> {
                   onPressed: () {
                     final box = context.findRenderObject() as RenderBox?;
                     _platformService.share(
-                      'This is a SINGLE-USE authentication token for '
-                      'Guardian Keyper. DO NOT REUSE IT! \n ${arguments.qrCode}',
+                      'This is a SINGLE-USE authentication token'
+                      ' for Guardian Keyper. DO NOT REUSE IT! \n '
+                      '${arguments.qrCode}',
                       subject: 'Guardian Code',
                       sharePositionOrigin:
                           box!.localToGlobal(Offset.zero) & box.size,

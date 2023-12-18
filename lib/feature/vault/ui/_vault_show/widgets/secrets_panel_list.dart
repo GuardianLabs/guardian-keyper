@@ -41,8 +41,8 @@ class SecretsPanelList extends StatelessWidget {
                 children: [
                   Text(
                     'In order to restore this Secret you have to get '
-                    'an approval from at least ${vault.threshold} '
-                    'Guardians of the Vault.',
+                    'an approval from at least ${vault.threshold}'
+                    ' Guardians of the Vault.',
                     style: styleSourceSansPro414Purple,
                   ),
                   Padding(

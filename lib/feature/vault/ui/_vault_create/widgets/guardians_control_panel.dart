@@ -55,7 +55,9 @@ class GuardiansControlPanel extends StatelessWidget {
                 ),
                 Switch.adaptive(
                   value: presenter.isVaultMember,
-                  onChanged: presenter.setVaultMembership,
+                  onChanged: (isMember) => presenter.setVaultMembership(
+                    isMember: isMember,
+                  ),
                 ),
               ],
             ),

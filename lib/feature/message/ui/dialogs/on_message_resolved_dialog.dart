@@ -18,6 +18,9 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
         builder: (_) => OnMessageResolvedDialog(message: message),
       );
 
+  static final _yamd = DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY);
+  static final _h24ms = DateFormat(DateFormat.HOUR24_MINUTE_SECOND);
+
   const OnMessageResolvedDialog({
     required this.message,
     super.key,
@@ -105,8 +108,8 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTitlesMixin {
                     children: [
                       Text('DATE', style: styleSourceSansPro612Purple),
                       Text(
-                        '${DateFormat(DateFormat.HOUR24_MINUTE_SECOND).format(message.timestamp)} '
-                        '  ${DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(message.timestamp)}',
+                        '${_h24ms.format(message.timestamp)} '
+                        '  ${_yamd.format(message.timestamp)}',
                         style: styleSourceSansPro616,
                       ),
                     ],

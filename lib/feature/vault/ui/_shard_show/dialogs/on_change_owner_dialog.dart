@@ -55,6 +55,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
                       qrCode: message.toBase64url(),
                       caption: 'Change owner',
                       subtitle:
+                          // ignore: lines_longer_than_80_chars
                           'This is a one-time for changing the owner of the Vault. '
                           'You can either show it directly as a QR Code '
                           'or Share as a Text via any messenger.',

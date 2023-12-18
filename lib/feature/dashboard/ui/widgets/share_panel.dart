@@ -54,6 +54,7 @@ class SharePanel extends StatelessWidget {
                         qrCode: message.toBase64url(),
                         caption: 'Become a Guardian',
                         subtitle:
+                            // ignore: lines_longer_than_80_chars
                             'This is a one-time for joining a Vault as a Guardian. '
                             'You can either show it directly as a QR Code '
                             'or Share as a Text via any messenger.',

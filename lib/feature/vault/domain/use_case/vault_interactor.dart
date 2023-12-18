@@ -12,7 +12,13 @@ import 'vault_network_mixin.dart';
 import 'vault_sss_mixin.dart';
 
 /// Depends on:
-/// [PreferencesService, VaultRepository, NetworkManager, PlatformService, AnalyticsService]
+/// [
+///   PreferencesService,
+///   AnalyticsService,
+///   PlatformService,
+///   VaultRepository,
+///   NetworkManager,
+/// ]
 class VaultInteractor
     with
         VaultAnalyticsMixin,

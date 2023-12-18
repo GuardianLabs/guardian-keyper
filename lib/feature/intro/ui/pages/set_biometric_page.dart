@@ -41,7 +41,7 @@ class SetBiometricPage extends StatelessWidget {
                     onPressed: () async {
                       await context
                           .read<IntroPresenter>()
-                          .setIsBiometricsEnabled(false);
+                          .setBiometrics(isEnabled: false);
                       if (context.mounted) Navigator.of(context).pop();
                     },
                     child: const Text('No'),
@@ -53,7 +53,7 @@ class SetBiometricPage extends StatelessWidget {
                     onPressed: () async {
                       await context
                           .read<IntroPresenter>()
-                          .setIsBiometricsEnabled(true);
+                          .setBiometrics(isEnabled: true);
                       if (context.mounted) Navigator.of(context).pop();
                     },
                     text: 'Yes',

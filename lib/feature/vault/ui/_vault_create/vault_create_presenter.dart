@@ -39,8 +39,8 @@ class VaultCreatePresenter extends PagePresenterBase {
     notifyListeners();
   }
 
-  void setVaultMembership(bool value) {
-    _isVaultMember = value;
+  void setVaultMembership({required bool isMember}) {
+    _isVaultMember = isMember;
     notifyListeners();
   }
 

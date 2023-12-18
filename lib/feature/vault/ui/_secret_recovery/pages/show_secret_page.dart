@@ -35,8 +35,8 @@ class ShowSecretPage extends StatelessWidget {
             children: [
               const PageTitle(
                 title: 'Here’s your Secret',
-                subtitle:
-                    'Make sure your display is covered if you want to see your Secret.',
+                subtitle: 'Make sure your display is covered'
+                    ' if you want to see your Secret.',
               ),
               // Secret
               Card(

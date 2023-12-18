@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
@@ -80,6 +79,7 @@ class HomeScreenState extends State<HomeScreen> {
           currentPage: _currentPage,
           onTap: _gotoPage,
         ),
+        // ignore: deprecated_member_use
         body: WillPopScope(
           onWillPop: _onWillPop,
           child: SafeArea(
