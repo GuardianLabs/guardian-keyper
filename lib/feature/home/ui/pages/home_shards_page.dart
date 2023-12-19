@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/ui/utils/screen_size.dart';
+
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 
 class HomeShardsPage extends StatelessWidget {
@@ -16,13 +18,15 @@ class HomeShardsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vaultInteractor = GetIt.I<VaultInteractor>();
+    final isTitleVisible =
+        MediaQuery.of(context).size.height >= ScreenMedium.height;
     return StreamBuilder<Object>(
       stream: vaultInteractor.watch(),
       builder: (context, snapshot) {
         return Column(
           children: [
             // Header
-            const HeaderBar(caption: 'Shards'),
+            if (isTitleVisible) const HeaderBar(caption: 'Shards'),
             // Body
             Expanded(
               child: vaultInteractor.shards.isEmpty

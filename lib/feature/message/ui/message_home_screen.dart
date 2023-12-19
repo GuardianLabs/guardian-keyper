@@ -1,4 +1,5 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/ui/utils/screen_size.dart';
 
 import 'message_home_presenter.dart';
 import 'widgets/resolved_messages_tab.dart';
@@ -10,38 +11,51 @@ class MessageHomeScreen extends StatelessWidget {
     ResolvedMessagesTab(),
   ];
 
+  static const PreferredSizeWidget _tabBar = TabBar(
+    dividerHeight: 0,
+    tabs: [
+      Tab(text: 'Active'),
+      Tab(text: 'Resolved'),
+    ],
+  );
+
   const MessageHomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => MessageHomePresenter(),
-        child: DefaultTabController(
-          length: _tabs.length,
-          child: Scaffold(
-            primary: false,
-            // Header
-            appBar: AppBar(
-              title: const Text('Notifications'),
-              bottom: const TabBar(
-                tabs: [Tab(text: 'Active'), Tab(text: 'Resolved')],
-              ),
-            ),
-            // Body
-            body: Column(
-              children: [
-                const Divider(height: 2),
-                Container(
-                  height: 20,
-                  color: Theme.of(context).colorScheme.background,
-                ),
-                const Expanded(child: TabBarView(children: _tabs)),
-                Container(
-                  height: 20,
-                  color: Theme.of(context).colorScheme.background,
-                ),
-              ],
-            ),
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isTitleVisible =
+        MediaQuery.of(context).size.height >= ScreenMedium.height;
+    final filledPading = Container(
+      height: 20,
+      color: theme.colorScheme.background,
+    );
+    return ChangeNotifierProvider(
+      create: (_) => MessageHomePresenter(),
+      child: DefaultTabController(
+        length: _tabs.length,
+        child: ScaffoldSafe(
+          // Header
+          header: isTitleVisible
+              ? AppBar(
+                  bottom: _tabBar,
+                  title: Text(
+                    'Notifications',
+                    style: theme.textTheme.titleMedium,
+                  ),
+                )
+              : _tabBar,
+          // Body
+          child: Column(
+            children: [
+              const Divider(height: 2),
+              filledPading,
+              const Expanded(child: TabBarView(children: _tabs)),
+              filledPading,
+            ],
           ),
         ),
-      );
+      ),
+    );
+  }
 }
