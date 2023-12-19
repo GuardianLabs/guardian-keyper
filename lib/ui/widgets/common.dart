@@ -18,16 +18,31 @@ const styleW600 = TextStyle(fontWeight: FontWeight.w600);
 
 class ScaffoldSafe extends StatelessWidget {
   const ScaffoldSafe({
-    required this.child,
+    this.header,
+    this.children,
+    this.child,
     super.key,
   });
 
-  final Widget child;
+  final Widget? header;
+  final List<Widget>? children;
+  final Widget? child;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: SafeArea(child: child),
+  Widget build(BuildContext context) => SafeArea(
+        child: Scaffold(
+          appBar: header == null
+              ? null
+              : PreferredSize(
+                  preferredSize: const Size.fromHeight(toolbarHeight),
+                  child: header!,
+                ),
+          body: child ??
+              ListView(
+                children: children ?? [],
+              ),
+          resizeToAvoidBottomInset: true,
+        ),
       );
 }
 

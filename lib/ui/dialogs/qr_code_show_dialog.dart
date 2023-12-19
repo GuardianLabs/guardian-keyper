@@ -47,11 +47,6 @@ class QRCodeShowDialog extends StatefulWidget {
 }
 
 class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
-  static const _radius8 = Radius.circular(8);
-
-  late final _colorScheme = Theme.of(context).colorScheme;
-  late final _textTheme = Theme.of(context).textTheme;
-
   @override
   void initState() {
     super.initState();
@@ -66,147 +61,169 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        header: HeaderBar(
+          caption: widget.caption,
+          leftButton: const HeaderBarButton.back(),
+          rightButton: HeaderBarButton.close(
+            onPressed: () => Navigator.of(context).popUntil((r) => r.isFirst),
+          ),
+        ),
+        child: ListView(
           children: [
-            // Header
-            HeaderBar(
-              caption: widget.caption,
-              leftButton: const HeaderBarButton.back(),
-              rightButton: HeaderBarButton.close(
-                onPressed: () =>
-                    Navigator.of(context).popUntil((r) => r.isFirst),
-              ),
-            ),
-            // Body
+            // Text
             PageTitle(
               title: widget.title,
               subtitle: widget.subtitle,
             ),
             // QR Code
-            Container(
-              margin: paddingAll20,
-              padding: paddingAll20,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: _colorScheme.surface,
-              ),
-              width: double.infinity,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxHeight: 400,
-                  maxWidth: 400,
-                ),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    QrImageView(
-                      data: widget.qrCode,
-                      errorCorrectionLevel: QrErrorCorrectLevel.M,
-                      dataModuleStyle: QrDataModuleStyle(
-                        color: _colorScheme.onSurface,
-                        dataModuleShape: QrDataModuleShape.square,
-                      ),
-                      eyeStyle: QrEyeStyle(
-                        color: _colorScheme.onSurface,
-                        eyeShape: QrEyeShape.square,
-                      ),
-                      padding: paddingAll20,
-                    ),
-                    LayoutBuilder(builder: (_, constraints) {
-                      final logoSize = constraints.biggest.shortestSide / 4;
-                      return Container(
-                        constraints: BoxConstraints.expand(
-                          height: logoSize,
-                          width: logoSize,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24),
-                          color: _colorScheme.surface,
-                        ),
-                        padding: const EdgeInsets.all(8),
-                        child: const SvgPicture(
-                          AssetBytesLoader('assets/images/logo.svg.vec'),
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    }),
-                  ],
-                ),
-              ),
-            ),
-            // Share Button
+            _QRCodeContainer(qrCode: widget.qrCode),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Text(
                 'Text Code',
-                style: _textTheme.bodySmall,
+                style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.center,
               ),
             ),
+            // Share Button
             Padding(
-              padding: paddingH20,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: ShapeDecoration(
-                        color: _colorScheme.surface,
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(color: _colorScheme.secondary),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: _radius8,
-                            bottomLeft: _radius8,
-                          ),
-                        ),
-                      ),
-                      height: 48,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          widget.qrCode,
-                          style: _textTheme.bodySmall,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    decoration: ShapeDecoration(
-                      color: _colorScheme.primary,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topRight: _radius8,
-                          bottomRight: _radius8,
-                        ),
-                      ),
-                    ),
-                    height: 48,
-                    child: Builder(
-                      builder: (context) => IconButton(
-                        icon: Transform.flip(
-                          flipX: true,
-                          child: const Icon(Icons.reply, size: 30),
-                        ),
-                        onPressed: () {
-                          final box = context.findRenderObject() as RenderBox?;
-                          GetIt.I<PlatformService>().share(
-                            'This is a SINGLE-USE authentication token'
-                            ' for Guardian Keyper. DO NOT REUSE IT! \n '
-                            '${widget.qrCode}',
-                            subject: 'Guardian Code',
-                            sharePositionOrigin:
-                                box!.localToGlobal(Offset.zero) & box.size,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              padding: paddingH20 + paddingB20,
+              child: _ShareTextCodeButton(qrCode: widget.qrCode),
             ),
           ],
         ),
       );
+}
+
+class _QRCodeContainer extends StatelessWidget {
+  const _QRCodeContainer({required this.qrCode});
+
+  final String qrCode;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      margin: paddingAll20,
+      padding: paddingAll20,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: colorScheme.surface,
+      ),
+      width: double.infinity,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 400,
+          maxWidth: 400,
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            QrImageView(
+              data: qrCode,
+              errorCorrectionLevel: QrErrorCorrectLevel.M,
+              dataModuleStyle: QrDataModuleStyle(
+                color: colorScheme.onSurface,
+                dataModuleShape: QrDataModuleShape.square,
+              ),
+              eyeStyle: QrEyeStyle(
+                color: colorScheme.onSurface,
+                eyeShape: QrEyeShape.square,
+              ),
+              padding: paddingAll20,
+            ),
+            LayoutBuilder(builder: (_, constraints) {
+              final logoSize = constraints.biggest.shortestSide / 4;
+              return Container(
+                constraints: BoxConstraints.expand(
+                  height: logoSize,
+                  width: logoSize,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  color: colorScheme.surface,
+                ),
+                padding: const EdgeInsets.all(8),
+                child: const SvgPicture(
+                  AssetBytesLoader('assets/images/logo.svg.vec'),
+                  fit: BoxFit.cover,
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ShareTextCodeButton extends StatelessWidget {
+  static const _radius8 = Radius.circular(8);
+
+  const _ShareTextCodeButton({required this.qrCode});
+
+  final String qrCode;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            alignment: Alignment.center,
+            decoration: ShapeDecoration(
+              color: colorScheme.surface,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(color: colorScheme.secondary),
+                borderRadius: const BorderRadius.only(
+                  topLeft: _radius8,
+                  bottomLeft: _radius8,
+                ),
+              ),
+            ),
+            height: 48,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                qrCode,
+                style: Theme.of(context).textTheme.bodySmall,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        ),
+        Container(
+          decoration: ShapeDecoration(
+            color: colorScheme.primary,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topRight: _radius8,
+                bottomRight: _radius8,
+              ),
+            ),
+          ),
+          height: 48,
+          child: Builder(
+            builder: (context) => IconButton(
+              icon: Transform.flip(
+                flipX: true,
+                child: const Icon(Icons.reply, size: 30),
+              ),
+              onPressed: () {
+                final box = context.findRenderObject() as RenderBox?;
+                GetIt.I<PlatformService>().share(
+                  'This is a SINGLE-USE authentication token'
+                  ' for Guardian Keyper. DO NOT REUSE IT! \n $qrCode',
+                  subject: 'Guardian Code',
+                  sharePositionOrigin:
+                      box!.localToGlobal(Offset.zero) & box.size,
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

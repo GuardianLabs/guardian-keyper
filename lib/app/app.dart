@@ -24,7 +24,8 @@ class App extends StatelessWidget with ThemeModeMapper {
   Widget build(BuildContext context) => FutureBuilder(
         future: di.init(),
         builder: (context, state) {
-          if (di.isNotInited) return const Splash();
+          // TBD: light color scheme
+          if (di.isNotInited) return const Splash(brightness: Brightness.dark);
           final themeModeHandler = SettingsThemeCase();
           final sentryNavigatorObserver = SentryNavigatorObserver();
           return StreamBuilder<ThemeMode>(
@@ -34,12 +35,10 @@ class App extends StatelessWidget with ThemeModeMapper {
               SystemChrome.setSystemUIOverlayStyle(switch (snapshot.data) {
                 ThemeMode.dark => systemStyleDark,
                 ThemeMode.light => systemStyleLight,
-                // TBD: light color scheme
                 _ =>
                   MediaQuery.of(context).platformBrightness == Brightness.dark
                       ? systemStyleDark
-                      : systemStyleDark,
-                // : systemStyleLight,
+                      : systemStyleLight,
               });
               return MaterialApp(
                 title: 'Guardian Keyper',
