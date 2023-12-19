@@ -18,15 +18,15 @@ const styleW600 = TextStyle(fontWeight: FontWeight.w600);
 
 class ScaffoldSafe extends StatelessWidget {
   const ScaffoldSafe({
-    required this.child,
     this.header,
-    // this.children,
+    this.children,
+    this.child,
     super.key,
   });
 
   final Widget? header;
-  // final List<Widget>? children;
-  final Widget child;
+  final List<Widget>? children;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) => SafeArea(
@@ -37,8 +37,10 @@ class ScaffoldSafe extends StatelessWidget {
                   preferredSize: const Size.fromHeight(toolbarHeight),
                   child: header!,
                 ),
-          // child: child ?? Column(children: children ?? []),
-          body: child,
+          body: child ??
+              ListView(
+                children: children ?? [],
+              ),
           resizeToAvoidBottomInset: true,
         ),
       );
