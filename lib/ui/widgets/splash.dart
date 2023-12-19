@@ -5,10 +5,15 @@ import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 class Splash extends StatefulWidget {
-  const Splash({super.key});
+  const Splash({
+    this.brightness,
+    super.key,
+  });
 
   @override
   State<Splash> createState() => _SplashState();
+
+  final Brightness? brightness;
 }
 
 class _SplashState extends State<Splash> with TickerProviderStateMixin {
@@ -23,7 +28,8 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _isSystemThemeDark =
-        MediaQuery.of(context).platformBrightness == Brightness.dark;
+        (widget.brightness ?? MediaQuery.of(context).platformBrightness) ==
+            Brightness.dark;
     SystemChrome.setSystemUIOverlayStyle(
       _isSystemThemeDark ? systemStyleDark : systemStyleLight,
     );

@@ -10,12 +10,13 @@ enum SettingsRepositoryKeys {
 }
 
 typedef SettingsRepositoryEvent<T extends Object> = ({
-  String key,
+  SettingsRepositoryKeys key,
   T? value,
-  bool isDeleted,
 });
 
 class SettingsRepository {
+  final _events = StreamController<SettingsRepositoryEvent>.broadcast();
+
   late final Box<String> _storage;
 
   Future<SettingsRepository> init() async {
@@ -49,6 +50,7 @@ class SettingsRepository {
       default:
         throw const SettingsValueFormatException();
     }
+    _events.add((key: key, value: value));
     return value;
   }
 
@@ -57,23 +59,27 @@ class SettingsRepository {
     T? value,
   ) async {
     if (value == null) {
-      await _storage.delete(key.name);
+      await delete(key);
+      return value;
     } else {
-      await put(key, value);
+      return put(key, value);
     }
-    return value;
   }
 
-  Future<void> delete(SettingsRepositoryKeys key) => _storage.delete(key.name);
+  Future<void> delete(SettingsRepositoryKeys key) async {
+    await _storage.delete(key.name);
+    _events.add((key: key, value: null));
+  }
 
-  Stream<SettingsRepositoryEvent<T>> watch<T extends Object>([
-    SettingsRepositoryKeys? key,
-  ]) =>
-      _storage.watch(key: key?.name).map<SettingsRepositoryEvent<T>>((e) => (
-            key: e.key as String,
-            value: e.value as T?,
-            isDeleted: e.deleted,
-          ));
+  Stream<SettingsRepositoryEvent<T>> watch<T extends Object>(
+    SettingsRepositoryKeys key,
+  ) =>
+      _events.stream
+          .where((e) => e.key == key)
+          .map<SettingsRepositoryEvent<T>>((e) => (
+                key: key,
+                value: e.value as T?,
+              ));
 
   Future<void> clear() => _storage.clear().then((_) => _storage.compact());
 
