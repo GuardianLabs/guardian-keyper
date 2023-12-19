@@ -39,7 +39,6 @@ class _QRCodeScanDialogState extends State<QRCodeScanDialog> {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.black54,
     ));
-    _sysOverlay = Theme.of(context).colorScheme.background;
   }
 
   @override
@@ -57,6 +56,7 @@ class _QRCodeScanDialogState extends State<QRCodeScanDialog> {
       width: scanAreaSize,
       height: scanAreaSize,
     );
+    _sysOverlay = Theme.of(context).colorScheme.background;
   }
 
   @override
