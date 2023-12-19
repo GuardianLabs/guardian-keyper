@@ -6,10 +6,10 @@ import 'widgets/resolved_messages_tab.dart';
 import 'widgets/active_messages_tab.dart';
 
 class MessageHomeScreen extends StatelessWidget {
-  static const _tabs = [
+  static const _tabBarView = TabBarView(children: [
     ActiveMessagesTab(),
     ResolvedMessagesTab(),
-  ];
+  ]);
 
   static const PreferredSizeWidget _tabBar = TabBar(
     dividerHeight: 0,
@@ -26,33 +26,30 @@ class MessageHomeScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final isTitleVisible =
         MediaQuery.of(context).size.height >= ScreenMedium.height;
-    final filledPading = Container(
-      height: 20,
-      color: theme.colorScheme.background,
-    );
     return ChangeNotifierProvider(
       create: (_) => MessageHomePresenter(),
       child: DefaultTabController(
-        length: _tabs.length,
-        child: ScaffoldSafe(
+        length: _tabBarView.children.length,
+        child: Scaffold(
           // Header
-          header: isTitleVisible
+          appBar: isTitleVisible
               ? AppBar(
                   bottom: _tabBar,
-                  title: Text(
-                    'Notifications',
-                    style: theme.textTheme.titleMedium,
-                  ),
+                  title: const Text('Notifications'),
+                  titleTextStyle: theme.textTheme.titleMedium,
                 )
               : _tabBar,
           // Body
-          child: Column(
-            children: [
-              const Divider(height: 2),
-              filledPading,
-              const Expanded(child: TabBarView(children: _tabs)),
-              filledPading,
-            ],
+          body: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                  top: BorderSide(
+                color: theme.colorScheme.primary,
+                width: 2,
+              )),
+            ),
+            padding: paddingV20,
+            child: _tabBarView,
           ),
         ),
       ),
