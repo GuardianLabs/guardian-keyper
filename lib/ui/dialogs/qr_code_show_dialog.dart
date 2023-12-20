@@ -68,30 +68,24 @@ class _QRCodeShowDialogState extends State<QRCodeShowDialog> {
             onPressed: () => Navigator.of(context).popUntil((r) => r.isFirst),
           ),
         ),
-        child: ListView(
-          children: [
-            // Text
-            PageTitle(
-              title: widget.title,
-              subtitle: widget.subtitle,
-            ),
-            // QR Code
-            _QRCodeContainer(qrCode: widget.qrCode),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                'Text Code',
-                style: Theme.of(context).textTheme.bodySmall,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            // Share Button
-            Padding(
-              padding: paddingH20 + paddingB20,
-              child: _ShareTextCodeButton(qrCode: widget.qrCode),
-            ),
-          ],
-        ),
+        children: [
+          // Text
+          PageTitle(
+            title: widget.title,
+            subtitle: widget.subtitle,
+          ),
+          // QR Code
+          _QRCodeContainer(qrCode: widget.qrCode),
+          const Padding(
+            padding: paddingV20,
+            child: Text('Text Code', textAlign: TextAlign.center),
+          ),
+          // Share Button
+          Padding(
+            padding: paddingB20,
+            child: _ShareTextCodeButton(qrCode: widget.qrCode),
+          ),
+        ],
       );
 }
 
@@ -104,7 +98,6 @@ class _QRCodeContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Container(
-      margin: paddingAll20,
       padding: paddingAll20,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),

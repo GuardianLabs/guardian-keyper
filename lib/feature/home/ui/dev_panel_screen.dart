@@ -14,48 +14,48 @@ class DevPanelScreen extends StatelessWidget {
   const DevPanelScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final networkManager = GetIt.I<NetworkManager>();
-    final items = [
-      ListTile(
-        title: const Text('OnMessageActiveDialog'),
-        subtitle: Text(MessageCode.createVault.name),
-        onTap: () => OnMessageActiveDialog.show(
-          context,
-          message: MessageModel(
-            code: MessageCode.createVault,
-            peerId: networkManager.selfId.copyWith(name: 'Myself'),
-            payload: Vault(
-              ownerId: networkManager.selfId.copyWith(name: 'Himself'),
-              id: VaultId(name: 'Cool Vault'),
-            ),
-          ),
+  Widget build(BuildContext context) => ScaffoldSafe(
+        header: const HeaderBar(
+          caption: 'Developer panel',
+          rightButton: HeaderBarButton.close(),
         ),
-      ),
-      ListTile(
-        title: const Text('show Intro'),
-        onTap: () => Navigator.of(context).pushNamed(routeIntro),
-      ),
-      ListTile(
-        title: const Text('Clear all Settings'),
-        onTap: () async {
-          await GetIt.I<SettingsRepository>().clear();
-          if (context.mounted) {
-            showSnackBar(
-              context,
-              text: 'Settings has been cleared!',
-              isFloating: true,
-            );
-          }
-        },
-      ),
-    ];
-    return ScaffoldSafe(
-        child: ListView.separated(
-      padding: paddingAll20,
-      itemCount: items.length,
-      itemBuilder: (context, index) => items[index],
-      separatorBuilder: (context, index) => const SizedBox(height: 20),
-    ));
-  }
+        isSeparated: true,
+        children: [
+          ListTile(
+            title: const Text('OnMessageActiveDialog'),
+            subtitle: Text(MessageCode.createVault.name),
+            onTap: () {
+              final networkManager = GetIt.I<NetworkManager>();
+              OnMessageActiveDialog.show(
+                context,
+                message: MessageModel(
+                  code: MessageCode.createVault,
+                  peerId: networkManager.selfId.copyWith(name: 'Myself'),
+                  payload: Vault(
+                    id: VaultId(name: 'Cool Vault'),
+                    ownerId: networkManager.selfId.copyWith(name: 'Himself'),
+                  ),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('show Intro'),
+            onTap: () => Navigator.of(context).pushNamed(routeIntro),
+          ),
+          ListTile(
+            title: const Text('Clear all Settings'),
+            onTap: () async {
+              await GetIt.I<SettingsRepository>().clear();
+              if (context.mounted) {
+                showSnackBar(
+                  context,
+                  text: 'Settings has been cleared!',
+                  isFloating: true,
+                );
+              }
+            },
+          ),
+        ],
+      );
 }

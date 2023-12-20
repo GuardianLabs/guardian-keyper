@@ -19,14 +19,16 @@ const styleW600 = TextStyle(fontWeight: FontWeight.w600);
 class ScaffoldSafe extends StatelessWidget {
   const ScaffoldSafe({
     this.header,
-    this.children,
     this.child,
+    this.children,
+    this.isSeparated = false,
     super.key,
   });
 
   final Widget? header;
-  final List<Widget>? children;
   final Widget? child;
+  final List<Widget>? children;
+  final bool isSeparated;
 
   @override
   Widget build(BuildContext context) => SafeArea(
@@ -38,10 +40,22 @@ class ScaffoldSafe extends StatelessWidget {
                   child: header!,
                 ),
           body: child ??
-              ListView(
-                children: children ?? [],
-              ),
+              (children == null
+                  ? null
+                  : (isSeparated
+                      ? ListView.separated(
+                          padding: paddingH20,
+                          itemCount: children!.length,
+                          itemBuilder: (_, i) => children![i],
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 20),
+                        )
+                      : ListView(
+                          padding: paddingH20,
+                          children: children!,
+                        ))),
           resizeToAvoidBottomInset: true,
+          primary: true,
         ),
       );
 }

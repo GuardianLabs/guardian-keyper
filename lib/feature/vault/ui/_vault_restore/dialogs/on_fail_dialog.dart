@@ -14,7 +14,7 @@ class OnFailDialog extends StatelessWidget {
   Widget build(BuildContext context) => BottomSheetWidget(
         icon: const Icon(Icons.cancel, size: 80),
         titleString: 'Ownership Transfer Failed',
-        textString: 'We couldn’t finish scanning the QR Code.\n'
+        textString: 'We couldn’t finish Guardian verification.\n'
             'Please try again.',
         footer: FilledButton(
           onPressed: Navigator.of(context).pop,

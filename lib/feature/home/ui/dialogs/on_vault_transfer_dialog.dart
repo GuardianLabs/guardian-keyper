@@ -23,43 +23,30 @@ class OnVaultTransferDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-        child: Column(
-          children: [
-            // Header
-            const HeaderBar(
-              caption: 'Assist with a Vault',
-              leftButton: HeaderBarButton.back(),
-            ),
-            // Body
-            const Padding(
-              padding: paddingAll20,
-              child: Text(
-                'Select a Vault to assist with its recovery '
-                'or ownership transfer.',
-                textAlign: TextAlign.center,
-              ),
-            ),
-            // Shards List
-            Expanded(
-              child: ListView(
-                padding: paddingH20,
-                children: [
-                  for (final vault in vaults)
-                    Padding(
-                      padding: paddingV6,
-                      child: ListTile(
-                        title: Text(vault.id.name),
-                        subtitle: Text('Owned by ${vault.ownerId.name}'),
-                        onTap: () => OnChangeOwnerDialog.show(
-                          context,
-                          vaultId: vault.id,
-                        ),
-                      ),
-                    )
-                ],
-              ),
-            ),
-          ],
+        header: const HeaderBar(
+          caption: 'Assist with a Vault',
+          leftButton: HeaderBarButton.back(),
         ),
+        children: [
+          const PageTitle(
+            subtitle: 'Select a Vault to assist with its recovery '
+                'or ownership transfer.',
+          ),
+          for (final vault in vaults)
+            Padding(
+              padding: paddingV6,
+              child: ListTile(
+                title: Text(vault.id.name),
+                subtitle: Text('Owned by ${vault.ownerId.name}'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  OnChangeOwnerDialog.show(
+                    context,
+                    vaultId: vault.id,
+                  );
+                },
+              ),
+            )
+        ],
       );
 }
