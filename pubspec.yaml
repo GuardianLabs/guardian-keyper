@@ -31,7 +31,7 @@ dependencies:
   mobile_scanner: ^3.5.5
   path_provider: ^2.1.1
   wakelock_plus: ^1.1.4
-  sodium_libs: ^2.2.0+6
+  sodium_libs: ^2.2.0+7
   url_launcher: ^6.2.1
   local_auth: ^2.1.7
   share_plus: ^7.2.1
@@ -41,7 +41,7 @@ dependencies:
   nsd: ^3.0.0
 
   # Analytics
-  sentry_flutter: ^7.13.2
+  sentry_flutter: ^7.14.0
   amplitude_flutter: ^3.16.1
 
 dependency_overrides:
