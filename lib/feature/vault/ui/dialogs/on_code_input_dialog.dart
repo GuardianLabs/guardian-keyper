@@ -28,32 +28,29 @@ class _OnCodeInputDialogState extends State<OnCodeInputDialog> {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-          child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Header
-          HeaderBar(
-            caption: 'Add via a Text Code',
-            leftButton: const HeaderBarButton.back(),
-            rightButton: HeaderBarButton.close(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-            ),
+        header: HeaderBar(
+          caption: 'Add via a Text Code',
+          leftButton: const HeaderBarButton.back(),
+          rightButton: HeaderBarButton.close(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
           ),
+        ),
+        children: [
           // Input
           Padding(
-            padding: paddingAll20,
+            padding: paddingV20,
             child: TextField(
+              autofocus: true,
               controller: _controller,
               decoration: const InputDecoration(labelText: ' Code '),
             ),
           ),
           // Buttons
           Padding(
-              padding: paddingAll20,
+              padding: paddingV20,
               child: Row(
                 children: [
                   // Paste
@@ -78,11 +75,14 @@ class _OnCodeInputDialogState extends State<OnCodeInputDialog> {
                     child: FilledButton(
                       onPressed: () =>
                           Navigator.of(context).pop(_controller.text),
-                      child: const Text('Add a Guardian'),
+                      child: const Text(
+                        'Add',
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
                 ],
               )),
         ],
-      ));
+      );
 }

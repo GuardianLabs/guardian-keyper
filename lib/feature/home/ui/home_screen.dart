@@ -20,7 +20,7 @@ import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dia
 import 'pages/home_page.dart';
 import 'pages/home_vault_page.dart';
 import 'pages/home_shards_page.dart';
-import 'widgets/notifications_icon.dart';
+import 'widgets/requests_icon.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -99,11 +99,14 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           width: _iconSize,
         ),
       ),
-      // Notifications
+      // Requests
       const BottomNavigationBarItem(
-        label: 'Notifications',
-        icon: NotificationsIcon(isSelected: false, iconSize: _iconSize),
-        activeIcon: NotificationsIcon(
+        label: 'Requests',
+        icon: RequestsIcon(
+          isSelected: false,
+          iconSize: _iconSize,
+        ),
+        activeIcon: RequestsIcon(
           isSelected: true,
           iconSize: _iconSize,
         ),
