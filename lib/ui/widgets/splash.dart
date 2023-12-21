@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:vector_graphics/vector_graphics_compat.dart';
 
 import 'package:guardian_keyper/ui/theme/theme.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 class Splash extends StatefulWidget {
   const Splash({
@@ -42,13 +43,20 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-        alignment: Alignment.center,
-        color:
-            _isSystemThemeDark ? themeDark.canvasColor : themeLight.canvasColor,
-        child: RotationTransition(
-          turns: _controller,
-          child: IconOf.app(size: MediaQuery.of(context).size.width / 3),
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size.width / 3;
+    return Container(
+      alignment: Alignment.center,
+      color:
+          _isSystemThemeDark ? themeDark.canvasColor : themeLight.canvasColor,
+      child: RotationTransition(
+        turns: _controller,
+        child: SvgPicture(
+          const AssetBytesLoader('assets/images/logo.svg.vec'),
+          height: size,
+          width: size,
         ),
-      );
+      ),
+    );
+  }
 }

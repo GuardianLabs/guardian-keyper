@@ -17,7 +17,7 @@ class IconOf extends StatelessWidget {
     super.key,
   });
 
-  const IconOf.app({
+  const IconOf.logo({
     super.key,
     this.size = defaultIconSize,
     this.color,
