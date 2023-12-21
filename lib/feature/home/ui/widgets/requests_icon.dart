@@ -5,8 +5,8 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
-class NotificationsIcon extends StatelessWidget {
-  const NotificationsIcon({
+class RequestsIcon extends StatelessWidget {
+  const RequestsIcon({
     required this.isSelected,
     required this.iconSize,
     super.key,
@@ -25,7 +25,7 @@ class NotificationsIcon extends StatelessWidget {
         final count =
             messageInteractor.messages.where((e) => e.isReceived).length;
         final icon = SvgPicture.asset(
-          'assets/icons/home_notifications.svg',
+          'assets/icons/home_requests.svg',
           colorFilter: ColorFilter.mode(
             isSelected
                 ? theme.bottomNavigationBarTheme.selectedItemColor!

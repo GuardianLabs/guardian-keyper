@@ -26,6 +26,8 @@ class MessageHomePresenter extends ChangeNotifier {
   List<MessageModel> get activeMessages => _activeMessages;
   List<MessageModel> get resolvedMessages => _resolvedMessages;
 
+  bool get isEmpty => _activeMessages.isEmpty && _resolvedMessages.isEmpty;
+
   // Private
   final _activeMessages = <MessageModel>[];
   final _resolvedMessages = <MessageModel>[];
