@@ -76,7 +76,7 @@ class _OnCodeInputDialogState extends State<OnCodeInputDialog> {
                       onPressed: () =>
                           Navigator.of(context).pop(_controller.text),
                       child: const Text(
-                        'Add a Guardian',
+                        'Add',
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
