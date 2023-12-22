@@ -6,8 +6,6 @@ import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart
 import 'message_home_presenter.dart';
 import 'widgets/message_list_tile.dart';
 import 'dialogs/on_message_archivate_dialog.dart';
-// import 'widgets/resolved_messages_tab.dart';
-// import 'widgets/active_messages_tab.dart';
 
 class MessageHomeScreen extends StatelessWidget {
   const MessageHomeScreen({super.key});
@@ -23,6 +21,7 @@ class MessageHomeScreen extends StatelessWidget {
         final presenter = context.watch<MessageHomePresenter>();
         return ScaffoldSafe(
           isSeparated: true,
+          isSeparatorSmall: true,
           header: isTitleVisible
               ? AppBar(
                   title: const Text('Requests'),

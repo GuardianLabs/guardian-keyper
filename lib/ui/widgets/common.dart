@@ -22,6 +22,7 @@ class ScaffoldSafe extends StatelessWidget {
     this.child,
     this.children,
     this.isSeparated = false,
+    this.isSeparatorSmall = false,
     super.key,
   });
 
@@ -29,6 +30,7 @@ class ScaffoldSafe extends StatelessWidget {
   final Widget? child;
   final List<Widget>? children;
   final bool isSeparated;
+  final bool isSeparatorSmall;
 
   @override
   Widget build(BuildContext context) => SafeArea(
@@ -47,8 +49,9 @@ class ScaffoldSafe extends StatelessWidget {
                           padding: paddingH20,
                           itemCount: children!.length,
                           itemBuilder: (_, i) => children![i],
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(height: 20),
+                          separatorBuilder: (_, __) => isSeparatorSmall
+                              ? const Padding(padding: paddingT12)
+                              : const Padding(padding: paddingT20),
                         )
                       : ListView(
                           padding: paddingH20,

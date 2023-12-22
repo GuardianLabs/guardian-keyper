@@ -44,6 +44,8 @@ final themeDark = themeData.copyWith(
   // AppBar
   appBarTheme: themeData.appBarTheme.copyWith(
     backgroundColor: colorSchemeDark.background,
+    systemOverlayStyle: systemStyleDark,
+    surfaceTintColor: colorSchemeDark.background,
   ),
   // Bottom Navigation Bar
   bottomNavigationBarTheme: themeData.bottomNavigationBarTheme.copyWith(
