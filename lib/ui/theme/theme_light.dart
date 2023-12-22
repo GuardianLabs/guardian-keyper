@@ -22,20 +22,32 @@ const colorSwatchLight = MaterialColor(
   },
 );
 
-final colorSchemeLight = ColorScheme.fromSwatch(
+final colorSchemeLight = ColorScheme.fromSeed(
   brightness: Brightness.light,
-  primarySwatch: colorSwatchLight,
+  seedColor: colorSwatchLight.shade500,
 ).copyWith(
   background: const Color(0xFFF7F7F7),
-  onBackground: Colors.grey,
+  onBackground: const Color(0xFF6A6581),
   primary: colorSwatchLight.shade500,
   onPrimary: Colors.white,
   primaryContainer: colorSwatchLight.shade400,
   onPrimaryContainer: Colors.white,
+  secondary: const Color(0xFF625B71),
+  onSecondary: Colors.white,
+  secondaryContainer: const Color(0xFFE5DFF9),
+  onSecondaryContainer: const Color(0xFF1C192B),
+  tertiary: const Color(0xFFE9E8ED),
+  onTertiary: const Color(0xFF120D23),
+  tertiaryContainer: const Color(0xFFE9E8ED),
+  onTertiaryContainer: const Color(0xFF120D23),
   surface: Colors.white,
   surfaceTint: const Color(0xFFF7F7F7),
   onSurface: const Color(0xFF120D23),
-  onSurfaceVariant: colorSwatchLight.shade500,
+  onSurfaceVariant: const Color(0xFF6A6581),
+  error: const Color(0xFFE63737),
+  onError: Colors.white,
+  errorContainer: const Color(0xFFF6EAEA),
+  onErrorContainer: const Color(0xFFD32C2C),
 );
 
 const colorSchemeExtensionLight = BrandColors(
@@ -53,6 +65,7 @@ final themeLight = themeData.copyWith(
   // AppBar
   appBarTheme: themeData.appBarTheme.copyWith(
     backgroundColor: colorSchemeLight.background,
+    surfaceTintColor: colorSchemeLight.background,
   ),
   // Bottom Navigation Bar
   bottomNavigationBarTheme: themeData.bottomNavigationBarTheme.copyWith(
@@ -65,31 +78,25 @@ final themeLight = themeData.copyWith(
     backgroundColor: colorSchemeLight.background,
   ),
   // Card
-  cardTheme: themeData.cardTheme.copyWith(
-    color: colorSchemeLight.surface,
-  ),
+  // cardTheme: themeData.cardTheme.copyWith(
+  //   color: colorSchemeLight.surface,
+  // ),
   // Divider
-  dividerTheme: themeData.dividerTheme.copyWith(
-    color: colorSchemeLight.primary,
-  ),
+  // dividerTheme: themeData.dividerTheme.copyWith(
+  //   color: colorSchemeLight.primary,
+  // ),
   // Expansion Panel
-  expansionTileTheme: themeData.expansionTileTheme.copyWith(
-    collapsedIconColor: colorSchemeLight.onPrimary,
-    iconColor: colorSchemeLight.onPrimary,
-  ),
+  // expansionTileTheme: themeData.expansionTileTheme.copyWith(
+  //   collapsedIconColor: colorSchemeLight.onPrimary,
+  //   iconColor: colorSchemeLight.onPrimary,
+  // ),
   // Icon
-  iconTheme: IconThemeData(
-    color: colorSchemeLight.onPrimary,
-  ),
+  // iconTheme: IconThemeData(
+  //   color: colorSchemeLight.onPrimary,
+  // ),
   // ListTile
   listTileTheme: themeData.listTileTheme.copyWith(
     tileColor: colorSchemeLight.surface,
-    titleTextStyle: themeData.listTileTheme.titleTextStyle!.copyWith(
-      color: colorSchemeLight.onPrimary,
-    ),
-    subtitleTextStyle: themeData.listTileTheme.subtitleTextStyle!.copyWith(
-      color: colorSchemeLight.onSurface,
-    ),
     iconColor: colorSchemeLight.onSurface,
   ),
   // SnackBar

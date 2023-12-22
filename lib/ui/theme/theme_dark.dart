@@ -32,7 +32,6 @@ final colorSchemeDark = ColorScheme.fromSeed(
   surface: const Color(0xFF24035F),
   onSurface: const Color(0xFFE6DEF8),
   onSurfaceVariant: const Color(0xFFE6DEF8),
-  // onSurfaceVariant: const Color(0xFFA066F5),
 );
 
 final themeDark = themeData.copyWith(
@@ -44,8 +43,8 @@ final themeDark = themeData.copyWith(
   // AppBar
   appBarTheme: themeData.appBarTheme.copyWith(
     backgroundColor: colorSchemeDark.background,
-    systemOverlayStyle: systemStyleDark,
     surfaceTintColor: colorSchemeDark.background,
+    systemOverlayStyle: systemStyleDark,
   ),
   // Bottom Navigation Bar
   bottomNavigationBarTheme: themeData.bottomNavigationBarTheme.copyWith(
