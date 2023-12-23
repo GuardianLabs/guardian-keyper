@@ -10,6 +10,8 @@ import 'vault_platform_mixin.dart';
 import 'vault_network_mixin.dart';
 import 'vault_sss_mixin.dart';
 
+export 'package:get_it/get_it.dart';
+
 /// Depends on:
 /// [
 ///   PreferencesService,

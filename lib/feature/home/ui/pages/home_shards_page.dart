@@ -1,4 +1,3 @@
-import 'package:get_it/get_it.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:guardian_keyper/app/routes.dart';
