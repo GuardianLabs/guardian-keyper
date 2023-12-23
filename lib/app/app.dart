@@ -29,7 +29,9 @@ class App extends StatelessWidget with ThemeModeMapper {
           final themeModeHandler = SettingsThemeCase();
           final sentryNavigatorObserver = SentryNavigatorObserver();
           return StreamBuilder<ThemeMode>(
-            initialData: mapBoolToThemeMode(themeModeHandler.isDarkMode),
+            // TBD: light color scheme
+            // initialData: mapBoolToThemeMode(themeModeHandler.isDarkMode),
+            initialData: ThemeMode.dark,
             stream: themeModeHandler.events.map<ThemeMode>(mapBoolToThemeMode),
             builder: (context, snapshot) {
               SystemChrome.setSystemUIOverlayStyle(switch (snapshot.data) {
