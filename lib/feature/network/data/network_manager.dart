@@ -10,6 +10,8 @@ import 'network_service.dart';
 import 'mdns_service.dart';
 import 'router_service.dart';
 
+export 'package:get_it/get_it.dart';
+
 enum NetworkManagerStatus { uninited, stopped, started, pending }
 
 typedef NetworkManagerState = ({
@@ -144,6 +146,7 @@ class NetworkManager {
   }
 
   Future<void> setDeviceName(String value) async {
+    if (_selfId.name == value) return;
     _selfId = _selfId.copyWith(name: value);
     await _preferencesService.set<String>(
       PreferencesKeys.keyDeviceName,
@@ -153,6 +156,7 @@ class NetworkManager {
   }
 
   Future<void> setBootstrap({required bool isEnabled}) async {
+    if (_isBootstrapEnabled == isEnabled) return;
     _isBootstrapEnabled = isEnabled;
     await _preferencesService.set<bool>(
       PreferencesKeys.keyIsBootstrapEnabled,
