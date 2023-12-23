@@ -45,6 +45,7 @@ class _OnCodeInputDialogState extends State<OnCodeInputDialog> {
             child: TextField(
               autofocus: true,
               controller: _controller,
+              enableInteractiveSelection: false,
               decoration: const InputDecoration(labelText: ' Code '),
             ),
           ),
@@ -75,10 +76,7 @@ class _OnCodeInputDialogState extends State<OnCodeInputDialog> {
                     child: FilledButton(
                       onPressed: () =>
                           Navigator.of(context).pop(_controller.text),
-                      child: const Text(
-                        'Add',
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      child: const Text('Add'),
                     ),
                   ),
                 ],
