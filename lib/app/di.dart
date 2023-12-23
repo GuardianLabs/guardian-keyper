@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 import 'package:hive/hive.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/data/services/platform_service.dart';
 import 'package:guardian_keyper/data/services/analytics_service.dart';

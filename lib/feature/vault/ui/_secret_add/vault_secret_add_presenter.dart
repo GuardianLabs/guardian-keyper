@@ -1,5 +1,3 @@
-import 'package:get_it/get_it.dart';
-
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 

@@ -40,6 +40,8 @@ final themeData = ThemeData(
   // AppBar
   appBarTheme: const AppBarTheme(
     centerTitle: true,
+    elevation: 0,
+    shadowColor: Colors.transparent,
     toolbarHeight: toolbarHeight,
   ),
   // Bottom Navigation Bar

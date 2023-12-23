@@ -1,5 +1,3 @@
-import 'package:get_it/get_it.dart';
-
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
