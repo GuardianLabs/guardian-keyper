@@ -1,4 +1,3 @@
-import 'package:get_it/get_it.dart';
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
@@ -12,7 +11,7 @@ class OnAskAuthDialog {
     required VoidCallback onUnlocked,
   }) async {
     final authManager = GetIt.I<AuthManager>();
-    final void Function()? authBio = await authManager.getUseBiometrics()
+    final void Function()? authBio = authManager.useBiometrics
         ? () async {
             if (await authManager.localAuthenticate()) {
               if (context.mounted) Navigator.of(context).pop();

@@ -1,21 +1,23 @@
 import 'dart:async';
+
 import 'package:get_it/get_it.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/data/services/preferences_service.dart';
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 
-import 'network_service.dart';
-import 'mdns_service.dart';
-import 'router_service.dart';
+import 'package:guardian_keyper/feature/network/data/mdns_service.dart';
+import 'package:guardian_keyper/feature/network/data/router_service.dart';
+import 'package:guardian_keyper/feature/network/data/network_service.dart';
+import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
 
 export 'package:get_it/get_it.dart';
 
 enum NetworkManagerStatus { uninited, stopped, started, pending }
 
 typedef NetworkManagerState = ({
-  PeerId peerId,
+  String deviceName,
   bool hasWiFi,
   bool hasConnectivity,
   bool isBootstrapEnabled,
@@ -23,7 +25,7 @@ typedef NetworkManagerState = ({
 });
 
 /// Depends on [PreferencesService]
-class NetworkManager {
+class NetworkManager with WidgetsBindingObserver {
   NetworkManager({
     MdnsService? mdnsService,
     RouterService? routerService,
@@ -64,6 +66,21 @@ class NetworkManager {
   bool get isBootstrapEnabled => _isBootstrapEnabled;
 
   Stream<NetworkManagerState> get state => _stateStreamController.stream;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    switch (state) {
+      case AppLifecycleState.resumed:
+        start();
+
+      case AppLifecycleState.paused:
+        stop();
+
+      case _:
+    }
+  }
 
   Future<NetworkManager> init() async {
     if (_status != NetworkManagerStatus.uninited) throw Exception('Init once!');
@@ -109,7 +126,14 @@ class NetworkManager {
 
     toggleBootstrap(isActive: _isBootstrapEnabled);
     _status = NetworkManagerStatus.stopped;
+    WidgetsBinding.instance.addObserver(this);
     return this;
+  }
+
+  Future<void> dispose() async {
+    WidgetsBinding.instance.removeObserver(this);
+    await stop();
+    await _stateStreamController.close();
   }
 
   Future<void> start() async {
@@ -155,7 +179,7 @@ class NetworkManager {
     _updateState();
   }
 
-  Future<void> setBootstrap({required bool isEnabled}) async {
+  Future<void> setIsBootstrapEnabled(bool isEnabled) async {
     if (_isBootstrapEnabled == isEnabled) return;
     _isBootstrapEnabled = isEnabled;
     await _preferencesService.set<bool>(
@@ -167,7 +191,7 @@ class NetworkManager {
 
   void _updateState() => _stateStreamController.add((
         status: _status,
-        peerId: _selfId,
+        deviceName: _selfId.name,
         hasWiFi: _networkService.hasWiFi,
         isBootstrapEnabled: _isBootstrapEnabled,
         hasConnectivity: _networkService.hasConnectivity,

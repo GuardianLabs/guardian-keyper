@@ -8,21 +8,12 @@ import 'pages/intros_page.dart';
 export 'package:provider/provider.dart';
 
 class IntroPresenter extends PagePresenterBase {
-  IntroPresenter({required super.pageCount}) {
-    _authManager.getHasBiometrics().then((hasBiometrics) {
-      if (hasBiometrics != _hasBiometrics) {
-        _hasBiometrics = hasBiometrics;
-        notifyListeners();
-      }
-    });
-  }
+  IntroPresenter({required super.pageCount});
 
   final _authManager = GetIt.I<AuthManager>();
   final _networkManager = GetIt.I<NetworkManager>();
 
   late String deviceName = _networkManager.selfId.name;
-
-  bool _hasBiometrics = false;
 
   int _introStep = 0;
 
@@ -30,7 +21,7 @@ class IntroPresenter extends PagePresenterBase {
 
   bool get canSaveName => deviceName.length >= minNameLength;
 
-  bool get hasBiometrics => _hasBiometrics;
+  bool get hasBiometrics => _authManager.hasBiometrics;
 
   void nextSlide() {
     if (_introStep == IntrosPage.slides.length - 1) {
@@ -54,7 +45,7 @@ class IntroPresenter extends PagePresenterBase {
   }
 
   Future<void> setBiometrics({required bool isEnabled}) async {
-    await _authManager.setBiometrics(isEnabled: isEnabled);
+    await _authManager.setIsBiometricsEnabled(isEnabled);
     notifyListeners();
   }
 }

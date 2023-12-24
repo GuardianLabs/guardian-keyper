@@ -1,8 +1,8 @@
-import 'package:get_it/get_it.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/theme/brand_colors.dart';
+
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
 class RequestsIcon extends StatelessWidget {

@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:hive/hive.dart';
+import 'package:flutter/widgets.dart';
+
+export 'package:get_it/get_it.dart';
 
 enum SettingsRepositoryKeys {
   keyIsDarkModeOn,
@@ -14,14 +17,29 @@ typedef SettingsRepositoryEvent<T extends Object> = ({
   T? value,
 });
 
-class SettingsRepository {
+class SettingsRepository with WidgetsBindingObserver {
   final _events = StreamController<SettingsRepositoryEvent>.broadcast();
 
   late final Box<String> _storage;
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.paused:
+        _storage.flush();
+      case _:
+    }
+  }
+
   Future<SettingsRepository> init() async {
     _storage = await Hive.openBox<String>('settings');
+    WidgetsBinding.instance.addObserver(this);
     return this;
+  }
+
+  Future<void> dispose() async {
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   T? get<T extends Object>(

@@ -7,8 +7,8 @@ import '../dialogs/on_message_resolved_dialog.dart';
 import '../dialogs/on_message_active_dialog.dart';
 import '../dialogs/message_text_mixin.dart';
 
-class MessageListTile extends StatelessWidget with MessageTextMixin {
-  const MessageListTile({
+class RequestListTile extends StatelessWidget with MessageTextMixin {
+  const RequestListTile({
     required this.message,
     super.key,
   });
@@ -18,7 +18,7 @@ class MessageListTile extends StatelessWidget with MessageTextMixin {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final brandColors = theme.extension<BrandColors>()!;
+    final brandColors = theme.extension<BrandColors>();
     return ListTile(
       title: Row(
         children: [
@@ -28,7 +28,7 @@ class MessageListTile extends StatelessWidget with MessageTextMixin {
               padding: const EdgeInsets.only(left: 4),
               child: Container(
                 decoration: BoxDecoration(
-                  color: brandColors.dangerColor,
+                  color: brandColors?.dangerColor,
                   shape: BoxShape.circle,
                 ),
                 height: 8,

@@ -1,7 +1,10 @@
 import 'package:hive/hive.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:guardian_keyper/data/services/preferences_service.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+
+export 'package:get_it/get_it.dart';
 
 export 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
@@ -12,12 +15,20 @@ typedef VaultRepositoryEvent = ({
 });
 
 /// Depends on [PreferencesService]
-class VaultRepository {
-  late final flush = _storage.flush;
-
+class VaultRepository with WidgetsBindingObserver {
   late final Box<Vault> _storage;
 
   Iterable<Vault> get values => _storage.values;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.paused:
+        _storage.flush();
+      case _:
+    }
+  }
 
   Future<VaultRepository> init({required HiveCipher encryptionCipher}) async {
     Hive.registerAdapter<Vault>(VaultModelAdapter());
@@ -25,7 +36,12 @@ class VaultRepository {
       'vaults',
       encryptionCipher: encryptionCipher,
     );
+    WidgetsBinding.instance.addObserver(this);
     return this;
+  }
+
+  Future<void> dispose() async {
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   Vault? get(String key) => _storage.get(key);

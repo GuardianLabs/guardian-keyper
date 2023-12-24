@@ -1,10 +1,8 @@
-import 'package:get_it/get_it.dart';
-
 import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 
-import '../../data/vault_repository.dart';
-import '../entity/secret_id.dart';
-import '../entity/vault_id.dart';
 import 'vault_analytics_mixin.dart';
 import 'vault_platform_mixin.dart';
 import 'vault_network_mixin.dart';
@@ -33,8 +31,6 @@ class VaultInteractor
 
   Iterable<Vault> get shards =>
       _vaultRepository.values.where((e) => e.ownerId != selfId);
-
-  Future<void> flush() => _vaultRepository.flush();
 
   Stream<VaultRepositoryEvent> watch([String? key]) =>
       _vaultRepository.watch(key);

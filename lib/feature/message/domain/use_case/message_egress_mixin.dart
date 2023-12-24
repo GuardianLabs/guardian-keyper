@@ -1,13 +1,22 @@
-import 'package:guardian_keyper/feature/network/data/network_manager.dart';
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
+import 'package:guardian_keyper/feature/network/data/network_manager.dart';
+import 'package:guardian_keyper/feature/message/data/message_repository.dart';
 
-abstract mixin class MessageEgressMixin {
+import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+
+mixin class MessageEgressMixin {
   final _networkManager = GetIt.I<NetworkManager>();
   final _vaultRepository = GetIt.I<VaultRepository>();
+  final _messageRepository = GetIt.I<MessageRepository>();
 
-  Future<void> archivateMessage(MessageModel message);
+  Future<void> archivateMessage(MessageModel message) async {
+    await _messageRepository.delete(message.aKey);
+    await _messageRepository.put(
+      message.timestamp.millisecondsSinceEpoch.toString(),
+      message,
+    );
+  }
 
   Future<void> sendRespone(MessageModel message) => switch (message.code) {
         MessageCode.createVault => _sendCreateVaultResponse(message),
