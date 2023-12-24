@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:guardian_keyper/data/services/preferences_service.dart';
 
@@ -10,10 +11,11 @@ export 'package:get_it/get_it.dart';
 
 typedef AuthManagerState = ({
   bool isBiometricsEnabled,
+  bool hasBiometrics,
 });
 
 /// Depends on [PreferencesService]
-class AuthManager {
+class AuthManager with WidgetsBindingObserver {
   AuthManager({
     AuthService? authService,
     PreferencesService? prefService,
@@ -40,28 +42,38 @@ class AuthManager {
 
   bool get isBiometricsEnabled => _isBiometricsEnabled;
 
+  bool get useBiometrics => hasBiometrics && isBiometricsEnabled;
+
   Stream<AuthManagerState> get state => _stateStreamController.stream;
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _authService.getHasBiometrics().then((v) => _hasBiometrics = v);
+      case AppLifecycleState.paused:
+      case _:
+    }
+    _updateState();
+  }
+
   Future<AuthManager> init() async {
-    _hasBiometrics = await getHasBiometrics();
+    _hasBiometrics = await _authService.getHasBiometrics();
     _isBiometricsEnabled = await _preferencesService
             .get<bool>(PreferencesKeys.keyIsBiometricsEnabled) ??
         true;
     _passCode =
         await _preferencesService.get<String>(PreferencesKeys.keyPassCode) ??
             '';
+    WidgetsBinding.instance.addObserver(this);
     return this;
   }
 
   Future<void> dispose() async {
+    WidgetsBinding.instance.removeObserver(this);
     await _stateStreamController.close();
   }
-
-  Future<bool> getHasBiometrics() async =>
-      _hasBiometrics = await _authService.getHasBiometrics();
-
-  Future<bool> getUseBiometrics() async =>
-      await getHasBiometrics() && isBiometricsEnabled;
 
   Future<bool> localAuthenticate({
     bool biometricOnly = true,
@@ -94,6 +106,8 @@ class AuthManager {
     );
   }
 
-  void _updateState() =>
-      _stateStreamController.add((isBiometricsEnabled: _isBiometricsEnabled));
+  void _updateState() => _stateStreamController.add((
+        isBiometricsEnabled: _isBiometricsEnabled,
+        hasBiometrics: _hasBiometrics,
+      ));
 }

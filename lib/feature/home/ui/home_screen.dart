@@ -9,8 +9,6 @@ import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/message/data/message_repository.dart';
-
-import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
 import 'package:guardian_keyper/feature/vault/ui/widgets/shards_list.dart';
@@ -29,7 +27,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => HomeScreenState();
 }
 
-class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+class HomeScreenState extends State<HomeScreen> {
   static const _headers = [
     null,
     HeaderBar(caption: 'Vaults'),
@@ -47,7 +45,6 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   final _tabsBucket = PageStorageBucket();
   final _authManager = GetIt.I<AuthManager>();
   final _networkManager = GetIt.I<NetworkManager>();
-  final _vaultInteractor = GetIt.I<VaultInteractor>();
   final _messageInteractor = GetIt.I<MessageInteractor>();
 
   late final _navBarItems = buildNavbarItems(context);
@@ -64,32 +61,13 @@ class HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _requestsStream = _messageInteractor.watch().listen(_onRequest);
     Future.microtask(_onFirstStart);
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    switch (state) {
-      case AppLifecycleState.resumed:
-        _networkManager.start();
-
-      case AppLifecycleState.paused:
-        _networkManager.stop();
-        _vaultInteractor.flush();
-        _messageInteractor.flush();
-
-      case _:
-    }
-  }
-
-  @override
-  void dispose() {
-    _requestsStream.cancel();
-    WidgetsBinding.instance.removeObserver(this);
+  Future<void> dispose() async {
+    await _requestsStream.cancel();
     super.dispose();
   }
 

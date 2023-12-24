@@ -33,8 +33,14 @@ class DI {
     GetIt.I.registerSingleton<AnalyticsService>(await AnalyticsService.init());
 
     // Managers
-    GetIt.I.registerSingleton<AuthManager>(await AuthManager().init());
-    GetIt.I.registerSingleton<NetworkManager>(await NetworkManager().init());
+    GetIt.I.registerSingleton<AuthManager>(
+      await AuthManager().init(),
+      dispose: (s) => s.dispose(),
+    );
+    GetIt.I.registerSingleton<NetworkManager>(
+      await NetworkManager().init(),
+      dispose: (s) => s.dispose(),
+    );
 
     // Repositories
     final encryptionCipher = HiveAesCipher(
@@ -43,24 +49,29 @@ class DI {
     Hive.init(preferences.pathDataDir);
     GetIt.I.registerSingleton<SettingsRepository>(
       await SettingsRepository().init(),
+      dispose: (s) => s.dispose(),
     );
     GetIt.I.registerSingleton<VaultRepository>(
       await VaultRepository().init(
         encryptionCipher: encryptionCipher,
       ),
+      dispose: (s) => s.dispose(),
     );
     GetIt.I.registerSingleton<MessageRepository>(
       await MessageRepository().init(
         encryptionCipher: encryptionCipher,
       ),
+      dispose: (s) => s.dispose(),
     );
 
     // Interactors
     GetIt.I.registerSingleton<MessageInteractor>(
       MessageInteractor(),
-      dispose: (s) => s.dispose,
+      dispose: (s) => s.dispose(),
     );
-    GetIt.I.registerSingleton<VaultInteractor>(VaultInteractor());
+    GetIt.I.registerSingleton<VaultInteractor>(
+      VaultInteractor(),
+    );
 
     _isInited = true;
   }

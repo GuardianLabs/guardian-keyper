@@ -8,7 +8,7 @@ import 'auth_dialog_mixin.dart';
 class OnDemandAuthDialog {
   static Future<void> show(BuildContext context) async {
     final authManager = GetIt.I<AuthManager>();
-    final void Function()? authBio = await authManager.getUseBiometrics()
+    final void Function()? authBio = authManager.useBiometrics
         ? () async {
             if (await authManager.localAuthenticate()) {
               if (context.mounted) Navigator.of(context).pop();
