@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'common.dart';
 
 class ActionCard extends StatelessWidget {
   const ActionCard({

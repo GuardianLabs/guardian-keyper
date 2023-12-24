@@ -2,11 +2,13 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
-
-import '../../data/message_repository.dart';
-import '../entity/message_model.dart';
+import 'package:guardian_keyper/feature/message/data/message_repository.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 mixin class MessageIngressMixin {
+  final _vaultRepository = GetIt.I<VaultRepository>();
+  final _messageRepository = GetIt.I<MessageRepository>();
+
   void onMessage(MessageModel message) {
     final ticket = _messageRepository.get(message.aKey);
     if (kDebugMode) print('$message\n$ticket');
@@ -61,8 +63,4 @@ mixin class MessageIngressMixin {
       message.copyWith(status: MessageStatus.received),
     );
   }
-
-  // Private
-  final _vaultRepository = GetIt.I<VaultRepository>();
-  final _messageRepository = GetIt.I<MessageRepository>();
 }

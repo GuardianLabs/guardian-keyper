@@ -56,7 +56,10 @@ class DI {
     );
 
     // Interactors
-    GetIt.I.registerSingleton<MessageInteractor>(MessageInteractor());
+    GetIt.I.registerSingleton<MessageInteractor>(
+      MessageInteractor(),
+      dispose: (s) => s.dispose,
+    );
     GetIt.I.registerSingleton<VaultInteractor>(VaultInteractor());
 
     _isInited = true;

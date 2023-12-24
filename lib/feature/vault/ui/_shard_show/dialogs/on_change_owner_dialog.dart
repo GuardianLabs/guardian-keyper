@@ -1,5 +1,3 @@
-import 'package:get_it/get_it.dart';
-
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';

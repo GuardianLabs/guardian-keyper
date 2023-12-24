@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
