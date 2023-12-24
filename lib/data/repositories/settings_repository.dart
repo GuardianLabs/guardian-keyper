@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:hive/hive.dart';
 
+export 'package:get_it/get_it.dart';
+
 enum SettingsRepositoryKeys {
   keyIsDarkModeOn,
   keyIsUnderstandingShardsHidden,

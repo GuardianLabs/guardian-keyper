@@ -3,95 +3,77 @@ import 'package:flutter/foundation.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
-import 'package:guardian_keyper/feature/auth/ui/dialogs/on_change_pass_code_dialog.dart';
+import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
+import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 
-import 'settings_presenter.dart';
-import 'dialogs/on_set_device_name_dialog.dart';
+import 'package:guardian_keyper/feature/settings/ui/widgets/theme_mode_switcher.dart';
+import 'package:guardian_keyper/feature/auth/ui/dialogs/on_change_pass_code_dialog.dart';
+import 'package:guardian_keyper/feature/settings/ui/dialogs/on_set_device_name_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => SettingsPresenter(),
-        child: ScaffoldSafe(
-          header: const HeaderBar(
-            caption: 'Settings',
-            rightButton: HeaderBarButton.close(),
-          ),
-          child: Consumer<SettingsPresenter>(
-            builder: (context, presenter, __) {
-              final bgColor = Theme.of(context).colorScheme.secondary;
-              final items = <Widget>[
-                // Change Device Name
-                ListTile(
-                  leading: IconOf.user(bgColor: bgColor),
-                  title: const Text('Change Guardian name'),
-                  subtitle: Text(presenter.deviceName),
-                  trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                  onTap: () => OnSetDeviceNameDialog.show(context),
-                ),
-                // Change PassCode
-                ListTile(
-                  leading: IconOf.passcode(bgColor: bgColor),
-                  title: const Text('Passcode'),
-                  subtitle: const Text('Change authentication passcode'),
-                  trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                  onTap: () => OnChangePassCodeDialog.show(context),
-                ),
-                // Toggle Biometrics
-                if (presenter.hasBiometrics)
-                  SwitchListTile.adaptive(
-                    secondary: const Icon(Icons.fingerprint, size: 40),
-                    title: const Text('Biometric login'),
-                    subtitle: const Text(
-                      'Easier, faster authentication with biometry',
-                    ),
-                    value: presenter.isBiometricsEnabled,
-                    onChanged: presenter.setBiometrics,
-                  ),
-                // Toggle Bootstrap
-                SwitchListTile.adaptive(
-                  secondary: IconOf.connection(bgColor: bgColor),
-                  title: const Text('Proxy connection'),
-                  subtitle: const Text(
-                    'Connect through Keyper-operated proxy server',
-                  ),
-                  value: presenter.isBootstrapEnabled,
-                  onChanged: presenter.setBootstrap,
-                ),
-                // Theme Mode
-                if (kDebugMode)
-                  SegmentedButton<ThemeMode>(
-                    segments: const [
-                      ButtonSegment(
-                        label: Text('Light'),
-                        value: ThemeMode.light,
-                      ),
-                      ButtonSegment(
-                        label: Text('System'),
-                        value: ThemeMode.system,
-                      ),
-                      ButtonSegment(
-                        label: Text('Dark'),
-                        value: ThemeMode.dark,
-                      ),
-                    ],
-                    emptySelectionAllowed: false,
-                    multiSelectionEnabled: false,
-                    selected: {presenter.selectedThemeMode},
-                    onSelectionChanged: (themeModeSet) =>
-                        presenter.setThemeMode(themeModeSet.first),
-                  ),
-              ];
-              return ListView.separated(
-                padding: paddingH20,
-                itemCount: items.length,
-                itemBuilder: (_, i) => items[i],
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
-              );
-            },
+  Widget build(BuildContext context) {
+    final authManager = GetIt.I<AuthManager>();
+    final networkManager = GetIt.I<NetworkManager>();
+    final bgColor = Theme.of(context).colorScheme.secondary;
+    return ScaffoldSafe(
+      isSeparated: true,
+      header: const HeaderBar(
+        caption: 'Settings',
+        rightButton: HeaderBarButton.close(),
+      ),
+      children: [
+        // Change Device Name
+        StreamBuilder<String>(
+          stream: networkManager.state.map((e) => e.deviceName),
+          builder: (context, snapshot) => ListTile(
+            leading: IconOf.user(bgColor: bgColor),
+            title: const Text('Change Guardian name'),
+            subtitle: Text(snapshot.data ?? networkManager.selfId.name),
+            trailing: const Icon(Icons.arrow_forward_ios_rounded),
+            onTap: () => OnSetDeviceNameDialog.show(context),
           ),
         ),
-      );
+        // Change PassCode
+        ListTile(
+          leading: IconOf.passcode(bgColor: bgColor),
+          title: const Text('Passcode'),
+          subtitle: const Text('Change authentication passcode'),
+          trailing: const Icon(Icons.arrow_forward_ios_rounded),
+          onTap: () => OnChangePassCodeDialog.show(context),
+        ),
+        // Toggle Biometrics
+        if (authManager.hasBiometrics)
+          StreamBuilder<bool>(
+            stream: authManager.state.map((e) => e.isBiometricsEnabled),
+            builder: (context, snapshot) => SwitchListTile.adaptive(
+              secondary: const Icon(Icons.fingerprint, size: 40),
+              title: const Text('Biometric login'),
+              subtitle: const Text(
+                'Easier, faster authentication with biometry',
+              ),
+              value: snapshot.data ?? authManager.isBiometricsEnabled,
+              onChanged: authManager.setIsBiometricsEnabled,
+            ),
+          ),
+        // Toggle Bootstrap
+        StreamBuilder<bool>(
+          stream: networkManager.state.map((e) => e.isBootstrapEnabled),
+          builder: (context, snapshot) => SwitchListTile.adaptive(
+            secondary: IconOf.connection(bgColor: bgColor),
+            title: const Text('Proxy connection'),
+            subtitle: const Text(
+              'Connect through Keyper-operated proxy server',
+            ),
+            value: snapshot.data ?? networkManager.isBootstrapEnabled,
+            onChanged: networkManager.setIsBootstrapEnabled,
+          ),
+        ),
+        // Theme Mode Switcher
+        if (kDebugMode) const ThemeModeSwitcher(),
+      ],
+    );
+  }
 }

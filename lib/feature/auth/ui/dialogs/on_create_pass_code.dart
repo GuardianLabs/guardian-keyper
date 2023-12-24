@@ -1,4 +1,3 @@
-import 'package:get_it/get_it.dart';
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 
 import 'package:guardian_keyper/consts.dart';

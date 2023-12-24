@@ -54,7 +54,7 @@ class IntroPresenter extends PagePresenterBase {
   }
 
   Future<void> setBiometrics({required bool isEnabled}) async {
-    await _authManager.setBiometrics(isEnabled: isEnabled);
+    await _authManager.setIsBiometricsEnabled(isEnabled);
     notifyListeners();
   }
 }

@@ -23,16 +23,17 @@ class DashboardList extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final brandColors = theme.extension<BrandColors>()!;
-    final selfId = GetIt.I<NetworkManager>().selfId;
     final vaultRepository = GetIt.I<VaultRepository>();
+    final networkManager = GetIt.I<NetworkManager>();
+    final selfId = networkManager.selfId;
     return ListView(
       padding: paddingAll20,
       children: [
         // Device Name
-        StreamBuilder<NetworkManagerState>(
-          stream: GetIt.I<NetworkManager>().state,
+        StreamBuilder<String>(
+          stream: networkManager.state.map((e) => e.deviceName),
           builder: (context, snapshot) => Text(
-            snapshot.data?.peerId.name ?? selfId.name,
+            snapshot.data ?? selfId.name,
             style: theme.textTheme.titleLarge,
           ),
         ),

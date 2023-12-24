@@ -31,6 +31,7 @@ class RequestsList extends StatelessWidget {
                 ),
               )
             : ListView.separated(
+                padding: paddingAll20,
                 itemCount: requests.length,
                 itemBuilder: (context, index) {
                   final request = requests[index];
