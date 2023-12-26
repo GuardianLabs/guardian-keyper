@@ -9,6 +9,8 @@ import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
 
 class DevPanelScreen extends StatelessWidget {
+  static const route = '/dev_panel';
+
   const DevPanelScreen({super.key});
 
   @override

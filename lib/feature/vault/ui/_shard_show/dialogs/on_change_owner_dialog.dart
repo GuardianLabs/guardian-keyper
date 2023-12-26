@@ -1,9 +1,9 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
+import 'package:guardian_keyper/feature/message/ui/dialogs/on_qr_code_show_dialog.dart';
 
 class OnChangeOwnerDialog extends StatelessWidget {
   static Future<void> show(
@@ -42,9 +42,9 @@ class OnChangeOwnerDialog extends StatelessWidget {
                     .createTakeVaultCode(vaultId);
                 if (context.mounted) {
                   Navigator.of(context).pop();
-                  QRCodeShowDialog.show(
+                  OnQRCodeShowDialog.show(
                     context,
-                    qrCode: message.toBase64url(),
+                    message: message,
                     caption: vaultId.name,
                     title: 'Assistance QR',
                     subtitle:

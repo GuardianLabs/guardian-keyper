@@ -3,18 +3,16 @@ import 'package:flutter/foundation.dart';
 import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/action_card.dart';
-import 'package:guardian_keyper/ui/dialogs/qr_code_show_dialog.dart';
 import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
-import 'package:guardian_keyper/feature/dev_panel/dev_panel_screen.dart';
+import 'package:guardian_keyper/feature/home/ui/dialogs/on_show_id_dialog.dart';
+import 'package:guardian_keyper/feature/message/ui/dialogs/on_qr_code_show_dialog.dart';
 import 'package:guardian_keyper/feature/vault/ui/dialogs/on_vault_transfer_dialog.dart';
-
-import '../dialogs/on_show_id_dialog.dart';
-import 'copy_my_key_to_clipboard_button.dart';
+import 'package:guardian_keyper/feature/home/ui/widgets/copy_my_key_to_clipboard_button.dart';
 
 class DashboardList extends StatelessWidget {
   const DashboardList({super.key});
@@ -106,9 +104,9 @@ class DashboardList extends StatelessWidget {
               final message =
                   await GetIt.I<MessageInteractor>().createJoinVaultCode();
               if (context.mounted) {
-                QRCodeShowDialog.show(
+                OnQRCodeShowDialog.show(
                   context,
-                  qrCode: message.toBase64url(),
+                  message: message,
                   caption: 'Become a Guardian',
                   title: 'Guardian QR code',
                   subtitle:
@@ -154,10 +152,7 @@ class DashboardList extends StatelessWidget {
               ),
               title: 'DevPanel',
               subtitle: 'Shortcut to show mocked dialogs and components',
-              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                builder: (_) => const DevPanelScreen(),
-                fullscreenDialog: true,
-              )),
+              onTap: () => Navigator.of(context).pushNamed(routeDevPanel),
             ),
           ),
       ],
