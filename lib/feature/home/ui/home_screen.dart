@@ -40,8 +40,9 @@ class HomeScreenState extends State<HomeScreen> {
   late final _isTitleVisible =
       MediaQuery.of(context).size.height >= ScreenMedium.height;
 
-  int _currentTab = 0;
   DateTime _lastExitTryAt = DateTime.timestamp();
+
+  int _currentTab = 0;
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(

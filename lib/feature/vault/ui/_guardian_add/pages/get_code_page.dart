@@ -1,14 +1,14 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/dialogs/qr_code_scan_dialog.dart';
 
 import 'package:guardian_keyper/feature/vault/ui/dialogs/on_version_low.dart';
 import 'package:guardian_keyper/feature/vault/ui/dialogs/on_version_high.dart';
 import 'package:guardian_keyper/feature/vault/ui/dialogs/on_invalid_dialog.dart';
+import 'package:guardian_keyper/feature/vault/ui/dialogs/qr_code_scan_dialog.dart';
 import 'package:guardian_keyper/feature/vault/ui/dialogs/on_code_input_dialog.dart';
+import 'package:guardian_keyper/feature/vault/ui/_secret_add/dialogs/on_fail_dialog.dart';
+import 'package:guardian_keyper/feature/vault/ui/_guardian_add/dialogs/on_duplicate_dialog.dart';
 
 import '../vault_guardian_add_presenter.dart';
-import '../dialogs/on_duplicate_dialog.dart';
-import '../dialogs/on_fail_dialog.dart';
 
 class GetCodePage extends StatelessWidget {
   const GetCodePage({super.key});
@@ -68,7 +68,10 @@ class GetCodePage extends StatelessWidget {
     } on SetCodeVersionHighException {
       OnVersionHighDialog.show(context);
     } on SetCodeDuplicateException catch (e) {
-      OnDuplicateDialog.show(context, peerName: e.message.peerId.name);
+      OnDuplicateDialog.show(
+        context,
+        peerName: e.message.peerId.name,
+      );
     }
   }
 }

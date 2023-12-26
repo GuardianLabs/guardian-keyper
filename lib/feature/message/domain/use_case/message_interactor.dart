@@ -36,7 +36,8 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
 
   Future<void> pruneMessages() => _messageRepository.prune();
 
-  Stream<MessageRepositoryEvent> watch() => _messageRepository.watch();
+  Stream<MessageRepositoryEvent> watch([String? key]) =>
+      _messageRepository.watch(key);
 
   Future<bool> pingPeer(PeerId peerId) => _networkManager.pingPeer(peerId);
 

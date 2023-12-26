@@ -32,14 +32,35 @@ class _LifecyclerState extends State<Lifecycler>
 
   late final StreamSubscription<MessageRepositoryEvent> _requestsStream;
 
-  bool _canShowMessage = true;
+  bool _canShowNotification = true;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _requestsStream = _messageInteractor.watch().listen(_onRequest);
-    Future.microtask(_onFirstStart);
+    // Listen network requests
+    _requestsStream = _messageInteractor.watch().listen(
+      (e) {
+        if (e.isDeleted) return;
+        if (_canShowNotification && e.message!.isReceived) {
+          _canShowNotification = false;
+          OnMessageActiveDialog.show(
+            context,
+            message: e.message!,
+          ).then((_) => _canShowNotification = true);
+        }
+      },
+    );
+    // Do stuff on start
+    Future.microtask(() async {
+      if (_authManager.passCode.isEmpty) {
+        await Navigator.of(context).pushNamed(routeIntro);
+      } else {
+        unawaited(_messageInteractor.pruneMessages());
+        await OnDemandAuthDialog.show(context);
+      }
+      await _networkManager.start();
+    });
   }
 
   @override
@@ -50,14 +71,14 @@ class _LifecyclerState extends State<Lifecycler>
 
   @override
   void didPushNext() {
-    _canShowMessage = false;
-    if (kDebugMode) print('Can Show Message: $_canShowMessage');
+    _canShowNotification = false;
+    if (kDebugMode) print('Can Show Message: $_canShowNotification');
   }
 
   @override
   void didPopNext() {
-    _canShowMessage = true;
-    if (kDebugMode) print('Can Show Message: $_canShowMessage');
+    _canShowNotification = true;
+    if (kDebugMode) print('Can Show Message: $_canShowNotification');
   }
 
   // @override
@@ -89,29 +110,13 @@ class _LifecyclerState extends State<Lifecycler>
   }
 
   @override
-  Future<void> dispose() async {
+  void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _routeObserver.unsubscribe(this);
-    await _requestsStream.cancel();
+    _requestsStream.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) => const HomeScreen();
-
-  void _onRequest(MessageRepositoryEvent event) {
-    if (!_canShowMessage) return;
-    if (event.isDeleted || event.message!.isNotReceived) return;
-    OnMessageActiveDialog.show(context, message: event.message!);
-  }
-
-  Future<void> _onFirstStart() async {
-    if (_authManager.passCode.isEmpty) {
-      await Navigator.of(context).pushNamed(routeIntro);
-    } else {
-      unawaited(_messageInteractor.pruneMessages());
-      await OnDemandAuthDialog.show(context);
-    }
-    await _networkManager.start();
-  }
 }
