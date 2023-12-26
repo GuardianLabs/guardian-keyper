@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
-import 'package:guardian_keyper/consts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/data/services/platform_service.dart';
 
@@ -17,7 +17,7 @@ class QRCodeShowDialog extends StatefulWidget {
   }) =>
       Navigator.of(context).push(MaterialPageRoute(
         fullscreenDialog: true,
-        settings: _routeSettings,
+        settings: const RouteSettings(name: route),
         builder: (_) => QRCodeShowDialog(
           qrCode: qrCode,
           caption: caption,
@@ -25,8 +25,6 @@ class QRCodeShowDialog extends StatefulWidget {
           subtitle: subtitle,
         ),
       ));
-
-  static const _routeSettings = RouteSettings(name: route);
 
   const QRCodeShowDialog({
     required this.qrCode,

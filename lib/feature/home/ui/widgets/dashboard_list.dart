@@ -10,11 +10,9 @@ import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
-import 'package:guardian_keyper/feature/dev_panel/dev_panel_screen.dart';
+import 'package:guardian_keyper/feature/home/ui/dialogs/on_show_id_dialog.dart';
 import 'package:guardian_keyper/feature/vault/ui/dialogs/on_vault_transfer_dialog.dart';
-
-import '../dialogs/on_show_id_dialog.dart';
-import 'copy_my_key_to_clipboard_button.dart';
+import 'package:guardian_keyper/feature/home/ui/widgets/copy_my_key_to_clipboard_button.dart';
 
 class DashboardList extends StatelessWidget {
   const DashboardList({super.key});
@@ -154,10 +152,7 @@ class DashboardList extends StatelessWidget {
               ),
               title: 'DevPanel',
               subtitle: 'Shortcut to show mocked dialogs and components',
-              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                builder: (_) => const DevPanelScreen(),
-                fullscreenDialog: true,
-              )),
+              onTap: () => Navigator.of(context).pushNamed(routeDevPanel),
             ),
           ),
       ],
