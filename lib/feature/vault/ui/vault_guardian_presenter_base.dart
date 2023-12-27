@@ -4,7 +4,7 @@ import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 
 import 'vault_presenter_base.dart';
 
-abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
+abstract base class VaultGuardianPresenterBase extends VaultPresenterBase {
   VaultGuardianPresenterBase({required super.pageCount});
 
   final _vaultInteractor = GetIt.I<VaultInteractor>();

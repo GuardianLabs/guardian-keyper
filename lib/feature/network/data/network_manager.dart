@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/consts.dart';
@@ -25,7 +24,7 @@ typedef NetworkManagerState = ({
 });
 
 /// Depends on [PreferencesService]
-class NetworkManager with WidgetsBindingObserver {
+class NetworkManager {
   NetworkManager({
     MdnsService? mdnsService,
     RouterService? routerService,
@@ -66,21 +65,6 @@ class NetworkManager with WidgetsBindingObserver {
   bool get isBootstrapEnabled => _isBootstrapEnabled;
 
   Stream<NetworkManagerState> get state => _stateStreamController.stream;
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    switch (state) {
-      case AppLifecycleState.resumed:
-        start();
-
-      case AppLifecycleState.paused:
-        stop();
-
-      case _:
-    }
-  }
 
   Future<NetworkManager> init() async {
     if (_status != NetworkManagerStatus.uninited) throw Exception('Init once!');
@@ -126,12 +110,10 @@ class NetworkManager with WidgetsBindingObserver {
 
     toggleBootstrap(isActive: _isBootstrapEnabled);
     _status = NetworkManagerStatus.stopped;
-    WidgetsBinding.instance.addObserver(this);
     return this;
   }
 
   Future<void> dispose() async {
-    WidgetsBinding.instance.removeObserver(this);
     await stop();
     await _stateStreamController.close();
   }

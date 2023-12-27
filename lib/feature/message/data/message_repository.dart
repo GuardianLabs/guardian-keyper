@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:guardian_keyper/data/services/preferences_service.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
@@ -13,20 +12,10 @@ typedef MessageRepositoryEvent = ({
 });
 
 /// Depends on [PreferencesService]
-class MessageRepository with WidgetsBindingObserver {
+class MessageRepository {
   late final Box<MessageModel> _storage;
 
   Iterable<MessageModel> get values => _storage.values;
-
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-    switch (state) {
-      case AppLifecycleState.paused:
-        await _storage.flush();
-      case _:
-    }
-  }
 
   Future<MessageRepository> init({required HiveCipher encryptionCipher}) async {
     Hive.registerAdapter<MessageModel>(MessageModelAdapter());
@@ -34,12 +23,10 @@ class MessageRepository with WidgetsBindingObserver {
       'messages',
       encryptionCipher: encryptionCipher,
     );
-    WidgetsBinding.instance.addObserver(this);
     return this;
   }
 
   Future<void> dispose() async {
-    WidgetsBinding.instance.removeObserver(this);
     await _storage.close();
   }
 

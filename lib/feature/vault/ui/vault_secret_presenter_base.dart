@@ -8,7 +8,7 @@ import '../domain/entity/secret_id.dart';
 import '../domain/entity/vault_id.dart';
 import 'vault_presenter_base.dart';
 
-abstract class VaultSecretPresenterBase extends VaultPresenterBase {
+abstract base class VaultSecretPresenterBase extends VaultPresenterBase {
   VaultSecretPresenterBase({
     required super.pageCount,
     required this.vaultId,

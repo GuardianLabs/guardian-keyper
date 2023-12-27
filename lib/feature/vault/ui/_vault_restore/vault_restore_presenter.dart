@@ -12,7 +12,7 @@ export 'package:provider/provider.dart';
 
 export '../vault_guardian_presenter_base.dart';
 
-class VaultRestorePresenter extends VaultGuardianPresenterBase {
+final class VaultRestorePresenter extends VaultGuardianPresenterBase {
   VaultRestorePresenter({
     required super.pageCount,
     this.vaultId,

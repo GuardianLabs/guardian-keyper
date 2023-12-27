@@ -7,7 +7,7 @@ import 'package:guardian_keyper/feature/vault/ui/vault_secret_presenter_base.dar
 
 export 'package:provider/provider.dart';
 
-class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
+final class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
   VaultSecretRecoveryPresenter({
     required super.pageCount,
     required super.vaultId,

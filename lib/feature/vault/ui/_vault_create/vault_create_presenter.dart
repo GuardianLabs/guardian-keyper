@@ -6,7 +6,7 @@ import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.d
 
 export 'package:provider/provider.dart';
 
-class VaultCreatePresenter extends PagePresenterBase {
+final class VaultCreatePresenter extends PagePresenterBase {
   VaultCreatePresenter({required super.pageCount}) {
     _vaultInteractor.logStartCreateVault();
   }

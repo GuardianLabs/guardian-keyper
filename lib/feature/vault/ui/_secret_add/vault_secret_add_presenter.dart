@@ -9,7 +9,7 @@ import 'package:guardian_keyper/feature/vault/ui/vault_secret_presenter_base.dar
 
 export 'package:provider/provider.dart';
 
-class VaultSecretAddPresenter extends VaultSecretPresenterBase {
+final class VaultSecretAddPresenter extends VaultSecretPresenterBase {
   VaultSecretAddPresenter({
     required super.pageCount,
     required super.vaultId,

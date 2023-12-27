@@ -7,7 +7,7 @@ import 'pages/intros_page.dart';
 
 export 'package:provider/provider.dart';
 
-class IntroPresenter extends PagePresenterBase {
+final class IntroPresenter extends PagePresenterBase {
   IntroPresenter({required super.pageCount});
 
   final _authManager = GetIt.I<AuthManager>();
@@ -44,7 +44,7 @@ class IntroPresenter extends PagePresenterBase {
     nextPage();
   }
 
-  Future<void> setBiometrics({required bool isEnabled}) async {
+  Future<void> setIsBiometricsEnabled(bool isEnabled) async {
     await _authManager.setIsBiometricsEnabled(isEnabled);
     notifyListeners();
   }
