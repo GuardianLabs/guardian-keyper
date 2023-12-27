@@ -1,11 +1,11 @@
 import 'dart:ui';
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/app/routes.dart';
-import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
+import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
@@ -27,10 +27,11 @@ class _LifecyclerState extends State<Lifecycler>
     with WidgetsBindingObserver, RouteAware {
   final _authManager = GetIt.I<AuthManager>();
   final _networkManager = GetIt.I<NetworkManager>();
-  final _routeObserver = GetIt.I<CurrentRouteObserver>();
   final _messageInteractor = GetIt.I<MessageInteractor>();
 
   late final StreamSubscription<MessageRepositoryEvent> _requestsStream;
+
+  DateTime _lastExitTryAt = DateTime.timestamp();
 
   bool _canShowNotification = true;
 
@@ -66,7 +67,6 @@ class _LifecyclerState extends State<Lifecycler>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
   @override
@@ -100,6 +100,18 @@ class _LifecyclerState extends State<Lifecycler>
   @override
   Future<bool> didPopRoute() {
     if (kDebugMode) print('didPopRoute');
+    // _canShowNotification == true means this route is current
+    if (_canShowNotification) {
+      final now = DateTime.timestamp();
+      if (_lastExitTryAt.isBefore(now.subtract(snackBarDuration))) {
+        _lastExitTryAt = now;
+        showSnackBar(
+          context,
+          text: 'Tap back again to exit',
+        );
+        return Future.value(true);
+      }
+    }
     return super.didPopRoute();
   }
 
@@ -112,7 +124,6 @@ class _LifecyclerState extends State<Lifecycler>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _routeObserver.unsubscribe(this);
     _requestsStream.cancel();
     super.dispose();
   }

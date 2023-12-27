@@ -26,10 +26,13 @@ class VaultSecretAddScreen extends StatelessWidget {
         pageCount: _pages.length,
         vaultId: vaultId,
       ),
-      // ignore: deprecated_member_use
-      child: WillPopScope(
-        onWillPop: () async {
-          return await OnAbortDialog.show(context) ?? false;
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (didPop) return;
+          if (await OnAbortDialog.show(context) ?? false) {
+            if (context.mounted) Navigator.of(context).pop();
+          }
         },
         child: ScaffoldSafe(
           child: Selector<VaultSecretAddPresenter, int>(

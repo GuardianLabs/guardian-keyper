@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/utils/screen_size.dart';
 
@@ -40,8 +37,6 @@ class HomeScreenState extends State<HomeScreen> {
   late final _isTitleVisible =
       MediaQuery.of(context).size.height >= ScreenMedium.height;
 
-  DateTime _lastExitTryAt = DateTime.timestamp();
-
   int _currentTab = 0;
 
   @override
@@ -52,26 +47,9 @@ class HomeScreenState extends State<HomeScreen> {
           items: _navBarItems,
           onTap: (page) => setState(() => _currentTab = page),
         ),
-        // ignore: deprecated_member_use
-        child: WillPopScope(
-          onWillPop: _onWillPop,
-          child: PageStorage(
-            bucket: _tabsBucket,
-            child: _tabs[_currentTab],
-          ),
+        child: PageStorage(
+          bucket: _tabsBucket,
+          child: _tabs[_currentTab],
         ),
       );
-
-  Future<bool> _onWillPop() async {
-    final now = DateTime.timestamp();
-    if (_lastExitTryAt.isAfter(now.subtract(snackBarDuration))) {
-      return true;
-    }
-    _lastExitTryAt = now;
-    showSnackBar(
-      context,
-      text: 'Tap back again to exit',
-    );
-    return false;
-  }
 }
