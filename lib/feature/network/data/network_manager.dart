@@ -168,6 +168,7 @@ class NetworkManager {
       PreferencesKeys.keyIsBootstrapEnabled,
       isEnabled,
     );
+    _routerService.toggleBootstrap(isActive: isEnabled);
     _updateState();
   }
 
