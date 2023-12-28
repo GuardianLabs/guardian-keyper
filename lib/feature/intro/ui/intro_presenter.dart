@@ -1,6 +1,4 @@
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/presenters/page_presenter_base.dart';
-import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 
 import 'pages/intros_page.dart';
@@ -11,15 +9,10 @@ final class IntroPresenter extends PagePresenterBase {
   IntroPresenter({required super.pageCount});
 
   final _authManager = GetIt.I<AuthManager>();
-  final _networkManager = GetIt.I<NetworkManager>();
-
-  late String deviceName = _networkManager.selfId.name;
 
   int _introStep = 0;
 
   int get introStep => _introStep;
-
-  bool get canSaveName => deviceName.length >= minNameLength;
 
   bool get hasBiometrics => _authManager.hasBiometrics;
 
@@ -37,11 +30,6 @@ final class IntroPresenter extends PagePresenterBase {
       _introStep--;
       notifyListeners();
     }
-  }
-
-  Future<void> saveDeviceName() async {
-    await _networkManager.setDeviceName(deviceName);
-    nextPage();
   }
 
   Future<void> setIsBiometricsEnabled(bool isEnabled) async {
