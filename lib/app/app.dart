@@ -6,7 +6,6 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/widgets/splash.dart';
 import 'package:guardian_keyper/ui/utils/theme_mode_mapper.dart';
-import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
 
 import 'package:guardian_keyper/feature/settings/domain/use_case/settings_theme_case.dart';
 
@@ -52,7 +51,6 @@ class App extends StatelessWidget with ThemeModeMapper {
                     themeMode: snapshot.data,
                     debugShowCheckedModeBanner: false,
                     navigatorObservers: [
-                      GetIt.I<CurrentRouteObserver>(),
                       GetIt.I<SentryNavigatorObserver>(),
                     ],
                     home: const Lifecycler(key: Key('AppLifecycler')),
