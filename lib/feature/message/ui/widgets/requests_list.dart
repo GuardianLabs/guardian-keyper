@@ -16,12 +16,7 @@ class RequestsList extends StatelessWidget {
       stream: messagesInteractor.watch(),
       builder: (context, _) {
         final backgroundColor = Theme.of(context).colorScheme.background;
-        final requests = messagesInteractor.messages.toList()
-          ..sort((a, b) => b.timestamp.compareTo(a.timestamp))
-          ..sort((a, b) {
-            if (a.isReceived && b.isReceived) return 0;
-            return a.isReceived ? -1 : 1;
-          });
+        final requests = messagesInteractor.requestsSortedByTimestamp;
         return requests.isEmpty
             ? const Center(
                 child: Text(
