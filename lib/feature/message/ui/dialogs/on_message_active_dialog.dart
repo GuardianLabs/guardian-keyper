@@ -65,9 +65,6 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
   void initState() {
     super.initState();
     _timer.isActive;
-    _animationController.addListener(() {
-      if (mounted) setState(() {});
-    });
   }
 
   @override
@@ -104,8 +101,11 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
                         padding: EdgeInsets.symmetric(vertical: 12),
                         child: Text('Something went wrong. Please try again.'),
                       ),
-                      LinearProgressIndicator(
-                        value: _animationController.value,
+                      AnimatedBuilder(
+                        animation: _animationController,
+                        builder: (_, __) => LinearProgressIndicator(
+                          value: _animationController.value,
+                        ),
                       ),
                     ]
                   // Peer status
@@ -163,19 +163,23 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
       );
 
   Future<void> _sendRespone(MessageStatus status) async {
+    _isRequestActive = true;
     final response = widget.message.copyWith(status: status);
-    setState(() => _isRequestActive = true);
+    setState(() {});
     try {
       await _messagesInteractor.sendRespone(response);
       if (mounted) Navigator.of(context).pop(true);
     } catch (_) {
-      _animationController
-          .forward()
-          .then((_) => setState(() => _isRequestError = false));
       setState(() {
         _isRequestError = true;
         _isRequestActive = false;
       });
+      _animationController.forward(from: 0).then(
+            (_) => setState(() {
+              _isRequestError = false;
+              _isRequestActive = false;
+            }),
+          );
     }
   }
 }
