@@ -36,24 +36,13 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
     with TickerProviderStateMixin {
   final _messagesInteractor = GetIt.I<MessageInteractor>();
 
-  late final _theme = Theme.of(context);
-  late final _brandColors = _theme.extension<BrandColors>()!;
+  late final _brandColors = Theme.of(context).extension<BrandColors>()!;
 
-  late final _animationController = AnimationController(
-    vsync: this,
-    duration: const Duration(seconds: 3),
-  );
+  late final _textTheme = Theme.of(context).textTheme;
 
-  late final _timer = Timer.periodic(
-    retryNetworkTimeout,
-    (_) {
-      _messagesInteractor.pingPeer(widget.message.peerId).then(
-        (isOnline) {
-          if (mounted) setState(() => _isPeerOnline = isOnline);
-        },
-      );
-    },
-  );
+  late final AnimationController _animationController;
+
+  late final Timer _timer;
 
   late bool _isPeerOnline =
       _messagesInteractor.getPeerStatus(widget.message.peerId);
@@ -64,7 +53,20 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
   @override
   void initState() {
     super.initState();
-    _timer.isActive;
+    _animationController = AnimationController(
+      duration: retryNetworkTimeout,
+      vsync: this,
+    );
+    _timer = Timer.periodic(
+      retryNetworkTimeout,
+      (_) {
+        _messagesInteractor.pingPeer(widget.message.peerId).then(
+          (isOnline) {
+            if (mounted) setState(() => _isPeerOnline = isOnline);
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -95,7 +97,7 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
                   ? [
                       Text(
                         'Connection Error',
-                        style: _theme.textTheme.bodyMedium,
+                        style: _textTheme.bodyMedium,
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 12),
@@ -112,20 +114,20 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
                   : [
                       Text(
                         widget.message.peerId.name,
-                        style: _theme.textTheme.bodySmall,
+                        style: _textTheme.bodySmall,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         child: _isPeerOnline
                             ? Text(
                                 'Online',
-                                style: _theme.textTheme.labelMedium?.copyWith(
+                                style: _textTheme.labelMedium?.copyWith(
                                   color: _brandColors.highlightColor,
                                 ),
                               )
                             : Text(
                                 'Offline',
-                                style: _theme.textTheme.labelMedium?.copyWith(
+                                style: _textTheme.labelMedium?.copyWith(
                                   color: _brandColors.dangerColor,
                                 ),
                               ),
@@ -167,7 +169,9 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
     final response = widget.message.copyWith(status: status);
     setState(() {});
     try {
-      await _messagesInteractor.sendRespone(response);
+      await _messagesInteractor
+          .sendRespone(response)
+          .timeout(retryNetworkTimeout);
       if (mounted) Navigator.of(context).pop(true);
     } catch (_) {
       setState(() {

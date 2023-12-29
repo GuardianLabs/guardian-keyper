@@ -12,10 +12,10 @@ class RequestsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final messagesInteractor = GetIt.I<MessageInteractor>();
+    final backgroundColor = Theme.of(context).colorScheme.background;
     return StreamBuilder(
       stream: messagesInteractor.watch(),
       builder: (context, _) {
-        final backgroundColor = Theme.of(context).colorScheme.background;
         final requests = messagesInteractor.requestsSortedByTimestamp;
         return requests.isEmpty
             ? const Center(

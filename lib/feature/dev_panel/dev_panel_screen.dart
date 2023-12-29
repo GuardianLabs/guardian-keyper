@@ -1,4 +1,5 @@
 import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/feature/message/data/message_repository.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 
@@ -51,6 +52,19 @@ class DevPanelScreen extends StatelessWidget {
                 showSnackBar(
                   context,
                   text: 'Settings has been cleared!',
+                  isFloating: true,
+                );
+              }
+            },
+          ),
+          ListTile(
+            title: const Text('Clear all Requests'),
+            onTap: () async {
+              await GetIt.I<MessageRepository>().clear();
+              if (context.mounted) {
+                showSnackBar(
+                  context,
+                  text: 'Requests has been cleared!',
                   isFloating: true,
                 );
               }

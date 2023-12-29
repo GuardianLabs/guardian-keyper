@@ -52,6 +52,8 @@ class MessageRepository {
   }
 
   Future<void> flush() => _storage.flush();
+
+  Future<void> clear() => _storage.clear();
 }
 
 class MessageModelAdapter extends TypeAdapter<MessageModel> {

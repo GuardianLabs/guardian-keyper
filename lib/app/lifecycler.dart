@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/app/routes.dart';
-import 'package:guardian_keyper/data/repositories/settings_repository.dart';
+import 'package:guardian_keyper/feature/message/ui/dialogs/on_qr_code_show_dialog.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
 
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 import 'package:guardian_keyper/feature/message/data/message_repository.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
@@ -21,13 +23,13 @@ class Lifecycler extends StatefulWidget {
   State<Lifecycler> createState() => _LifecyclerState();
 }
 
-class _LifecyclerState extends State<Lifecycler>
-    with WidgetsBindingObserver, RouteAware {
+class _LifecyclerState extends State<Lifecycler> with WidgetsBindingObserver {
   final _authManager = GetIt.I<AuthManager>();
   final _networkManager = GetIt.I<NetworkManager>();
   final _vaultRepository = GetIt.I<VaultRepository>();
   final _settingsRepository = GetIt.I<SettingsRepository>();
   final _messageInteractor = GetIt.I<MessageInteractor>();
+  final _routeObserver = GetIt.I<CurrentRouteObserver>();
 
   late final StreamSubscription<MessageRepositoryEvent> _requestsStream;
 
@@ -42,13 +44,22 @@ class _LifecyclerState extends State<Lifecycler>
     // Listen network requests
     _requestsStream = _messageInteractor.watch().listen(
       (e) {
-        if (e.isDeleted) return;
-        if (_canShowNotification && e.message!.isReceived) {
-          _canShowNotification = false;
-          OnMessageActiveDialog.show(
-            context,
-            message: e.message!,
-          ).then((_) => _canShowNotification = true);
+        if (!_canShowNotification || e.isDeleted || e.message == null) return;
+        final currentRouteName = _routeObserver.currentRouteName;
+        if (currentRouteName == '/' ||
+            currentRouteName == OnQRCodeShowDialog.route) {
+          if (e.message!.isReceived || e.message!.hasResponse) {
+            _canShowNotification = false;
+            OnMessageActiveDialog.show(
+              context,
+              message: e.message!,
+            ).then((_) {
+              _canShowNotification = true;
+              if (mounted && currentRouteName == OnQRCodeShowDialog.route) {
+                Navigator.of(context).pop();
+              }
+            });
+          }
         }
       },
     );
@@ -102,16 +113,6 @@ class _LifecyclerState extends State<Lifecycler>
     WidgetsBinding.instance.removeObserver(this);
     _requestsStream.cancel();
     super.dispose();
-  }
-
-  @override
-  void didPushNext() {
-    _canShowNotification = false;
-  }
-
-  @override
-  void didPopNext() {
-    _canShowNotification = true;
   }
 
   @override
