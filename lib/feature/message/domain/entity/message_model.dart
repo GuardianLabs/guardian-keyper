@@ -99,13 +99,17 @@ class MessageModel extends Serializable {
         _ => throw const FormatException('Payload have no vaultId!'),
       };
 
+  bool get isCreated => status == MessageStatus.created;
   bool get isNotRequested => status != MessageStatus.created;
 
   bool get isReceived => status == MessageStatus.received;
   bool get isNotReceived => status != MessageStatus.received;
 
   bool get isAccepted => status == MessageStatus.accepted;
+  bool get isNotAccepted => status != MessageStatus.accepted;
+
   bool get isRejected => status == MessageStatus.rejected;
+  bool get isNotRejected => status != MessageStatus.rejected;
 
   bool get hasResponse =>
       status != MessageStatus.created && status != MessageStatus.received;

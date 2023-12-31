@@ -4,26 +4,20 @@ class OnRejectDialog extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
     required String peerId,
-    required String vaultId,
   }) =>
       showModalBottomSheet(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
-        builder: (_) => OnRejectDialog(
-          peerName: peerId,
-          vaultName: vaultId,
-        ),
+        builder: (_) => OnRejectDialog(peerName: peerId),
       );
 
   const OnRejectDialog({
     required this.peerName,
-    required this.vaultName,
     super.key,
   });
 
   final String peerName;
-  final String vaultName;
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
@@ -32,9 +26,8 @@ class OnRejectDialog extends StatelessWidget {
         textSpan: [
           TextSpan(text: peerName, style: styleW600),
           const TextSpan(
-            text: ' rejected the transfer of ownership for the Vault ',
+            text: ' rejected the transfer of ownership for the Vault.',
           ),
-          TextSpan(text: vaultName, style: styleW600),
         ],
         body: const Card(
           child: Padding(

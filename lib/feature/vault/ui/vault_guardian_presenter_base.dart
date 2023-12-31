@@ -46,7 +46,7 @@ abstract base class VaultGuardianPresenterBase extends VaultPresenterBase {
     if (message.peerId == _vaultInteractor.selfId) {
       throw SetCodeDuplicateException(message);
     }
-    final hasPeer = _vaultInteractor
+    late final hasPeer = _vaultInteractor
         .getVaultById(vaultId!)
         ?.guardians
         .containsKey(message.peerId);

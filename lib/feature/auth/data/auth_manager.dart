@@ -60,7 +60,7 @@ class AuthManager {
     await _stateStreamController.close();
   }
 
-  void onResumed() => _authService.getHasBiometrics().then(
+  Future<void> onResumed() => _authService.getHasBiometrics().then(
         (v) {
           _hasBiometrics = v;
           _updateState();

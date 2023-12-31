@@ -44,21 +44,22 @@ class _LifecyclerState extends State<Lifecycler> with WidgetsBindingObserver {
     // Listen network requests
     _requestsStream = _messageInteractor.watch().listen(
       (e) {
-        if (!_canShowNotification || e.isDeleted || e.message == null) return;
+        if (!_canShowNotification || e.isDeleted) return;
+        final message = e.message;
+        if (message == null || message.isCreated) return;
         final currentRouteName = _routeObserver.currentRouteName;
         if (currentRouteName == '/' ||
             currentRouteName == OnQRCodeShowDialog.route) {
-          if (e.message!.isReceived || e.message!.hasResponse) {
+          if (message.isReceived || message.hasResponse) {
             _canShowNotification = false;
-            OnMessageActiveDialog.show(
-              context,
-              message: e.message!,
-            ).then((_) {
-              _canShowNotification = true;
-              if (mounted && currentRouteName == OnQRCodeShowDialog.route) {
-                Navigator.of(context).pop();
-              }
-            });
+            OnMessageActiveDialog.show(context, message: message).then(
+              (_) {
+                _canShowNotification = true;
+                if (mounted && currentRouteName == OnQRCodeShowDialog.route) {
+                  Navigator.of(context).popUntil((r) => r.isFirst);
+                }
+              },
+            );
           }
         }
       },
@@ -71,21 +72,21 @@ class _LifecyclerState extends State<Lifecycler> with WidgetsBindingObserver {
         _messageInteractor.pruneMessages();
         await OnDemandAuthDialog.show(context);
       }
-      _networkManager.start();
+      await _networkManager.start();
     });
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     switch (state) {
       case AppLifecycleState.resumed:
-        _networkManager.start();
-        _authManager.onResumed();
+        await _networkManager.start();
+        await _authManager.onResumed();
       case AppLifecycleState.paused:
-        _networkManager.stop();
-        _vaultRepository.flush();
-        _messageInteractor.flush();
-        _settingsRepository.flush();
+        await _networkManager.stop();
+        await _vaultRepository.flush();
+        await _messageInteractor.flush();
+        await _settingsRepository.flush();
       case _:
     }
     super.didChangeAppLifecycleState(state);

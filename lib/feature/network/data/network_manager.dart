@@ -10,6 +10,7 @@ import 'package:guardian_keyper/feature/network/data/mdns_service.dart';
 import 'package:guardian_keyper/feature/network/data/router_service.dart';
 import 'package:guardian_keyper/feature/network/data/network_service.dart';
 import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 export 'package:get_it/get_it.dart';
 
@@ -26,23 +27,16 @@ typedef NetworkManagerState = ({
 /// Depends on [PreferencesService]
 class NetworkManager {
   NetworkManager({
+    int? port,
     MdnsService? mdnsService,
     RouterService? routerService,
     NetworkService? networkService,
-  })  : _mdnsService = mdnsService ?? MdnsService(),
+  })  : _port = port ?? bsPort,
+        _mdnsService = mdnsService ?? MdnsService(),
         _routerService = routerService ?? RouterService(),
         _networkService = networkService ?? NetworkService();
 
-  // Public fields
-  late final pingPeer = _routerService.pingPeer;
-  late final sendToPeer = _routerService.sendToPeer;
-  late final getPeerStatus = _routerService.getPeerStatus;
-  late final toggleBootstrap = _routerService.toggleBootstrap;
-  late final discoverNeighbours = _mdnsService.startDiscovery;
-  late final peerStatusChanges = _routerService.peerStatusChanges;
-  late final messageStream = _routerService.messageStream;
-
-  // Private fields
+  final int _port;
   final MdnsService _mdnsService;
   final RouterService _routerService;
   final NetworkService _networkService;
@@ -55,16 +49,18 @@ class NetworkManager {
   late PeerId _selfId;
   late bool _isBootstrapEnabled;
 
-  int port = bsPort;
-
   NetworkManagerStatus _status = NetworkManagerStatus.uninited;
 
-  // Public methods
   PeerId get selfId => _selfId;
 
   bool get isBootstrapEnabled => _isBootstrapEnabled;
 
   Stream<NetworkManagerState> get state => _stateStreamController.stream;
+
+  Stream<MessageModel> get messageStream => _routerService.messageStream;
+
+  Stream<(PeerId, bool)> get peerStatusChanges =>
+      _routerService.peerStatusChanges;
 
   Future<NetworkManager> init() async {
     if (_status != NetworkManagerStatus.uninited) throw Exception('Init once!');
@@ -95,20 +91,22 @@ class NetworkManager {
         (peerId, address, port) => _routerService.addPeerAddress(
               peerId: peerId,
               address: address,
-              port: port ?? this.port,
+              port: port ?? _port,
             );
 
-    _networkService.onConnectivityChanged.listen((state) async {
-      if (state.hasConnectivity) {
-        await stop();
-        await start();
-      } else {
-        await stop();
-      }
-      _updateState();
-    });
+    _networkService.onConnectivityChanged.listen(
+      (state) async {
+        if (state.hasConnectivity) {
+          await stop();
+          await start();
+        } else {
+          await stop();
+        }
+        _updateState();
+      },
+    );
 
-    toggleBootstrap(isActive: _isBootstrapEnabled);
+    _routerService.toggleBootstrap(isActive: _isBootstrapEnabled);
     _status = NetworkManagerStatus.stopped;
     return this;
   }
@@ -130,11 +128,11 @@ class NetworkManager {
       _status = NetworkManagerStatus.stopped;
       return;
     } else {
-      await _routerService.start(port);
+      await _routerService.start(_port);
     }
 
     if (_networkService.hasWiFi) {
-      await _mdnsService.register(_selfId.token, port);
+      await _mdnsService.register(_selfId.token, _port);
       await _mdnsService.startDiscovery();
     }
     _status = NetworkManagerStatus.started;
@@ -171,6 +169,21 @@ class NetworkManager {
     _routerService.toggleBootstrap(isActive: isEnabled);
     _updateState();
   }
+
+  Future<bool> pingPeer(PeerId peerId) => _routerService.pingPeer(peerId);
+
+  bool getPeerStatus(PeerId peerId) => _routerService.getPeerStatus(peerId);
+
+  Future<void> sendToPeer(
+    PeerId peerId, {
+    required MessageModel message,
+    bool isConfirmable = false,
+  }) =>
+      _routerService.sendToPeer(
+        peerId,
+        message: message,
+        isConfirmable: isConfirmable,
+      );
 
   void _updateState() => _stateStreamController.add((
         status: _status,

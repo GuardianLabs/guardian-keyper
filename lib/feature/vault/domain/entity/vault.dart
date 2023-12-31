@@ -36,10 +36,15 @@ class Vault extends Serializable {
   bool operator ==(Object other) =>
       other is Vault &&
       runtimeType == other.runtimeType &&
-      id.hashCode == other.id.hashCode;
+      id.hashCode == other.id.hashCode &&
+      ownerId == other.ownerId;
 
   @override
-  int get hashCode => Object.hash(runtimeType, id.hashCode);
+  int get hashCode => Object.hash(
+        runtimeType,
+        id.hashCode,
+        ownerId.hashCode,
+      );
 
   int get size => guardians.length;
   int get missed => maxSize - size;

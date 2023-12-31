@@ -30,6 +30,8 @@ class VaultRepository {
 
   Future<void> dispose() async {}
 
+  Future<void> clear() => _storage.clear();
+
   Future<void> flush() => _storage.flush();
 
   Vault? get(String key) => _storage.get(key);
