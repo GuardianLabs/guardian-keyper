@@ -34,7 +34,10 @@ class MessageRepository {
 
   bool containsKey(String key) => _storage.containsKey(key);
 
-  Future<void> put(String key, MessageModel value) => _storage.put(key, value);
+  Future<MessageModel> put(String key, MessageModel value) async {
+    await _storage.put(key, value);
+    return value;
+  }
 
   Future<void> delete(String key) => _storage.delete(key);
 

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/app/routes.dart';
-import 'package:guardian_keyper/feature/message/ui/dialogs/on_qr_code_show_dialog.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
 
@@ -13,6 +12,7 @@ import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 import 'package:guardian_keyper/feature/message/data/message_repository.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
+import 'package:guardian_keyper/feature/message/ui/dialogs/on_qr_code_show_dialog.dart';
 import 'package:guardian_keyper/feature/auth/ui/dialogs/on_demand_auth_dialog.dart';
 import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 

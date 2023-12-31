@@ -38,7 +38,10 @@ class VaultRepository {
 
   bool containsKey(String key) => _storage.containsKey(key);
 
-  Future<void> put(String key, Vault value) => _storage.put(key, value);
+  Future<Vault> put(String key, Vault value) async {
+    await _storage.put(key, value);
+    return value;
+  }
 
   Future<void> delete(String key) => _storage.delete(key);
 
