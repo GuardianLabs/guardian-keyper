@@ -62,7 +62,10 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
       (_) {
         _messagesInteractor.pingPeer(widget.message.peerId).then(
           (isOnline) {
-            if (mounted) setState(() => _isPeerOnline = isOnline);
+            if (_isPeerOnline != isOnline) {
+              _isPeerOnline = isOnline;
+              if (mounted) setState(() {});
+            }
           },
         );
       },

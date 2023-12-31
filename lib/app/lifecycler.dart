@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/app/routes.dart';
-import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
+import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
-import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 import 'package:guardian_keyper/feature/message/data/message_repository.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
@@ -94,17 +94,14 @@ class _LifecyclerState extends State<Lifecycler> with WidgetsBindingObserver {
 
   @override
   Future<bool> didPopRoute() {
-    // _canShowNotification == true also means this route is current
-    if (_canShowNotification) {
-      final now = DateTime.timestamp();
-      if (_lastExitTryAt.isBefore(now.subtract(snackBarDuration))) {
-        _lastExitTryAt = now;
-        showSnackBar(
-          context,
-          text: 'Tap back again to exit',
-        );
-        return Future.value(true);
-      }
+    final now = DateTime.timestamp();
+    if (_lastExitTryAt.isBefore(now.subtract(snackBarDuration))) {
+      _lastExitTryAt = now;
+      showSnackBar(
+        context,
+        text: 'Tap back again to exit',
+      );
+      return Future.value(true);
     }
     return super.didPopRoute();
   }
