@@ -20,7 +20,6 @@ class RouterService {
 
   late final p2p.RouterL2 _router;
 
-  late final init = _router.init;
   late final selfId = _router.selfId.value;
 
   late final messageStream = _router.messageStream
@@ -30,8 +29,14 @@ class RouterService {
   late final peerStatusChanges = _router.lastSeenStream
       .map((e) => (PeerId(token: e.peerId.value), e.isOnline));
 
+  Future<Uint8List> init([Uint8List? seed]) => _router.init(seed);
+
   Future<void> start(int port) async {
-    for (final address in await _getIPs()) {
+    final ifs = <InternetAddress>{};
+    for (final nIf in await NetworkInterface.list()) {
+      ifs.addAll(nIf.addresses);
+    }
+    for (final address in ifs) {
       _router.transports.add(p2p.TransportUdp(
         bindAddress: p2p.FullAddress(address: address, port: port),
       ));
@@ -109,13 +114,5 @@ class RouterService {
     } else {
       _router.removePeerAddress(peerId);
     }
-  }
-
-  Future<Set<InternetAddress>> _getIPs() async {
-    final result = <InternetAddress>{};
-    for (final nIf in await NetworkInterface.list()) {
-      result.addAll(nIf.addresses);
-    }
-    return result;
   }
 }

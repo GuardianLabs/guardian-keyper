@@ -52,8 +52,8 @@ class App extends StatelessWidget with ThemeModeMapper {
                     themeMode: snapshot.data,
                     debugShowCheckedModeBanner: false,
                     navigatorObservers: [
-                      GetIt.I<CurrentRouteObserver>(),
                       GetIt.I<SentryNavigatorObserver>(),
+                      GetIt.I<CurrentRouteObserver>(),
                     ],
                     home: const Lifecycler(key: Key('AppLifecycler')),
                   );

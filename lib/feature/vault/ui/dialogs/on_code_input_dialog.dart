@@ -28,25 +28,19 @@ class _OnCodeInputDialogState extends State<OnCodeInputDialog> {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-        header: HeaderBar(
+        header: const HeaderBar(
           caption: 'Add via a Text Code',
-          leftButton: const HeaderBarButton.back(),
-          rightButton: HeaderBarButton.close(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-            },
-          ),
+          leftButton: HeaderBarButton.back(),
         ),
         children: [
           // Input
           Padding(
             padding: paddingV20,
             child: TextField(
-              autofocus: true,
               controller: _controller,
-              enableInteractiveSelection: false,
               decoration: const InputDecoration(labelText: ' Code '),
+              enableInteractiveSelection: false,
+              readOnly: true,
             ),
           ),
           // Buttons

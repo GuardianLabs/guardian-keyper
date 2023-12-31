@@ -4,7 +4,7 @@ import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 
 import 'vault_presenter_base.dart';
 
-abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
+abstract base class VaultGuardianPresenterBase extends VaultPresenterBase {
   VaultGuardianPresenterBase({required super.pageCount});
 
   final _vaultInteractor = GetIt.I<VaultInteractor>();
@@ -46,7 +46,7 @@ abstract class VaultGuardianPresenterBase extends VaultPresenterBase {
     if (message.peerId == _vaultInteractor.selfId) {
       throw SetCodeDuplicateException(message);
     }
-    final hasPeer = _vaultInteractor
+    late final hasPeer = _vaultInteractor
         .getVaultById(vaultId!)
         ?.guardians
         .containsKey(message.peerId);

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:collection/collection.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
@@ -27,6 +28,10 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
   PeerId get selfId => _networkManager.selfId;
 
   Iterable<MessageModel> get messages => _messageRepository.values;
+
+  List<MessageModel> get requestsSortedByTimestamp => _messageRepository.values
+      .where((e) => e.peerId != selfId)
+      .sorted((a, b) => b.timestamp.compareTo(a.timestamp));
 
   Future<void> dispose() async {
     await _streamSubscription.cancel();

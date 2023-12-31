@@ -17,37 +17,34 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
-    context.read<VaultRestorePresenter>().startRequest().then((message) async {
-      if (message.isAccepted) {
-        final wantAddAnother = await OnSuccessDialog.show(
-          context,
-          peerName: message.peerId.name,
-          vaultName: message.vault.id.name,
-          isFull: message.vault.isFull,
-        );
-        if (context.mounted) {
-          wantAddAnother ?? false
-              ? Navigator.of(context).pushReplacementNamed(
-                  routeVaultRestore,
-                  arguments: message.vaultId,
-                )
-              : Navigator.of(context).pop();
-          return;
+    context.read<VaultRestorePresenter>().startRequest().then(
+      (message) async {
+        if (message.isAccepted) {
+          final wantAddAnother = await OnSuccessDialog.show(
+            context,
+            peerName: message.peerId.name,
+            vaultName: message.vault.id.name,
+            isFull: message.vault.isFull,
+          );
+          if (mounted) {
+            return wantAddAnother ?? false
+                ? Navigator.of(context).pushReplacementNamed(
+                    routeVaultRestore,
+                    arguments: message.vaultId,
+                  )
+                : Navigator.of(context).pop();
+          }
+        } else if (message.isRejected) {
+          await OnRejectDialog.show(
+            context,
+            peerId: message.peerId.name,
+          );
+        } else {
+          await OnFailDialog.show(context);
         }
-      }
-
-      if (context.mounted) {
-        message.isRejected
-            ? await OnRejectDialog.show(
-                context,
-                peerId: message.peerId.name,
-                vaultId: message.vaultId.name,
-              )
-            : await OnFailDialog.show(context);
-      }
-
-      if (context.mounted) Navigator.of(context).pop();
-    });
+        if (mounted) Navigator.of(context).pop();
+      },
+    );
   }
 
   @override
@@ -60,9 +57,9 @@ class _LoadingPageState extends State<LoadingPage> {
             rightButton: HeaderBarButton.close(),
           ),
           // Body
-          const Padding(padding: EdgeInsets.only(top: 32)),
+          const Padding(padding: paddingT12),
           Padding(
-            padding: paddingH20,
+            padding: paddingAll20,
             child: Card(
               child: Column(
                 children: [

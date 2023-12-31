@@ -2,11 +2,11 @@ import 'dart:typed_data';
 import 'package:hive/hive.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
+import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
 import 'package:guardian_keyper/data/services/platform_service.dart';
 import 'package:guardian_keyper/data/services/analytics_service.dart';
 import 'package:guardian_keyper/data/services/preferences_service.dart';
 import 'package:guardian_keyper/data/repositories/settings_repository.dart';
-import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
 
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';

@@ -10,7 +10,7 @@ export 'package:provider/provider.dart';
 
 export '../vault_guardian_presenter_base.dart';
 
-class VaultGuardianAddPresenter extends VaultGuardianPresenterBase {
+final class VaultGuardianAddPresenter extends VaultGuardianPresenterBase {
   VaultGuardianAddPresenter({
     required super.pageCount,
     required this.vaultId,
