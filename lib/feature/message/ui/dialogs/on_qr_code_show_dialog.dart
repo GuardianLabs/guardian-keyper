@@ -47,13 +47,13 @@ class OnQRCodeShowDialog extends StatefulWidget {
 }
 
 class _OnQRCodeShowDialogState extends State<OnQRCodeShowDialog> {
+  late final _screenSize = ScreenSize(context);
+
   late final _qrCode = widget.message.toBase64url();
 
   late final _colorScheme = Theme.of(context).colorScheme;
 
-  late final _size = ScreenSize.get(MediaQuery.of(context).size);
-
-  late final _padding = EdgeInsets.all(_size is ScreenSmall ? 12 : 20);
+  late final _padding = EdgeInsets.all(_screenSize is ScreenSmall ? 12 : 20);
 
   @override
   void initState() {
@@ -77,28 +77,32 @@ class _OnQRCodeShowDialogState extends State<OnQRCodeShowDialog> {
           children: [
             // Text
             PageTitle(
-              title: _size is ScreenSmall ? null : widget.title,
+              title: _screenSize is ScreenSmall ? null : widget.title,
               subtitle: widget.subtitle,
             ),
             // QR Code
             Expanded(
-              child: Container(
-                margin: _padding,
-                padding: _padding,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: _colorScheme.surface,
-                ),
-                child: QrImageView(
-                  data: _qrCode,
-                  errorCorrectionLevel: QrErrorCorrectLevel.M,
-                  dataModuleStyle: QrDataModuleStyle(
-                    color: _colorScheme.onSurface,
-                    dataModuleShape: QrDataModuleShape.square,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: _colorScheme.surface,
                   ),
-                  eyeStyle: QrEyeStyle(
-                    color: _colorScheme.onSurface,
-                    eyeShape: QrEyeShape.square,
+                  margin: _padding,
+                  child: QrImageView(
+                    errorCorrectionLevel: QrErrorCorrectLevel.M,
+                    dataModuleStyle: QrDataModuleStyle(
+                      color: _colorScheme.onSurface,
+                      dataModuleShape: QrDataModuleShape.square,
+                    ),
+                    eyeStyle: QrEyeStyle(
+                      color: _colorScheme.onSurface,
+                      eyeShape: QrEyeShape.square,
+                    ),
+                    padding: _padding,
+                    data: _qrCode,
                   ),
                 ),
               ),
@@ -167,7 +171,7 @@ class _OnQRCodeShowDialogState extends State<OnQRCodeShowDialog> {
                 ],
               ),
             ),
-            if (_size is! ScreenSmall) const Spacer(),
+            if (_screenSize.isBig) const Spacer(),
           ],
         ),
       );

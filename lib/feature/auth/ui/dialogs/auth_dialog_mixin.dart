@@ -15,7 +15,7 @@ mixin class AuthDialogMixin {
 
   static EdgeInsets getPadding(BuildContext context) =>
       paddingH20 +
-      (ScreenSize.get(MediaQuery.of(context).size) is ScreenSmall
+      (ScreenSize(context) is ScreenSmall
           ? const EdgeInsets.symmetric(vertical: 12)
           : const EdgeInsets.symmetric(vertical: 32));
 
