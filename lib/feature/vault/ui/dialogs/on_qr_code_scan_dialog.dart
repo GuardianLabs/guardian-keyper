@@ -1,9 +1,8 @@
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/utils/screen_size.dart';
 
-class QRCodeScanDialog extends StatefulWidget {
+class OnQrCodeScanDialog extends StatefulWidget {
   static const route = '/qrcode/scan';
 
   static Future<String?> show(
@@ -13,10 +12,10 @@ class QRCodeScanDialog extends StatefulWidget {
       Navigator.of(context).push(MaterialPageRoute(
         fullscreenDialog: true,
         settings: const RouteSettings(name: route),
-        builder: (_) => QRCodeScanDialog(caption: caption),
+        builder: (_) => OnQrCodeScanDialog(caption: caption),
       ));
 
-  const QRCodeScanDialog({
+  const OnQrCodeScanDialog({
     required this.caption,
     super.key,
   });
@@ -24,10 +23,10 @@ class QRCodeScanDialog extends StatefulWidget {
   final String caption;
 
   @override
-  State<QRCodeScanDialog> createState() => _QRCodeScanDialogState();
+  State<OnQrCodeScanDialog> createState() => _OnQrCodeScanDialogState();
 }
 
-class _QRCodeScanDialogState extends State<QRCodeScanDialog> {
+class _OnQrCodeScanDialogState extends State<OnQrCodeScanDialog> {
   bool _hasResult = false;
   late Rect _scanWindow;
 
@@ -35,12 +34,7 @@ class _QRCodeScanDialogState extends State<QRCodeScanDialog> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final size = MediaQuery.of(context).size;
-    final scanAreaSize = switch (ScreenSize.get(size)) {
-      ScreenSmall _ => size.width * 0.7,
-      ScreenMedium _ => size.width * 0.7,
-      ScreenLarge _ => size.width * 0.6,
-      ScreenBig _ => size.width * 0.5,
-    };
+    final scanAreaSize = size.width / 2;
     _scanWindow = Rect.fromCenter(
       center: size.center(Offset.zero),
       width: scanAreaSize,
