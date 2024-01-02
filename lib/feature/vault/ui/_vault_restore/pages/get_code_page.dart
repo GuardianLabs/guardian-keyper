@@ -3,7 +3,7 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/feature/vault/ui/dialogs/on_version_low.dart';
 import 'package:guardian_keyper/feature/vault/ui/dialogs/on_version_high.dart';
 import 'package:guardian_keyper/feature/vault/ui/dialogs/on_invalid_dialog.dart';
-import 'package:guardian_keyper/feature/vault/ui/dialogs/qr_code_scan_dialog.dart';
+import 'package:guardian_keyper/feature/vault/ui/dialogs/on_qr_code_scan_dialog.dart';
 import 'package:guardian_keyper/feature/vault/ui/dialogs/on_code_input_dialog.dart';
 
 import '../vault_restore_presenter.dart';
@@ -33,7 +33,7 @@ class GetCodePage extends StatelessWidget {
           Padding(
             padding: paddingH20,
             child: FilledButton(
-              onPressed: () => QRCodeScanDialog.show(
+              onPressed: () => OnQrCodeScanDialog.show(
                 context,
                 caption: 'Scan the Assistance QR',
               ).then(
