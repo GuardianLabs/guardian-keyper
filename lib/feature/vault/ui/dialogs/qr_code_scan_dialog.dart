@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
@@ -31,15 +30,6 @@ class QRCodeScanDialog extends StatefulWidget {
 class _QRCodeScanDialogState extends State<QRCodeScanDialog> {
   bool _hasResult = false;
   late Rect _scanWindow;
-  late Color _sysOverlay;
-
-  @override
-  void initState() {
-    super.initState();
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.black54,
-    ));
-  }
 
   @override
   void didChangeDependencies() {
@@ -56,42 +46,33 @@ class _QRCodeScanDialogState extends State<QRCodeScanDialog> {
       width: scanAreaSize,
       height: scanAreaSize,
     );
-    _sysOverlay = Theme.of(context).colorScheme.background;
   }
 
   @override
-  void dispose() {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: _sysOverlay,
-    ));
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => ScaffoldSafe(
-        child: Stack(
-          children: [
-            MobileScanner(
-              scanWindow: _scanWindow,
-              onDetect: (BarcodeCapture captured) {
-                if (captured.barcodes.isEmpty) return;
-                if (_hasResult) return;
-                if (context.mounted) {
-                  _hasResult = true;
-                  Navigator.of(context)
-                      .pop<String?>(captured.barcodes.first.rawValue);
-                }
-              },
-            ),
-            CustomPaint(painter: _ScannerOverlay(frame: _scanWindow)),
-            // Header
-            HeaderBar(
+  Widget build(BuildContext context) => Stack(
+        children: [
+          MobileScanner(
+            scanWindow: _scanWindow,
+            onDetect: (BarcodeCapture captured) {
+              if (captured.barcodes.isEmpty) return;
+              if (_hasResult) return;
+              if (context.mounted) {
+                _hasResult = true;
+                Navigator.of(context)
+                    .pop<String?>(captured.barcodes.first.rawValue);
+              }
+            },
+          ),
+          CustomPaint(painter: _ScannerOverlay(frame: _scanWindow)),
+          // Header
+          SafeArea(
+            child: HeaderBar(
               isTransparent: true,
               caption: widget.caption,
               rightButton: const HeaderBarButton.close(),
             ),
-          ],
-        ),
+          ),
+        ],
       );
 }
 

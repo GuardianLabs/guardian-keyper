@@ -35,33 +35,36 @@ class ScaffoldSafe extends StatelessWidget {
   final bool isSeparated;
 
   @override
-  Widget build(BuildContext context) => SafeArea(
-        child: Scaffold(
-          appBar: header == null
-              ? null
-              : PreferredSize(
-                  preferredSize: const Size.fromHeight(toolbarHeight),
-                  child: header!,
-                ),
-          body: child ??
-              (children == null
-                  ? null
-                  : (isSeparated
-                      ? ListView.separated(
-                          padding: paddingAll20,
-                          itemCount: children!.length,
-                          itemBuilder: (_, i) => children![i],
-                          separatorBuilder: (_, __) => isSeparatorSmall
-                              ? const Padding(padding: paddingT12)
-                              : const Padding(padding: paddingT20),
-                        )
-                      : ListView(
-                          padding: paddingAll20,
-                          children: children!,
-                        ))),
-          bottomNavigationBar: bottomNavigationBar,
-          resizeToAvoidBottomInset: true,
-          primary: true,
+  Widget build(BuildContext context) => ColoredBox(
+        color: Theme.of(context).canvasColor,
+        child: SafeArea(
+          child: Scaffold(
+            appBar: header == null
+                ? null
+                : PreferredSize(
+                    preferredSize: const Size.fromHeight(toolbarHeight),
+                    child: header!,
+                  ),
+            body: child ??
+                (children == null
+                    ? null
+                    : (isSeparated
+                        ? ListView.separated(
+                            padding: paddingAll20,
+                            itemCount: children!.length,
+                            itemBuilder: (_, i) => children![i],
+                            separatorBuilder: (_, __) => isSeparatorSmall
+                                ? const Padding(padding: paddingT12)
+                                : const Padding(padding: paddingT20),
+                          )
+                        : ListView(
+                            padding: paddingAll20,
+                            children: children!,
+                          ))),
+            bottomNavigationBar: bottomNavigationBar,
+            resizeToAvoidBottomInset: true,
+            primary: true,
+          ),
         ),
       );
 }
