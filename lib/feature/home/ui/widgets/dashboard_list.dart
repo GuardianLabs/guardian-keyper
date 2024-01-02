@@ -5,8 +5,8 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/action_card.dart';
 import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 
-import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
+import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
 import 'package:guardian_keyper/feature/home/ui/dialogs/on_show_id_dialog.dart';
@@ -21,17 +21,15 @@ class DashboardList extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final brandColors = theme.extension<BrandColors>()!;
-    final vaultRepository = GetIt.I<VaultRepository>();
-    final networkManager = GetIt.I<NetworkManager>();
-    final selfId = networkManager.selfId;
+    final vaultInteractor = GetIt.I<VaultInteractor>();
     return ListView(
       padding: paddingAll20,
       children: [
         // Device Name
         StreamBuilder<String>(
-          stream: networkManager.state.map((e) => e.deviceName),
+          stream: GetIt.I<NetworkManager>().state.map((e) => e.deviceName),
           builder: (context, snapshot) => Text(
-            snapshot.data ?? selfId.name,
+            snapshot.data ?? vaultInteractor.selfId.name,
             style: theme.textTheme.titleLarge,
           ),
         ),
@@ -39,17 +37,17 @@ class DashboardList extends StatelessWidget {
           children: [
             // My Key
             Text(
-              selfId.toHexShort(),
+              vaultInteractor.selfId.toHexShort(),
               style: theme.textTheme.bodySmall,
             ),
             // Copy to Clipboard
-            CopyMyKeyToClipboardButton(id: selfId.asHex),
+            CopyMyKeyToClipboardButton(id: vaultInteractor.selfId.asHex),
             // Show full ID
             IconButton(
               icon: const Icon(Icons.visibility_outlined),
               onPressed: () => OnShowIdDialog.show(
                 context,
-                id: selfId.asHex,
+                id: vaultInteractor.selfId.asHex,
               ),
             ),
             const Spacer(),
@@ -120,9 +118,9 @@ class DashboardList extends StatelessWidget {
         ),
         // Assist with a Vault
         StreamBuilder<VaultRepositoryEvent>(
-          stream: vaultRepository.watch(),
+          stream: vaultInteractor.watch(),
           builder: (context, _) => Offstage(
-            offstage: vaultRepository.values.isEmpty,
+            offstage: vaultInteractor.shards.isEmpty,
             child: Padding(
               padding: paddingT20,
               child: ActionCard(
@@ -134,9 +132,10 @@ class DashboardList extends StatelessWidget {
                 title: 'Assist with a Vault',
                 subtitle: 'Provide assistance to restore a Vault '
                     'or transfer its ownership to another user.',
-                onTap: () => OnVaultTransferDialog.show(context,
-                    vaults: vaultRepository.values
-                        .where((e) => e.ownerId != selfId)),
+                onTap: () => OnVaultTransferDialog.show(
+                  context,
+                  vaults: vaultInteractor.shards,
+                ),
               ),
             ),
           ),

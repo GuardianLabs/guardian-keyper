@@ -10,6 +10,9 @@ import 'vault_sss_mixin.dart';
 
 export 'package:get_it/get_it.dart';
 
+export 'package:guardian_keyper/feature/vault/data/vault_repository.dart'
+    show VaultRepositoryEvent;
+
 /// Depends on:
 /// [
 ///   PreferencesService,
