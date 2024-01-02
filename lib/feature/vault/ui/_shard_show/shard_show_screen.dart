@@ -21,7 +21,7 @@ class ShardShowScreen extends StatelessWidget {
       children: [
         // Owner name
         Padding(
-          padding: switch (ScreenSize.get(MediaQuery.of(context).size)) {
+          padding: switch (ScreenSize(context)) {
             ScreenSmall _ => paddingT12,
             ScreenMedium _ => paddingT20,
             _ => const EdgeInsets.only(top: 32),

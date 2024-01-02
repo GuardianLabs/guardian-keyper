@@ -168,7 +168,7 @@ class PageTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final paddingTop = switch (ScreenSize.get(MediaQuery.of(context).size)) {
+    final paddingTop = switch (ScreenSize(context)) {
       ScreenSmall _ => paddingT12,
       ScreenMedium _ => paddingT20,
       _ => const EdgeInsets.only(top: 32),
