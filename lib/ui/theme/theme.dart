@@ -47,6 +47,14 @@ final themeData = ThemeData(
   // Bottom Navigation Bar
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
+    selectedLabelStyle: TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.w700,
+    ),
+    unselectedLabelStyle: TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.w400,
+    ),
   ),
   // Bottom Sheet
   bottomSheetTheme: const BottomSheetThemeData(
