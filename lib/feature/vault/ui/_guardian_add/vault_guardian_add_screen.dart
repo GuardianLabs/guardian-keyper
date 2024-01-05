@@ -8,6 +8,8 @@ import 'pages/get_code_page.dart';
 import 'pages/loading_page.dart';
 
 class VaultGuardianAddScreen extends StatelessWidget {
+  static const route = '/vault/guardian/add';
+
   static const _pages = [
     GetCodePage(),
     LoadingPage(),

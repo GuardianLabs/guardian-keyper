@@ -6,6 +6,8 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'dialogs/on_need_new_wallet_dialog.dart';
 
 class OnboardingScreen extends StatelessWidget {
+  static const route = '/onboarding';
+
   static const _darkOverlay = SystemUiOverlayStyle(
     // statusBarColor: Colors.transparent,
     statusBarBrightness: Brightness.dark,

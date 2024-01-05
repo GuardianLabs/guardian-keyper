@@ -11,6 +11,8 @@ import 'package:guardian_keyper/feature/auth/ui/dialogs/on_change_pass_code_dial
 import 'package:guardian_keyper/feature/settings/ui/dialogs/on_set_device_name_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
+  static const route = '/settings';
+
   const SettingsScreen({super.key});
 
   @override

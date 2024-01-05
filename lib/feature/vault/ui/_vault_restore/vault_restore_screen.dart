@@ -6,6 +6,8 @@ import 'pages/get_code_page.dart';
 import 'pages/loading_page.dart';
 
 class VaultRestoreScreen extends StatelessWidget {
+  static const route = '/vault/restore';
+
   static const _pages = [
     GetCodePage(),
     LoadingPage(),

@@ -8,6 +8,8 @@ import 'pages/set_biometric_page.dart';
 import 'pages/set_device_name_page.dart';
 
 class IntroScreen extends StatelessWidget {
+  static const route = '/intro';
+
   static const _pages = [
     IntrosPage(),
     SetDeviceNamePage(),

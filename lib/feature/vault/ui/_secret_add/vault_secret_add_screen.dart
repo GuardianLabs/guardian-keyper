@@ -10,6 +10,8 @@ import 'pages/add_secret_page.dart';
 import 'pages/secret_transmitting_page.dart';
 
 class VaultSecretAddScreen extends StatelessWidget {
+  static const route = '/vault/secret/add';
+
   static const _pages = [
     AddNamePage(),
     AddSecretPage(),

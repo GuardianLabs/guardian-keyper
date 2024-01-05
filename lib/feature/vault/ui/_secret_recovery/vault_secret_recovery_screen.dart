@@ -9,6 +9,8 @@ import 'pages/discovering_peers_page.dart';
 import 'pages/show_secret_page.dart';
 
 class VaultSecretRecoveryScreen extends StatelessWidget {
+  static const route = '/vault/secret/recovery';
+
   static const _pages = [
     DiscoveringPeersPage(),
     ShowSecretPage(),
