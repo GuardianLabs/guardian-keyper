@@ -11,7 +11,7 @@ class ChooseSizePage extends StatelessWidget {
     return Column(children: [
       // Header
       const HeaderBar(
-        caption: 'Select the size of the Vault',
+        caption: 'Select the size of the Safe',
         rightButton: HeaderBarButton.close(),
       ),
       // Body
@@ -20,7 +20,7 @@ class ChooseSizePage extends StatelessWidget {
           padding: paddingAll20,
           children: [
             const PageTitle(
-              title: 'How many Guardians will be safeguarding the Vault?',
+              title: 'How many Guardians will be safeguarding the Safe?',
             ),
             // Control
             ListTile(

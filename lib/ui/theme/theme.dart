@@ -47,6 +47,14 @@ final themeData = ThemeData(
   // Bottom Navigation Bar
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
+    selectedLabelStyle: TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.w700,
+    ),
+    unselectedLabelStyle: TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.w400,
+    ),
   ),
   // Bottom Sheet
   bottomSheetTheme: const BottomSheetThemeData(
@@ -83,9 +91,6 @@ final themeData = ThemeData(
         double.infinity,
         buttonSize,
       )),
-      shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(cornerRadius),
-      )),
       textStyle: MaterialStatePropertyAll(textTheme.titleMedium),
     ),
   ),
@@ -116,9 +121,6 @@ final themeData = ThemeData(
     fixedSize: const MaterialStatePropertyAll(Size(
       double.infinity,
       buttonSize,
-    )),
-    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(cornerRadius),
     )),
     textStyle: MaterialStatePropertyAll(textTheme.titleMedium),
   )),

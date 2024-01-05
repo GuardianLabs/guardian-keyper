@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   static const _headers = [
     null,
-    HeaderBar(caption: 'Vaults'),
+    HeaderBar(caption: 'Safes'),
     HeaderBar(caption: 'Shards'),
     HeaderBar(caption: 'Requests'),
   ];
@@ -34,14 +34,13 @@ class HomeScreenState extends State<HomeScreen> {
 
   late final _navBarItems = buildNavbarItems(context);
 
-  late final _isTitleVisible =
-      MediaQuery.of(context).size.height >= ScreenMedium.height;
-
   int _currentTab = 0;
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-        header: _isTitleVisible ? _headers[_currentTab] : null,
+        header: MediaQuery.of(context).size.height >= ScreenMedium.height
+            ? _headers[_currentTab]
+            : null,
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentTab,
           items: _navBarItems,

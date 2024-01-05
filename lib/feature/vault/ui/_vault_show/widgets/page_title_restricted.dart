@@ -50,7 +50,7 @@ class _PageTitleRestrictedState extends State<PageTitleRestricted> {
           subtitleSpans: [
             const TextSpan(
               text: 'You`re unable to add a new Secrets '
-                  'due to your limited vault access.',
+                  'due to your limited Safe access.',
             ),
             _limitedAccessTapable,
           ],
@@ -65,7 +65,7 @@ class _PageTitleRestrictedState extends State<PageTitleRestricted> {
                   'This will grant you ',
             ),
             _limitedAccessTapable,
-            const TextSpan(text: ' to Vault’s Secrets.'),
+            const TextSpan(text: ' to Safe’s Secrets.'),
           ],
         );
 }

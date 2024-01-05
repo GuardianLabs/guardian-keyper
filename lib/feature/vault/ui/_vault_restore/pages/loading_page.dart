@@ -53,7 +53,7 @@ class _LoadingPageState extends State<LoadingPage> {
         children: [
           // Header
           const HeaderBar(
-            caption: 'Restore a Vault',
+            caption: 'Restore a Safe',
             rightButton: HeaderBarButton.close(),
           ),
           // Body

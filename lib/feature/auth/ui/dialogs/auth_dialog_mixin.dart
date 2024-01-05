@@ -29,6 +29,9 @@ mixin class AuthDialogMixin {
       buttonStyle: ButtonStyle(
         foregroundColor: MaterialStatePropertyAll(theme.colorScheme.onSurface),
         side: const MaterialStatePropertyAll(BorderSide.none),
+        shape: const MaterialStatePropertyAll(CircleBorder(
+          side: BorderSide.none,
+        )),
       ),
     );
   }

@@ -1,10 +1,9 @@
 import 'dart:async';
-
 import 'package:get_it/get_it.dart';
 
 import 'package:guardian_keyper/data/services/preferences_service.dart';
 
-import 'package:guardian_keyper/feature/auth/data/auth_service.dart';
+import 'auth_service.dart';
 
 export 'package:get_it/get_it.dart';
 
@@ -56,7 +55,7 @@ class AuthManager {
     return this;
   }
 
-  Future<void> dispose() async {
+  Future<void> close() async {
     await _stateStreamController.close();
   }
 

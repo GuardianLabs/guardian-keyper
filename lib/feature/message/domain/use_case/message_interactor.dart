@@ -33,7 +33,7 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
       .where((e) => e.peerId != selfId)
       .sorted((a, b) => b.timestamp.compareTo(a.timestamp));
 
-  Future<void> dispose() async {
+  Future<void> close() async {
     await _streamSubscription.cancel();
   }
 

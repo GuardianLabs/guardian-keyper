@@ -46,7 +46,7 @@ class VaultShowScreen extends StatelessWidget {
                 PageTitle(
                   title: 'Guardians',
                   subtitle: 'Adding ${vault.maxSize} Guardians '
-                      'will activate your Vault, making it '
+                      'will activate your Safe, making it '
                       'ready to securely hold your Secrets.',
                 )
               else

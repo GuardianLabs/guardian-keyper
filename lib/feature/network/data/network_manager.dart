@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 
@@ -111,7 +110,7 @@ class NetworkManager {
     return this;
   }
 
-  Future<void> dispose() async {
+  Future<void> close() async {
     await stop();
     await _stateStreamController.close();
   }

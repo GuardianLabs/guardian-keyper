@@ -47,11 +47,11 @@ class SecretListTile extends StatelessWidget {
                 ? null
                 : () async {
                     final isSecretRestoreExplainerHidden =
-                        GetIt.I<SettingsRepository>().get<bool>(
-                                SettingsRepositoryKeys
+                        await GetIt.I<SettingsRepository>().get<bool>(
+                                PreferencesKeys
                                     .keyIsSecretRestoreExplainerHidden) ??
                             false;
-                    if (!isSecretRestoreExplainerHidden) {
+                    if (!isSecretRestoreExplainerHidden && context.mounted) {
                       final shouldContinue =
                           await OnSecretRestoreDialog.show(context) ?? false;
                       if (!shouldContinue) return;

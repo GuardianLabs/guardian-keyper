@@ -13,8 +13,8 @@ class OnDuplicateDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
         icon: const Icon(Icons.check_circle, size: 80),
-        titleString: 'The Vault is yours',
-        textString: 'Seems like you are the owner of the Vault already. '
+        titleString: 'The Safe is yours',
+        textString: 'Seems like you are the owner of the Safe already. '
             'No recovery required here.',
         footer: FilledButton(
           onPressed: Navigator.of(context).pop,

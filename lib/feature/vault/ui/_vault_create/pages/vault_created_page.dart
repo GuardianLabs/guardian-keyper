@@ -16,10 +16,10 @@ class VaultCreatedPage extends StatelessWidget {
             const Spacer(),
             const Icon(Icons.check_circle, size: 64),
             const PageTitle(
-              title: 'Vault Created!',
+              title: 'Safe Created!',
               subtitle:
-                  'Your vault is now set up. Next, add Guardians to ensure '
-                  'your Vault`s security and recovery.',
+                  'Your Safe is now set up. Next, add Guardians to ensure '
+                  'your Safe`s security and recovery.',
             ),
             const Spacer(),
             // Footer
@@ -31,7 +31,7 @@ class VaultCreatedPage extends StatelessWidget {
                   routeVaultShow,
                   arguments: context.read<VaultCreatePresenter>().vault.id,
                 ),
-                child: const Text('Go to Vault'),
+                child: const Text('Go to Safe'),
               ),
             ),
           ],

@@ -28,7 +28,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
   Widget build(BuildContext context) => BottomSheetWidget(
         icon: const IconOf.confirmIdentity(size: 80),
         titleString: 'Confirm Identity!',
-        textString: 'Helping with Vault recovery or changing ownership?\n'
+        textString: 'Helping with Safe recovery or changing ownership?\n'
             'Please verify if the person is the current '
             'Owner or a newly approved one.\n\n'
             'Assisting a malicious individual could lead to asset loss!',
@@ -49,7 +49,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
                     title: 'Assistance QR',
                     subtitle:
                         'Only display this Assistance QR to the current or '
-                        'a new designated Vault Owner. If sharing QR is not '
+                        'a new designated Safe Owner. If sharing QR is not '
                         'possible, try sharing a text-code instead.',
                   );
                 }

@@ -38,7 +38,7 @@ List<BottomNavigationBarItem> buildNavbarItems(BuildContext context) {
     ),
     // Vaults
     BottomNavigationBarItem(
-      label: 'Vaults',
+      label: 'Safe',
       icon: SvgPicture.asset(
         _vaultsSvg,
         colorFilter: unselectedColorFilter,

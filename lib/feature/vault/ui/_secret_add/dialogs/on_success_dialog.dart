@@ -14,11 +14,11 @@ class OnSuccessDialog extends StatelessWidget {
   Widget build(BuildContext context) => BottomSheetWidget(
         icon: const Icon(Icons.check_circle, size: 80),
         titleString: 'Secret Added Successfully!',
-        textString: 'Your Secret has been safely placed in the Vault, '
+        textString: 'Your Secret has been safely placed in the Safe, '
             'with each Guardian receiving a Shard for enhanced security.',
         footer: FilledButton(
           onPressed: Navigator.of(context).pop,
-          child: const Text('Go to Vault'),
+          child: const Text('Go to Safe'),
         ),
       );
 }

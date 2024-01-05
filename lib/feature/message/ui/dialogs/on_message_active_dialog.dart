@@ -16,7 +16,6 @@ class OnMessageActiveDialog extends StatefulWidget with MessageTextMixin {
   }) =>
       showModalBottomSheet<bool>(
         context: context,
-        useSafeArea: true,
         isScrollControlled: true,
         builder: (_) => OnMessageActiveDialog(message: message),
       );

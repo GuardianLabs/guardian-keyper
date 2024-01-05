@@ -22,9 +22,9 @@ const colorSwatchLight = MaterialColor(
   },
 );
 
-final colorSchemeLight = ColorScheme.fromSeed(
+final colorSchemeLight = ColorScheme.fromSwatch(
   brightness: Brightness.light,
-  seedColor: colorSwatchLight.shade500,
+  primarySwatch: colorSwatchLight,
 ).copyWith(
   background: const Color(0xFFF7F7F7),
   onBackground: const Color(0xFF6A6581),
@@ -99,6 +99,12 @@ final themeLight = themeData.copyWith(
     tileColor: colorSchemeLight.surface,
     iconColor: colorSchemeLight.onSurface,
   ),
+  // Outlined Button
+  outlinedButtonTheme: OutlinedButtonThemeData(
+      style: themeData.outlinedButtonTheme.style?.copyWith(
+    foregroundColor: MaterialStatePropertyAll(colorSchemeDark.primary),
+    side: MaterialStatePropertyAll(BorderSide(color: colorSchemeDark.primary)),
+  )),
   // SnackBar
   snackBarTheme: themeData.snackBarTheme.copyWith(
     backgroundColor: colorSchemeExtensionDark.highlightColor,

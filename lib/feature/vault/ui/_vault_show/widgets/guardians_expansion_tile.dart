@@ -20,7 +20,7 @@ class GuardiansExpansionTile extends StatelessWidget {
   Widget build(BuildContext context) => ExpansionTile(
         initiallyExpanded: initiallyExpanded,
         childrenPadding: EdgeInsets.zero,
-        title: const Text('Vault’s Guardians'),
+        title: const Text('Safe’s Guardians'),
         subtitle: vault.isFull
             ? Text('${vault.size} out of ${vault.maxSize}')
             : Row(

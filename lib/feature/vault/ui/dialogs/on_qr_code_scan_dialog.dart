@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
@@ -27,8 +29,20 @@ class OnQrCodeScanDialog extends StatefulWidget {
 }
 
 class _OnQrCodeScanDialogState extends State<OnQrCodeScanDialog> {
+  late final ThemeData _theme;
+
   bool _hasResult = false;
   late Rect _scanWindow;
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.light,
+    ));
+  }
 
   @override
   void didChangeDependencies() {
@@ -40,6 +54,16 @@ class _OnQrCodeScanDialogState extends State<OnQrCodeScanDialog> {
       width: scanAreaSize,
       height: scanAreaSize,
     );
+    _theme = Theme.of(context);
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setSystemUIOverlayStyle(
+        _theme.colorScheme.brightness == Brightness.light
+            ? systemStyleLight
+            : systemStyleDark);
+    super.dispose();
   }
 
   @override
@@ -63,7 +87,10 @@ class _OnQrCodeScanDialogState extends State<OnQrCodeScanDialog> {
             child: HeaderBar(
               isTransparent: true,
               caption: widget.caption,
-              rightButton: const HeaderBarButton.close(),
+              rightButton: const Material(
+                color: Colors.transparent,
+                child: HeaderBarButton.close(),
+              ),
             ),
           ),
         ],

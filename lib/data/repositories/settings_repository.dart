@@ -1,65 +1,36 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:hive/hive.dart';
+import 'package:get_it/get_it.dart';
+
+import 'package:guardian_keyper/data/services/preferences_service.dart';
 
 export 'package:get_it/get_it.dart';
-
-enum SettingsRepositoryKeys {
-  keyIsDarkModeOn,
-  keyIsUnderstandingShardsHidden,
-  keyIsSecretRestoreExplainerHidden,
-}
+export 'package:guardian_keyper/data/enums.dart';
 
 typedef SettingsRepositoryEvent<T extends Object> = ({
-  SettingsRepositoryKeys key,
+  PreferencesKeys key,
   T? value,
 });
 
 class SettingsRepository {
+  final _cache = <PreferencesKeys, Object>{};
+  final _preferencesService = GetIt.I<PreferencesService>();
   final _events = StreamController<SettingsRepositoryEvent>.broadcast();
 
-  late final Box<String> _storage;
-
-  Future<SettingsRepository> init() async {
-    _storage = await Hive.openBox<String>('settings');
-    return this;
-  }
-
-  Future<void> dispose() async {}
-
-  T? get<T extends Object>(
-    SettingsRepositoryKeys key, {
+  Future<T?> get<T extends Object>(
+    PreferencesKeys key, {
     T? defaultValue,
-  }) {
-    final value = _storage.get(key.name);
-    return value == null
-        ? defaultValue
-        : switch (T) {
-            String => value as T,
-            int => int.tryParse(value) as T?,
-            bool => bool.tryParse(value) as T?,
-            double => double.tryParse(value) as T?,
-            Uint8List => _tryParseBase64(value) as T?,
-            _ => throw const SettingsValueFormatException(),
-          };
-  }
+  }) async =>
+      _cache[key] as T? ?? await _preferencesService.get<T>(key);
 
-  Future<T> put<T extends Object>(SettingsRepositoryKeys key, T value) async {
-    switch (T) {
-      case int || bool || double || String:
-        await _storage.put(key.name, value.toString());
-      case Uint8List:
-        await _storage.put(key.name, base64UrlEncode(value as Uint8List));
-      default:
-        throw const SettingsValueFormatException();
-    }
+  Future<T> put<T extends Object>(PreferencesKeys key, T value) async {
+    await _preferencesService.set<T>(key, value);
     _events.add((key: key, value: value));
+    _cache[key] = value;
     return value;
   }
 
   Future<T?> putNullable<T extends Object>(
-    SettingsRepositoryKeys key,
+    PreferencesKeys key,
     T? value,
   ) async {
     if (value == null) {
@@ -70,35 +41,21 @@ class SettingsRepository {
     }
   }
 
-  Future<void> delete(SettingsRepositoryKeys key) async {
-    await _storage.delete(key.name);
+  Future<void> delete(PreferencesKeys key) async {
+    await _preferencesService.delete(key);
     _events.add((key: key, value: null));
+    _cache.remove(key);
   }
 
-  Stream<SettingsRepositoryEvent<T>> watch<T extends Object>(
-    SettingsRepositoryKeys key,
-  ) =>
-      _events.stream
-          .where((e) => e.key == key)
-          .map<SettingsRepositoryEvent<T>>((e) => (
-                key: key,
-                value: e.value as T?,
-              ));
-
-  Future<void> clear() => _storage.clear().then((_) => _storage.compact());
-
-  Future<void> flush() => _storage.flush().then((_) => _storage.compact());
-
-  Uint8List? _tryParseBase64(String? value) {
-    if (value == null) return null;
-    try {
-      return base64Decode(value);
-    } catch (_) {
-      return null;
-    }
+  Stream<SettingsRepositoryEvent<T>> watch<T extends Object>([
+    PreferencesKeys? key,
+  ]) {
+    final stream = key == null
+        ? _events.stream
+        : _events.stream.where((e) => e.key == key);
+    return stream.map<SettingsRepositoryEvent<T>>((e) => (
+          key: e.key,
+          value: e.value as T?,
+        ));
   }
-}
-
-class SettingsValueFormatException extends FormatException {
-  const SettingsValueFormatException() : super('Unsupported value type');
 }

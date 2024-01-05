@@ -57,7 +57,7 @@ class ShardShowScreen extends StatelessWidget {
         Padding(
           padding: paddingT12,
           child: OutlinedButton(
-            child: const Text('Move Vault to this Device'),
+            child: const Text('Move Safe to this Device'),
             onPressed: () => OnBecomeOwnerDialog.show(
               context,
               vaultId: vault.id,

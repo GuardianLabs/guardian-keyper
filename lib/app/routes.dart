@@ -8,6 +8,7 @@ import 'package:guardian_keyper/feature/vault/ui/_secret_add/vault_secret_add_sc
 import 'package:guardian_keyper/feature/vault/ui/_vault_restore/vault_restore_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_guardian_add/vault_guardian_add_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_secret_recovery/vault_secret_recovery_screen.dart';
+import 'package:guardian_keyper/feature/wallet/ui/_wallet_create/wallet_create_wizard_screen.dart';
 
 const routeIntro = '/intro';
 const routeSettings = '/settings';
@@ -19,6 +20,7 @@ const routeVaultSecretAdd = '/vault/secret/add';
 const routeVaultGuardianAdd = '/vault/guardian/add';
 const routeVaultSecretRecovery = '/vault/secret/recovery';
 const routeDevPanel = DevPanelScreen.route;
+const routeWalletCreateWizard = WalletCreateWizardScreen.route;
 
 final routes = {
   routeIntro: (_) => const IntroScreen(),
@@ -31,4 +33,5 @@ final routes = {
   routeVaultSecretAdd: (_) => const VaultSecretAddScreen(),
   routeVaultGuardianAdd: (_) => const VaultGuardianAddScreen(),
   routeVaultSecretRecovery: (_) => const VaultSecretRecoveryScreen(),
+  routeWalletCreateWizard: (_) => const WalletCreateWizardScreen(),
 };
