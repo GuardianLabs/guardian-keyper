@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/utils/screen_size.dart';
 
@@ -5,6 +7,7 @@ import 'package:guardian_keyper/feature/vault/ui/widgets/shards_list.dart';
 import 'package:guardian_keyper/feature/vault/ui/widgets/vaults_list.dart';
 import 'package:guardian_keyper/feature/message/ui/widgets/requests_list.dart';
 
+import 'widgets/dev_drawer.dart';
 import 'widgets/dashboard_list.dart';
 import 'utils/build_navbar_items.dart';
 
@@ -46,6 +49,7 @@ class HomeScreenState extends State<HomeScreen> {
           items: _navBarItems,
           onTap: (page) => setState(() => _currentTab = page),
         ),
+        drawer: kDebugMode ? const DevDrawer() : null,
         child: PageStorage(
           bucket: _tabsBucket,
           child: _tabs[_currentTab],

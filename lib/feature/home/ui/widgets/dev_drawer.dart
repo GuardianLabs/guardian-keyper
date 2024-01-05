@@ -10,18 +10,11 @@ import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart
 import 'package:guardian_keyper/feature/onboarding/ui/onboarding_screen.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
 
-class DevPanelScreen extends StatelessWidget {
-  static const route = '/dev_panel';
-
-  const DevPanelScreen({super.key});
+class DevDrawer extends StatelessWidget {
+  const DevDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) => ScaffoldSafe(
-        header: const HeaderBar(
-          caption: 'Developer panel',
-          rightButton: HeaderBarButton.close(),
-        ),
-        isSeparated: true,
+  Widget build(BuildContext context) => NavigationDrawer(
         children: [
           ListTile(
             title: const Text('Clear all Requests'),

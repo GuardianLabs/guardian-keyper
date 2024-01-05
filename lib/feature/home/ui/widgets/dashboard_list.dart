@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/action_card.dart';
@@ -140,20 +138,6 @@ class DashboardList extends StatelessWidget {
             ),
           ),
         ),
-        // Dev panel
-        if (kDebugMode)
-          Padding(
-            padding: paddingT20,
-            child: ActionCard(
-              icon: Icon(
-                Icons.app_shortcut,
-                color: brandColors.dangerColor,
-              ),
-              title: 'DevPanel',
-              subtitle: 'Shortcut to show mocked dialogs and components',
-              onTap: () => Navigator.of(context).pushNamed(routeDevPanel),
-            ),
-          ),
       ],
     );
   }

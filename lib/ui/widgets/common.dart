@@ -19,6 +19,7 @@ const styleW600 = TextStyle(fontWeight: FontWeight.w600);
 class ScaffoldSafe extends StatelessWidget {
   const ScaffoldSafe({
     this.header,
+    this.drawer,
     this.child,
     this.children,
     this.bottomNavigationBar,
@@ -29,6 +30,7 @@ class ScaffoldSafe extends StatelessWidget {
 
   final Widget? header;
   final Widget? child;
+  final Widget? drawer;
   final Widget? bottomNavigationBar;
   final List<Widget>? children;
   final bool isSeparatorSmall;
@@ -64,6 +66,7 @@ class ScaffoldSafe extends StatelessWidget {
             bottomNavigationBar: bottomNavigationBar,
             resizeToAvoidBottomInset: true,
             primary: true,
+            drawer: drawer,
           ),
         ),
       );
