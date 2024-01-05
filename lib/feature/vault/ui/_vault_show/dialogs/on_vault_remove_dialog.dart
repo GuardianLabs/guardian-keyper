@@ -10,7 +10,6 @@ class OnVaultRemoveDialog extends StatelessWidget {
   }) =>
       showModalBottomSheet<bool>(
         context: context,
-        useSafeArea: true,
         isScrollControlled: true,
         builder: (_) => OnVaultRemoveDialog(vaultId: vaultId),
       );

@@ -5,14 +5,9 @@ import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-enum PreferencesKeys {
-  keySeed,
-  keyPassCode,
-  keyLastStart,
-  keyDeviceName,
-  keyIsBootstrapEnabled,
-  keyIsBiometricsEnabled,
-}
+import 'package:guardian_keyper/data/enums.dart';
+
+export 'package:guardian_keyper/data/enums.dart';
 
 class PreferencesService {
   static const _iOptions = IOSOptions(

@@ -3,7 +3,6 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 class OnLimitedAccessDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) => showModalBottomSheet<bool>(
         context: context,
-        useSafeArea: true,
         isDismissible: false,
         isScrollControlled: true,
         builder: (_) => const OnLimitedAccessDialog(),

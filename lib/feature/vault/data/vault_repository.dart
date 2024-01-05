@@ -28,7 +28,7 @@ class VaultRepository {
     return this;
   }
 
-  Future<void> dispose() async {}
+  Future<void> close() async {}
 
   Future<void> clear() => _storage.clear();
 

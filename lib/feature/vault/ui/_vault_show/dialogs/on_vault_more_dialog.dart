@@ -11,7 +11,6 @@ class OnVaultMoreDialog extends StatelessWidget {
   }) =>
       showModalBottomSheet<bool>(
         context: context,
-        useSafeArea: true,
         isScrollControlled: true,
         builder: (_) => OnVaultMoreDialog(vaultId: vaultId),
       );

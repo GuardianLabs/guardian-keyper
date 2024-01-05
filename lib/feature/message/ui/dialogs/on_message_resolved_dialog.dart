@@ -12,7 +12,6 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
   }) =>
       showModalBottomSheet<bool>(
         context: context,
-        useSafeArea: true,
         isScrollControlled: true,
         builder: (_) => OnMessageResolvedDialog(message: message),
       );

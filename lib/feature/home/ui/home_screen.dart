@@ -34,14 +34,13 @@ class HomeScreenState extends State<HomeScreen> {
 
   late final _navBarItems = buildNavbarItems(context);
 
-  late final _isTitleVisible =
-      MediaQuery.of(context).size.height >= ScreenMedium.height;
-
   int _currentTab = 0;
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-        header: _isTitleVisible ? _headers[_currentTab] : null,
+        header: MediaQuery.of(context).size.height >= ScreenMedium.height
+            ? _headers[_currentTab]
+            : null,
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentTab,
           items: _navBarItems,

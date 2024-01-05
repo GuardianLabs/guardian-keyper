@@ -12,7 +12,6 @@ class OnRemoveSecretDialog extends StatelessWidget {
   }) =>
       showModalBottomSheet(
         context: context,
-        useSafeArea: true,
         isScrollControlled: true,
         builder: (_) => OnRemoveSecretDialog(
           vault: vault,

@@ -30,7 +30,7 @@ class _OnSecretRestoreDialogState extends State<OnSecretRestoreDialog> {
             value: _isChecked,
             onChanged: (value) async {
               await _settingsRepository.putNullable(
-                SettingsRepositoryKeys.keyIsSecretRestoreExplainerHidden,
+                PreferencesKeys.keyIsSecretRestoreExplainerHidden,
                 value,
               );
               setState(() => _isChecked = value ?? false);

@@ -68,6 +68,7 @@ final themeDark = themeData.copyWith(
   expansionTileTheme: themeData.expansionTileTheme.copyWith(
     collapsedIconColor: colorSchemeDark.onPrimary,
     iconColor: colorSchemeDark.onPrimary,
+    textColor: colorSchemeDark.onPrimary,
   ),
   // Filled Button
   filledButtonTheme: FilledButtonThemeData(
@@ -81,6 +82,11 @@ final themeDark = themeData.copyWith(
         (states) => states.contains(MaterialState.disabled)
             ? colorSchemeDark.primary.withOpacity(0.5)
             : colorSchemeDark.primary,
+      ),
+      shape: const MaterialStatePropertyAll(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadiusDirectional.all(Radius.circular(8)),
+        ),
       ),
     ),
   ),
@@ -119,6 +125,11 @@ final themeDark = themeData.copyWith(
           ? colorSchemeDark.onPrimary.withOpacity(0.5)
           : colorSchemeDark.onPrimary,
     ),
+    shape: const MaterialStatePropertyAll<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadiusDirectional.all(Radius.circular(8)),
+      ),
+    ),
     side: MaterialStateProperty.resolveWith<BorderSide>(
       (states) => BorderSide(
         color: states.contains(MaterialState.disabled)
@@ -131,6 +142,8 @@ final themeDark = themeData.copyWith(
   snackBarTheme: themeData.snackBarTheme.copyWith(
     backgroundColor: colorSchemeExtensionDark.highlightColor,
     contentTextStyle: const TextStyle(color: Color(0xFF004D45)),
+    closeIconColor: const Color(0xFF004D45),
+    showCloseIcon: true,
   ),
   // Switch
   switchTheme: SwitchThemeData(
@@ -179,4 +192,6 @@ final themeDark = themeData.copyWith(
       color: colorSchemeDark.onSurface,
     ),
   ),
+  // ignore: deprecated_member_use
+  useMaterial3: false,
 );

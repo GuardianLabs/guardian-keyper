@@ -44,7 +44,7 @@ class _OnSecretSharingDialogState extends State<OnSecretSharingDialog> {
             value: _isChecked,
             onChanged: (value) async {
               await _settingsRepository.putNullable(
-                SettingsRepositoryKeys.keyIsUnderstandingShardsHidden,
+                PreferencesKeys.keyIsUnderstandingShardsHidden,
                 value,
               );
               setState(() => _isChecked = value ?? false);

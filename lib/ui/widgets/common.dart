@@ -70,13 +70,11 @@ class ScaffoldSafe extends StatelessWidget {
 }
 
 class HeaderBar extends StatelessWidget {
-  static const _emptyButton = SizedBox(height: 40, width: 40);
-
   const HeaderBar({
     super.key,
     this.caption = '',
-    this.leftButton = _emptyButton,
-    this.rightButton = _emptyButton,
+    this.leftButton,
+    this.rightButton,
     this.isTransparent = false,
   });
 
@@ -93,27 +91,21 @@ class HeaderBar extends StatelessWidget {
       color: isTransparent ? Colors.transparent : theme.colorScheme.background,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Left Button
-          Padding(
-            padding: const EdgeInsets.all(14),
+          SizedBox.square(
+            dimension: toolbarHeight,
             child: leftButton,
           ),
-          // Caption
-          Expanded(
-            child: Center(
-              child: Text(
-                caption,
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
-              ),
-            ),
+          Text(
+            caption,
+            maxLines: 1,
+            softWrap: false,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.titleMedium,
           ),
-          // Right Button
-          Padding(
-            padding: const EdgeInsets.all(14),
+          SizedBox.square(
+            dimension: toolbarHeight,
             child: rightButton,
           ),
         ],
@@ -148,9 +140,16 @@ class HeaderBarButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) => IconButton.filledTonal(
-        onPressed: onPressed ?? Navigator.of(context).pop,
-        icon: Icon(icon),
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.secondary,
+          shape: BoxShape.circle,
+        ),
+        margin: const EdgeInsets.all(14),
+        child: IconButton(
+          onPressed: onPressed ?? Navigator.of(context).pop,
+          icon: Icon(icon),
+        ),
       );
 }
 
