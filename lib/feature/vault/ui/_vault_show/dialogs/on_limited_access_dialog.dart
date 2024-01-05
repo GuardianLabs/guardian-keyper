@@ -14,8 +14,8 @@ class OnLimitedAccessDialog extends StatelessWidget {
   Widget build(BuildContext context) => BottomSheetWidget(
         titleString: 'Limited Access',
         textString: 'With limited access, you can restore Secrets, but you '
-            'won`t be able to add new Secrets to the Vault. To get full '
-            'access, make sure to add all the guardians linked to the vault.',
+            'won`t be able to add new Secrets to the Safe. To get full '
+            'access, make sure to add all the guardians linked to the Safe.',
         footer: FilledButton(
           onPressed: Navigator.of(context).pop,
           child: const Text('Got it'),

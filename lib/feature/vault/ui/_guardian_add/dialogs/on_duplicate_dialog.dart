@@ -33,7 +33,7 @@ class OnDuplicateDialog extends StatelessWidget {
             style: styleW600,
           ),
           const TextSpan(
-            text: ' to this Vault. Try adding a different Guardian.',
+            text: ' to this Safe. Try adding a different Guardian.',
           ),
         ],
         footer: FilledButton(

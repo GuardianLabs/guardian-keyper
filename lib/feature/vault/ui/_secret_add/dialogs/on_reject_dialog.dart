@@ -36,7 +36,7 @@ class OnRejectDialog extends StatelessWidget {
         ],
         footer: FilledButton(
           onPressed: Navigator.of(context).pop,
-          child: const Text('Go to Vault'),
+          child: const Text('Go to Safe'),
         ),
       );
 }

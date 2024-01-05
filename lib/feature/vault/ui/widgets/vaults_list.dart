@@ -20,14 +20,14 @@ class VaultsList extends StatelessWidget {
           children: [
             if (vaults.isEmpty)
               const PageTitle(
-                title: 'Welcome to Vaults',
-                subtitle: 'The Vaults is a place where you can securely keep '
+                title: 'Welcome to Safes',
+                subtitle: 'The Safes is a place where you can securely keep '
                     'your secrets such as seed phrases or passwords.',
               ),
             Padding(
               padding: paddingAll20,
               child: FilledButton(
-                child: const Text('Add a new Vault'),
+                child: const Text('Add a new Safe'),
                 onPressed: () => Navigator.pushNamed(
                   context,
                   routeVaultCreate,

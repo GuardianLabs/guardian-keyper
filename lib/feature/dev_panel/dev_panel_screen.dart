@@ -37,13 +37,13 @@ class DevPanelScreen extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text('Clear all Vaults'),
+            title: const Text('Clear all Safes'),
             onTap: () async {
               await GetIt.I<VaultRepository>().clear();
               if (context.mounted) {
                 showSnackBar(
                   context,
-                  text: 'Vaults has been cleared!',
+                  text: 'Safes has been cleared!',
                   isFloating: true,
                 );
               }

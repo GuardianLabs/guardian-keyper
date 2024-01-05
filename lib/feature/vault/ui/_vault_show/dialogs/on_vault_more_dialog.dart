@@ -25,7 +25,7 @@ class OnVaultMoreDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
         footer: FilledButton(
-          child: const Text('Remove the Vault'),
+          child: const Text('Remove the Safe'),
           onPressed: () {
             Navigator.of(context).pop();
             OnVaultRemoveDialog.show(context, vaultId: vaultId);

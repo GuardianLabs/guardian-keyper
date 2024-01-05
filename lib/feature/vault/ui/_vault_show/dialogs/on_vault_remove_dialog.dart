@@ -24,10 +24,10 @@ class OnVaultRemoveDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
         icon: const Icon(Icons.warning_rounded, size: 80),
-        titleString: 'Do you want to remove this Vault?',
-        textString: 'All the Secrets from this Vault will be removed as well.',
+        titleString: 'Do you want to remove this Safe?',
+        textString: 'All the Secrets from this Safe will be removed as well.',
         footer: FilledButton(
-          child: const Text('Yes, remove the Vault'),
+          child: const Text('Yes, remove the Safe'),
           onPressed: () async {
             await GetIt.I<VaultInteractor>().removeVault(vaultId);
             if (context.mounted) {

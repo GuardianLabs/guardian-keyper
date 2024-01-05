@@ -17,7 +17,7 @@ class OnFailDialog extends StatelessWidget {
         textString: 'Sharding process has been terminated.',
         footer: FilledButton(
           onPressed: Navigator.of(context).pop,
-          child: const Text('Go to Vault'),
+          child: const Text('Go to Safe'),
         ),
       );
 }

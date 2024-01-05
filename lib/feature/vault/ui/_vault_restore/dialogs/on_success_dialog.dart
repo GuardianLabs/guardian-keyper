@@ -36,7 +36,7 @@ class OnSuccessDialog extends StatelessWidget {
           titleString: 'Ownership Changed',
           textSpan: [
             const TextSpan(
-              text: 'The ownership of the Vault ',
+              text: 'The ownership of the Safe ',
             ),
             TextSpan(
               text: vaultName,
@@ -60,7 +60,7 @@ class OnSuccessDialog extends StatelessWidget {
               style: styleW600,
             ),
             const TextSpan(
-              text: ' approved the transfer of ownership for the Vault ',
+              text: ' approved the transfer of ownership for the Safe ',
             ),
             TextSpan(
               text: vaultName,

@@ -24,7 +24,7 @@ class GetCodePage extends StatelessWidget {
           ),
           // Body
           const PageTitle(
-            title: 'Add a Guardian to your Vault',
+            title: 'Add a Guardian to your Safe',
             subtitle: 'Ask a Guardian to tap “Become a Guardian” in the app, '
                 'and provide their Guardian QR code or text code.',
           ),

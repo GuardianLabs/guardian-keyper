@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   static const _headers = [
     null,
-    HeaderBar(caption: 'Vaults'),
+    HeaderBar(caption: 'Safes'),
     HeaderBar(caption: 'Shards'),
     HeaderBar(caption: 'Requests'),
   ];

@@ -67,9 +67,9 @@ class DashboardList extends StatelessWidget {
               color: brandColors.highlightColor,
               size: 24,
             ),
-            title: 'Create a Vault',
+            title: 'Create a Safe',
             subtitle: 'Safely store seed phrases, passwords, '
-                'and codes in your Vault.',
+                'and codes in your Safe.',
             onTap: () => Navigator.of(context).pushNamed(routeVaultCreate),
           ),
         ),
@@ -82,8 +82,8 @@ class DashboardList extends StatelessWidget {
               color: brandColors.highlightColor,
               size: 24,
             ),
-            title: 'Restore my Vault',
-            subtitle: 'Recover your Vault with help of Guardians.',
+            title: 'Restore my Safe',
+            subtitle: 'Recover your Safe with help of Guardians.',
             onTap: () => Navigator.of(context).pushNamed(routeVaultRestore),
           ),
         ),
@@ -92,7 +92,7 @@ class DashboardList extends StatelessWidget {
           padding: paddingT20,
           child: ActionCard(
             title: 'Become a Guardian',
-            subtitle: 'Safeguard a part of another user`s Vault.',
+            subtitle: 'Safeguard a part of another user`s Safe.',
             icon: Icon(
               Icons.shield_outlined,
               color: brandColors.highlightColor,
@@ -109,7 +109,7 @@ class DashboardList extends StatelessWidget {
                   title: 'Guardian QR code',
                   subtitle:
                       'To become a Guardian, show the QR code below to the '
-                      'Owner of the Vault. If sharing QR is not possible, '
+                      'Owner of the Safe. If sharing QR is not possible, '
                       'try sharing a text-code instead.',
                 );
               }
@@ -129,8 +129,8 @@ class DashboardList extends StatelessWidget {
                   color: brandColors.highlightColor,
                   size: 24,
                 ),
-                title: 'Assist with a Vault',
-                subtitle: 'Provide assistance to restore a Vault '
+                title: 'Assist with a Safe',
+                subtitle: 'Provide assistance to restore a Safe '
                     'or transfer its ownership to another user.',
                 onTap: () => OnVaultTransferDialog.show(
                   context,

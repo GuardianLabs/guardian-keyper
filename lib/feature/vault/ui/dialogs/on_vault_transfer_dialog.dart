@@ -26,12 +26,12 @@ class OnVaultTransferDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
         header: const HeaderBar(
-          caption: 'Assist with a Vault',
+          caption: 'Assist with a Safe',
           leftButton: HeaderBarButton.back(),
         ),
         children: [
           const PageTitle(
-            subtitle: 'Select a Vault to assist with its recovery '
+            subtitle: 'Select a Safe to assist with its recovery '
                 'or ownership transfer.',
           ),
           for (final vault in vaults)

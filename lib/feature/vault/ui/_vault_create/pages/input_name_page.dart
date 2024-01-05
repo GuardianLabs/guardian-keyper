@@ -11,7 +11,7 @@ class InputNamePage extends StatelessWidget {
         children: [
           // Header
           HeaderBar(
-            caption: 'Name the Vault',
+            caption: 'Name the Safe',
             leftButton: HeaderBarButton.back(
               onPressed: context.read<VaultCreatePresenter>().previousPage,
             ),
@@ -22,12 +22,12 @@ class InputNamePage extends StatelessWidget {
             child: ListView(
               padding: paddingH20,
               children: [
-                const PageTitle(title: 'Create a name for your Vault'),
+                const PageTitle(title: 'Create a name for your Safe'),
                 TextFormField(
                   autofocus: true,
                   keyboardType: TextInputType.text,
                   maxLength: maxNameLength,
-                  decoration: const InputDecoration(labelText: ' Vault name '),
+                  decoration: const InputDecoration(labelText: ' Safe name '),
                   onChanged: context.read<VaultCreatePresenter>().setVaultName,
                 ),
                 // Footer
