@@ -38,7 +38,7 @@ class ScaffoldSafe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ColoredBox(
-        color: Theme.of(context).canvasColor,
+        color: Theme.of(context).colorScheme.background,
         child: SafeArea(
           child: Scaffold(
             appBar: header == null
