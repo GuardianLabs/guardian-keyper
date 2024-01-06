@@ -56,6 +56,19 @@ class DevDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            title: const Text('Set passcode to 0'),
+            onTap: () async {
+              await GetIt.I<AuthManager>().setPassCode('0');
+              if (context.mounted) {
+                showSnackBar(
+                  context,
+                  text: 'Passcode has been set to 0!',
+                  isFloating: true,
+                );
+              }
+            },
+          ),
+          ListTile(
             title: const Text('Show Onboarding'),
             onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
               builder: (context) => const OnboardingScreen(),

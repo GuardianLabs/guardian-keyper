@@ -9,10 +9,10 @@ import 'package:guardian_keyper/feature/message/domain/use_case/message_interact
 export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 
-enum HomeState { initial, normal, needAuth, needOnboarding, needExit }
+enum HomeState { normal, needAuth, needOnboarding }
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit() : super(HomeState.initial);
+  HomeCubit() : super(HomeState.needAuth);
 
   final _authManager = GetIt.I<AuthManager>();
   // final _walletManager = GetIt.I<WalletManager>();
