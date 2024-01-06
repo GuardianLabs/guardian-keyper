@@ -4,12 +4,16 @@ import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
+import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
+// import 'package:guardian_keyper/feature/wallet/data/wallet_manager.dart';
+import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
+import 'package:guardian_keyper/feature/network/data/network_manager.dart';
+import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
+
 import 'package:guardian_keyper/feature/message/ui/request_handler.dart';
 import 'package:guardian_keyper/feature/auth/ui/dialogs/on_demand_auth_dialog.dart';
 // import 'package:guardian_keyper/feature/onboarding/ui/onboarding_screen.dart';
 import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
-
-import 'home_cubit.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -19,27 +23,47 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with WidgetsBindingObserver {
-  late final _cubit = GetIt.I<HomeCubit>();
+  final _authManager = GetIt.I<AuthManager>();
+  // final _walletManager = GetIt.I<WalletManager>();
+  final _networkManager = GetIt.I<NetworkManager>();
+  final _vaultRepository = GetIt.I<VaultRepository>();
+  final _messageInteractor = GetIt.I<MessageInteractor>();
 
   DateTime _lastExitTryAt = DateTime.now();
+
+  bool _canShowHome = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    Future.microtask(_cubit.start);
+    Future.microtask(() async {
+      // if (_walletManager.hasNoEntropy) {
+      if (_authManager.passCode.isEmpty) {
+        Navigator.of(context).pushNamed(routeIntro).then(_unlock);
+      } else if (_authManager.passCode.isNotEmpty) {
+        OnDemandAuthDialog.show(context).then(_unlock);
+        await _messageInteractor.pruneMessages();
+      }
+    });
   }
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.resumed:
-        await _cubit.onResume();
+        await _authManager.onResumed();
+        if (_authManager.needPasscode && mounted) {
+          OnDemandAuthDialog.show(context).then(_unlock);
+        }
       case AppLifecycleState.paused:
-        await _cubit.onPause();
+        await _authManager.onPause();
+        await _networkManager.stop();
+        await _vaultRepository.flush();
+        await _messageInteractor.flush();
       case _:
     }
-    super.didChangeAppLifecycleState(state);
   }
 
   @override
@@ -60,26 +84,12 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(BuildContext context) => BlocConsumer<HomeCubit, HomeState>(
-        bloc: _cubit,
-        buildWhen: (p, c) => c == HomeState.normal,
-        builder: (context, state) => switch (state) {
-          HomeState.normal => const RequestHandler(
-              key: Key('RequestHandlerWidget'),
-              child: HomeScreen(
-                key: Key('HomeScreenWidget'),
-              ),
-            ),
-          _ => Container(color: Theme.of(context).canvasColor),
-        },
-        listener: (context, state) {
-          switch (state) {
-            case HomeState.needAuth:
-              OnDemandAuthDialog.show(context).then(_cubit.unlock);
-            case HomeState.needOnboarding:
-              Navigator.of(context).pushNamed(routeIntro).then(_cubit.unlock);
-            case _:
-          }
-        },
-      );
+  Widget build(BuildContext context) => _canShowHome
+      ? const RequestHandler(child: HomeScreen())
+      : Container(color: Theme.of(context).canvasColor);
+
+  Future<void> _unlock([_]) async {
+    setState(() => _canShowHome = true);
+    await _networkManager.start();
+  }
 }

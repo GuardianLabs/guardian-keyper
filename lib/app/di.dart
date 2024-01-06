@@ -19,8 +19,6 @@ import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.d
 import 'package:guardian_keyper/feature/message/data/message_repository.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
-import 'home_cubit.dart';
-
 class DI {
   static bool _isInited = false;
 
@@ -92,10 +90,6 @@ class DI {
         // TBD: `true` for Keyper (2), `false` for Wallet (3), `null` then
         await preferences.get(PreferencesKeys.keyIsDarkModeOn, true),
       ),
-      dispose: (i) => i.close(),
-    );
-    GetIt.I.registerLazySingleton<HomeCubit>(
-      HomeCubit.new,
       dispose: (i) => i.close(),
     );
 
