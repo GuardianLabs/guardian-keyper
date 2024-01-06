@@ -21,7 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with WidgetsBindingObserver {
   late final _cubit = GetIt.I<HomeCubit>();
 
-  DateTime _lastExitTryAt = DateTime.timestamp();
+  DateTime _lastExitTryAt = DateTime.now();
 
   @override
   void initState() {
@@ -34,9 +34,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     switch (state) {
       case AppLifecycleState.resumed:
-        await _cubit.onResumed();
+        await _cubit.onResume();
       case AppLifecycleState.paused:
-        await _cubit.onPaused();
+        await _cubit.onPause();
       case _:
     }
     super.didChangeAppLifecycleState(state);
@@ -44,13 +44,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   Future<bool> didPopRoute() {
-    final now = DateTime.timestamp();
+    final now = DateTime.now();
     if (_lastExitTryAt.isBefore(now.subtract(snackBarDuration))) {
       _lastExitTryAt = now;
-      showSnackBar(
-        context,
-        text: 'Tap back again to exit',
-      );
+      showSnackBar(context, text: 'Tap back again to exit');
       return Future.value(true);
     }
     return super.didPopRoute();
@@ -65,6 +62,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) => BlocConsumer<HomeCubit, HomeState>(
         bloc: _cubit,
+        buildWhen: (p, c) => c == HomeState.normal,
         builder: (context, state) => switch (state) {
           HomeState.normal => const RequestHandler(
               key: Key('RequestHandlerWidget'),

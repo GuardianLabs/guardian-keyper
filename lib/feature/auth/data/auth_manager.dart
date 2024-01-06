@@ -26,7 +26,7 @@ class AuthManager {
 
   final _stateStreamController = StreamController<AuthManagerState>.broadcast();
 
-  late final vibrate = _authService.vibrate;
+  DateTime _lastPausedAt = DateTime.now();
 
   late String _passCode;
 
@@ -41,6 +41,9 @@ class AuthManager {
   bool get isBiometricsEnabled => _isBiometricsEnabled;
 
   bool get useBiometrics => hasBiometrics && isBiometricsEnabled;
+
+  bool get needPasscode => _lastPausedAt
+      .isBefore(DateTime.now().subtract(const Duration(seconds: 30)));
 
   Stream<AuthManagerState> get state => _stateStreamController.stream;
 
@@ -59,12 +62,14 @@ class AuthManager {
     await _stateStreamController.close();
   }
 
-  Future<void> onResumed() => _authService.getHasBiometrics().then(
-        (v) {
-          _hasBiometrics = v;
-          _updateState();
-        },
-      );
+  Future<void> onResumed() async {
+    _hasBiometrics = await _authService.getHasBiometrics();
+    _updateState();
+  }
+
+  Future<void> onPause() async => _lastPausedAt = DateTime.now();
+
+  Future<void> vibrate() => _authService.vibrate();
 
   Future<bool> localAuthenticate({
     bool biometricOnly = true,

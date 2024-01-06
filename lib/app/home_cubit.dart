@@ -9,7 +9,7 @@ import 'package:guardian_keyper/feature/message/domain/use_case/message_interact
 export 'package:get_it/get_it.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 
-enum HomeState { initial, normal, needAuth, needOnboarding }
+enum HomeState { initial, normal, needAuth, needOnboarding, needExit }
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeState.initial);
@@ -19,20 +19,6 @@ class HomeCubit extends Cubit<HomeState> {
   final _networkManager = GetIt.I<NetworkManager>();
   final _vaultRepository = GetIt.I<VaultRepository>();
   final _messageInteractor = GetIt.I<MessageInteractor>();
-
-  Future<void> onResumed() async {
-    if (state == HomeState.normal) {
-      await _networkManager.start();
-      await _authManager.onResumed();
-    }
-  }
-
-  Future<void> onPaused() async {
-    await _networkManager.stop();
-    await _vaultRepository.flush();
-    await _messageInteractor.flush();
-    emit(HomeState.needAuth);
-  }
 
   Future<void> unlock([_]) async {
     await _networkManager.start();
@@ -47,5 +33,17 @@ class HomeCubit extends Cubit<HomeState> {
       emit(HomeState.needAuth);
       await _messageInteractor.pruneMessages();
     }
+  }
+
+  Future<void> onResume() async {
+    await _authManager.onResumed();
+    if (_authManager.needPasscode) emit(HomeState.needAuth);
+  }
+
+  Future<void> onPause() async {
+    await _authManager.onPause();
+    await _networkManager.stop();
+    await _vaultRepository.flush();
+    await _messageInteractor.flush();
   }
 }
