@@ -32,7 +32,7 @@ class Stepper extends StatelessWidget {
     };
     final theme = Theme.of(context);
     return SafeArea(
-      minimum: const EdgeInsets.only(left: 16, right: 16),
+      minimum: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.max,

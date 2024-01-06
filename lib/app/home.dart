@@ -5,15 +5,13 @@ import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
-// import 'package:guardian_keyper/feature/wallet/data/wallet_manager.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
+import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 import 'package:guardian_keyper/feature/message/ui/request_handler.dart';
 import 'package:guardian_keyper/feature/auth/ui/dialogs/on_demand_auth_dialog.dart';
-// import 'package:guardian_keyper/feature/onboarding/ui/onboarding_screen.dart';
-import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -24,27 +22,24 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with WidgetsBindingObserver {
   final _authManager = GetIt.I<AuthManager>();
-  // final _walletManager = GetIt.I<WalletManager>();
   final _networkManager = GetIt.I<NetworkManager>();
   final _vaultRepository = GetIt.I<VaultRepository>();
   final _messageInteractor = GetIt.I<MessageInteractor>();
 
   DateTime _lastExitTryAt = DateTime.now();
 
-  bool _canShowHome = false;
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     Future.microtask(() async {
-      // if (_walletManager.hasNoEntropy) {
       if (_authManager.passCode.isEmpty) {
-        Navigator.of(context).pushNamed(routeIntro).then(_unlock);
+        await Navigator.of(context).pushNamed(routeIntro);
       } else if (_authManager.passCode.isNotEmpty) {
-        OnDemandAuthDialog.show(context).then(_unlock);
+        await OnDemandAuthDialog.show(context);
         await _messageInteractor.pruneMessages();
       }
+      await _networkManager.start();
     });
   }
 
@@ -55,7 +50,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         await _authManager.onResumed();
         if (_authManager.needPasscode && mounted) {
-          OnDemandAuthDialog.show(context).then(_unlock);
+          await OnDemandAuthDialog.show(context);
+          await _networkManager.start();
         }
       case AppLifecycleState.paused:
         await _authManager.onPause();
@@ -84,12 +80,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(BuildContext context) => _canShowHome
-      ? const RequestHandler(child: HomeScreen())
-      : Container(color: Theme.of(context).canvasColor);
-
-  Future<void> _unlock([_]) async {
-    setState(() => _canShowHome = true);
-    await _networkManager.start();
-  }
+  Widget build(BuildContext context) =>
+      const RequestHandler(child: HomeScreen());
 }

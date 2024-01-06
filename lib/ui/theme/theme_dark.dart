@@ -1,7 +1,7 @@
 part of 'theme.dart';
 
 const systemStyleDark = SystemUiOverlayStyle(
-  statusBarColor: Color(0xFF1A0244),
+  statusBarColor: Colors.transparent,
   statusBarBrightness: Brightness.dark,
   statusBarIconBrightness: Brightness.light,
 );

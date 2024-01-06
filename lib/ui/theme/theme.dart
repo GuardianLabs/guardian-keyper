@@ -61,6 +61,7 @@ final themeData = ThemeData(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(cornerRadius)),
     ),
+    showDragHandle: true,
   ),
   // Card
   cardTheme: CardTheme(

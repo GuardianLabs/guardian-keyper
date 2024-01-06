@@ -8,7 +8,6 @@ import 'package:guardian_keyper/feature/vault/ui/_secret_add/vault_secret_add_sc
 import 'package:guardian_keyper/feature/vault/ui/_vault_restore/vault_restore_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_guardian_add/vault_guardian_add_screen.dart';
 import 'package:guardian_keyper/feature/vault/ui/_secret_recovery/vault_secret_recovery_screen.dart';
-import 'package:guardian_keyper/feature/wallet/ui/_wallet_create/wallet_create_wizard_screen.dart';
 
 const routeIntro = IntroScreen.route;
 const routeSettings = SettingsScreen.route;
@@ -19,7 +18,6 @@ const routeVaultRestore = VaultRestoreScreen.route;
 const routeVaultSecretAdd = VaultSecretAddScreen.route;
 const routeVaultGuardianAdd = VaultGuardianAddScreen.route;
 const routeVaultSecretRecovery = VaultSecretRecoveryScreen.route;
-const routeWalletCreateWizard = WalletCreateWizardScreen.route;
 const routeOnboarding = OnboardingScreen.route;
 
 final routes = {
@@ -32,6 +30,5 @@ final routes = {
   VaultSecretAddScreen.route: (_) => const VaultSecretAddScreen(),
   VaultGuardianAddScreen.route: (_) => const VaultGuardianAddScreen(),
   VaultSecretRecoveryScreen.route: (_) => const VaultSecretRecoveryScreen(),
-  WalletCreateWizardScreen.route: (_) => const WalletCreateWizardScreen(),
   OnboardingScreen.route: (_) => const OnboardingScreen(),
 };
