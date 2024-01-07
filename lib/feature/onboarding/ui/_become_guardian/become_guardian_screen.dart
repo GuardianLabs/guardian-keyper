@@ -1,4 +1,3 @@
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/onboarding/onboarding_presenter.dart';
@@ -23,10 +22,7 @@ class BecomeGuardianScreen extends StatelessWidget {
           builder: (context, _) {
             final currentPage =
                 context.select<OnboardingPresenter, int>((p) => p.currentPage);
-            return AnimatedSwitcher(
-              duration: pageChangeDuration,
-              child: _pages[currentPage],
-            );
+            return _pages[currentPage];
           },
         ),
       );

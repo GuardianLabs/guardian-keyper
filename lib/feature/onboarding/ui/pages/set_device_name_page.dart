@@ -9,7 +9,7 @@ class SetDeviceNamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final presenter = context.read<OnboardingPresenter>();
+    final presenter = context.watch<OnboardingPresenter>();
     return StepperPage(
       stepCurrent: presenter.currentPage,
       stepsCount: presenter.pageCount,
@@ -32,11 +32,7 @@ class SetDeviceNamePage extends StatelessWidget {
         ),
       ],
       topButton: FilledButton(
-        onPressed: presenter.canProceed
-            ? () async {
-                await presenter.saveDeviceName();
-              }
-            : null,
+        onPressed: presenter.canProceed ? presenter.saveDeviceName : null,
         child: const Text('Continue'),
       ),
       bottomButton: OutlinedButton(

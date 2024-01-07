@@ -1,4 +1,5 @@
 import 'package:guardian_keyper/consts.dart';
+import 'package:guardian_keyper/ui/utils/screen_lock.dart';
 import 'package:guardian_keyper/ui/presenters/page_presenter_base.dart';
 
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
@@ -11,6 +12,7 @@ final class OnboardingPresenter extends PagePresenterBase {
 
   final _authManager = GetIt.I<AuthManager>();
   final _networkManager = GetIt.I<NetworkManager>();
+  final passcodeInputController = InputController();
 
   late String _deviceName = _networkManager.selfId.name;
 
@@ -20,7 +22,16 @@ final class OnboardingPresenter extends PagePresenterBase {
 
   bool get hasBiometrics => _authManager.hasBiometrics;
 
-  Future<void> vibrate() => _authManager.vibrate();
+  @override
+  void dispose() {
+    passcodeInputController.dispose();
+    super.dispose();
+  }
+
+  void onPasscodeInputError() {
+    passcodeInputController.unsetConfirmed();
+    _authManager.vibrate();
+  }
 
   Future<void> setPassCode(String value) async {
     await _authManager.setPassCode(value);
@@ -28,12 +39,12 @@ final class OnboardingPresenter extends PagePresenterBase {
   }
 
   void onInputChanged(String value) {
-    _deviceName = value;
     if (value.length >= minNameLength && !canProceed) {
       notifyListeners();
     } else if (value.length < minNameLength && canProceed) {
       notifyListeners();
     }
+    _deviceName = value;
   }
 
   Future<void> setIsBiometricsEnabled(bool isEnabled) async {
