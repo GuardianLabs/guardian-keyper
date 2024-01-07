@@ -67,7 +67,7 @@ class AuthManager {
     _updateState();
   }
 
-  Future<void> onPause() async => _lastPausedAt = DateTime.now();
+  Future<void> onInactive() async => _lastPausedAt = DateTime.now();
 
   Future<void> vibrate() => _authService.vibrate();
 

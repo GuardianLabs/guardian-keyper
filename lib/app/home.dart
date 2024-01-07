@@ -51,11 +51,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         await _authManager.onResumed();
         if (_authManager.needPasscode && mounted) {
           await OnDemandAuthDialog.show(context);
-          await _networkManager.start();
         }
+        await _networkManager.start();
+      case AppLifecycleState.inactive:
+        await _authManager.onInactive();
       case AppLifecycleState.paused:
-        _lastExitTryAt = DateTime.now();
-        await _authManager.onPause();
         await _networkManager.stop();
         await _vaultRepository.flush();
         await _messageInteractor.flush();
