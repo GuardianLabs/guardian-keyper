@@ -159,11 +159,13 @@ class HeaderBarButton extends StatelessWidget {
 class PageTitle extends StatelessWidget {
   const PageTitle({
     super.key,
+    this.icon,
     this.title,
     this.subtitle,
     this.subtitleSpans,
   });
 
+  final Widget? icon;
   final String? title;
   final String? subtitle;
   final List<TextSpan>? subtitleSpans;
@@ -179,7 +181,14 @@ class PageTitle extends StatelessWidget {
     return Padding(
       padding: paddingH20,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
+          // Icon
+          if (icon != null)
+            Padding(
+              padding: paddingTop,
+              child: icon,
+            ),
           // Title
           if (title != null)
             Padding(

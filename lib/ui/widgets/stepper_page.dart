@@ -9,6 +9,7 @@ class StepperPage extends StatelessWidget {
     required this.stepsCount,
     this.title,
     this.subtitle,
+    this.child,
     this.children,
     this.topButton,
     this.bottomButton,
@@ -19,6 +20,7 @@ class StepperPage extends StatelessWidget {
   final int stepsCount;
   final String? title;
   final String? subtitle;
+  final Widget? child;
   final List<Widget>? children;
   final Widget? topButton;
   final Widget? bottomButton;
@@ -31,10 +33,9 @@ class StepperPage extends StatelessWidget {
       _ => const EdgeInsets.only(top: 24),
     };
     final theme = Theme.of(context);
-    return ColoredBox(
-      color: Theme.of(context).colorScheme.background,
-      child: SafeArea(
-        minimum: const EdgeInsets.symmetric(horizontal: 16),
+    return ScaffoldSafe(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.max,
@@ -67,11 +68,12 @@ class StepperPage extends StatelessWidget {
                   style: theme.textTheme.bodyLarge,
                 ),
               ),
-            // Children
+            // Child or Children
             Expanded(
-              child: children == null
-                  ? Container()
-                  : ListView(children: children!),
+              child: child ??
+                  (children == null
+                      ? Container()
+                      : ListView(children: children!)),
             ),
             // Top Button
             if (topButton != null)

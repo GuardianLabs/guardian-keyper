@@ -54,6 +54,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           await _networkManager.start();
         }
       case AppLifecycleState.paused:
+        _lastExitTryAt = DateTime.now();
         await _authManager.onPause();
         await _networkManager.stop();
         await _vaultRepository.flush();

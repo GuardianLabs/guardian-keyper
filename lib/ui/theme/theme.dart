@@ -104,6 +104,8 @@ final themeData = ThemeData(
       borderSide: const BorderSide(width: 2),
     ),
     floatingLabelStyle: textTheme.labelMedium,
+    helperMaxLines: 1,
+    helperStyle: textTheme.bodySmall,
   ),
   // ListTile
   listTileTheme: ListTileThemeData(
