@@ -5,6 +5,7 @@ import 'package:guardian_keyper/ui/utils/screen_lock.dart';
 import 'package:guardian_keyper/ui/widgets/stepper_page.dart';
 
 import 'package:guardian_keyper/feature/onboarding/onboarding_presenter.dart';
+import 'package:guardian_keyper/feature/onboarding/widgets/discard_button.dart';
 
 class SetPasscodePage extends StatelessWidget {
   const SetPasscodePage({super.key});
@@ -41,10 +42,7 @@ class SetPasscodePage extends StatelessWidget {
           );
         },
       ),
-      bottomButton: OutlinedButton(
-        onPressed: Navigator.of(context).pop,
-        child: const Text('Discard'),
-      ),
+      bottomButton: const DiscardButton(),
     );
   }
 }

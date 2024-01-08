@@ -16,6 +16,9 @@ final class OnboardingPresenter extends PagePresenterBase {
 
   late String _deviceName = _networkManager.selfId.name;
 
+  @override
+  int get pageCount => super.pageCount - 1;
+
   String get deviceName => _deviceName;
 
   bool get canProceed => _deviceName.length >= minNameLength;
@@ -47,9 +50,9 @@ final class OnboardingPresenter extends PagePresenterBase {
     _deviceName = value;
   }
 
-  Future<void> setIsBiometricsEnabled(bool isEnabled) async {
-    await _authManager.setIsBiometricsEnabled(isEnabled);
-    notifyListeners();
+  Future<void> enableBiometrics() async {
+    await _authManager.setIsBiometricsEnabled(true);
+    nextPage();
   }
 
   Future<void> saveDeviceName() async {

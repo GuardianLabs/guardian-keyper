@@ -1,33 +1,36 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/stepper_page.dart';
-
-import 'package:guardian_keyper/feature/onboarding/onboarding_presenter.dart';
 
 class AllDonePage extends StatelessWidget {
-  const AllDonePage({super.key});
+  const AllDonePage({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    super.key,
+  });
+
+  final Widget icon;
+  final String title;
+  final String subtitle;
 
   @override
-  Widget build(BuildContext context) {
-    final presenter = context.read<OnboardingPresenter>();
-    return StepperPage(
-      stepCurrent: presenter.currentPage,
-      stepsCount: presenter.pageCount,
-      child: const Align(
-        alignment: Alignment.bottomCenter,
-        child: PageTitle(
-          icon: Icon(Icons.wallet_rounded, size: 110),
-          title: 'You are a Guardian!',
-          subtitle: 'Now you can store encrypted parts of entrusted '
-              'Secrets and create your own.',
+  Widget build(BuildContext context) => Container(
+        color: Theme.of(context).colorScheme.background,
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            PageTitle(
+              icon: icon,
+              title: title,
+              subtitle: subtitle,
+            ),
+            FilledButton(
+              onPressed: Navigator.of(context).pop,
+              child: const Text('Great'),
+            ),
+          ],
         ),
-      ),
-      topButton: FilledButton(
-        onPressed: () async {
-          await presenter.saveDeviceName();
-          if (context.mounted) Navigator.of(context).pop();
-        },
-        child: const Text('Great'),
-      ),
-    );
-  }
+      );
 }

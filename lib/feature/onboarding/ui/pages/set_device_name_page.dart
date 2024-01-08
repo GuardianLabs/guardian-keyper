@@ -3,6 +3,7 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/stepper_page.dart';
 
 import 'package:guardian_keyper/feature/onboarding/onboarding_presenter.dart';
+import 'package:guardian_keyper/feature/onboarding/widgets/discard_button.dart';
 
 class SetDeviceNamePage extends StatelessWidget {
   const SetDeviceNamePage({super.key});
@@ -35,10 +36,7 @@ class SetDeviceNamePage extends StatelessWidget {
         onPressed: presenter.canProceed ? presenter.saveDeviceName : null,
         child: const Text('Continue'),
       ),
-      bottomButton: OutlinedButton(
-        onPressed: Navigator.of(context).pop,
-        child: const Text('Discard'),
-      ),
+      bottomButton: const DiscardButton(),
     );
   }
 }
