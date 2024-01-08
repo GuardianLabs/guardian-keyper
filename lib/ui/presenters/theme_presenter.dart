@@ -1,21 +1,22 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:guardian_keyper/data/services/preferences_service.dart';
 
-export 'package:get_it/get_it.dart';
-export 'package:flutter_bloc/flutter_bloc.dart';
+export 'package:provider/provider.dart';
 
-class ThemeModeCubit extends Cubit<ThemeMode> {
-  ThemeModeCubit(bool? isDarkModeOn)
-      : super(switch (isDarkModeOn) {
+class ThemePresenter extends ChangeNotifier {
+  ThemePresenter({bool? isDarkModeOn})
+      : _themeMode = switch (isDarkModeOn) {
           true => ThemeMode.dark,
           false => ThemeMode.light,
           null => ThemeMode.system,
-        });
-
+        };
   final _preferencesService = GetIt.I<PreferencesService>();
+
+  ThemeMode _themeMode;
+
+  ThemeMode get themeMode => _themeMode;
 
   Future<void> setThemeMode(ThemeMode themeMode) async {
     switch (themeMode) {
@@ -26,6 +27,7 @@ class ThemeModeCubit extends Cubit<ThemeMode> {
       case ThemeMode.system:
         await _preferencesService.delete(PreferencesKeys.keyIsDarkModeOn);
     }
-    emit(themeMode);
+    _themeMode = themeMode;
+    notifyListeners();
   }
 }

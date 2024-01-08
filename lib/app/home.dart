@@ -34,7 +34,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     Future.microtask(() async {
       if (_authManager.passCode.isEmpty) {
-        await Navigator.of(context).pushNamed(routeIntro);
+        await Navigator.of(context).pushNamed(
+          buildV3 ? routeOnboarding : routeIntro,
+        );
       } else if (_authManager.passCode.isNotEmpty) {
         await OnDemandAuthDialog.show(context);
         await _messageInteractor.pruneMessages();

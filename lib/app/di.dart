@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:hive/hive.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/data/services/platform_service.dart';
 import 'package:guardian_keyper/data/services/analytics_service.dart';
 import 'package:guardian_keyper/data/services/preferences_service.dart';
@@ -11,7 +12,6 @@ import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
 import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 import 'package:guardian_keyper/feature/wallet/data/wallet_manager.dart';
 import 'package:guardian_keyper/feature/network/data/network_manager.dart';
-import 'package:guardian_keyper/feature/settings/bloc/theme_mode_cubit.dart';
 
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
@@ -22,17 +22,30 @@ import 'package:guardian_keyper/feature/message/domain/use_case/message_interact
 class DI {
   static bool _isInited = false;
 
+  static bool? _isDarkModeOn;
+
+  static PreferencesService? _preferences;
+
   const DI();
 
   bool get isInited => _isInited;
   bool get isNotInited => !_isInited;
 
+  bool? get isDarkModeOn => _isDarkModeOn;
+
   Future<void> init() async {
+    _preferences ??= await PreferencesService().init();
+
+    // Init values
+    _isDarkModeOn = await _preferences?.get(
+      PreferencesKeys.keyIsDarkModeOn,
+      // TBD: `true` for Keyper (2), `false` for Wallet (3), `null` for system
+      !buildV3,
+    );
     if (_isInited) return;
 
-    // Services
-    final preferences = await PreferencesService().init();
-    GetIt.I.registerSingleton<PreferencesService>(preferences);
+    // Register Services
+    GetIt.I.registerSingleton<PreferencesService>(_preferences!);
     GetIt.I.registerLazySingleton<PlatformService>(PlatformService.new);
     GetIt.I.registerLazySingleton<SentryNavigatorObserver>(
       SentryNavigatorObserver.new,
@@ -44,7 +57,7 @@ class DI {
       await AnalyticsService.init(),
     );
 
-    // Managers
+    // Register Managers
     GetIt.I.registerSingleton<AuthManager>(
       await AuthManager().init(),
       dispose: (i) => i.close(),
@@ -58,11 +71,11 @@ class DI {
       dispose: (i) => i.close(),
     );
 
-    // Repositories
+    // Register Repositories
     final encryptionCipher = HiveAesCipher(
-      (await preferences.get<Uint8List>(PreferencesKeys.keySeed))!,
+      (await _preferences!.get<Uint8List>(PreferencesKeys.keySeed))!,
     );
-    Hive.init(preferences.pathDataDir);
+    Hive.init(_preferences!.pathDataDir);
     GetIt.I.registerSingleton<VaultRepository>(
       await VaultRepository().init(encryptionCipher: encryptionCipher),
       dispose: (i) => i.close(),
@@ -75,22 +88,13 @@ class DI {
       SettingsRepository.new,
     );
 
-    // Interactors
+    // Register Interactors
     GetIt.I.registerLazySingleton<MessageInteractor>(
       MessageInteractor.new,
       dispose: (i) => i.close(),
     );
     GetIt.I.registerLazySingleton<VaultInteractor>(
       VaultInteractor.new,
-    );
-
-    // Blocs
-    GetIt.I.registerSingleton<ThemeModeCubit>(
-      ThemeModeCubit(
-        // TBD: `true` for Keyper (2), `false` for Wallet (3), `null` then
-        await preferences.get(PreferencesKeys.keyIsDarkModeOn, true),
-      ),
-      dispose: (i) => i.close(),
     );
 
     _isInited = true;

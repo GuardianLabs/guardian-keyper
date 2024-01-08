@@ -1,12 +1,12 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/services.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/splash.dart';
+import 'package:guardian_keyper/ui/presenters/theme_presenter.dart';
 import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
-
-import 'package:guardian_keyper/feature/settings/bloc/theme_mode_cubit.dart';
 
 import 'di.dart';
 import 'home.dart';
@@ -23,25 +23,13 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FutureBuilder(
         future: di.init(),
-        builder: (context, state) => di.isNotInited
+        builder: (context, _) => di.isNotInited
             ? const Splash()
-            : BlocConsumer<ThemeModeCubit, ThemeMode>(
-                bloc: GetIt.I<ThemeModeCubit>(),
-                builder: (context, state) => MaterialApp(
-                  title: 'Guardian Keyper',
-                  routes: routes,
-                  themeMode: state,
-                  theme: themeLight,
-                  darkTheme: themeDark,
-                  debugShowCheckedModeBanner: false,
-                  navigatorObservers: [
-                    GetIt.I<SentryNavigatorObserver>(),
-                    GetIt.I<CurrentRouteObserver>(),
-                  ],
-                  home: const Home(key: Key('AppHomeWidget')),
-                ),
-                listener: (context, state) {
-                  SystemChrome.setSystemUIOverlayStyle(switch (state) {
+            : ChangeNotifierProvider(
+                create: (_) => ThemePresenter(isDarkModeOn: di.isDarkModeOn),
+                builder: (context, child) {
+                  final themeMode = context.watch<ThemePresenter>().themeMode;
+                  SystemChrome.setSystemUIOverlayStyle(switch (themeMode) {
                     ThemeMode.dark => systemStyleDark,
                     ThemeMode.light => systemStyleLight,
                     _ => MediaQuery.of(context).platformBrightness ==
@@ -49,7 +37,21 @@ class App extends StatelessWidget {
                         ? systemStyleDark
                         : systemStyleLight,
                   });
+                  return MaterialApp(
+                    title: 'Guardian Keyper',
+                    routes: routes,
+                    themeMode: themeMode,
+                    theme: themeLight,
+                    darkTheme: themeDark,
+                    debugShowCheckedModeBanner: false,
+                    navigatorObservers: [
+                      GetIt.I<SentryNavigatorObserver>(),
+                      GetIt.I<CurrentRouteObserver>(),
+                    ],
+                    home: child,
+                  );
                 },
+                child: const Home(),
               ),
       );
 }
