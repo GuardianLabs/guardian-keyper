@@ -25,14 +25,16 @@ class ScaffoldSafe extends StatelessWidget {
     this.bottomNavigationBar,
     this.isSeparated = false,
     this.isSeparatorSmall = false,
+    this.minimumPadding = EdgeInsets.zero,
     super.key,
   });
 
   final Widget? header;
-  final Widget? child;
   final Widget? drawer;
-  final Widget? bottomNavigationBar;
+  final Widget? child;
+  final EdgeInsets minimumPadding;
   final List<Widget>? children;
+  final Widget? bottomNavigationBar;
   final bool isSeparatorSmall;
   final bool isSeparated;
 
@@ -40,6 +42,7 @@ class ScaffoldSafe extends StatelessWidget {
   Widget build(BuildContext context) => ColoredBox(
         color: Theme.of(context).colorScheme.background,
         child: SafeArea(
+          minimum: minimumPadding,
           child: Scaffold(
             appBar: header == null
                 ? null

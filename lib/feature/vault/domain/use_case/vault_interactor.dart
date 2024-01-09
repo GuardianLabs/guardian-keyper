@@ -42,6 +42,7 @@ class VaultInteractor
 
   Future<Vault> createVault(Vault vault) async {
     await _vaultRepository.put(vault.aKey, vault);
+    logFinishCreateVault();
     return vault;
   }
 

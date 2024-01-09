@@ -1,7 +1,8 @@
-import 'package:guardian_keyper/ui/utils/screen_size.dart';
-
 import 'common.dart';
 import 'step_indicator.dart';
+import '../utils/screen_size.dart';
+
+export '../presenters/page_controller_base.dart';
 
 class StepperPage extends StatelessWidget {
   const StepperPage({
@@ -33,64 +34,56 @@ class StepperPage extends StatelessWidget {
       _ => const EdgeInsets.only(top: 24),
     };
     final theme = Theme.of(context);
-    return ScaffoldSafe(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            // Step Indicator
-            Padding(
-              padding: paddingTop,
-              child: StepIndicator(
-                stepCurrent: stepCurrent,
-                stepsCount: stepsCount,
-              ),
-            ),
-            // Title
-            if (title != null)
-              Padding(
-                padding: paddingTop,
-                child: Text(
-                  title!,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.headlineLarge,
-                ),
-              ),
-            // Subtitle
-            if (subtitle != null)
-              Padding(
-                padding: paddingT20,
-                child: Text(
-                  subtitle!,
-                  style: theme.textTheme.bodyLarge,
-                ),
-              ),
-            // Child or Children
-            Expanded(
-              child: child ??
-                  (children == null
-                      ? Container()
-                      : ListView(children: children!)),
-            ),
-            // Top Button
-            if (topButton != null)
-              Padding(
-                padding: paddingTop,
-                child: topButton,
-              ),
-            // Bottom Button
-            if (bottomButton != null)
-              Padding(
-                padding: paddingTop,
-                child: bottomButton,
-              ),
-            Padding(padding: paddingTop),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        // Step Indicator
+        Padding(
+          padding: paddingTop,
+          child: StepIndicator(
+            stepCurrent: stepCurrent,
+            stepsCount: stepsCount,
+          ),
         ),
-      ),
+        // Title
+        if (title != null)
+          Padding(
+            padding: paddingTop,
+            child: Text(
+              title!,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.headlineLarge,
+            ),
+          ),
+        // Subtitle
+        if (subtitle != null)
+          Padding(
+            padding: paddingT20,
+            child: Text(
+              subtitle!,
+              style: theme.textTheme.bodyLarge,
+            ),
+          ),
+        // Child or Children
+        Expanded(
+          child: child ??
+              (children == null ? Container() : ListView(children: children!)),
+        ),
+        // Top Button
+        if (topButton != null)
+          Padding(
+            padding: paddingTop,
+            child: topButton,
+          ),
+        // Bottom Button
+        if (bottomButton != null)
+          Padding(
+            padding: paddingTop,
+            child: bottomButton,
+          ),
+      ],
     );
   }
 }

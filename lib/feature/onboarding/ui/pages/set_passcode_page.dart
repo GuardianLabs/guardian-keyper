@@ -4,45 +4,62 @@ import 'package:guardian_keyper/ui/utils/screen_size.dart';
 import 'package:guardian_keyper/ui/utils/screen_lock.dart';
 import 'package:guardian_keyper/ui/widgets/stepper_page.dart';
 
-import 'package:guardian_keyper/feature/onboarding/onboarding_presenter.dart';
+import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 import 'package:guardian_keyper/feature/onboarding/widgets/discard_button.dart';
 
-class SetPasscodePage extends StatelessWidget {
+class SetPasscodePage extends StatefulWidget {
   const SetPasscodePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final padding = ScreenSize.getPadding(context);
-    final presenter = context.read<OnboardingPresenter>();
-    return StepperPage(
-      stepCurrent: presenter.currentPage,
-      stepsCount: presenter.pageCount,
-      child: ScreenLock.create(
-        useBlur: false,
-        digits: passCodeLength,
-        keyPadConfig: keyPadConfig,
-        inputController: presenter.passcodeInputController,
-        config: getScreenLockConfig(context),
-        title: Padding(
-          padding: padding,
-          child: const Text('Create your passcode'),
-        ),
-        confirmTitle: Padding(
-          padding: padding,
-          child: const Text('Enter it once more'),
-        ),
-        onConfirmed: presenter.setPassCode,
-        onError: (_) {
-          presenter.onPasscodeInputError();
-          showSnackBar(
-            context,
-            text: 'Wrong passcode!',
-            isFloating: true,
-            isError: true,
-          );
-        },
-      ),
-      bottomButton: const DiscardButton(),
-    );
+  State<SetPasscodePage> createState() => _SetPasscodePageState();
+}
+
+class _SetPasscodePageState extends State<SetPasscodePage> {
+  final _passcodeInputController = InputController();
+  final _authManager = GetIt.I<AuthManager>();
+
+  late final _padding = ScreenSize.getPadding(context);
+  late final _presenter = context.read<PageControllerBase>();
+
+  @override
+  void dispose() {
+    _passcodeInputController.dispose();
+    super.dispose();
   }
+
+  @override
+  Widget build(BuildContext context) => StepperPage(
+        stepCurrent: _presenter.currentPage,
+        stepsCount: _presenter.stepsCount,
+        child: ScreenLock.create(
+          useBlur: false,
+          digits: passCodeLength,
+          keyPadConfig: keyPadConfig,
+          inputController: _passcodeInputController,
+          config: getScreenLockConfig(context),
+          title: Padding(
+            padding: _padding,
+            child: const Text('Create your passcode'),
+          ),
+          confirmTitle: Padding(
+            padding: _padding,
+            child: const Text('Enter it once more'),
+          ),
+          onConfirmed: (String value) async {
+            await _authManager.setPassCode(value);
+            await _presenter.nextPage();
+          },
+          onError: (_) {
+            _passcodeInputController.unsetConfirmed();
+            _authManager.vibrate();
+            showSnackBar(
+              context,
+              text: 'Wrong passcode!',
+              isFloating: true,
+              isError: true,
+            );
+          },
+        ),
+        bottomButton: const DiscardButton(),
+      );
 }

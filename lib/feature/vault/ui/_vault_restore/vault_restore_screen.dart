@@ -1,4 +1,3 @@
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'vault_restore_presenter.dart';
@@ -16,15 +15,13 @@ class VaultRestoreScreen extends StatelessWidget {
   const VaultRestoreScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => VaultRestorePresenter(pageCount: _pages.length),
-        child: ScaffoldSafe(
-          child: Selector<VaultRestorePresenter, int>(
-            selector: (_, presenter) => presenter.currentPage,
-            builder: (_, currentPage, __) => AnimatedSwitcher(
-              duration: pageChangeDuration,
-              child: _pages[currentPage],
-            ),
+  Widget build(BuildContext context) => ScaffoldSafe(
+        child: ChangeNotifierProvider(
+          create: (_) => VaultRestorePresenter(stepsCount: _pages.length),
+          builder: (context, _) => PageView(
+            controller: context.read<VaultRestorePresenter>(),
+            physics: const NeverScrollableScrollPhysics(),
+            children: _pages,
           ),
         ),
       );

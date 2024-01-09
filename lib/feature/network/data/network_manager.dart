@@ -150,11 +150,18 @@ class NetworkManager {
 
   Future<void> setDeviceName(String value) async {
     if (_selfId.name == value) return;
-    _selfId = _selfId.copyWith(name: value);
-    await _preferencesService.set<String>(
-      PreferencesKeys.keyDeviceName,
-      value,
-    );
+    if (value.isEmpty) {
+      await _preferencesService.delete(PreferencesKeys.keyDeviceName);
+      _selfId = _selfId.copyWith(
+        name: await _networkService.getDeviceName(),
+      );
+    } else {
+      _selfId = _selfId.copyWith(name: value);
+      await _preferencesService.set<String>(
+        PreferencesKeys.keyDeviceName,
+        value,
+      );
+    }
     _updateState();
   }
 

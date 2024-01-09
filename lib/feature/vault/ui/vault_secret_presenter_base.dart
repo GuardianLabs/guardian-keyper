@@ -10,10 +10,10 @@ import 'vault_presenter_base.dart';
 
 abstract base class VaultSecretPresenterBase extends VaultPresenterBase {
   VaultSecretPresenterBase({
-    required super.pageCount,
+    required super.stepsCount,
     required this.vaultId,
     required this.secretId,
-    super.currentPage,
+    super.initialPage,
   });
 
   SecretId secretId;

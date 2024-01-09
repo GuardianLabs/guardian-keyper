@@ -27,6 +27,8 @@ final colorSchemeDark = ColorScheme.fromSeed(
   onTertiary: Colors.white,
   error: const Color(0xFFEC5F59),
   onError: const Color(0xFFF19C38),
+  errorContainer: const Color(0x22F6EAEA),
+  onErrorContainer: const Color(0xFFD32C2C),
   background: const Color(0xFF1A0244),
   onBackground: Colors.white,
   surface: const Color(0xFF24035F),

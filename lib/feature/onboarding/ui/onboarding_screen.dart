@@ -60,6 +60,8 @@ class OnboardingScreen extends StatelessWidget {
                   fullscreenDialog: true,
                   maintainState: false,
                 )),
+                // TBD: Remove
+                onLongPress: Navigator.of(context).pop,
                 child: const Text('Become a Guardian'),
               ),
             ],

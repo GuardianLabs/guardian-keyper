@@ -1,4 +1,3 @@
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
@@ -24,19 +23,17 @@ class VaultSecretRecoveryScreen extends StatelessWidget {
       VaultId vaultId,
       SecretId secretId,
     });
-    return ChangeNotifierProvider(
-      create: (_) => VaultSecretRecoveryPresenter(
-        pageCount: _pages.length,
-        vaultId: arguments.vaultId,
-        secretId: arguments.secretId,
-      ),
-      child: ScaffoldSafe(
-        child: Selector<VaultSecretRecoveryPresenter, int>(
-          selector: (_, presenter) => presenter.currentPage,
-          builder: (_, currentPage, __) => AnimatedSwitcher(
-            duration: pageChangeDuration,
-            child: _pages[currentPage],
-          ),
+    return ScaffoldSafe(
+      child: ChangeNotifierProvider(
+        create: (_) => VaultSecretRecoveryPresenter(
+          stepsCount: _pages.length,
+          vaultId: arguments.vaultId,
+          secretId: arguments.secretId,
+        ),
+        builder: (context, _) => PageView(
+          controller: context.read<VaultSecretRecoveryPresenter>(),
+          physics: const NeverScrollableScrollPhysics(),
+          children: _pages,
         ),
       ),
     );

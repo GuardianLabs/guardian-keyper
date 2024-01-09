@@ -71,7 +71,7 @@ class _OnQRCodeShowDialogState extends State<OnQRCodeShowDialog> {
   Widget build(BuildContext context) => ScaffoldSafe(
         header: HeaderBar(
           caption: widget.caption,
-          leftButton: const HeaderBarButton.back(),
+          rightButton: const HeaderBarButton.close(),
         ),
         child: Column(
           children: [
