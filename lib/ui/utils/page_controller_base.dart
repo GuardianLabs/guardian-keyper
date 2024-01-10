@@ -34,4 +34,10 @@ class PageControllerBase extends PageController {
       curve: curve ?? Curves.easeInOut,
     );
   }
+
+  @override
+  void jumpToPage(int page) {
+    if (page >= 0) _currentPage = page;
+    super.jumpToPage(page);
+  }
 }

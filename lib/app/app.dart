@@ -8,6 +8,9 @@ import 'package:guardian_keyper/ui/widgets/splash.dart';
 import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
 import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 
+import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
+import 'package:guardian_keyper/feature/home/ui/home_presenter.dart';
+
 import 'di.dart';
 import 'home.dart';
 import 'routes.dart';
@@ -60,6 +63,10 @@ class App extends StatelessWidget {
                 GetIt.I<SentryNavigatorObserver>(),
                 GetIt.I<CurrentRouteObserver>(),
               ],
+              builder: (context, child) => ChangeNotifierProvider(
+                create: (_) => HomePresenter(stepsCount: HomeScreen.tabsCount),
+                child: child,
+              ),
               home: const Home(),
             );
           },

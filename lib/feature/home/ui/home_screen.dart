@@ -7,20 +7,16 @@ import 'package:guardian_keyper/feature/vault/ui/widgets/shards_list.dart';
 import 'package:guardian_keyper/feature/vault/ui/widgets/vaults_list.dart';
 import 'package:guardian_keyper/feature/message/ui/widgets/requests_list.dart';
 
+import 'home_presenter.dart';
 import 'widgets/dev_drawer.dart';
+import 'widgets/bottom_navbar.dart';
 import 'widgets/dashboard_list.dart';
-import 'utils/build_navbar_items.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  static final tabsCount = _tabs.length;
 
-  @override
-  State<HomeScreen> createState() => HomeScreenState();
-}
-
-class HomeScreenState extends State<HomeScreen> {
   static const _headers = [
-    null,
+    Offstage(),
     HeaderBar(caption: 'Safes'),
     HeaderBar(caption: 'Shards'),
     HeaderBar(caption: 'Requests'),
@@ -33,26 +29,28 @@ class HomeScreenState extends State<HomeScreen> {
     RequestsList(key: PageStorageKey<String>('homeRequests')),
   ];
 
-  final _tabsBucket = PageStorageBucket();
-
-  late final _navBarItems = buildNavbarItems(context);
-
-  int _currentTab = 0;
+  const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => ScaffoldSafe(
-        header: MediaQuery.of(context).size.height >= ScreenMedium.height
-            ? _headers[_currentTab]
-            : null,
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentTab,
-          items: _navBarItems,
-          onTap: (page) => setState(() => _currentTab = page),
-        ),
-        drawer: kDebugMode ? const DevDrawer() : null,
-        child: PageStorage(
-          bucket: _tabsBucket,
-          child: _tabs[_currentTab],
-        ),
-      );
+  State<HomeScreen> createState() => HomeScreenState();
+}
+
+class HomeScreenState extends State<HomeScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldSafe(
+      header: MediaQuery.of(context).size.height >= ScreenMedium.height
+          ? Selector<HomePresenter, int>(
+              selector: (context, presenter) => presenter.currentPage,
+              builder: (context, index, _) => HomeScreen._headers[index],
+            )
+          : null,
+      drawer: kDebugMode ? const DevDrawer() : null,
+      bottomNavigationBar: const BottomNavBar(),
+      child: PageView(
+        controller: context.read<HomePresenter>(),
+        children: HomeScreen._tabs,
+      ),
+    );
+  }
 }
