@@ -38,6 +38,7 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final presenter = context.read<HomePresenter>();
     return ScaffoldSafe(
       header: MediaQuery.of(context).size.height >= ScreenMedium.height
           ? Selector<HomePresenter, int>(
@@ -48,7 +49,9 @@ class HomeScreenState extends State<HomeScreen> {
       drawer: kDebugMode ? const DevDrawer() : null,
       bottomNavigationBar: const BottomNavBar(),
       child: PageView(
-        controller: context.read<HomePresenter>(),
+        key: const Key('HomePageView'),
+        controller: presenter,
+        onPageChanged: presenter.jumpToPage,
         children: HomeScreen._tabs,
       ),
     );
