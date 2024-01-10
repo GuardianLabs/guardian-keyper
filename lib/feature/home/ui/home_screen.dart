@@ -37,7 +37,7 @@ class HomeScreen extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: ScaffoldSafe(
-        header: MediaQuery.of(context).size.height >= ScreenMedium.height
+        header: MediaQuery.of(context).size.height >= ScreenSmall.height
             ? Selector<HomeTabPresenter, int>(
                 selector: (context, p) => p.currentPage,
                 builder: (context, index, _) => HomeScreen._headers[index],
