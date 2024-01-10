@@ -1,11 +1,11 @@
 import 'common.dart';
-import '../utils/page_controller_base.dart';
+import '../presenters/page_presenter_base.dart';
 
-export '../utils/page_controller_base.dart';
+export '../presenters/page_presenter_base.dart';
 
 typedef PopInvoke = void Function(bool);
 
-class StepperScreen<T extends PageControllerBase?> extends StatelessWidget {
+class StepperScreen<T extends PagePresentererBase?> extends StatelessWidget {
   const StepperScreen({
     required this.pages,
     required this.create,

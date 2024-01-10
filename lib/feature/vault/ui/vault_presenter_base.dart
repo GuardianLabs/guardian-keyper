@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/utils/page_controller_base.dart';
+import 'package:guardian_keyper/ui/presenters/page_presenter_base.dart';
 
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 
-abstract base class VaultPresenterBase extends PageControllerBase {
+abstract base class VaultPresenterBase extends PagePresentererBase {
   VaultPresenterBase({
     required super.stepsCount,
     super.initialPage,

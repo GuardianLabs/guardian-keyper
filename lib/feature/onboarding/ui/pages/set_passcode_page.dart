@@ -19,7 +19,7 @@ class _SetPasscodePageState extends State<SetPasscodePage> {
   final _authManager = GetIt.I<AuthManager>();
 
   late final _padding = ScreenSize.getPadding(context);
-  late final _presenter = context.read<PageControllerBase>();
+  late final _presenter = context.read<PagePresentererBase>();
 
   @override
   void dispose() {

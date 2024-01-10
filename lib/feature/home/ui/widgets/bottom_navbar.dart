@@ -1,9 +1,9 @@
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/feature/message/ui/widgets/requests_icon.dart';
+import 'package:guardian_keyper/ui/presenters/home_tab_presenter.dart';
 
-import '../home_presenter.dart';
+import 'package:guardian_keyper/feature/message/ui/widgets/requests_icon.dart';
 
 class BottomNavBar extends StatelessWidget {
   static const _iconSize = 32.0;
@@ -15,7 +15,7 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final presenter = context.watch<HomePresenter>();
+    final presenter = context.watch<HomeTabPresenter>();
     final bottomNavBarTheme = Theme.of(context).bottomNavigationBarTheme;
     final selectedColorFilter = ColorFilter.mode(
       bottomNavBarTheme.selectedItemColor!,

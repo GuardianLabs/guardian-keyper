@@ -9,7 +9,7 @@ class SetBiometricLogonPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authManager = GetIt.I<AuthManager>();
-    final presenter = context.read<PageControllerBase>();
+    final presenter = context.read<PagePresentererBase>();
     return StepperPage(
       stepCurrent: presenter.currentPage,
       stepsCount: presenter.stepsCount,

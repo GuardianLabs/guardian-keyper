@@ -20,7 +20,7 @@ class BecomeGuardianScreen extends StatelessWidget {
   Widget build(BuildContext context) => StepperScreen(
         pages: _pages,
         // Minus one to not treat last screen as a step
-        create: (_) => PageControllerBase(stepsCount: _pages.length - 1),
+        create: (_) => PagePresentererBase(stepsCount: _pages.length - 1),
         onPopInvoked: (_) {},
       );
 }

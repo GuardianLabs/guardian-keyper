@@ -15,7 +15,7 @@ class SetDeviceNamePage extends StatefulWidget {
 class _SetDeviceNamePageState extends State<SetDeviceNamePage> {
   final _networkManager = GetIt.I<NetworkManager>();
 
-  late final _presenter = context.read<PageControllerBase>();
+  late final _presenter = context.read<PagePresentererBase>();
 
   late final _inputController =
       TextEditingController(text: _networkManager.selfId.name)

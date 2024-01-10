@@ -1,19 +1,20 @@
+import 'package:get_it/get_it.dart';
 import 'package:flutter/services.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/splash.dart';
 import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
-import 'package:guardian_keyper/data/repositories/settings_repository.dart';
+import 'package:guardian_keyper/ui/presenters/home_tab_presenter.dart';
+import 'package:guardian_keyper/ui/presenters/settings_presenter.dart';
 
 import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
-import 'package:guardian_keyper/feature/home/ui/home_presenter.dart';
 import 'package:guardian_keyper/feature/message/ui/request_handler.dart';
 
 import 'di.dart';
 import 'routes.dart';
+import 'lifecycle.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -29,47 +30,53 @@ class App extends StatelessWidget {
       future: di.init(),
       builder: (context, _) {
         if (di.isNotInited) return const Splash();
-        final settingsRepository = GetIt.I<SettingsRepository>();
-        return StreamBuilder(
-          initialData: settingsRepository.get<bool>(
-            PreferencesKeys.keyIsDarkModeOn,
-            // TBD: `true` for Keyper (2), `false` for Wallet (3), `null` for system
-            !buildV3,
-          ),
-          stream: settingsRepository
-              .watch<bool>(PreferencesKeys.keyIsDarkModeOn)
-              .map((event) => event.value),
-          builder: (context, snapshot) {
-            final themeMode = switch (snapshot.data) {
-              true => ThemeMode.dark,
-              false => ThemeMode.light,
-              null => ThemeMode.system,
-            };
-            SystemChrome.setSystemUIOverlayStyle(switch (themeMode) {
-              ThemeMode.dark => systemStyleDark,
-              ThemeMode.light => systemStyleLight,
-              _ => MediaQuery.of(context).platformBrightness == Brightness.dark
-                  ? systemStyleDark
-                  : systemStyleLight,
-            });
-            return MaterialApp(
-              title: 'Guardian Keyper',
-              routes: routes,
-              themeMode: themeMode,
-              theme: themeLight,
-              darkTheme: themeDark,
-              debugShowCheckedModeBanner: false,
-              navigatorObservers: [
-                GetIt.I<SentryNavigatorObserver>(),
-                GetIt.I<CurrentRouteObserver>(),
-              ],
-              builder: (context, child) => ChangeNotifierProvider(
-                create: (_) => HomePresenter(stepsCount: HomeScreen.tabsCount),
-                child: child,
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider<SettingsPresenter>(
+              create: (_) => SettingsPresenter(),
+            ),
+            ChangeNotifierProvider<HomeTabPresenter>(
+              create: (_) => HomeTabPresenter(
+                stepsCount: HomeScreen.tabsCount,
               ),
-              home: const RequestHandler(child: HomeScreen()),
-            );
-          },
+            ),
+          ],
+          child: Selector<SettingsPresenter, bool?>(
+            selector: (_, p) => p.isDarkModeOn,
+            builder: (context, isDarkModeOn, _) {
+              SystemChrome.setSystemUIOverlayStyle(switch (isDarkModeOn) {
+                true => systemStyleDark,
+                false => systemStyleLight,
+                null =>
+                  MediaQuery.of(context).platformBrightness == Brightness.dark
+                      ? systemStyleDark
+                      : systemStyleLight,
+              });
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Guardian Keyper',
+                routes: routes,
+                themeMode: switch (isDarkModeOn) {
+                  true => ThemeMode.dark,
+                  false => ThemeMode.light,
+                  null => ThemeMode.system,
+                },
+                theme: themeLight,
+                darkTheme: themeDark,
+                themeAnimationCurve: Curves.bounceInOut,
+                themeAnimationDuration: const Duration(seconds: 1),
+                navigatorObservers: [
+                  GetIt.I<SentryNavigatorObserver>(),
+                  GetIt.I<CurrentRouteObserver>(),
+                ],
+                home: const Lifecycle(
+                  child: RequestHandler(
+                    child: HomeScreen(),
+                  ),
+                ),
+              );
+            },
+          ),
         );
       },
     );

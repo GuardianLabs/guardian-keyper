@@ -1,12 +1,12 @@
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/utils/page_controller_base.dart';
+import 'package:guardian_keyper/ui/presenters/page_presenter_base.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 
 export 'package:provider/provider.dart';
 
-final class VaultCreatePresenter extends PageControllerBase {
+final class VaultCreatePresenter extends PagePresentererBase {
   VaultCreatePresenter({required super.stepsCount}) {
     _vaultInteractor.logStartCreateVault();
   }

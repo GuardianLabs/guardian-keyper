@@ -4,8 +4,8 @@ import 'package:guardian_keyper/consts.dart';
 
 export 'package:provider/provider.dart';
 
-class PageControllerBase extends PageController {
-  PageControllerBase({
+class PagePresentererBase extends PageController {
+  PagePresentererBase({
     required this.stepsCount,
     super.initialPage = 0,
     super.keepPage = false,
