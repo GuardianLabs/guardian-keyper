@@ -11,14 +11,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  vector_graphics: ^1.1.9+1
-  bip39_mnemonic: ^3.0.6
+  vector_graphics: ^1.1.9+2
+  # bip39_mnemonic: ^3.0.6
   google_fonts: ^6.1.0
   flutter_svg: ^2.0.9
   messagepack: ^0.2.1
   collection: ^1.17.2
   qr_flutter: ^4.1.0
-  web3dart: ^2.7.2
+  # web3dart: ^2.7.2
   provider: ^6.1.1
   get_it: ^7.6.6
   p2plib: ^2.1.1
@@ -30,12 +30,12 @@ dependencies:
   flutter_screen_lock: ^9.0.2
   connectivity_plus: ^5.0.2
   device_info_plus: ^9.1.1
-  mobile_scanner: ^3.5.5
-  path_provider: ^2.1.1
+  mobile_scanner: ^3.5.6
+  path_provider: ^2.1.2
   wakelock_plus: ^1.1.4
   sodium_libs: ^2.2.0+7
-  url_launcher: ^6.2.1
-  local_auth: ^2.1.7
+  url_launcher: ^6.2.3
+  local_auth: ^2.1.8
   share_plus: ^7.2.1
   vibration: ^1.8.4
   sodium: ^2.3.0
