@@ -1,11 +1,9 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/action_card.dart';
 import 'package:guardian_keyper/ui/theme/brand_colors.dart';
+import 'package:guardian_keyper/ui/widgets/action_card.dart';
+import 'package:guardian_keyper/data/managers/network_manager.dart';
 
-import 'package:guardian_keyper/feature/network/data/network_manager.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
@@ -140,20 +138,6 @@ class DashboardList extends StatelessWidget {
             ),
           ),
         ),
-        // Dev panel
-        if (kDebugMode)
-          Padding(
-            padding: paddingT20,
-            child: ActionCard(
-              icon: Icon(
-                Icons.app_shortcut,
-                color: brandColors.dangerColor,
-              ),
-              title: 'DevPanel',
-              subtitle: 'Shortcut to show mocked dialogs and components',
-              onTap: () => Navigator.of(context).pushNamed(routeDevPanel),
-            ),
-          ),
       ],
     );
   }

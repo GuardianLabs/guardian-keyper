@@ -1,23 +1,22 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/utils/screen_size.dart';
+import 'package:guardian_keyper/ui/presenters/home_tab_presenter.dart';
 
 import 'package:guardian_keyper/feature/vault/ui/widgets/shards_list.dart';
 import 'package:guardian_keyper/feature/vault/ui/widgets/vaults_list.dart';
 import 'package:guardian_keyper/feature/message/ui/widgets/requests_list.dart';
 
+import 'widgets/dev_drawer.dart';
+import 'widgets/bottom_navbar.dart';
 import 'widgets/dashboard_list.dart';
-import 'utils/build_navbar_items.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  static final tabsCount = _tabs.length;
 
-  @override
-  State<HomeScreen> createState() => HomeScreenState();
-}
-
-class HomeScreenState extends State<HomeScreen> {
   static const _headers = [
-    null,
+    Offstage(),
     HeaderBar(caption: 'Safes'),
     HeaderBar(caption: 'Shards'),
     HeaderBar(caption: 'Requests'),
@@ -30,25 +29,29 @@ class HomeScreenState extends State<HomeScreen> {
     RequestsList(key: PageStorageKey<String>('homeRequests')),
   ];
 
-  final _tabsBucket = PageStorageBucket();
-
-  late final _navBarItems = buildNavbarItems(context);
-
-  int _currentTab = 0;
+  const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => ScaffoldSafe(
-        header: MediaQuery.of(context).size.height >= ScreenMedium.height
-            ? _headers[_currentTab]
+  Widget build(BuildContext context) {
+    final presenter = context.read<HomeTabPresenter>();
+    return PopScope(
+      canPop: false,
+      child: ScaffoldSafe(
+        header: MediaQuery.of(context).size.height >= ScreenSmall.height
+            ? Selector<HomeTabPresenter, int>(
+                selector: (context, p) => p.currentPage,
+                builder: (context, index, _) => HomeScreen._headers[index],
+              )
             : null,
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentTab,
-          items: _navBarItems,
-          onTap: (page) => setState(() => _currentTab = page),
+        drawer: kDebugMode ? const DevDrawer() : null,
+        bottomNavigationBar: const BottomNavBar(),
+        child: PageView(
+          key: const Key('HomePageView'),
+          controller: presenter,
+          onPageChanged: presenter.jumpToPage,
+          children: HomeScreen._tabs,
         ),
-        child: PageStorage(
-          bucket: _tabsBucket,
-          child: _tabs[_currentTab],
-        ),
-      );
+      ),
+    );
+  }
 }

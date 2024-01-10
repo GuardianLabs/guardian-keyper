@@ -1,27 +1,20 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
+import 'package:guardian_keyper/data/managers/auth_manager.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
-import 'package:guardian_keyper/feature/network/data/network_manager.dart';
+import 'package:guardian_keyper/data/managers/network_manager.dart';
 import 'package:guardian_keyper/feature/message/data/message_repository.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 import 'package:guardian_keyper/feature/onboarding/ui/onboarding_screen.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
 
-class DevPanelScreen extends StatelessWidget {
-  static const route = '/dev_panel';
-
-  const DevPanelScreen({super.key});
+class DevDrawer extends StatelessWidget {
+  const DevDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) => ScaffoldSafe(
-        header: const HeaderBar(
-          caption: 'Developer panel',
-          rightButton: HeaderBarButton.close(),
-        ),
-        isSeparated: true,
+  Widget build(BuildContext context) => NavigationDrawer(
         children: [
           ListTile(
             title: const Text('Clear all Requests'),
@@ -57,6 +50,19 @@ class DevPanelScreen extends StatelessWidget {
                 showSnackBar(
                   context,
                   text: 'Passcode has been cleared!',
+                  isFloating: true,
+                );
+              }
+            },
+          ),
+          ListTile(
+            title: const Text('Set passcode to 0'),
+            onTap: () async {
+              await GetIt.I<AuthManager>().setPassCode('0');
+              if (context.mounted) {
+                showSnackBar(
+                  context,
+                  text: 'Passcode has been set to 0!',
                   isFloating: true,
                 );
               }

@@ -10,6 +10,8 @@ import 'widgets/page_title_restricted.dart';
 import 'widgets/secret_list_tile.dart';
 
 class VaultShowScreen extends StatelessWidget {
+  static const route = '/vault/show';
+
   const VaultShowScreen({super.key});
 
   @override

@@ -1,34 +1,47 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
-
-import 'package:guardian_keyper/feature/settings/bloc/theme_mode_cubit.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 
 class ThemeModeSwitcher extends StatelessWidget {
   const ThemeModeSwitcher({super.key});
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<ThemeModeCubit, ThemeMode>(
-        bloc: GetIt.I<ThemeModeCubit>(),
-        builder: (context, state) => SegmentedButton<ThemeMode>(
+  Widget build(BuildContext context) {
+    final settingsRepository = GetIt.I<SettingsRepository>();
+    return StreamBuilder(
+      initialData: settingsRepository.get<bool>(
+        PreferencesKeys.keyIsDarkModeOn,
+      ),
+      stream: settingsRepository
+          .watch<bool>(PreferencesKeys.keyIsDarkModeOn)
+          .map((event) => event.value),
+      builder: (context, snapshot) {
+        return SegmentedButton<bool?>(
           segments: const [
             ButtonSegment(
               label: Text('Light'),
-              value: ThemeMode.light,
+              value: false,
             ),
             ButtonSegment(
               label: Text('System'),
-              value: ThemeMode.system,
+              value: null,
             ),
             ButtonSegment(
               label: Text('Dark'),
-              value: ThemeMode.dark,
+              value: true,
             ),
           ],
           showSelectedIcon: false,
           emptySelectionAllowed: false,
           multiSelectionEnabled: false,
-          selected: {state},
-          onSelectionChanged: (values) =>
-              GetIt.I<ThemeModeCubit>().setThemeMode(values.first),
-        ),
-      );
+          selected: {snapshot.data},
+          onSelectionChanged: (values) async {
+            await settingsRepository.setNullable<bool>(
+              PreferencesKeys.keyIsDarkModeOn,
+              values.first,
+            );
+          },
+        );
+      },
+    );
+  }
 }

@@ -19,25 +19,30 @@ const styleW600 = TextStyle(fontWeight: FontWeight.w600);
 class ScaffoldSafe extends StatelessWidget {
   const ScaffoldSafe({
     this.header,
+    this.drawer,
     this.child,
     this.children,
     this.bottomNavigationBar,
     this.isSeparated = false,
     this.isSeparatorSmall = false,
+    this.minimumPadding = EdgeInsets.zero,
     super.key,
   });
 
   final Widget? header;
+  final Widget? drawer;
   final Widget? child;
-  final Widget? bottomNavigationBar;
+  final EdgeInsets minimumPadding;
   final List<Widget>? children;
+  final Widget? bottomNavigationBar;
   final bool isSeparatorSmall;
   final bool isSeparated;
 
   @override
   Widget build(BuildContext context) => ColoredBox(
-        color: Theme.of(context).canvasColor,
+        color: Theme.of(context).colorScheme.background,
         child: SafeArea(
+          minimum: minimumPadding,
           child: Scaffold(
             appBar: header == null
                 ? null
@@ -64,6 +69,7 @@ class ScaffoldSafe extends StatelessWidget {
             bottomNavigationBar: bottomNavigationBar,
             resizeToAvoidBottomInset: true,
             primary: true,
+            drawer: drawer,
           ),
         ),
       );
@@ -156,11 +162,13 @@ class HeaderBarButton extends StatelessWidget {
 class PageTitle extends StatelessWidget {
   const PageTitle({
     super.key,
+    this.icon,
     this.title,
     this.subtitle,
     this.subtitleSpans,
   });
 
+  final Widget? icon;
   final String? title;
   final String? subtitle;
   final List<TextSpan>? subtitleSpans;
@@ -176,7 +184,14 @@ class PageTitle extends StatelessWidget {
     return Padding(
       padding: paddingH20,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
+          // Icon
+          if (icon != null)
+            Padding(
+              padding: paddingTop,
+              child: icon,
+            ),
           // Title
           if (title != null)
             Padding(

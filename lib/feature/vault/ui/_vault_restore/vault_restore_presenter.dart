@@ -11,7 +11,7 @@ export '../vault_guardian_presenter_base.dart';
 
 final class VaultRestorePresenter extends VaultGuardianPresenterBase {
   VaultRestorePresenter({
-    required super.pageCount,
+    required super.stepsCount,
     this.vaultId,
   }) {
     _vaultInteractor.logStartRestoreVault();

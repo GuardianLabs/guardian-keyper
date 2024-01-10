@@ -2,9 +2,9 @@ import 'package:vibration/vibration.dart';
 import 'package:local_auth/local_auth.dart';
 
 class AuthService {
-  static final _localAuth = LocalAuthentication();
+  final _localAuth = LocalAuthentication();
 
-  final vibrate = Vibration.vibrate;
+  Future<void> vibrate() => Vibration.vibrate();
 
   Future<bool> getHasBiometrics() =>
       _localAuth.getAvailableBiometrics().then((value) => value.isNotEmpty);

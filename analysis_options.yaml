@@ -10,5 +10,6 @@ linter:
     require_trailing_commas: false
     always_use_package_imports: false
     lines_longer_than_80_chars: false
+    sort_child_properties_last: false
     avoid_redundant_argument_values: false
     avoid_positional_boolean_parameters: false

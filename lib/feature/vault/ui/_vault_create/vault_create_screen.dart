@@ -1,4 +1,3 @@
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'vault_create_presenter.dart';
@@ -7,6 +6,8 @@ import 'pages/input_name_page.dart';
 import 'pages/vault_created_page.dart';
 
 class VaultCreateScreen extends StatelessWidget {
+  static const route = '/vault/create';
+
   static const _pages = [
     ChooseSizePage(),
     InputNamePage(),
@@ -16,15 +17,13 @@ class VaultCreateScreen extends StatelessWidget {
   const VaultCreateScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => VaultCreatePresenter(pageCount: _pages.length),
-        child: ScaffoldSafe(
-          child: Selector<VaultCreatePresenter, int>(
-            selector: (_, presenter) => presenter.currentPage,
-            builder: (_, currentPage, __) => AnimatedSwitcher(
-              duration: pageChangeDuration,
-              child: _pages[currentPage],
-            ),
+  Widget build(BuildContext context) => ScaffoldSafe(
+        child: ChangeNotifierProvider(
+          create: (_) => VaultCreatePresenter(stepsCount: _pages.length),
+          builder: (context, _) => PageView(
+            controller: context.read<VaultCreatePresenter>(),
+            physics: const NeverScrollableScrollPhysics(),
+            children: _pages,
           ),
         ),
       );

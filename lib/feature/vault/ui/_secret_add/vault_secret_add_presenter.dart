@@ -11,13 +11,10 @@ export 'package:provider/provider.dart';
 
 final class VaultSecretAddPresenter extends VaultSecretPresenterBase {
   VaultSecretAddPresenter({
-    required super.pageCount,
+    required super.stepsCount,
     required super.vaultId,
   }) : super(secretId: SecretId()) {
     _vaultInteractor.logStartAddSecret();
-    _settingsRepository
-        .get<bool>(PreferencesKeys.keyIsUnderstandingShardsHidden)
-        .then((value) => _isUnderstandingShardsHidden = value ?? false);
   }
 
   final _vaultInteractor = GetIt.I<VaultInteractor>();
@@ -25,7 +22,6 @@ final class VaultSecretAddPresenter extends VaultSecretPresenterBase {
 
   String _secret = '';
   String _secretName = '';
-  bool _isUnderstandingShardsHidden = false;
 
   String get secret => _secret;
 
@@ -33,7 +29,10 @@ final class VaultSecretAddPresenter extends VaultSecretPresenterBase {
 
   bool get isNameTooShort => _secretName.length < minNameLength;
 
-  bool get isUnderstandingShardsHidden => _isUnderstandingShardsHidden;
+  bool get isUnderstandingShardsHidden =>
+      _settingsRepository
+          .get<bool>(PreferencesKeys.keyIsUnderstandingShardsHidden) ??
+      false;
 
   @override
   Future<MessageModel> startRequest() async {

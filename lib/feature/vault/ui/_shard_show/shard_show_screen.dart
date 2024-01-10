@@ -7,6 +7,8 @@ import 'dialogs/on_become_owner_dialog.dart';
 import 'dialogs/on_change_owner_dialog.dart';
 
 class ShardShowScreen extends StatelessWidget {
+  static const route = '/vault/shard/show';
+
   const ShardShowScreen({super.key});
 
   @override

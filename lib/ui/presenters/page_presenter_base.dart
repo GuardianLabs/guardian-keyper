@@ -1,26 +1,43 @@
 import 'package:flutter/widgets.dart';
 
-base class PagePresenterBase extends ChangeNotifier {
-  final int pageCount;
+import 'package:guardian_keyper/consts.dart';
 
-  int currentPage;
+export 'package:provider/provider.dart';
 
-  PagePresenterBase({
-    required this.pageCount,
-    this.currentPage = 0,
+class PagePresentererBase extends PageController {
+  PagePresentererBase({
+    required this.stepsCount,
+    super.initialPage = 0,
+    super.keepPage = false,
   });
 
-  void nextPage([void _]) {
-    if (currentPage < pageCount - 1) {
-      currentPage++;
-      notifyListeners();
-    }
+  final int stepsCount;
+
+  late int _currentPage = super.initialPage;
+
+  int get currentPage => _currentPage;
+
+  @override
+  Future<void> nextPage({Curve? curve, Duration? duration}) {
+    _currentPage++;
+    return super.nextPage(
+      duration: duration ?? pageChangeDuration,
+      curve: curve ?? Curves.easeInOut,
+    );
   }
 
-  void previousPage([void _]) {
-    if (currentPage > 0) {
-      currentPage--;
-      notifyListeners();
-    }
+  @override
+  Future<void> previousPage({Curve? curve, Duration? duration}) {
+    if (_currentPage > 0) _currentPage--;
+    return super.previousPage(
+      duration: duration ?? pageChangeDuration,
+      curve: curve ?? Curves.easeInOut,
+    );
+  }
+
+  @override
+  void jumpToPage(int page) {
+    if (page >= 0) _currentPage = page;
+    super.jumpToPage(page);
   }
 }

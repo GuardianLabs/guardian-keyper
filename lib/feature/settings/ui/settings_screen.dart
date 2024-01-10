@@ -3,14 +3,16 @@ import 'package:flutter/foundation.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
-import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
-import 'package:guardian_keyper/feature/network/data/network_manager.dart';
+import 'package:guardian_keyper/data/managers/auth_manager.dart';
+import 'package:guardian_keyper/data/managers/network_manager.dart';
 
 import 'package:guardian_keyper/feature/settings/ui/widgets/theme_mode_switcher.dart';
 import 'package:guardian_keyper/feature/auth/ui/dialogs/on_change_pass_code_dialog.dart';
 import 'package:guardian_keyper/feature/settings/ui/dialogs/on_set_device_name_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
+  static const route = '/settings';
+
   const SettingsScreen({super.key});
 
   @override

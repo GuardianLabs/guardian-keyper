@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
@@ -15,7 +15,7 @@ export 'package:guardian_keyper/feature/vault/data/vault_repository.dart'
 
 /// Depends on:
 /// [
-///   PreferencesService,
+///   settingsRepository,
 ///   AnalyticsService,
 ///   PlatformService,
 ///   VaultRepository,
@@ -42,6 +42,7 @@ class VaultInteractor
 
   Future<Vault> createVault(Vault vault) async {
     await _vaultRepository.put(vault.aKey, vault);
+    logFinishCreateVault();
     return vault;
   }
 

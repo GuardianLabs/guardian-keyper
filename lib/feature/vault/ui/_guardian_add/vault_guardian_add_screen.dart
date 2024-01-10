@@ -1,4 +1,3 @@
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
@@ -8,6 +7,8 @@ import 'pages/get_code_page.dart';
 import 'pages/loading_page.dart';
 
 class VaultGuardianAddScreen extends StatelessWidget {
+  static const route = '/vault/guardian/add';
+
   static const _pages = [
     GetCodePage(),
     LoadingPage(),
@@ -16,22 +17,17 @@ class VaultGuardianAddScreen extends StatelessWidget {
   const VaultGuardianAddScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final vaultId = ModalRoute.of(context)!.settings.arguments! as VaultId;
-    return ChangeNotifierProvider(
-      create: (_) => VaultGuardianAddPresenter(
-        pageCount: _pages.length,
-        vaultId: vaultId,
-      ),
-      child: ScaffoldSafe(
-        child: Selector<VaultGuardianAddPresenter, int>(
-          selector: (_, presenter) => presenter.currentPage,
-          builder: (_, currentPage, __) => AnimatedSwitcher(
-            duration: pageChangeDuration,
-            child: _pages[currentPage],
+  Widget build(BuildContext context) => ScaffoldSafe(
+        child: ChangeNotifierProvider(
+          create: (_) => VaultGuardianAddPresenter(
+            stepsCount: _pages.length,
+            vaultId: ModalRoute.of(context)!.settings.arguments! as VaultId,
+          ),
+          builder: (context, _) => PageView(
+            controller: context.read<VaultGuardianAddPresenter>(),
+            physics: const NeverScrollableScrollPhysics(),
+            children: _pages,
           ),
         ),
-      ),
-    );
-  }
+      );
 }

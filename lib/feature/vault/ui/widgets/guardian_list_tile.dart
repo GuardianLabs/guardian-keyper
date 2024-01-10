@@ -1,6 +1,6 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
 
 class GuardianListTile extends StatelessWidget {

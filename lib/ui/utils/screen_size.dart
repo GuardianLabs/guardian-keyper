@@ -1,6 +1,11 @@
 import 'package:flutter/widgets.dart';
 
 sealed class ScreenSize {
+  static EdgeInsets getPadding(BuildContext context) =>
+      (ScreenSize(context) is ScreenSmall
+          ? const EdgeInsets.symmetric(vertical: 12, horizontal: 20)
+          : const EdgeInsets.symmetric(vertical: 32, horizontal: 20));
+
   factory ScreenSize(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return switch (size.height) {

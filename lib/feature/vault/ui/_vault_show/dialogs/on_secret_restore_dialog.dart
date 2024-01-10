@@ -29,7 +29,7 @@ class _OnSecretRestoreDialogState extends State<OnSecretRestoreDialog> {
             title: const Text('Do not show again'),
             value: _isChecked,
             onChanged: (value) async {
-              await _settingsRepository.putNullable(
+              await _settingsRepository.setNullable(
                 PreferencesKeys.keyIsSecretRestoreExplainerHidden,
                 value,
               );

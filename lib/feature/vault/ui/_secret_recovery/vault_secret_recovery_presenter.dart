@@ -9,7 +9,7 @@ export 'package:provider/provider.dart';
 
 final class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
   VaultSecretRecoveryPresenter({
-    required super.pageCount,
+    required super.stepsCount,
     required super.vaultId,
     required super.secretId,
   }) {

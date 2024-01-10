@@ -1,7 +1,7 @@
 part of 'theme.dart';
 
 const systemStyleDark = SystemUiOverlayStyle(
-  statusBarColor: Color(0xFF1A0244),
+  statusBarColor: Colors.transparent,
   statusBarBrightness: Brightness.dark,
   statusBarIconBrightness: Brightness.light,
 );
@@ -27,6 +27,8 @@ final colorSchemeDark = ColorScheme.fromSeed(
   onTertiary: Colors.white,
   error: const Color(0xFFEC5F59),
   onError: const Color(0xFFF19C38),
+  errorContainer: const Color(0x22F6EAEA),
+  onErrorContainer: const Color(0xFFD32C2C),
   background: const Color(0xFF1A0244),
   onBackground: Colors.white,
   surface: const Color(0xFF24035F),
@@ -96,30 +98,33 @@ final themeDark = themeData.copyWith(
   ),
   // Input
   inputDecorationTheme: themeData.inputDecorationTheme.copyWith(
-    border: themeData.inputDecorationTheme.border!.copyWith(
+    border: themeData.inputDecorationTheme.border?.copyWith(
       borderSide: themeData.inputDecorationTheme.border!.borderSide.copyWith(
         color: colorSchemeDark.secondary,
       ),
     ),
     floatingLabelStyle:
-        themeData.inputDecorationTheme.floatingLabelStyle!.copyWith(
+        themeData.inputDecorationTheme.floatingLabelStyle?.copyWith(
+      color: colorSchemeDark.onSecondary,
+    ),
+    helperStyle: themeData.inputDecorationTheme.helperStyle?.copyWith(
       color: colorSchemeDark.onSecondary,
     ),
   ),
   // ListTile
   listTileTheme: themeData.listTileTheme.copyWith(
     tileColor: colorSchemeDark.surface,
-    titleTextStyle: themeData.listTileTheme.titleTextStyle!.copyWith(
+    titleTextStyle: themeData.listTileTheme.titleTextStyle?.copyWith(
       color: colorSchemeDark.onPrimary,
     ),
-    subtitleTextStyle: themeData.listTileTheme.subtitleTextStyle!.copyWith(
+    subtitleTextStyle: themeData.listTileTheme.subtitleTextStyle?.copyWith(
       color: colorSchemeDark.onSurface,
     ),
     iconColor: colorSchemeDark.onSurface,
   ),
   // Outlined Button
   outlinedButtonTheme: OutlinedButtonThemeData(
-      style: themeData.filledButtonTheme.style!.copyWith(
+      style: themeData.filledButtonTheme.style?.copyWith(
     foregroundColor: MaterialStateProperty.resolveWith<Color>(
       (states) => states.contains(MaterialState.disabled)
           ? colorSchemeDark.onPrimary.withOpacity(0.5)

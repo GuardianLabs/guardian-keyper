@@ -61,6 +61,7 @@ final themeData = ThemeData(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(cornerRadius)),
     ),
+    showDragHandle: true,
   ),
   // Card
   cardTheme: CardTheme(
@@ -103,6 +104,8 @@ final themeData = ThemeData(
       borderSide: const BorderSide(width: 2),
     ),
     floatingLabelStyle: textTheme.labelMedium,
+    helperMaxLines: 1,
+    helperStyle: textTheme.bodySmall,
   ),
   // ListTile
   listTileTheme: ListTileThemeData(

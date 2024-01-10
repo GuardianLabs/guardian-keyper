@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:messagepack/messagepack.dart';
 
 import 'package:guardian_keyper/domain/entity/serializable.dart';
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';

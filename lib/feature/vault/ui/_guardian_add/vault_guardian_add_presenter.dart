@@ -12,7 +12,7 @@ export '../vault_guardian_presenter_base.dart';
 
 final class VaultGuardianAddPresenter extends VaultGuardianPresenterBase {
   VaultGuardianAddPresenter({
-    required super.pageCount,
+    required super.stepsCount,
     required this.vaultId,
   }) {
     _vaultInteractor.logStartAddGuardian();

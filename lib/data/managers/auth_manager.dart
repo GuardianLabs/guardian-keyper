@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'package:get_it/get_it.dart';
 
-import 'package:guardian_keyper/data/services/preferences_service.dart';
-
-import 'auth_service.dart';
+import '../services/auth_service.dart';
+import '../repositories/settings_repository.dart';
 
 export 'package:get_it/get_it.dart';
 
@@ -12,27 +10,27 @@ typedef AuthManagerState = ({
   bool hasBiometrics,
 });
 
-/// Depends on [PreferencesService]
+/// Depends on [SettingsRepository]
 class AuthManager {
-  AuthManager({
-    AuthService? authService,
-    PreferencesService? prefService,
-  })  : _authService = authService ?? AuthService(),
-        _preferencesService = prefService ?? GetIt.I<PreferencesService>();
+  AuthManager({AuthService? authService})
+      : _authService = authService ?? AuthService();
 
   final AuthService _authService;
 
-  final PreferencesService _preferencesService;
+  final _settingsRepository = GetIt.I<SettingsRepository>();
 
   final _stateStreamController = StreamController<AuthManagerState>.broadcast();
 
-  late final vibrate = _authService.vibrate;
-
-  late String _passCode;
+  DateTime _lastPausedAt = DateTime.now();
 
   late bool _hasBiometrics;
 
-  late bool _isBiometricsEnabled;
+  late String _passCode =
+      _settingsRepository.get<String>(PreferencesKeys.keyPassCode) ?? '';
+
+  late bool _isBiometricsEnabled =
+      _settingsRepository.get<bool>(PreferencesKeys.keyIsBiometricsEnabled) ??
+          true;
 
   String get passCode => _passCode;
 
@@ -42,16 +40,13 @@ class AuthManager {
 
   bool get useBiometrics => hasBiometrics && isBiometricsEnabled;
 
+  bool get needPasscode => _lastPausedAt
+      .isBefore(DateTime.now().subtract(const Duration(seconds: 30)));
+
   Stream<AuthManagerState> get state => _stateStreamController.stream;
 
   Future<AuthManager> init() async {
     _hasBiometrics = await _authService.getHasBiometrics();
-    _isBiometricsEnabled = await _preferencesService
-            .get<bool>(PreferencesKeys.keyIsBiometricsEnabled) ??
-        true;
-    _passCode =
-        await _preferencesService.get<String>(PreferencesKeys.keyPassCode) ??
-            '';
     return this;
   }
 
@@ -59,12 +54,14 @@ class AuthManager {
     await _stateStreamController.close();
   }
 
-  Future<void> onResumed() => _authService.getHasBiometrics().then(
-        (v) {
-          _hasBiometrics = v;
-          _updateState();
-        },
-      );
+  Future<void> onResumed() async {
+    _hasBiometrics = await _authService.getHasBiometrics();
+    _updateState();
+  }
+
+  Future<void> onInactive() async => _lastPausedAt = DateTime.now();
+
+  Future<void> vibrate() => _authService.vibrate();
 
   Future<bool> localAuthenticate({
     bool biometricOnly = true,
@@ -82,7 +79,7 @@ class AuthManager {
 
   Future<void> setPassCode(String value) {
     _passCode = value;
-    return _preferencesService.set<String>(
+    return _settingsRepository.set<String>(
       PreferencesKeys.keyPassCode,
       value,
     );
@@ -91,7 +88,7 @@ class AuthManager {
   Future<void> setIsBiometricsEnabled(bool isEnabled) {
     _isBiometricsEnabled = isEnabled;
     _updateState();
-    return _preferencesService.set<bool>(
+    return _settingsRepository.set<bool>(
       PreferencesKeys.keyIsBiometricsEnabled,
       isEnabled,
     );
