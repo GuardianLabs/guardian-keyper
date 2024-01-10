@@ -1,14 +1,12 @@
 import 'dart:async';
-import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/data/services/preferences_service.dart';
-
-import 'package:guardian_keyper/feature/network/data/mdns_service.dart';
-import 'package:guardian_keyper/feature/network/data/router_service.dart';
-import 'package:guardian_keyper/feature/network/data/network_service.dart';
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/data/services/mdns_service.dart';
+import 'package:guardian_keyper/data/services/router_service.dart';
+import 'package:guardian_keyper/data/services/network_service.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 export 'package:get_it/get_it.dart';
@@ -23,7 +21,7 @@ typedef NetworkManagerState = ({
   NetworkManagerStatus status,
 });
 
-/// Depends on [PreferencesService]
+/// Depends on [SettingsRepository]
 class NetworkManager {
   NetworkManager({
     int? port,
@@ -40,7 +38,7 @@ class NetworkManager {
   final RouterService _routerService;
   final NetworkService _networkService;
 
-  final _preferencesService = GetIt.I<PreferencesService>();
+  final _settingsRepository = GetIt.I<SettingsRepository>();
 
   final _stateStreamController =
       StreamController<NetworkManagerState>.broadcast();
@@ -64,14 +62,13 @@ class NetworkManager {
   Future<NetworkManager> init() async {
     if (_status != NetworkManagerStatus.uninited) throw Exception('Init once!');
     _status = NetworkManagerStatus.pending;
-    _isBootstrapEnabled = await _preferencesService
-            .get<bool>(PreferencesKeys.keyIsBootstrapEnabled) ??
-        true;
+    _isBootstrapEnabled =
+        _settingsRepository.get<bool>(PreferencesKeys.keyIsBootstrapEnabled) ??
+            true;
 
-    final seed =
-        await _preferencesService.get<Uint8List>(PreferencesKeys.keySeed);
+    final seed = _settingsRepository.get<Uint8List>(PreferencesKeys.keySeed);
     if (seed == null) {
-      await _preferencesService.set<Uint8List>(
+      await _settingsRepository.set<Uint8List>(
         PreferencesKeys.keySeed,
         await _routerService.init(),
       );
@@ -81,8 +78,7 @@ class NetworkManager {
 
     _selfId = PeerId(
       token: _routerService.selfId,
-      name: await _preferencesService
-              .get<String>(PreferencesKeys.keyDeviceName) ??
+      name: _settingsRepository.get<String>(PreferencesKeys.keyDeviceName) ??
           await _networkService.getDeviceName(),
     );
 
@@ -151,13 +147,13 @@ class NetworkManager {
   Future<void> setDeviceName(String value) async {
     if (_selfId.name == value) return;
     if (value.isEmpty) {
-      await _preferencesService.delete(PreferencesKeys.keyDeviceName);
+      await _settingsRepository.delete(PreferencesKeys.keyDeviceName);
       _selfId = _selfId.copyWith(
         name: await _networkService.getDeviceName(),
       );
     } else {
       _selfId = _selfId.copyWith(name: value);
-      await _preferencesService.set<String>(
+      await _settingsRepository.set<String>(
         PreferencesKeys.keyDeviceName,
         value,
       );
@@ -168,7 +164,7 @@ class NetworkManager {
   Future<void> setIsBootstrapEnabled(bool isEnabled) async {
     if (_isBootstrapEnabled == isEnabled) return;
     _isBootstrapEnabled = isEnabled;
-    await _preferencesService.set<bool>(
+    await _settingsRepository.set<bool>(
       PreferencesKeys.keyIsBootstrapEnabled,
       isEnabled,
     );

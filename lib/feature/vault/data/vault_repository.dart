@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-import 'package:guardian_keyper/data/services/preferences_service.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 
 export 'package:get_it/get_it.dart';
@@ -13,7 +13,7 @@ typedef VaultRepositoryEvent = ({
   bool isDeleted,
 });
 
-/// Depends on [PreferencesService]
+/// Depends on [SettingsRepository]
 class VaultRepository {
   late final Box<Vault> _storage;
 

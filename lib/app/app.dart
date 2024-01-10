@@ -1,12 +1,12 @@
-import 'package:get_it/get_it.dart';
 import 'package:flutter/services.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/splash.dart';
-import 'package:guardian_keyper/ui/presenters/theme_presenter.dart';
 import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 
 import 'di.dart';
 import 'home.dart';
@@ -21,37 +21,50 @@ class App extends StatelessWidget {
   final DI di;
 
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-        future: di.init(),
-        builder: (context, _) => di.isNotInited
-            ? const Splash()
-            : ChangeNotifierProvider(
-                create: (_) => ThemePresenter(isDarkModeOn: di.isDarkModeOn),
-                builder: (context, child) {
-                  final themeMode = context.watch<ThemePresenter>().themeMode;
-                  SystemChrome.setSystemUIOverlayStyle(switch (themeMode) {
-                    ThemeMode.dark => systemStyleDark,
-                    ThemeMode.light => systemStyleLight,
-                    _ => MediaQuery.of(context).platformBrightness ==
-                            Brightness.dark
-                        ? systemStyleDark
-                        : systemStyleLight,
-                  });
-                  return MaterialApp(
-                    title: 'Guardian Keyper',
-                    routes: routes,
-                    themeMode: themeMode,
-                    theme: themeLight,
-                    darkTheme: themeDark,
-                    debugShowCheckedModeBanner: false,
-                    navigatorObservers: [
-                      GetIt.I<SentryNavigatorObserver>(),
-                      GetIt.I<CurrentRouteObserver>(),
-                    ],
-                    home: child,
-                  );
-                },
-                child: const Home(),
-              ),
-      );
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: di.init(),
+      builder: (context, _) {
+        if (di.isNotInited) return const Splash();
+        final settingsRepository = GetIt.I<SettingsRepository>();
+        return StreamBuilder(
+          initialData: settingsRepository.get<bool>(
+            PreferencesKeys.keyIsDarkModeOn,
+            // TBD: `true` for Keyper (2), `false` for Wallet (3), `null` for system
+            !buildV3,
+          ),
+          stream: settingsRepository
+              .watch<bool>(PreferencesKeys.keyIsDarkModeOn)
+              .map((event) => event.value),
+          builder: (context, snapshot) {
+            final themeMode = switch (snapshot.data) {
+              true => ThemeMode.dark,
+              false => ThemeMode.light,
+              null => ThemeMode.system,
+            };
+            SystemChrome.setSystemUIOverlayStyle(switch (themeMode) {
+              ThemeMode.dark => systemStyleDark,
+              ThemeMode.light => systemStyleLight,
+              _ => MediaQuery.of(context).platformBrightness == Brightness.dark
+                  ? systemStyleDark
+                  : systemStyleLight,
+            });
+            return MaterialApp(
+              title: 'Guardian Keyper',
+              routes: routes,
+              themeMode: themeMode,
+              theme: themeLight,
+              darkTheme: themeDark,
+              debugShowCheckedModeBanner: false,
+              navigatorObservers: [
+                GetIt.I<SentryNavigatorObserver>(),
+                GetIt.I<CurrentRouteObserver>(),
+              ],
+              home: const Home(),
+            );
+          },
+        );
+      },
+    );
+  }
 }

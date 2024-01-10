@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/presenters/page_controller_base.dart';
+import 'package:guardian_keyper/ui/utils/page_controller_base.dart';
 
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';

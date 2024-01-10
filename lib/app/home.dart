@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
+import 'package:guardian_keyper/data/managers/auth_manager.dart';
 
-import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
-import 'package:guardian_keyper/feature/network/data/network_manager.dart';
+import 'package:guardian_keyper/data/managers/network_manager.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 
 import 'package:guardian_keyper/feature/home/ui/home_screen.dart';

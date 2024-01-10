@@ -1,7 +1,7 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
-import 'package:guardian_keyper/feature/network/data/network_manager.dart';
+import 'package:guardian_keyper/data/managers/auth_manager.dart';
+import 'package:guardian_keyper/data/managers/network_manager.dart';
 import 'package:guardian_keyper/feature/onboarding/ui/dialogs/on_discard_dialog.dart';
 
 class DiscardButton extends StatelessWidget {

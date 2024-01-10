@@ -2,7 +2,7 @@ import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/stepper_page.dart';
 
-import 'package:guardian_keyper/feature/network/data/network_manager.dart';
+import 'package:guardian_keyper/data/managers/network_manager.dart';
 import 'package:guardian_keyper/feature/onboarding/widgets/discard_button.dart';
 
 class SetDeviceNamePage extends StatefulWidget {

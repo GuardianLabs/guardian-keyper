@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-import 'package:guardian_keyper/data/services/preferences_service.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 export 'package:get_it/get_it.dart';
@@ -11,7 +11,7 @@ typedef MessageRepositoryEvent = ({
   bool isDeleted,
 });
 
-/// Depends on [PreferencesService]
+/// Depends on [SettingsRepository]
 class MessageRepository {
   late final Box<MessageModel> _storage;
 

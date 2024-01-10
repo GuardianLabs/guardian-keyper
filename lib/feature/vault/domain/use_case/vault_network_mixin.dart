@@ -1,5 +1,5 @@
-import 'package:guardian_keyper/feature/network/data/network_manager.dart';
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/data/managers/network_manager.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 mixin class VaultNetworkMixin {

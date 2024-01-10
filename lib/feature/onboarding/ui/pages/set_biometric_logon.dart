@@ -1,7 +1,7 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/stepper_page.dart';
 
-import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
+import 'package:guardian_keyper/data/managers/auth_manager.dart';
 
 class SetBiometricLogonPage extends StatelessWidget {
   const SetBiometricLogonPage({super.key});

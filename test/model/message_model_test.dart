@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:guardian_keyper/domain/entity/id_base.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import '../data/filled_models.dart';
 
 void main() {

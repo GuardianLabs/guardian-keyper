@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:p2plib/p2plib.dart' as p2p;
 
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/feature/network/domain/entity/peer_id.dart';
+import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
 class RouterService {

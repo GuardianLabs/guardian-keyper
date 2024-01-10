@@ -1,7 +1,7 @@
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/feature/auth/data/auth_manager.dart';
+import 'package:guardian_keyper/data/managers/auth_manager.dart';
 
 import 'auth_dialog_mixin.dart';
 

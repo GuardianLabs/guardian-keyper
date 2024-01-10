@@ -1,7 +1,7 @@
-import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
-import 'package:guardian_keyper/feature/network/data/network_manager.dart';
-import 'package:guardian_keyper/feature/message/data/message_repository.dart';
+import 'package:guardian_keyper/data/managers/network_manager.dart';
 
+import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
+import 'package:guardian_keyper/feature/message/data/message_repository.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/secret_shard.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
 
