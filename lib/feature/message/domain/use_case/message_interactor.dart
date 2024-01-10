@@ -39,7 +39,10 @@ class MessageInteractor with MessageIngressMixin, MessageEgressMixin {
 
   Future<void> flush() => _messageRepository.flush();
 
-  Future<void> pruneMessages() => _messageRepository.prune();
+  Future<void> pruneMessages() async {
+    await _messageRepository.prune();
+    await _messageRepository.flush();
+  }
 
   Stream<MessageRepositoryEvent> watch([String? key]) =>
       _messageRepository.watch(key);

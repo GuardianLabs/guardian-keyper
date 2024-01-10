@@ -10,9 +10,9 @@ import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 
 import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 import 'package:guardian_keyper/feature/home/ui/home_presenter.dart';
+import 'package:guardian_keyper/feature/message/ui/request_handler.dart';
 
 import 'di.dart';
-import 'home.dart';
 import 'routes.dart';
 
 class App extends StatelessWidget {
@@ -67,7 +67,7 @@ class App extends StatelessWidget {
                 create: (_) => HomePresenter(stepsCount: HomeScreen.tabsCount),
                 child: child,
               ),
-              home: const Home(),
+              home: const RequestHandler(child: HomeScreen()),
             );
           },
         );
