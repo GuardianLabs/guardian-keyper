@@ -9,7 +9,6 @@ import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
 
 import 'package:guardian_keyper/data/managers/auth_manager.dart';
-import 'package:guardian_keyper/feature/wallet/data/wallet_manager.dart';
 import 'package:guardian_keyper/data/managers/network_manager.dart';
 
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
@@ -61,10 +60,6 @@ class DI {
     // Register Managers
     GetIt.I.registerSingleton<AuthManager>(
       await AuthManager().init(),
-      dispose: (i) => i.close(),
-    );
-    GetIt.I.registerSingleton<WalletManager>(
-      await WalletManager().init(),
       dispose: (i) => i.close(),
     );
     GetIt.I.registerSingleton<NetworkManager>(
