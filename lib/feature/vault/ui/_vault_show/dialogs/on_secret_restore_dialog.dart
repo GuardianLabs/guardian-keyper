@@ -26,15 +26,16 @@ class _OnSecretRestoreDialogState extends State<OnSecretRestoreDialog> {
             'as you are connected via peer-to-peer (P2P), '
             'and doing so could disrupt the process.',
         body: CheckboxListTile(
-            title: const Text('Do not show again'),
-            value: _isChecked,
-            onChanged: (value) async {
-              await _settingsRepository.setNullable(
-                PreferencesKeys.keyIsSecretRestoreExplainerHidden,
-                value,
-              );
-              setState(() => _isChecked = value ?? false);
-            }),
+          title: const Text('Do not show again'),
+          value: _isChecked,
+          onChanged: (value) async {
+            await _settingsRepository.setNullable(
+              PreferencesKeys.keyIsSecretRestoreExplainerHidden,
+              value,
+            );
+            setState(() => _isChecked = value ?? false);
+          },
+        ),
         footer: FilledButton(
           onPressed: () => Navigator.of(context).pop(true),
           child: const Text('Got it'),

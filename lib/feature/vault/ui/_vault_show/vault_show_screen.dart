@@ -1,4 +1,5 @@
 import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
@@ -37,7 +38,10 @@ class VaultShowScreen extends StatelessWidget {
         ),
         stream: vaultInteractor.watch(vaultId.asKey),
         builder: (context, snapshot) {
-          final vault = snapshot.data!.vault!;
+          final vault = snapshot.data?.vault ??
+              Vault(
+                ownerId: vaultInteractor.selfId,
+              );
           return ListView(
             padding: paddingH20,
             children: [

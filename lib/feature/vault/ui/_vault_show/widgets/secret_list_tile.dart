@@ -43,9 +43,8 @@ class SecretListTile extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: vault.isRestricted
-                ? null
-                : () async {
+            onPressed: vault.hasQuorum
+                ? () async {
                     final isSecretRestoreExplainerHidden =
                         GetIt.I<SettingsRepository>().get<bool>(PreferencesKeys
                                 .keyIsSecretRestoreExplainerHidden) ??
@@ -64,7 +63,8 @@ class SecretListTile extends StatelessWidget {
                         ),
                       );
                     }
-                  },
+                  }
+                : null,
             icon: const Icon(Icons.visibility_outlined),
           ),
         ],
