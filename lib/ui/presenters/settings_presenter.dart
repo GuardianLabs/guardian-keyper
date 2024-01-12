@@ -17,8 +17,8 @@ class SettingsPresenter extends ChangeNotifier {
 
   bool? get isDarkModeOn => _settingsRepository.get<bool>(
         PreferencesKeys.keyIsDarkModeOn,
-        // TBD: `true` for Keyper (2), `false` for Wallet (3), `null` for system
-        false,
+        // TBD: light color scheme
+        true,
       );
 
   @override
