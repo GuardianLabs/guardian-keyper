@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/data/managers/auth_manager.dart';
 import 'package:guardian_keyper/data/managers/network_manager.dart';
@@ -33,9 +32,7 @@ class _LifecycleState extends State<Lifecycle> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     Future.microtask(() async {
       if (_authManager.passCode.isEmpty) {
-        await Navigator.of(context).pushNamed(
-          buildV3 ? routeOnboarding : routeIntro,
-        );
+        await Navigator.of(context).pushNamed(routeIntro);
       } else if (_authManager.passCode.isNotEmpty) {
         await OnDemandAuthDialog.show(context);
         await _messageInteractor.pruneMessages();

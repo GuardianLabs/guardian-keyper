@@ -1,13 +1,12 @@
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
+import 'package:guardian_keyper/data/managers/network_manager.dart';
 import 'package:guardian_keyper/data/managers/auth_manager.dart';
+
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
-import 'package:guardian_keyper/data/managers/network_manager.dart';
 import 'package:guardian_keyper/feature/message/data/message_repository.dart';
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
-
-import 'package:guardian_keyper/feature/onboarding/ui/onboarding_screen.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_message_active_dialog.dart';
 
 class DevDrawer extends StatelessWidget {
@@ -67,14 +66,6 @@ class DevDrawer extends StatelessWidget {
                 );
               }
             },
-          ),
-          ListTile(
-            title: const Text('Show Onboarding'),
-            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-              builder: (context) => const OnboardingScreen(),
-              fullscreenDialog: true,
-              maintainState: false,
-            )),
           ),
           ListTile(
             title: const Text('OnMessageActiveDialog'),

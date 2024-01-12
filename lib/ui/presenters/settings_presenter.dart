@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 
 export 'package:provider/provider.dart';
@@ -19,7 +18,7 @@ class SettingsPresenter extends ChangeNotifier {
   bool? get isDarkModeOn => _settingsRepository.get<bool>(
         PreferencesKeys.keyIsDarkModeOn,
         // TBD: `true` for Keyper (2), `false` for Wallet (3), `null` for system
-        !buildV3,
+        false,
       );
 
   @override

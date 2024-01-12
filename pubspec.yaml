@@ -12,13 +12,11 @@ dependencies:
   flutter:
     sdk: flutter
   vector_graphics: ^1.1.9+2
-  # bip39_mnemonic: ^3.0.6
   google_fonts: ^6.1.0
   flutter_svg: ^2.0.9
   messagepack: ^0.2.1
   collection: ^1.17.2
   qr_flutter: ^4.1.0
-  # web3dart: ^2.7.2
   provider: ^6.1.1
   get_it: ^7.6.6
   p2plib: ^2.1.1
