@@ -29,7 +29,8 @@ class App extends StatelessWidget {
     return FutureBuilder(
       future: di.init(),
       builder: (context, _) {
-        if (di.isNotInited) return const Splash();
+        // TBD: light color scheme
+        if (di.isNotInited) return const Splash(brightness: Brightness.dark);
         return MultiProvider(
           providers: [
             ChangeNotifierProvider<SettingsPresenter>(

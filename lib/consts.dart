@@ -22,4 +22,3 @@ const urlAppStore = String.fromEnvironment('APP_STORE');
 const bsAddressV4 = String.fromEnvironment('BS_V4');
 const bsAddressV6 = String.fromEnvironment('BS_V6');
 const bsPeerId = String.fromEnvironment('BS_ID');
-const buildV3 = bool.fromEnvironment('BUILD_V3');

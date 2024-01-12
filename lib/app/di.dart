@@ -9,7 +9,6 @@ import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
 
 import 'package:guardian_keyper/data/managers/auth_manager.dart';
-import 'package:guardian_keyper/feature/wallet/data/wallet_manager.dart';
 import 'package:guardian_keyper/data/managers/network_manager.dart';
 
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
@@ -30,7 +29,7 @@ class DI {
     if (_isInited) return;
     final pathAppDir = (await getApplicationDocumentsDirectory()).path;
 
-    // Register Services
+    // Register Service Layer
     GetIt.I.registerLazySingleton<PlatformService>(PlatformService.new);
     GetIt.I.registerLazySingleton<SentryNavigatorObserver>(
       SentryNavigatorObserver.new,
@@ -42,9 +41,15 @@ class DI {
       await AnalyticsService.init(),
     );
 
-    // Register Repositories
+    // Register Data Layer
     final settingsRepository = await SettingsRepository().init(pathAppDir);
     GetIt.I.registerSingleton<SettingsRepository>(settingsRepository);
+
+    GetIt.I.registerSingleton<NetworkManager>(
+      await NetworkManager().init(),
+      dispose: (i) => i.close(),
+    );
+
     final encryptionCipher = HiveAesCipher(
       settingsRepository.get<Uint8List>(PreferencesKeys.keySeed)!,
     );
@@ -57,22 +62,12 @@ class DI {
       await MessageRepository().init(encryptionCipher: encryptionCipher),
       dispose: (i) => i.close(),
     );
-
-    // Register Managers
     GetIt.I.registerSingleton<AuthManager>(
       await AuthManager().init(),
       dispose: (i) => i.close(),
     );
-    GetIt.I.registerSingleton<WalletManager>(
-      await WalletManager().init(),
-      dispose: (i) => i.close(),
-    );
-    GetIt.I.registerSingleton<NetworkManager>(
-      await NetworkManager().init(),
-      dispose: (i) => i.close(),
-    );
 
-    // Register Interactors
+    // Register Domain Layer
     GetIt.I.registerLazySingleton<MessageInteractor>(
       MessageInteractor.new,
       dispose: (i) => i.close(),
