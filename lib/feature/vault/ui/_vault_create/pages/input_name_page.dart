@@ -23,11 +23,14 @@ class InputNamePage extends StatelessWidget {
               padding: paddingH20,
               children: [
                 const PageTitle(title: 'Create a name for your Safe'),
-                TextFormField(
+                TextField(
                   autofocus: true,
                   keyboardType: TextInputType.text,
                   maxLength: maxNameLength,
-                  decoration: const InputDecoration(labelText: ' Safe name '),
+                  decoration: const InputDecoration(
+                    labelText: ' Safe name ',
+                  ),
+                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
                   onChanged: context.read<VaultCreatePresenter>().setVaultName,
                 ),
                 // Footer

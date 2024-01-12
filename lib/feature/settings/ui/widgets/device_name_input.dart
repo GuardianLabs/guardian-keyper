@@ -45,6 +45,7 @@ class _DeviceNameInputState extends State<DeviceNameInput> {
                 labelText: ' Device name ',
                 helperText: 'Minimum $minNameLength characters',
               ),
+              onTapOutside: (_) => FocusScope.of(context).unfocus(),
               onChanged: (value) {
                 if (value.length >= minNameLength && !_canProceed) {
                   setState(() => _canProceed = true);

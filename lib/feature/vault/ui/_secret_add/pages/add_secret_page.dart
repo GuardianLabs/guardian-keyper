@@ -30,13 +30,14 @@ class AddSecretPage extends StatelessWidget {
               // Input
               TextFormField(
                 autofocus: true,
+                maxLines: null,
+                maxLength: maxSecretLength,
+                initialValue: presenter.secret,
+                keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
                   labelText: ' Your Secret ',
                 ),
-                initialValue: presenter.secret,
-                keyboardType: TextInputType.multiline,
-                maxLength: maxSecretLength,
-                maxLines: null,
+                onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 onChanged: presenter.setSecret,
               ),
               // Footer

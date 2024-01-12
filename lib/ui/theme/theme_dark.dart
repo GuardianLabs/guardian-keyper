@@ -42,6 +42,7 @@ final themeDark = themeData.copyWith(
   canvasColor: colorSchemeDark.background,
   scaffoldBackgroundColor: colorSchemeDark.background,
   extensions: [colorSchemeExtensionDark],
+  unselectedWidgetColor: colorSchemeDark.onSurface,
   // AppBar
   appBarTheme: themeData.appBarTheme.copyWith(
     backgroundColor: colorSchemeDark.background,
@@ -61,6 +62,11 @@ final themeDark = themeData.copyWith(
   // Card
   cardTheme: themeData.cardTheme.copyWith(
     color: colorSchemeDark.surface,
+  ),
+  // Check Box
+  checkboxTheme: CheckboxThemeData(
+    side: BorderSide(color: colorSchemeDark.onSurface),
+    checkColor: MaterialStatePropertyAll(colorSchemeDark.onSurface),
   ),
   // Divider
   dividerTheme: themeData.dividerTheme.copyWith(
@@ -105,10 +111,13 @@ final themeDark = themeData.copyWith(
     ),
     floatingLabelStyle:
         themeData.inputDecorationTheme.floatingLabelStyle?.copyWith(
-      color: colorSchemeDark.onSecondary,
+      color: colorSchemeDark.onSurface,
+    ),
+    labelStyle: themeData.inputDecorationTheme.labelStyle?.copyWith(
+      color: colorSchemeDark.onSurface,
     ),
     helperStyle: themeData.inputDecorationTheme.helperStyle?.copyWith(
-      color: colorSchemeDark.onSecondary,
+      color: colorSchemeDark.onSurface,
     ),
   ),
   // ListTile

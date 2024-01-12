@@ -22,7 +22,7 @@ class _PageTitleRestrictedState extends State<PageTitleRestricted> {
   late final TapGestureRecognizer _tapRecognizer;
 
   late final _limitedAccessTapable = TextSpan(
-    text: 'limited access',
+    text: 'limited Safe access.',
     style: const TextStyle(
       fontWeight: FontWeight.w600,
       decoration: TextDecoration.underline,
@@ -50,7 +50,7 @@ class _PageTitleRestrictedState extends State<PageTitleRestricted> {
           subtitleSpans: [
             const TextSpan(
               text: 'You`re unable to add a new Secrets '
-                  'due to your limited Safe access.',
+                  'due to your ',
             ),
             _limitedAccessTapable,
           ],
