@@ -31,7 +31,7 @@ dependencies:
   mobile_scanner: ^3.5.6
   path_provider: ^2.1.2
   wakelock_plus: ^1.1.4
-  sodium_libs: ^2.2.0+7
+  sodium_libs: ^2.2.0+8
   url_launcher: ^6.2.3
   local_auth: ^2.1.8
   share_plus: ^7.2.1
