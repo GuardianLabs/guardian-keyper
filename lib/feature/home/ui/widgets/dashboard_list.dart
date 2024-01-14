@@ -81,7 +81,7 @@ class DashboardList extends StatelessWidget {
               size: 24,
             ),
             title: 'Restore my Safe',
-            subtitle: 'Recover your Safe with help of Guardians.',
+            subtitle: 'Recover your Safe with the help of your Guardians.',
             onTap: () => Navigator.of(context).pushNamed(routeVaultRestore),
           ),
         ),

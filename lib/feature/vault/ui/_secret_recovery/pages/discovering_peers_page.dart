@@ -43,7 +43,7 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
                 // Title
                 const PageTitle(
                   title: 'Awaiting Guardians',
-                  subtitle: 'Ask Guardians to open the app and approve '
+                  subtitle: 'Ask your Guardians to open the app and approve '
                       'a secret recovery. Once you get enough approvals, '
                       'the button will become active.',
                 ),

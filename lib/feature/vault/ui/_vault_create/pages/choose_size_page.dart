@@ -27,7 +27,7 @@ class ChooseSizePage extends StatelessWidget {
               title: const Text('3 Guardians'),
               subtitle: const Text(
                 'Recovering a Secret will require approval from '
-                'at least 2 out 3 Guardians.',
+                'at least 2 out of 3 Guardians.',
               ),
               trailing: Icon(
                 presenter.vaultSize == 3
@@ -41,7 +41,7 @@ class ChooseSizePage extends StatelessWidget {
               title: const Text('5 Guardians'),
               subtitle: const Text(
                 'Recovering a Secret will require approval from '
-                'at least 3 out 5 Guardians.',
+                'at least 3 out of 5 Guardians.',
               ),
               trailing: Icon(
                 presenter.vaultSize == 5

@@ -31,7 +31,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
         textString: 'Helping with Safe recovery or changing ownership?\n'
             'Please verify if the person is the current '
             'Owner or a newly approved one.\n\n'
-            'Assisting a malicious individual could lead to asset loss!',
+            'Assisting a malicious individual could result in asset loss!',
         footer: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

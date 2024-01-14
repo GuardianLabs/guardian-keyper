@@ -25,7 +25,7 @@ class GetCodePage extends StatelessWidget {
           // Body
           const PageTitle(
             title: 'Add a Guardian to proceed with a Safe recovery',
-            subtitle: 'Ask a Guardian to tap “Assist with Safe” in the app, '
+            subtitle: 'Ask a Guardian to tap on “Assist with Safe” in the app, '
                 'select the Safe you need, and provide their '
                 'Assistance QR code or text code.',
           ),

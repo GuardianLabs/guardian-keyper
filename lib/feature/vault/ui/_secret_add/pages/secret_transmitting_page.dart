@@ -88,7 +88,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                           Padding(
                             padding: paddingH20,
                             child: Text(
-                              'Ask Guardians to open the app and accept a '
+                              'Ask your Guardians to open the app and accept a '
                               'Secret Shard. Make sure they keep the app open '
                               'until the Shard splitting is complete.',
                               style: _theme.textTheme.bodySmall,
