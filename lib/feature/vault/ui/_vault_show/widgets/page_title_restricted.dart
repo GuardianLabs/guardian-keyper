@@ -61,7 +61,7 @@ class _PageTitleRestrictedState extends State<PageTitleRestricted> {
             TextSpan(
               text: 'Add at least '
                   '${widget.vault.missed} more '
-                  'Guardian to complete the Recovery. '
+                  'Guardian${widget.vault.missed == 1 ? '' : 's'} to complete the Recovery. '
                   'This will grant you ',
             ),
             _limitedAccessTapable,

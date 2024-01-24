@@ -62,7 +62,7 @@ class ShardShowScreen extends StatelessWidget {
             child: const Text('Move Safe to this Device'),
             onPressed: () => OnBecomeOwnerDialog.show(
               context,
-              vaultId: vault.id,
+              vault: vault,
             ),
           ),
         ),
