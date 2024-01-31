@@ -63,9 +63,9 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                   ),
                   padding: paddingAll20,
                   child: Text(
-                    'Do not exit or minimize the app until the end of the '
-                    'process, as you are connected via peer-to-peer (P2P), '
-                    'and doing so could disrupt the progress.',
+                    'Keep the app open and active throughout the process, '
+                    'as closing or minimizing it will disrupt the peer-to-peer (P2P) '
+                    'connection and reset progress.',
                     style: TextStyle(color: _theme.colorScheme.onError),
                   ),
                 ),
@@ -89,8 +89,8 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                             padding: paddingH20,
                             child: Text(
                               'Ask your Guardians to open the app and accept a '
-                              'Secret Shard. Make sure they keep the app open '
-                              'until the Shard splitting is complete.',
+                              'Secret shard. Make sure they keep the app open '
+                              'until the shard splitting is complete.',
                               style: _theme.textTheme.bodySmall,
                             ),
                           ),

@@ -11,7 +11,7 @@ mixin class MessageTextMixin {
   };
 
   static const _subtitles = {
-    MessageCode.createVault: ' asks you to become a Safe Guardian for ',
+    MessageCode.createVault: ' asks you to be a Safe Guardian for ',
     MessageCode.setShard: ' asks you to accept the Secret Shard for ',
     MessageCode.getShard: ' asks you to approve a recovery of Secret for ',
     MessageCode.takeVault: ' asks you to approve a change of ownership for ',

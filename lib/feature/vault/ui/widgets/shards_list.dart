@@ -7,7 +7,7 @@ import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.d
 
 class ShardsList extends StatelessWidget {
   static const _textSubtitle =
-      'Shards you are guarding will be displayed here. Each Shard is a secure '
+      'Shards you are guarding will be displayed here. Each shard is a secure '
       'component of someone else`s Secret, essential for collective recovery, '
       'yet individually reveals no information.';
 

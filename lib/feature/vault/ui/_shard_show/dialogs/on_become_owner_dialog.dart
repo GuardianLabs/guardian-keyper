@@ -75,12 +75,13 @@ class OnBecomeOwnerDialogState extends State<OnBecomeOwnerDialog> {
             size: 40,
           ),
         ),
-        titleString: 'Irreversible Action Ahead!',
-        textString: 'Once you tap the confirm button, you will no longer be a Guardian '
-            'for ${widget.vault.ownerId.name} and won’t be able to assist with the Safe anymore. '
-            '\n\nInstead, the Safe will be moved to this device in an inactive state — its Secrets '
-            'won’t be accessible until you get enough approvals from the Safe’s Guardians.'
-            '\n\nThis action cannot be undone.',
+        titleString: 'Caution: Irreversible Action!',
+        textString: 'By pressing the confirm button, you will cease to be a Guardian '
+            'for ${widget.vault.ownerId.name} and will no longer be able to assist with the Safe. '
+            '\n\nThe Safe will then be transferred to this device in a dormant state, '
+            'meaning its Secrets will remain inaccessible until you obtain sufficient '
+            'approvals from the other Guardians of the Safe.'
+            '\n\nPlease note, this action is irreversible.',
 
         footer: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
