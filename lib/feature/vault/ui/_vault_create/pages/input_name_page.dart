@@ -22,7 +22,7 @@ class InputNamePage extends StatelessWidget {
             child: ListView(
               padding: paddingH20,
               children: [
-                const PageTitle(title: 'Create a name for your Safe'),
+                const PageTitle(title: 'Create a Name for your Safe'),
                 TextField(
                   autofocus: true,
                   keyboardType: TextInputType.text,

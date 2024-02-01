@@ -20,7 +20,7 @@ class AddNamePage extends StatelessWidget {
         // Body
         Expanded(
           child: ListView(children: [
-            const PageTitle(title: 'Create a name for your Secret'),
+            const PageTitle(title: 'Create a Name for your Secret'),
             // Input
             Padding(
               padding: const EdgeInsets.only(top: 32, left: 20, right: 20),

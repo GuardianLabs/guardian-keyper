@@ -34,11 +34,11 @@ class _OnSecretSharingDialogState extends State<OnSecretSharingDialog> {
   Widget build(BuildContext context) => BottomSheetWidget(
         icon: const IconOf.shard(size: 80),
         titleString: 'Understanding Shards',
-        textString: 'Your Secret will be split into ${widget.maxSize} '
-            'Shards, with each Guardian receiving one. Individually, '
-            'Shards are encrypted and non-functional, ensuring safety. '
-            'Together, they enable seamless, '
-            'on-demand recovery of your Secret.',
+        textString: 'Your Secret will be divided into ${widget.maxSize} '
+            'Shards, each entrusted to a different Guardian. On their own, '
+            'these Shards are encrypted and non-functional, providing '
+            'enhanced safety. When combined, they allow for the smooth '
+            'and on-demand recovery of your Secret.',
         body: CheckboxListTile(
             title: const Text('Do not show again'),
             value: _isChecked,
