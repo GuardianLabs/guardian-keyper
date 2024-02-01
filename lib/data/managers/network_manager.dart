@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 import 'package:guardian_keyper/consts.dart';
@@ -45,6 +46,7 @@ class NetworkManager {
 
   late PeerId _selfId;
   late bool _isBootstrapEnabled;
+  final Map<String, List<InternetAddress>> _bootstrapAddresses = {};
 
   NetworkManagerStatus _status = NetworkManagerStatus.uninited;
 
@@ -101,7 +103,16 @@ class NetworkManager {
       },
     );
 
-    _routerService.toggleBootstrap(isActive: _isBootstrapEnabled);
+    if (bsName.isNotEmpty) {
+      final addresses =
+          await InternetAddress.lookup(bsName).timeout(retryNetworkTimeout);
+      if (addresses.isNotEmpty) _bootstrapAddresses[bsPeerId] = addresses;
+    }
+
+    _routerService.toggleBootstrap(
+      isActive: _isBootstrapEnabled,
+      addresses: _bootstrapAddresses,
+    );
     _status = NetworkManagerStatus.stopped;
     return this;
   }
@@ -168,7 +179,10 @@ class NetworkManager {
       PreferencesKeys.keyIsBootstrapEnabled,
       isEnabled,
     );
-    _routerService.toggleBootstrap(isActive: isEnabled);
+    _routerService.toggleBootstrap(
+      isActive: _isBootstrapEnabled,
+      addresses: _bootstrapAddresses,
+    );
     _updateState();
   }
 
