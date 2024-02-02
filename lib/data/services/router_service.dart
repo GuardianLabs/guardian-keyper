@@ -83,36 +83,25 @@ class RouterService {
     }
   }
 
-  void toggleBootstrap({bool? isActive}) {
-    if (bsPeerId.isEmpty) return;
-    final peerId = p2p.PeerId(value: base64Decode(bsPeerId));
-    if (isActive ?? false) {
-      final addressProperties = p2p.AddressProperties(isStatic: true);
-      if (bsAddressV4.isNotEmpty) {
-        _router.addPeerAddress(
-          canForward: true,
-          peerId: peerId,
-          address: p2p.FullAddress(
-            address: InternetAddress(bsAddressV4),
-            port: bsPort,
-          ),
-          properties: addressProperties,
-        );
+  void toggleBootstrap({
+    required bool isActive,
+    required Map<String, List<InternetAddress>> addresses,
+  }) {
+    final addressProperties = p2p.AddressProperties(isStatic: true);
+    for (final e in addresses.entries) {
+      final peerId = p2p.PeerId(value: base64Decode(e.key));
+      if (isActive) {
+        for (final address in e.value) {
+          _router.addPeerAddress(
+            canForward: true,
+            peerId: peerId,
+            address: p2p.FullAddress(address: address, port: bsPort),
+            properties: addressProperties,
+          );
+        }
+      } else {
+        _router.removePeerAddress(peerId);
       }
-      if (bsAddressV6.isNotEmpty) {
-        _router.addPeerAddress(
-          canForward: true,
-          peerId: peerId,
-          address: p2p.FullAddress(
-            address: InternetAddress(bsAddressV6),
-            port: bsPort,
-          ),
-          properties: addressProperties,
-        );
-      }
-      if (_router.isRun) _router.sendMessage(dstPeerId: peerId);
-    } else {
-      _router.removePeerAddress(peerId);
     }
   }
 }
