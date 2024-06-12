@@ -13,17 +13,17 @@ class NetworkService {
 
   Stream<ConnectivityState> get onConnectivityChanged =>
       _connectivity.onConnectivityChanged.map<ConnectivityState>((type) {
-        _connectivityType = type;
+        _connectivityType = type.first;
         return (
-          hasConnectivity: type != ConnectivityResult.none,
-          hasWiFi: type == ConnectivityResult.wifi,
+          hasConnectivity: _connectivityType != ConnectivityResult.none,
+          hasWiFi: _connectivityType == ConnectivityResult.wifi,
         );
       });
 
   ConnectivityResult _connectivityType = ConnectivityResult.none;
 
   Future<bool> checkConnectivity() async {
-    _connectivityType = await _connectivity.checkConnectivity();
+    _connectivityType = (await _connectivity.checkConnectivity()).first;
     return hasConnectivity;
   }
 
