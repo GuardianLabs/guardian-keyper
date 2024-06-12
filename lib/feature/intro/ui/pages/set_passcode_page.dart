@@ -17,7 +17,7 @@ class _SetPasscodePageState extends State<SetPasscodePage> {
     super.initState();
     Future.microtask(() async {
       await OnCreatePassCodeDialog.show(context);
-      if (context.mounted) {
+      if (mounted) {
         final presenter = context.read<IntroPresenter>();
         presenter.hasBiometrics
             ? presenter.nextPage()

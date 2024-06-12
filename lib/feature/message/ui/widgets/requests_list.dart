@@ -12,7 +12,7 @@ class RequestsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final messagesInteractor = GetIt.I<MessageInteractor>();
-    final backgroundColor = Theme.of(context).colorScheme.background;
+    final backgroundColor = Theme.of(context).colorScheme.surface;
     return StreamBuilder(
       stream: messagesInteractor.watch(),
       builder: (context, _) {

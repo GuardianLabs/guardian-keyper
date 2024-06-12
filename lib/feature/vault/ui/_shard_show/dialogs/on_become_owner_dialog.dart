@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/theme/brand_colors.dart';
+
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 
 class OnBecomeOwnerDialog extends StatefulWidget {
@@ -19,7 +20,7 @@ class OnBecomeOwnerDialog extends StatefulWidget {
 
   const OnBecomeOwnerDialog({
     required this.vault,
-    super.key, 
+    super.key,
   });
 
   final Vault vault;
@@ -76,13 +77,13 @@ class OnBecomeOwnerDialogState extends State<OnBecomeOwnerDialog> {
           ),
         ),
         titleString: 'Caution: Irreversible Action!',
-        textString: 'By pressing the confirm button, you will cease to be a Guardian '
+        textString:
+            'By pressing the confirm button, you will cease to be a Guardian '
             'for ${widget.vault.ownerId.name} and will no longer be able to assist with the Safe. '
             '\n\nThe Safe will then be transferred to this device in a dormant state, '
             'meaning its Secrets will remain inaccessible until you obtain sufficient '
             'approvals from the other Guardians of the Safe.'
             '\n\nPlease note, this action is irreversible.',
-
         footer: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -91,12 +92,12 @@ class OnBecomeOwnerDialogState extends State<OnBecomeOwnerDialog> {
                   ? Text('I want to move the Safe ($_countdown)')
                   : const Text('Confirm'),
               style: _theme.filledButtonTheme.style?.copyWith(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (states) => states.contains(MaterialState.disabled)
-                          ? _brandColors!.dangerColor.withOpacity(0.5)
-                          : _brandColors!.dangerColor,
-                    ),
-                  ),
+                backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                  (states) => states.contains(WidgetState.disabled)
+                      ? _brandColors!.dangerColor.withOpacity(0.5)
+                      : _brandColors!.dangerColor,
+                ),
+              ),
               onPressed: _countdown > 0
                   ? null
                   : () async {

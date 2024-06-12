@@ -26,8 +26,6 @@ final colorSchemeLight = ColorScheme.fromSwatch(
   brightness: Brightness.light,
   primarySwatch: colorSwatchLight,
 ).copyWith(
-  background: const Color(0xFFF7F7F7),
-  onBackground: const Color(0xFF6A6581),
   primary: colorSwatchLight.shade500,
   onPrimary: Colors.white,
   primaryContainer: colorSwatchLight.shade400,
@@ -40,7 +38,7 @@ final colorSchemeLight = ColorScheme.fromSwatch(
   onTertiary: const Color(0xFF120D23),
   tertiaryContainer: const Color(0xFFE9E8ED),
   onTertiaryContainer: const Color(0xFF120D23),
-  surface: Colors.white,
+  surface: const Color(0xFFF7F7F7),
   surfaceTint: const Color(0xFFF7F7F7),
   onSurface: const Color(0xFF120D23),
   onSurfaceVariant: const Color(0xFF6A6581),
@@ -59,23 +57,23 @@ const colorSchemeExtensionLight = BrandColors(
 final themeLight = themeData.copyWith(
   // Color Scheme
   colorScheme: colorSchemeLight,
-  canvasColor: colorSchemeLight.background,
-  scaffoldBackgroundColor: colorSchemeLight.background,
+  canvasColor: colorSchemeLight.surface,
+  scaffoldBackgroundColor: colorSchemeLight.surface,
   extensions: [colorSchemeExtensionLight],
   // AppBar
   appBarTheme: themeData.appBarTheme.copyWith(
-    backgroundColor: colorSchemeLight.background,
-    surfaceTintColor: colorSchemeLight.background,
+    backgroundColor: colorSchemeLight.surface,
+    surfaceTintColor: colorSchemeLight.surface,
   ),
   // Bottom Navigation Bar
   bottomNavigationBarTheme: themeData.bottomNavigationBarTheme.copyWith(
-    backgroundColor: colorSchemeLight.background,
+    backgroundColor: colorSchemeLight.surface,
     selectedItemColor: colorSchemeLight.primary,
-    unselectedItemColor: colorSchemeLight.onBackground,
+    unselectedItemColor: colorSchemeLight.onSurfaceVariant,
   ),
   // Bottom Sheet
   bottomSheetTheme: themeData.bottomSheetTheme.copyWith(
-    backgroundColor: colorSchemeLight.background,
+    backgroundColor: colorSchemeLight.surface,
   ),
   // Card
   // cardTheme: themeData.cardTheme.copyWith(
@@ -102,8 +100,8 @@ final themeLight = themeData.copyWith(
   // Outlined Button
   outlinedButtonTheme: OutlinedButtonThemeData(
       style: themeData.outlinedButtonTheme.style?.copyWith(
-    foregroundColor: MaterialStatePropertyAll(colorSchemeDark.primary),
-    side: MaterialStatePropertyAll(BorderSide(color: colorSchemeDark.primary)),
+    foregroundColor: WidgetStatePropertyAll(colorSchemeDark.primary),
+    side: WidgetStatePropertyAll(BorderSide(color: colorSchemeDark.primary)),
   )),
   // SnackBar
   snackBarTheme: themeData.snackBarTheme.copyWith(
@@ -112,13 +110,13 @@ final themeLight = themeData.copyWith(
   ),
   // Switch
   switchTheme: SwitchThemeData(
-    thumbColor: MaterialStatePropertyAll(colorSchemeLight.onPrimary),
-    trackColor: MaterialStateProperty.resolveWith<Color>((states) =>
-        states.contains(MaterialState.selected)
+    thumbColor: WidgetStatePropertyAll(colorSchemeLight.onPrimary),
+    trackColor: WidgetStateProperty.resolveWith<Color>((states) =>
+        states.contains(WidgetState.selected)
             ? colorSchemeLight.tertiary
             : colorSchemeLight.secondary),
-    trackOutlineColor: MaterialStatePropertyAll(colorSchemeLight.secondary),
-    trackOutlineWidth: const MaterialStatePropertyAll(0),
+    trackOutlineColor: WidgetStatePropertyAll(colorSchemeLight.secondary),
+    trackOutlineWidth: const WidgetStatePropertyAll(0),
   ),
   // TabBar
   tabBarTheme: themeData.tabBarTheme.copyWith(

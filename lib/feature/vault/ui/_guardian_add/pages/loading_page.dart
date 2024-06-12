@@ -34,7 +34,7 @@ class _LoadingPageState extends State<LoadingPage> {
       } else {
         await OnFailDialog.show(context);
       }
-      if (context.mounted) Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop();
     });
   }
 

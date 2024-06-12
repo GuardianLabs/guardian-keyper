@@ -33,7 +33,7 @@ class _CopyMyKeyToClipboardButtonState
                   snackBarDuration,
                   () => setState(() => _isDisabled = false),
                 );
-                if (mounted) {
+                if (context.mounted) {
                   showSnackBar(
                     context,
                     text: 'Public Key has been copied to clipboard.',

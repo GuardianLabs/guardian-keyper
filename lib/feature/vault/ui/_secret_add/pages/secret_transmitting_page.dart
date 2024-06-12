@@ -33,7 +33,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
         } else {
           await OnFailDialog.show(context);
         }
-        if (context.mounted) Navigator.of(context).pop();
+        if (mounted) Navigator.of(context).pop();
       },
     );
   }

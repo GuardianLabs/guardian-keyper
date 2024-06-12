@@ -22,7 +22,7 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
     _presenter.startRequest().then((message) async {
       if (message.isRejected) {
         await OnRejectDialog.show(context, vaultName: message.vaultId.name);
-        if (context.mounted) Navigator.of(context).pop();
+        if (mounted) Navigator.of(context).pop();
       }
     });
   }

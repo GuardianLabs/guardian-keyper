@@ -66,7 +66,7 @@ final themeDark = themeData.copyWith(
   // Check Box
   checkboxTheme: CheckboxThemeData(
     side: BorderSide(color: colorSchemeDark.onSurface),
-    checkColor: MaterialStatePropertyAll(colorSchemeDark.onSurface),
+    checkColor: WidgetStatePropertyAll(colorSchemeDark.onSurface),
   ),
   // Divider
   dividerTheme: themeData.dividerTheme.copyWith(
@@ -81,17 +81,17 @@ final themeDark = themeData.copyWith(
   // Filled Button
   filledButtonTheme: FilledButtonThemeData(
     style: themeData.filledButtonTheme.style!.copyWith(
-      foregroundColor: MaterialStateProperty.resolveWith<Color>(
-        (states) => states.contains(MaterialState.disabled)
+      foregroundColor: WidgetStateProperty.resolveWith<Color>(
+        (states) => states.contains(WidgetState.disabled)
             ? colorSchemeDark.onPrimary.withOpacity(0.5)
             : colorSchemeDark.onPrimary,
       ),
-      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-        (states) => states.contains(MaterialState.disabled)
+      backgroundColor: WidgetStateProperty.resolveWith<Color>(
+        (states) => states.contains(WidgetState.disabled)
             ? colorSchemeDark.primary.withOpacity(0.5)
             : colorSchemeDark.primary,
       ),
-      shape: const MaterialStatePropertyAll(
+      shape: const WidgetStatePropertyAll(
         RoundedRectangleBorder(
           borderRadius: BorderRadiusDirectional.all(Radius.circular(8)),
         ),
@@ -134,19 +134,19 @@ final themeDark = themeData.copyWith(
   // Outlined Button
   outlinedButtonTheme: OutlinedButtonThemeData(
       style: themeData.filledButtonTheme.style?.copyWith(
-    foregroundColor: MaterialStateProperty.resolveWith<Color>(
-      (states) => states.contains(MaterialState.disabled)
+    foregroundColor: WidgetStateProperty.resolveWith<Color>(
+      (states) => states.contains(WidgetState.disabled)
           ? colorSchemeDark.onPrimary.withOpacity(0.5)
           : colorSchemeDark.onPrimary,
     ),
-    shape: const MaterialStatePropertyAll<RoundedRectangleBorder>(
+    shape: const WidgetStatePropertyAll<RoundedRectangleBorder>(
       RoundedRectangleBorder(
         borderRadius: BorderRadiusDirectional.all(Radius.circular(8)),
       ),
     ),
-    side: MaterialStateProperty.resolveWith<BorderSide>(
+    side: WidgetStateProperty.resolveWith<BorderSide>(
       (states) => BorderSide(
-        color: states.contains(MaterialState.disabled)
+        color: states.contains(WidgetState.disabled)
             ? colorSchemeDark.primary.withOpacity(0.5)
             : colorSchemeDark.primary,
       ),
@@ -161,13 +161,13 @@ final themeDark = themeData.copyWith(
   ),
   // Switch
   switchTheme: SwitchThemeData(
-    thumbColor: MaterialStatePropertyAll(colorSchemeDark.onPrimary),
-    trackColor: MaterialStateProperty.resolveWith<Color>((states) =>
-        states.contains(MaterialState.selected)
+    thumbColor: WidgetStatePropertyAll(colorSchemeDark.onPrimary),
+    trackColor: WidgetStateProperty.resolveWith<Color>((states) =>
+        states.contains(WidgetState.selected)
             ? colorSchemeDark.tertiary
             : colorSchemeDark.secondary),
-    trackOutlineColor: MaterialStatePropertyAll(colorSchemeDark.secondary),
-    trackOutlineWidth: const MaterialStatePropertyAll(0),
+    trackOutlineColor: WidgetStatePropertyAll(colorSchemeDark.secondary),
+    trackOutlineWidth: const WidgetStatePropertyAll(0),
   ),
   // TabBar
   tabBarTheme: themeData.tabBarTheme.copyWith(

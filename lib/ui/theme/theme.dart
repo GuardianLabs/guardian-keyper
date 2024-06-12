@@ -88,11 +88,11 @@ final themeData = ThemeData(
   // Filled Button
   filledButtonTheme: FilledButtonThemeData(
     style: ButtonStyle(
-      fixedSize: const MaterialStatePropertyAll(Size(
+      fixedSize: const WidgetStatePropertyAll(Size(
         double.infinity,
         buttonSize,
       )),
-      textStyle: MaterialStatePropertyAll(textTheme.titleMedium),
+      textStyle: WidgetStatePropertyAll(textTheme.titleMedium),
     ),
   ),
   // Font family
@@ -122,11 +122,11 @@ final themeData = ThemeData(
   // Outlined Button
   outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(
-    fixedSize: const MaterialStatePropertyAll(Size(
+    fixedSize: const WidgetStatePropertyAll(Size(
       double.infinity,
       buttonSize,
     )),
-    textStyle: MaterialStatePropertyAll(textTheme.titleMedium),
+    textStyle: WidgetStatePropertyAll(textTheme.titleMedium),
   )),
   // SnackBar
   snackBarTheme: const SnackBarThemeData(
