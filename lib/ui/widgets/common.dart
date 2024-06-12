@@ -40,7 +40,7 @@ class ScaffoldSafe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ColoredBox(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.surfaceTint,
         child: SafeArea(
           minimum: minimumPadding,
           child: Scaffold(
@@ -94,7 +94,7 @@ class HeaderBar extends StatelessWidget {
     final theme = Theme.of(context);
     return Container(
       height: toolbarHeight,
-      color: isTransparent ? Colors.transparent : theme.colorScheme.background,
+      color: isTransparent ? Colors.transparent : theme.colorScheme.surfaceTint,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

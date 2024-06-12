@@ -48,7 +48,7 @@ class _OnQrCodeScanDialogState extends State<OnQrCodeScanDialog> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final size = MediaQuery.of(context).size;
-    final scanAreaSize = size.width > 600 ? size.width : size.width * 0.66;
+    final scanAreaSize = size.width * (size.width > 600 ? 0.5 : 0.66);
     _scanWindow = Rect.fromCenter(
       center: size.center(Offset.zero),
       width: scanAreaSize,

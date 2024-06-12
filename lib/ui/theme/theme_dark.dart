@@ -29,9 +29,9 @@ final colorSchemeDark = ColorScheme.fromSeed(
   onError: const Color(0xFFF19C38),
   errorContainer: const Color(0x22F6EAEA),
   onErrorContainer: const Color(0xFFD32C2C),
-  background: const Color(0xFF1A0244),
-  onBackground: Colors.white,
+  // background: const Color(0xFF1A0244),
   surface: const Color(0xFF24035F),
+  surfaceTint: const Color(0xFF1A0244),
   onSurface: const Color(0xFFE6DEF8),
   onSurfaceVariant: const Color(0xFFE6DEF8),
 );
@@ -39,25 +39,25 @@ final colorSchemeDark = ColorScheme.fromSeed(
 final themeDark = themeData.copyWith(
   // Color Scheme
   colorScheme: colorSchemeDark,
-  canvasColor: colorSchemeDark.background,
-  scaffoldBackgroundColor: colorSchemeDark.background,
+  canvasColor: colorSchemeDark.surfaceTint,
+  scaffoldBackgroundColor: colorSchemeDark.surfaceTint,
   extensions: [colorSchemeExtensionDark],
   unselectedWidgetColor: colorSchemeDark.onSurface,
   // AppBar
   appBarTheme: themeData.appBarTheme.copyWith(
-    backgroundColor: colorSchemeDark.background,
-    surfaceTintColor: colorSchemeDark.background,
+    backgroundColor: colorSchemeDark.surfaceTint,
+    surfaceTintColor: colorSchemeDark.surfaceTint,
     systemOverlayStyle: systemStyleDark,
   ),
   // Bottom Navigation Bar
   bottomNavigationBarTheme: themeData.bottomNavigationBarTheme.copyWith(
-    backgroundColor: colorSchemeDark.background,
+    backgroundColor: colorSchemeDark.surfaceTint,
     selectedItemColor: colorSchemeExtensionDark.highlightColor,
-    unselectedItemColor: colorSchemeDark.onBackground,
+    unselectedItemColor: colorSchemeDark.onSurface,
   ),
   // Bottom Sheet
   bottomSheetTheme: themeData.bottomSheetTheme.copyWith(
-    backgroundColor: colorSchemeDark.background,
+    backgroundColor: colorSchemeDark.surfaceTint,
   ),
   // Card
   cardTheme: themeData.cardTheme.copyWith(
