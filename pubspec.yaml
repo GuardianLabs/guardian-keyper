@@ -41,7 +41,7 @@ dependencies:
   nsd: ^3.0.0
 
   # Analytics
-  sentry_flutter: ^8.2.0
+  sentry_flutter: ^8.3.0
   amplitude_flutter: ^3.16.2
 
 dependency_overrides:
