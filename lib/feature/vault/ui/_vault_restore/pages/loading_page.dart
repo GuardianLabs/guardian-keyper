@@ -48,54 +48,61 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Header
-          const HeaderBar(
-            caption: 'Restore a Safe',
-            rightButton: HeaderBarButton.close(),
-          ),
-          // Body
-          const Padding(padding: paddingT12),
-          Padding(
-            padding: paddingAll20,
-            child: Card(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: paddingT20,
-                    child: Selector<VaultRestorePresenter, bool>(
-                      selector: (_, presenter) => presenter.isWaiting,
-                      builder: (_, isWaiting, __) => Visibility(
-                        visible: isWaiting,
-                        child: const CircularProgressIndicator.adaptive(),
+  Widget build(BuildContext context) => ScaffoldSafe(
+    appBar: AppBar(
+      title: const Text('Restoring your Safe'),
+      centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    ),
+    child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Body
+            const Padding(padding: paddingT12),
+            Padding(
+              padding: paddingAll20,
+              child: Card(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: paddingT20,
+                      child: Selector<VaultRestorePresenter, bool>(
+                        selector: (_, presenter) => presenter.isWaiting,
+                        builder: (_, isWaiting, __) => Visibility(
+                          visible: isWaiting,
+                          child: const CircularProgressIndicator.adaptive(),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: paddingAll20,
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          const TextSpan(text: 'Awaiting '),
-                          TextSpan(
-                            text: context
-                                .read<VaultRestorePresenter>()
-                                .qrCode!
-                                .peerId
-                                .name,
-                            style: styleW600,
-                          ),
-                          const TextSpan(text: '’s response'),
-                        ],
+                    Padding(
+                      padding: paddingAll20,
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(text: 'Awaiting '),
+                            TextSpan(
+                              text: context
+                                  .read<VaultRestorePresenter>()
+                                  .qrCode!
+                                  .peerId
+                                  .name,
+                              style: styleW600,
+                            ),
+                            const TextSpan(text: '’s response'),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      );
+          ],
+        ),
+  );
 }

@@ -69,15 +69,20 @@ class _OnQRCodeShowDialogState extends State<OnQRCodeShowDialog> {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-        header: HeaderBar(
-          caption: widget.caption,
-          rightButton: const HeaderBarButton.close(),
+        appBar: AppBar(
+          title: Text(widget.caption),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         child: Column(
           children: [
             // Text
             PageTitle(
-              title: _screenSize is ScreenSmall ? null : widget.title,
               subtitle: widget.subtitle,
             ),
             // QR Code

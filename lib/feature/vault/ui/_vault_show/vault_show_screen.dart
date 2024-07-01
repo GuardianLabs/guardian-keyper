@@ -20,15 +20,26 @@ class VaultShowScreen extends StatelessWidget {
     final vaultId = ModalRoute.of(context)!.settings.arguments! as VaultId;
     final vaultInteractor = GetIt.I<VaultInteractor>();
     return ScaffoldSafe(
-      header: HeaderBar(
-        caption: vaultId.name,
-        leftButton: const HeaderBarButton.back(),
-        rightButton: HeaderBarButton.more(
-          onPressed: () => OnVaultMoreDialog.show(
-            context,
-            vaultId: vaultId,
-          ),
+      appBar: AppBar(
+        title: Text(vaultId.name),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              OnVaultMoreDialog.show(
+                context,
+                vaultId: vaultId,
+              );
+            },
+          ),
+        ],
       ),
       child: StreamBuilder<VaultRepositoryEvent>(
         initialData: (

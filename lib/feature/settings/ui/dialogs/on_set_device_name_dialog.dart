@@ -13,9 +13,14 @@ class OnSetDeviceNameDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-        header: const HeaderBar(
-          caption: 'Change Device Name',
-          leftButton: HeaderBarButton.back(),
+        appBar: AppBar(
+          title: const Text('Change Device Name'),
+          centerTitle: true,
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
         ),
         child: DeviceNameInput(
           onProceed: () {

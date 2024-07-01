@@ -14,47 +14,53 @@ class GetCodePage extends StatelessWidget {
   const GetCodePage({super.key});
 
   @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Header
-          const HeaderBar(
-            caption: 'Adding a Guardian',
-            rightButton: HeaderBarButton.close(),
-          ),
-          // Body
-          const PageTitle(
-            title: 'Add a Guardian to your Safe',
-            subtitle: 'Ask a Guardian to tap on “Become a Guardian” in the app, '
-                'and provide their Guardian QR code or text code.',
-          ),
-          // Scan QR
-          Padding(
-            padding: paddingH20,
-            child: FilledButton(
-              onPressed: () async {
-                final code = await OnQrCodeScanDialog.show(
-                  context,
-                  caption: 'Scan the Guardian QR',
-                );
-                if (context.mounted) _setCode(context, code);
-              },
-              child: const Text('Add with a QR Code'),
+  Widget build(BuildContext context) => ScaffoldSafe(
+    appBar: AppBar(
+      title: const Text('Adding a Guardian'),
+      centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    ),
+    child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Body
+            const PageTitle(
+              subtitle: 'Ask a Guardian to tap on “Become a Guardian” in the app, '
+                  'and provide their Guardian QR code or text code.',
             ),
-          ),
-          // Input QR
-          Padding(
-            padding: paddingAll20,
-            child: OutlinedButton(
-              onPressed: () async {
-                final code = await OnCodeInputDialog.show(context);
-                if (context.mounted) _setCode(context, code);
-              },
-              child: const Text('Add with a Text Code'),
+            // Scan QR
+            Padding(
+              padding: paddingH20,
+              child: FilledButton(
+                onPressed: () async {
+                  final code = await OnQrCodeScanDialog.show(
+                    context,
+                    caption: 'Scan the Guardian QR',
+                  );
+                  if (context.mounted) _setCode(context, code);
+                },
+                child: const Text('Add with a QR Code'),
+              ),
             ),
-          ),
-        ],
-      );
+            // Input QR
+            Padding(
+              padding: paddingAll20,
+              child: OutlinedButton(
+                onPressed: () async {
+                  final code = await OnCodeInputDialog.show(context);
+                  if (context.mounted) _setCode(context, code);
+                },
+                child: const Text('Add with a Text Code'),
+              ),
+            ),
+          ],
+        ),
+  );
 
   void _setCode(BuildContext context, String? code) {
     try {

@@ -22,9 +22,14 @@ class SettingsScreen extends StatelessWidget {
     final bgColor = Theme.of(context).colorScheme.secondary;
     return ScaffoldSafe(
       isSeparated: true,
-      header: const HeaderBar(
-        caption: 'Settings',
-        rightButton: HeaderBarButton.close(),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        centerTitle: true,
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
       ),
       children: [
         // Change Device Name

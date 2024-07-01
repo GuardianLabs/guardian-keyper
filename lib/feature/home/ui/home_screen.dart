@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:guardian_keyper/app/routes.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/utils/screen_size.dart';
@@ -15,11 +16,11 @@ import 'widgets/dashboard_list.dart';
 class HomeScreen extends StatelessWidget {
   static final tabsCount = _tabs.length;
 
-  static const _headers = [
-    Offstage(),
-    HeaderBar(caption: 'Safes'),
-    HeaderBar(caption: 'Shards'),
-    HeaderBar(caption: 'Requests'),
+  static const _appBarTitles = [
+    '',
+    'Safes',
+    'Shards',
+    'Requests',
   ];
 
   static const _tabs = [
@@ -37,10 +38,29 @@ class HomeScreen extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: ScaffoldSafe(
-        header: MediaQuery.of(context).size.height >= ScreenSmall.height
-            ? Selector<HomeTabPresenter, int>(
-                selector: (context, p) => p.currentPage,
-                builder: (context, index, _) => HomeScreen._headers[index],
+        appBar: MediaQuery.of(context).size.height >= ScreenSmall.height
+            ? PreferredSize(
+                preferredSize: const Size.fromHeight(kToolbarHeight),
+                child: Selector<HomeTabPresenter, int>(
+                  selector: (context, p) => p.currentPage,
+                  builder: (context, index, _) => AppBar(
+                    leading: IconButton(
+                      icon: const Icon(Icons.menu),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                    ),
+                    title: Text(HomeScreen._appBarTitles[index]),
+                    centerTitle: true,
+                    actions: [
+                      IconButton(
+                        icon: const Icon(Icons.settings),
+                        onPressed: () =>
+                            Navigator.of(context).pushNamed(routeSettings),
+                      ),
+                    ],
+                  ),
+                ),
               )
             : null,
         drawer: kDebugMode ? const DevDrawer() : null,

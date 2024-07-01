@@ -49,11 +49,6 @@ class DashboardList extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            // Settings
-            IconButton(
-              icon: const Icon(Icons.settings_outlined),
-              onPressed: () => Navigator.of(context).pushNamed(routeSettings),
-            )
           ],
         ),
         // Create a Vault

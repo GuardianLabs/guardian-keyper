@@ -19,6 +19,7 @@ const styleW600 = TextStyle(fontWeight: FontWeight.w600);
 class ScaffoldSafe extends StatelessWidget {
   const ScaffoldSafe({
     this.header,
+    this.appBar,
     this.drawer,
     this.child,
     this.children,
@@ -29,6 +30,7 @@ class ScaffoldSafe extends StatelessWidget {
     super.key,
   });
 
+  final PreferredSizeWidget? appBar;
   final Widget? header;
   final Widget? drawer;
   final Widget? child;
@@ -44,12 +46,7 @@ class ScaffoldSafe extends StatelessWidget {
         child: SafeArea(
           minimum: minimumPadding,
           child: Scaffold(
-            appBar: header == null
-                ? null
-                : PreferredSize(
-                    preferredSize: const Size.fromHeight(toolbarHeight),
-                    child: header!,
-                  ),
+            appBar: appBar,
             body: child ??
                 (children == null
                     ? null
@@ -71,90 +68,6 @@ class ScaffoldSafe extends StatelessWidget {
             primary: true,
             drawer: drawer,
           ),
-        ),
-      );
-}
-
-class HeaderBar extends StatelessWidget {
-  const HeaderBar({
-    super.key,
-    this.caption = '',
-    this.leftButton,
-    this.rightButton,
-    this.isTransparent = false,
-  });
-
-  final String caption;
-  final Widget? leftButton;
-  final Widget? rightButton;
-  final bool isTransparent;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      height: toolbarHeight,
-      color: isTransparent ? Colors.transparent : theme.colorScheme.surfaceTint,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox.square(
-            dimension: toolbarHeight,
-            child: leftButton,
-          ),
-          Text(
-            caption,
-            maxLines: 1,
-            softWrap: false,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.titleMedium,
-          ),
-          SizedBox.square(
-            dimension: toolbarHeight,
-            child: rightButton,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class HeaderBarButton extends StatelessWidget {
-  const HeaderBarButton({
-    required this.icon,
-    this.onPressed,
-    super.key,
-  });
-
-  const HeaderBarButton.close({
-    this.onPressed,
-    super.key,
-  }) : icon = Icons.close;
-
-  const HeaderBarButton.back({
-    this.onPressed,
-    super.key,
-  }) : icon = Icons.arrow_back;
-
-  const HeaderBarButton.more({
-    required this.onPressed,
-    super.key,
-  }) : icon = Icons.keyboard_control;
-
-  final IconData icon;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
-          shape: BoxShape.circle,
-        ),
-        margin: const EdgeInsets.all(14),
-        child: IconButton(
-          onPressed: onPressed ?? Navigator.of(context).pop,
-          icon: Icon(icon),
         ),
       );
 }

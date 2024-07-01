@@ -25,9 +25,15 @@ class OnVaultTransferDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-        header: const HeaderBar(
-          caption: 'Assist with a Safe',
-          leftButton: HeaderBarButton.back(),
+        appBar: AppBar(
+          title: const Text('Assist with a Safe'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         children: [
           const PageTitle(

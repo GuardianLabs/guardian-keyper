@@ -16,9 +16,15 @@ class ShardShowScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final vault = ModalRoute.of(context)!.settings.arguments! as Vault;
     return ScaffoldSafe(
-      header: HeaderBar(
-        caption: vault.id.name,
-        leftButton: const HeaderBarButton.back(),
+      appBar: AppBar(
+        title: Text(vault.id.name),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       children: [
         // Owner name

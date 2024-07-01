@@ -39,42 +39,49 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Header
-          const HeaderBar(
-            caption: 'Adding a Guardian',
-            rightButton: HeaderBarButton.close(),
-          ),
-          // Body
-          const Padding(padding: EdgeInsets.only(top: 32)),
-          Padding(
-            padding: paddingH20,
-            child: Card(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: paddingT20,
-                    child: Selector<VaultGuardianAddPresenter, bool>(
-                      selector: (_, presenter) => presenter.isWaiting,
-                      builder: (_, isWaiting, __) => Visibility(
-                        visible: isWaiting,
-                        child: const CircularProgressIndicator.adaptive(),
+  Widget build(BuildContext context) => ScaffoldSafe(
+    appBar: AppBar(
+      title: const Text('Adding a Guardian'),
+      centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    ),
+    child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Body
+            const Padding(padding: EdgeInsets.only(top: 32)),
+            Padding(
+              padding: paddingH20,
+              child: Card(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: paddingT20,
+                      child: Selector<VaultGuardianAddPresenter, bool>(
+                        selector: (_, presenter) => presenter.isWaiting,
+                        builder: (_, isWaiting, __) => Visibility(
+                          visible: isWaiting,
+                          child: const CircularProgressIndicator.adaptive(),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: paddingAll20,
-                    child: Text(
-                      'Awaiting Guardian’s response',
-                      style: _theme.textTheme.bodyMedium,
+                    Padding(
+                      padding: paddingAll20,
+                      child: Text(
+                        'Awaiting Guardian’s response',
+                        style: _theme.textTheme.bodyMedium,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      );
+          ],
+        ),
+  );
 }

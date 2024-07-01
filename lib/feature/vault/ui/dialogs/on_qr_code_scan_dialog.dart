@@ -67,7 +67,9 @@ class _OnQrCodeScanDialogState extends State<OnQrCodeScanDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => Stack(
+Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
         children: [
           MobileScanner(
             scanWindow: _scanWindow,
@@ -82,19 +84,29 @@ class _OnQrCodeScanDialogState extends State<OnQrCodeScanDialog> {
             },
           ),
           CustomPaint(painter: _ScannerOverlay(frame: _scanWindow)),
-          // Header
-          SafeArea(
-            child: HeaderBar(
-              isTransparent: true,
-              caption: widget.caption,
-              rightButton: const Material(
-                color: Colors.transparent,
-                child: HeaderBarButton.close(),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: SafeArea(
+              child: AppBar(
+                title: Text(widget.caption),
+                backgroundColor: Colors.transparent,
+                centerTitle: true,
+                elevation: 0,
+                leading: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
               ),
             ),
           ),
         ],
-      );
+      ),
+    );
+  }
 }
 
 class _ScannerOverlay extends CustomPainter {

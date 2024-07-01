@@ -28,67 +28,73 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          // Header
-          const HeaderBar(
-            caption: 'Secret Recovery',
-            rightButton: HeaderBarButton.close(),
-          ),
-          // Body
-          Expanded(
-            child: ListView(
-              padding: paddingH20,
-              children: [
-                // Title
-                const PageTitle(
-                  title: 'Awaiting Guardians',
-                  subtitle: 'Ask your Guardians to open the app and approve '
-                      'a secret recovery. Once you get enough approvals, '
-                      'the button will become active.',
-                ),
-                // Guardians
-                Card(
-                  child: Padding(
-                    padding: paddingT20,
-                    child: Consumer<VaultSecretRecoveryPresenter>(
-                      builder: (context, presenter, _) => Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: paddingH20,
-                            child: Text(
-                              'Approvals',
-                              style: _theme.textTheme.bodyMedium,
+  Widget build(BuildContext context) => ScaffoldSafe(
+    appBar: AppBar(
+      title: const Text('Secret Recovery'),
+      centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    ),
+    child: Column(
+          children: [
+            // Body
+            Expanded(
+              child: ListView(
+                padding: paddingH20,
+                children: [
+                  // Title
+                  const PageTitle(
+                    subtitle: 'Ask your Guardians to open the app and approve '
+                        'a secret recovery. Once you get enough approvals, '
+                        'the button will become active.',
+                  ),
+                  // Guardians
+                  Card(
+                    child: Padding(
+                      padding: paddingT20,
+                      child: Consumer<VaultSecretRecoveryPresenter>(
+                        builder: (context, presenter, _) => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: paddingH20,
+                              child: Text(
+                                'Approvals',
+                                style: _theme.textTheme.bodyMedium,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: paddingH20,
-                            child: Text(
-                              'Get at least ${_presenter.needAtLeast}'
-                              ' approvals to access your Secret.',
-                              style: _theme.textTheme.bodySmall,
+                            Padding(
+                              padding: paddingH20,
+                              child: Text(
+                                'Get at least ${_presenter.needAtLeast}'
+                                ' approvals to access your Secret.',
+                                style: _theme.textTheme.bodySmall,
+                              ),
                             ),
-                          ),
-                          for (final message in presenter.messages)
-                            message.peerId == presenter.selfId
-                                ? const GuardianListTile.my()
-                                : message.isAccepted
-                                    ? GuardianListTile(
-                                        guardian: message.peerId,
-                                      )
-                                    : GuardianListTile.pending(
-                                        guardian: message.peerId,
-                                      ),
-                        ],
+                            for (final message in presenter.messages)
+                              message.peerId == presenter.selfId
+                                  ? const GuardianListTile.my()
+                                  : message.isAccepted
+                                      ? GuardianListTile(
+                                          guardian: message.peerId,
+                                        )
+                                      : GuardianListTile.pending(
+                                          guardian: message.peerId,
+                                        ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      );
+          ],
+        ),
+  );
 }
