@@ -19,7 +19,5 @@ const bsPort = int.fromEnvironment('BS_PORT', defaultValue: 2022);
 const amplitudeKey = String.fromEnvironment('AMPLITUDE_KEY');
 const urlPlayMarket = String.fromEnvironment('PLAY_MARKET');
 const urlAppStore = String.fromEnvironment('APP_STORE');
-const bsAddressV4 = String.fromEnvironment('BS_V4');
-const bsAddressV6 = String.fromEnvironment('BS_V6');
 const bsName = String.fromEnvironment('BS_NAME');
 const bsPeerId = String.fromEnvironment('BS_ID');
