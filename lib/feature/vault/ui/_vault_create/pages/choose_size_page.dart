@@ -10,7 +10,7 @@ class ChooseSizePage extends StatelessWidget {
     final presenter = Provider.of<VaultCreatePresenter>(context);
     return ScaffoldSafe(
       appBar: AppBar(
-        title: const Text('How many Guardians do you need?'),
+        title: const Text('Set Guardians count'),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

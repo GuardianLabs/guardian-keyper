@@ -15,22 +15,23 @@ class GetCodePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-    appBar: AppBar(
-      title: const Text('Restoring your Safe'),
-      centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-    ),
-    child: Column(
+        appBar: AppBar(
+          title: const Text('Restore your Safe'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Body
             const PageTitle(
-              subtitle: 'Ask a Guardian to tap on “Assist with a Safe” in the app, '
+              subtitle:
+                  'Ask a Guardian to tap on “Assist with a Safe” in the app, '
                   'select the Safe you need, and provide their '
                   'Assistance QR code or text code.',
             ),
@@ -59,7 +60,7 @@ class GetCodePage extends StatelessWidget {
             ),
           ],
         ),
-  );
+      );
 
   void _setCode(BuildContext context, String? code) {
     if (!context.mounted) return;

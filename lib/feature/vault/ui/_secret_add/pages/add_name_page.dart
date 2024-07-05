@@ -11,7 +11,7 @@ class AddNamePage extends StatelessWidget {
     final presenter = context.read<VaultSecretAddPresenter>();
     return ScaffoldSafe(
       appBar: AppBar(
-        title: const Text('Create a Name for your Secret'),
+        title: const Text('Create a name for your Secret'),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

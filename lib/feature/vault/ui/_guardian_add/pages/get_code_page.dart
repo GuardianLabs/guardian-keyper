@@ -15,22 +15,23 @@ class GetCodePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-    appBar: AppBar(
-      title: const Text('Adding a Guardian'),
-      centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-    ),
-    child: Column(
+        appBar: AppBar(
+          title: const Text('Add a Guardian'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Body
             const PageTitle(
-              subtitle: 'Ask a Guardian to tap on “Become a Guardian” in the app, '
+              subtitle:
+                  'Ask a Guardian to tap on “Become a Guardian” in the app, '
                   'and provide their Guardian QR code or text code.',
             ),
             // Scan QR
@@ -60,7 +61,7 @@ class GetCodePage extends StatelessWidget {
             ),
           ],
         ),
-  );
+      );
 
   void _setCode(BuildContext context, String? code) {
     try {

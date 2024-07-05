@@ -29,17 +29,17 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-    appBar: AppBar(
-      title: const Text('Secret Recovery'),
-      centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-    ),
-    child: Column(
+        appBar: AppBar(
+          title: const Text('Secret recovery'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        child: Column(
           children: [
             // Body
             Expanded(
@@ -96,5 +96,5 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
             ),
           ],
         ),
-  );
+      );
 }

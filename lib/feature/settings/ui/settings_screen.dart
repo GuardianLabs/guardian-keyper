@@ -70,7 +70,7 @@ class SettingsScreen extends StatelessWidget {
           stream: networkManager.state.map((e) => e.isBootstrapEnabled),
           builder: (context, snapshot) => SwitchListTile.adaptive(
             secondary: IconOf.connection(bgColor: bgColor),
-            title: const Text('Proxy Connection'),
+            title: const Text('Proxy connection'),
             subtitle: const Text(
               'P2P-discovery via Internet',
             ),
