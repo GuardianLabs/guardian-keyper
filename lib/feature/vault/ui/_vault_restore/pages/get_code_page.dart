@@ -30,10 +30,11 @@ class GetCodePage extends StatelessWidget {
           children: [
             // Body
             const PageTitle(
-              subtitle:
-                  'Ask a Guardian to tap on “Assist with a Safe” in the app, '
-                  'select the Safe you need, and provide their '
-                  'Assistance QR code or text code.',
+              subtitle: 'This screen will help you restore your safe created '
+                  'on another device if you`ve lost access to it.'
+                  '\n\nAsk a Guardian of the restoring safe to open the Shards tab '
+                  'in the app, tap the “Help Restore a Safe” button, select the Safe '
+                  'you need, and provide their Assistance QR code or text code.',
             ),
             // Scan QR
             Padding(
@@ -45,7 +46,7 @@ class GetCodePage extends StatelessWidget {
                 ).then(
                   (value) => _setCode(context, value),
                 ),
-                child: const Text('Add with a QR Code'),
+                child: const Text('Restore with a QR Code'),
               ),
             ),
             // Input QR
@@ -55,7 +56,7 @@ class GetCodePage extends StatelessWidget {
                 onPressed: () => OnCodeInputDialog.show(context).then(
                   (value) => _setCode(context, value),
                 ),
-                child: const Text('Add with a Text Code'),
+                child: const Text('Restore with a Text Code'),
               ),
             ),
           ],

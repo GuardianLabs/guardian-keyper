@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
@@ -5,8 +6,7 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 class OnCodeInputDialog extends StatefulWidget {
   static Future<String?> show(BuildContext context) =>
       Navigator.of(context).push(
-        MaterialPageRoute<String>(
-          fullscreenDialog: true,
+        CupertinoPageRoute<String>(
           builder: (_) => const OnCodeInputDialog(),
         ),
       );

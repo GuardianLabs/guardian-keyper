@@ -24,51 +24,60 @@ class SecretListTile extends StatelessWidget {
     final dangerColor = Theme.of(context).extension<BrandColors>()!.dangerColor;
     return ListTile(
       title: Text(secretId.name),
-      trailing: vault.isRestricted ? null : Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-            IconButton(
-              onPressed: vault.isRestricted
-                  ? null
-                  : () => OnRemoveSecretDialog.show(
-                        context,
-                        vault: vault,
-                        secretId: secretId,
-                      ),
-              icon: Icon(
-                Icons.delete_outlined,
-                color: vault.isRestricted
-                    ? dangerColor.withOpacity(0.5)
-                    : dangerColor,
-              ),
-            ),
-            IconButton(
-              onPressed: vault.hasQuorum
-                  ? () async {
-                      final isSecretRestoreExplainerHidden =
-                          GetIt.I<SettingsRepository>().get<bool>(PreferencesKeys
-                                  .keyIsSecretRestoreExplainerHidden) ??
-                              false;
-                      if (!isSecretRestoreExplainerHidden && context.mounted) {
-                        final shouldContinue =
-                            await OnSecretRestoreDialog.show(context) ?? false;
-                        if (!shouldContinue) return;
-                      }
-                      if (context.mounted) {
-                        Navigator.of(context).pushNamed(
-                          routeVaultSecretRecovery,
-                          arguments: (
-                            vaultId: vault.id,
+      contentPadding: const EdgeInsets.symmetric(
+        vertical: 0,
+        horizontal: 16,
+      ),
+      trailing: vault.isRestricted
+          ? null
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: vault.isRestricted
+                      ? null
+                      : () => OnRemoveSecretDialog.show(
+                            context,
+                            vault: vault,
                             secretId: secretId,
                           ),
-                        );
-                      }
-                    }
-                  : null,
-              icon: const Icon(Icons.visibility_outlined),
+                  icon: Icon(
+                    Icons.delete_outlined,
+                    color: vault.isRestricted
+                        ? dangerColor.withOpacity(0.5)
+                        : dangerColor,
+                  ),
+                ),
+                IconButton(
+                  onPressed: vault.hasQuorum
+                      ? () async {
+                          final isSecretRestoreExplainerHidden =
+                              GetIt.I<SettingsRepository>().get<bool>(
+                                      PreferencesKeys
+                                          .keyIsSecretRestoreExplainerHidden) ??
+                                  false;
+                          if (!isSecretRestoreExplainerHidden &&
+                              context.mounted) {
+                            final shouldContinue =
+                                await OnSecretRestoreDialog.show(context) ??
+                                    false;
+                            if (!shouldContinue) return;
+                          }
+                          if (context.mounted) {
+                            Navigator.of(context).pushNamed(
+                              routeVaultSecretRecovery,
+                              arguments: (
+                                vaultId: vault.id,
+                                secretId: secretId,
+                              ),
+                            );
+                          }
+                        }
+                      : null,
+                  icon: const Icon(Icons.visibility_outlined),
+                ),
+              ],
             ),
-        ],
-      ),
     );
   }
 }

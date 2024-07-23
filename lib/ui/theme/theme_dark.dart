@@ -168,19 +168,6 @@ final themeDark = themeData.copyWith(
     trackOutlineColor: WidgetStatePropertyAll(colorSchemeDark.secondary),
     trackOutlineWidth: const WidgetStatePropertyAll(0),
   ),
-  // TabBar
-  tabBarTheme: themeData.tabBarTheme.copyWith(
-    indicatorSize: TabBarIndicatorSize.tab,
-    indicator: BoxDecoration(
-      borderRadius: const BorderRadius.vertical(
-        top: Radius.circular(10),
-      ),
-      color: colorSchemeDark.secondary,
-    ),
-    labelPadding: EdgeInsets.zero,
-    labelColor: colorSchemeDark.onPrimary,
-    unselectedLabelColor: colorSchemeDark.onSecondary,
-  ),
   // TextSelection
   textSelectionTheme: TextSelectionThemeData(
     cursorColor: colorSchemeDark.onPrimary,

@@ -6,7 +6,6 @@ import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/splash.dart';
 import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
-import 'package:guardian_keyper/ui/presenters/home_tab_presenter.dart';
 import 'package:guardian_keyper/ui/presenters/settings_presenter.dart';
 
 import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
@@ -35,11 +34,6 @@ class App extends StatelessWidget {
           providers: [
             ChangeNotifierProvider<SettingsPresenter>(
               create: (_) => SettingsPresenter(),
-            ),
-            ChangeNotifierProvider<HomeTabPresenter>(
-              create: (_) => HomeTabPresenter(
-                stepsCount: HomeScreen.tabsCount,
-              ),
             ),
           ],
           child: Selector<SettingsPresenter, bool?>(

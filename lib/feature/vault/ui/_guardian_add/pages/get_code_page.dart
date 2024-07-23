@@ -30,9 +30,9 @@ class GetCodePage extends StatelessWidget {
           children: [
             // Body
             const PageTitle(
-              subtitle:
-                  'Ask a Guardian to tap on “Become a Guardian” in the app, '
-                  'and provide their Guardian QR code or text code.',
+              subtitle: 'Ask a Guardian to open the Shards tab in the app, '
+                  'tap the “Become a Guardian” button, and provide '
+                  'their Guardian QR code or text code.',
             ),
             // Scan QR
             Padding(

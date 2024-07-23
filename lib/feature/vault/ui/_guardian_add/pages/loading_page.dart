@@ -25,7 +25,7 @@ class _LoadingPageState extends State<LoadingPage> {
           textSpans: [
             const TextSpan(text: 'You have successfully added '),
             TextSpan(text: message.peerId.name, style: styleW600),
-            const TextSpan(text: 'as a Guardian for '),
+            const TextSpan(text: ' as a Guardian for '),
             TextSpan(text: presenter.vaultId.name, style: styleW600),
           ],
         );
@@ -40,17 +40,17 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-    appBar: AppBar(
-      title: const Text('Adding a Guardian'),
-      centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-    ),
-    child: Column(
+        appBar: AppBar(
+          title: const Text('Adding a Guardian'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Body
@@ -83,5 +83,5 @@ class _LoadingPageState extends State<LoadingPage> {
             ),
           ],
         ),
-  );
+      );
 }

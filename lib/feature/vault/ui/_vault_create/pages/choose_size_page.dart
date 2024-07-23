@@ -55,7 +55,6 @@ class ChooseSizePage extends StatelessWidget {
               ),
               const Padding(padding: EdgeInsets.only(bottom: 32)),
               ListTile(
-                isThreeLine: true,
                 title: const Text('Turn this device into a Guardian'),
                 subtitle: const Text(
                   'The device will count as one Guardian. It will keep parts '

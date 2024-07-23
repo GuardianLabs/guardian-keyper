@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -11,8 +12,7 @@ class OnQrCodeScanDialog extends StatefulWidget {
     BuildContext context, {
     required String caption,
   }) =>
-      Navigator.of(context).push(MaterialPageRoute(
-        fullscreenDialog: true,
+      Navigator.of(context).push(CupertinoPageRoute(
         settings: const RouteSettings(name: route),
         builder: (_) => OnQrCodeScanDialog(caption: caption),
       ));
@@ -67,7 +67,7 @@ class _OnQrCodeScanDialogState extends State<OnQrCodeScanDialog> {
   }
 
   @override
-Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [

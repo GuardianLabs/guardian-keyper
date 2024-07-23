@@ -41,20 +41,7 @@ final themeData = ThemeData(
   appBarTheme: const AppBarTheme(
     centerTitle: true,
     elevation: 0,
-    shadowColor: Colors.transparent,
     toolbarHeight: toolbarHeight,
-  ),
-  // Bottom Navigation Bar
-  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-    type: BottomNavigationBarType.fixed,
-    selectedLabelStyle: TextStyle(
-      fontSize: 10,
-      fontWeight: FontWeight.w700,
-    ),
-    unselectedLabelStyle: TextStyle(
-      fontSize: 10,
-      fontWeight: FontWeight.w400,
-    ),
   ),
   // Bottom Sheet
   bottomSheetTheme: const BottomSheetThemeData(
@@ -83,6 +70,10 @@ final themeData = ThemeData(
     ),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(cornerRadius),
+    ),
+    tilePadding: const EdgeInsets.symmetric(
+      vertical: 0,
+      horizontal: 16,
     ),
   ),
   // Filled Button
@@ -118,6 +109,10 @@ final themeData = ThemeData(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(cornerRadius),
     ),
+    contentPadding: const EdgeInsets.symmetric(
+      vertical: cornerRadius,
+      horizontal: 16,
+    ),
   ),
   // Outlined Button
   outlinedButtonTheme: OutlinedButtonThemeData(
@@ -128,6 +123,10 @@ final themeData = ThemeData(
     )),
     textStyle: WidgetStatePropertyAll(textTheme.titleMedium),
   )),
+  pageTransitionsTheme: const PageTransitionsTheme(builders: {
+    TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+  }),
   // SnackBar
   snackBarTheme: const SnackBarThemeData(
     behavior: SnackBarBehavior.floating,
