@@ -1,4 +1,5 @@
 import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
@@ -20,15 +21,26 @@ class VaultShowScreen extends StatelessWidget {
     final vaultId = ModalRoute.of(context)!.settings.arguments! as VaultId;
     final vaultInteractor = GetIt.I<VaultInteractor>();
     return ScaffoldSafe(
-      header: HeaderBar(
-        caption: vaultId.name,
-        leftButton: const HeaderBarButton.back(),
-        rightButton: HeaderBarButton.more(
-          onPressed: () => OnVaultMoreDialog.show(
-            context,
-            vaultId: vaultId,
-          ),
+      appBar: AppBar(
+        title: Text(vaultId.name),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              OnVaultMoreDialog.show(
+                context,
+                vaultId: vaultId,
+              );
+            },
+          ),
+        ],
       ),
       child: StreamBuilder<VaultRepositoryEvent>(
         initialData: (
@@ -45,25 +57,6 @@ class VaultShowScreen extends StatelessWidget {
           return ListView(
             padding: paddingH20,
             children: [
-              // Title
-              if (vault.isRestricted)
-                PageTitleRestricted(vault: vault)
-              else if (vault.isNotFull)
-                PageTitle(
-                  title: 'Guardians',
-                  subtitle: 'Adding ${vault.maxSize} Guardians '
-                      'will activate your Safe, making it '
-                      'ready to securely hold your Secrets.',
-                )
-              else
-                const PageTitle(title: 'Guardians'),
-              // Guardians
-              GuardiansExpansionTile(
-                vault: vault,
-                initiallyExpanded: vault.hasNoSecrets,
-              ),
-              if (vault.hasSecrets || vault.isFull)
-                const PageTitle(title: 'Secrets'),
               // Button
               if (vault.isFull)
                 Padding(
@@ -77,8 +70,58 @@ class VaultShowScreen extends StatelessWidget {
                   ),
                 ),
               // Secrets
-              for (final secretId in vault.secrets.keys)
-                SecretListTile(vault: vault, secretId: secretId)
+              if (vault.hasSecrets)
+                const Padding(
+                  padding: paddingV6,
+                  child: Text('Safe’s Secrets:'),
+                ),
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(cornerRadius),
+                  ),
+                  color: Theme.of(context).colorScheme.surface,
+                ),
+                child: Column(
+                  children: [
+                    for (final secretId in vault.secrets.keys)
+                      SecretListTile(vault: vault, secretId: secretId),
+                  ],
+                ),
+              ),
+              // Guardians
+              if (vault.isRestricted)
+                PageTitleRestricted(vault: vault)
+              else if (vault.isNotFull)
+                PageTitle(
+                  subtitle: 'Adding ${vault.maxSize} Guardians '
+                      'will activate your Safe, making it '
+                      'ready to securely hold your Secrets.',
+                )
+              else ...[
+                const Padding(padding: paddingT20),
+                const Padding(
+                  padding: paddingV6,
+                  child: Text('Safe’s Guardians:'),
+                ),
+              ],
+              // Guardians List
+              Column(
+                children: [
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(cornerRadius),
+                      ),
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
+                    child: GuardiansExpansionTile(
+                      vault: vault,
+                      initiallyExpanded: vault.hasNoSecrets,
+                    ),
+                  ),
+                ],
+              ),
             ],
           );
         },

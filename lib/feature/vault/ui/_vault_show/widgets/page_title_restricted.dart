@@ -56,7 +56,6 @@ class _PageTitleRestrictedState extends State<PageTitleRestricted> {
           ],
         )
       : PageTitle(
-          title: 'Almost done...',
           subtitleSpans: [
             TextSpan(
               text: 'Add at least '

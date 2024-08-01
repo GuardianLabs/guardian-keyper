@@ -14,45 +14,53 @@ class GetCodePage extends StatelessWidget {
   const GetCodePage({super.key});
 
   @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Header
-          const HeaderBar(
-            caption: 'Restore my Safe',
-            rightButton: HeaderBarButton.close(),
+  Widget build(BuildContext context) => ScaffoldSafe(
+        appBar: AppBar(
+          title: const Text('Restore your Safe'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          // Body
-          const PageTitle(
-            title: 'Add a Guardian to proceed with a Safe recovery',
-            subtitle: 'Ask a Guardian to tap on “Assist with Safe” in the app, '
-                'select the Safe you need, and provide their '
-                'Assistance QR code or text code.',
-          ),
-          // Scan QR
-          Padding(
-            padding: paddingH20,
-            child: FilledButton(
-              onPressed: () => OnQrCodeScanDialog.show(
-                context,
-                caption: 'Scan the Assistance QR',
-              ).then(
-                (value) => _setCode(context, value),
-              ),
-              child: const Text('Add with a QR Code'),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Body
+            const PageTitle(
+              subtitle: 'This screen will help you restore your safe created '
+                  'on another device if you`ve lost access to it.'
+                  '\n\nAsk a Guardian of the restoring safe to open the Shards tab '
+                  'in the app, tap the “Help Restore a Safe” button, select the Safe '
+                  'you need, and provide their Assistance QR code or text code.',
             ),
-          ),
-          // Input QR
-          Padding(
-            padding: paddingAll20,
-            child: OutlinedButton(
-              onPressed: () => OnCodeInputDialog.show(context).then(
-                (value) => _setCode(context, value),
+            // Scan QR
+            Padding(
+              padding: paddingH20,
+              child: FilledButton(
+                onPressed: () => OnQrCodeScanDialog.show(
+                  context,
+                  caption: 'Scan the Assistance QR',
+                ).then(
+                  (value) => _setCode(context, value),
+                ),
+                child: const Text('Restore with a QR Code'),
               ),
-              child: const Text('Add with a Text Code'),
             ),
-          ),
-        ],
+            // Input QR
+            Padding(
+              padding: paddingAll20,
+              child: OutlinedButton(
+                onPressed: () => OnCodeInputDialog.show(context).then(
+                  (value) => _setCode(context, value),
+                ),
+                child: const Text('Restore with a Text Code'),
+              ),
+            ),
+          ],
+        ),
       );
 
   void _setCode(BuildContext context, String? code) {

@@ -55,6 +55,10 @@ class GuardianListTile extends StatelessWidget {
         title: Text(title, maxLines: 1),
         subtitle: Text(subtitle, maxLines: 1),
         trailing: isWaiting ? const CircularProgressIndicator.adaptive() : null,
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 0,
+          horizontal: 16,
+        ),
         onTap: onTap,
         onLongPress: onLongPress,
       );

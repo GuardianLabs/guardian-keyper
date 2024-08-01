@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'package:guardian_keyper/consts.dart';
@@ -18,8 +19,7 @@ class OnQRCodeShowDialog extends StatefulWidget {
     required String subtitle,
     required MessageModel message,
   }) =>
-      Navigator.of(context).push(MaterialPageRoute(
-        fullscreenDialog: true,
+      Navigator.of(context).push(CupertinoPageRoute(
         settings: const RouteSettings(name: route),
         builder: (_) => OnQRCodeShowDialog(
           caption: caption,
@@ -69,15 +69,20 @@ class _OnQRCodeShowDialogState extends State<OnQRCodeShowDialog> {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-        header: HeaderBar(
-          caption: widget.caption,
-          rightButton: const HeaderBarButton.close(),
+        appBar: AppBar(
+          title: Text(widget.caption),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         child: Column(
           children: [
             // Text
             PageTitle(
-              title: _screenSize is ScreenSmall ? null : widget.title,
               subtitle: widget.subtitle,
             ),
             // QR Code

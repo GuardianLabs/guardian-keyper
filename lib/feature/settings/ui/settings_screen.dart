@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/feature/message/ui/widgets/requests_icon.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/icon_of.dart';
@@ -22,9 +24,14 @@ class SettingsScreen extends StatelessWidget {
     final bgColor = Theme.of(context).colorScheme.secondary;
     return ScaffoldSafe(
       isSeparated: true,
-      header: const HeaderBar(
-        caption: 'Settings',
-        rightButton: HeaderBarButton.close(),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        centerTitle: true,
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
       ),
       children: [
         // Change Device Name
@@ -32,7 +39,7 @@ class SettingsScreen extends StatelessWidget {
           stream: networkManager.state.map((e) => e.deviceName),
           builder: (context, snapshot) => ListTile(
             leading: IconOf.user(bgColor: bgColor),
-            title: const Text('Change Guardian name'),
+            title: const Text('Rename device'),
             subtitle: Text(snapshot.data ?? networkManager.selfId.name),
             trailing: const Icon(Icons.arrow_forward_ios_rounded),
             onTap: () => OnSetDeviceNameDialog.show(context),
@@ -41,8 +48,8 @@ class SettingsScreen extends StatelessWidget {
         // Change PassCode
         ListTile(
           leading: IconOf.passcode(bgColor: bgColor),
-          title: const Text('Passcode'),
-          subtitle: const Text('Change authentication passcode'),
+          title: const Text('Change passcode'),
+          subtitle: const Text('Set new authentication passcode'),
           trailing: const Icon(Icons.arrow_forward_ios_rounded),
           onTap: () => OnChangePassCodeDialog.show(context),
         ),
@@ -65,13 +72,24 @@ class SettingsScreen extends StatelessWidget {
           stream: networkManager.state.map((e) => e.isBootstrapEnabled),
           builder: (context, snapshot) => SwitchListTile.adaptive(
             secondary: IconOf.connection(bgColor: bgColor),
-            title: const Text('Proxy Connection'),
+            title: const Text('Proxy connection'),
             subtitle: const Text(
               'P2P-discovery via Internet',
             ),
             value: snapshot.data ?? networkManager.isBootstrapEnabled,
             onChanged: networkManager.setIsBootstrapEnabled,
           ),
+        ),
+        // Show Requests Archive
+        ListTile(
+          leading: const RequestsIcon(
+            isSelected: false,
+            iconSize: IconOf.defaultIconSize,
+          ),
+          title: const Text('Requests'),
+          subtitle: const Text('Show requests history'),
+          trailing: const Icon(Icons.arrow_forward_ios_rounded),
+          onTap: () => Navigator.pushNamed(context, routeRequestsScreen),
         ),
         // Theme Mode Switcher
         if (kDebugMode) const ThemeModeSwitcher(),

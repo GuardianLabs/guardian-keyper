@@ -7,31 +7,36 @@ class InputNamePage extends StatelessWidget {
   const InputNamePage({super.key});
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) {
+    final presenter = context.read<VaultCreatePresenter>();
+    return ScaffoldSafe(
+      appBar: AppBar(
+        title: const Text('Name your Safe'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: presenter.previousPage,
+        ),
+      ),
+      child: Column(
         children: [
-          // Header
-          HeaderBar(
-            caption: 'Name the Safe',
-            leftButton: HeaderBarButton.back(
-              onPressed: context.read<VaultCreatePresenter>().previousPage,
-            ),
-            rightButton: const HeaderBarButton.close(),
-          ),
           // Body
           Expanded(
             child: ListView(
               padding: paddingH20,
               children: [
-                const PageTitle(title: 'Create a Name for your Safe'),
-                TextField(
-                  autofocus: true,
-                  keyboardType: TextInputType.text,
-                  maxLength: maxNameLength,
-                  decoration: const InputDecoration(
-                    labelText: ' Safe name ',
+                Padding(
+                  padding: const EdgeInsets.only(top: 32),
+                  child: TextField(
+                    autofocus: true,
+                    keyboardType: TextInputType.text,
+                    maxLength: maxNameLength,
+                    decoration: const InputDecoration(
+                      labelText: ' Safe name ',
+                    ),
+                    onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                    onChanged: presenter.setVaultName,
                   ),
-                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                  onChanged: context.read<VaultCreatePresenter>().setVaultName,
                 ),
                 // Footer
                 Padding(
@@ -40,9 +45,8 @@ class InputNamePage extends StatelessWidget {
                     selector: (context, presenter) =>
                         presenter.isVaultNameTooShort,
                     builder: (context, isGroupNameToolShort, _) => FilledButton(
-                      onPressed: isGroupNameToolShort
-                          ? null
-                          : context.read<VaultCreatePresenter>().createVault,
+                      onPressed:
+                          isGroupNameToolShort ? null : presenter.createVault,
                       child: const Text('Continue'),
                     ),
                   ),
@@ -51,5 +55,7 @@ class InputNamePage extends StatelessWidget {
             ),
           ),
         ],
-      );
+      ),
+    );
+  }
 }

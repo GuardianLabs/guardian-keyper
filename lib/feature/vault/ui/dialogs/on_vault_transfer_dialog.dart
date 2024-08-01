@@ -1,8 +1,8 @@
+import 'package:flutter/cupertino.dart';
+import 'package:guardian_keyper/feature/vault/ui/dialogs/on_change_owner_dialog.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
-
-import 'package:guardian_keyper/feature/vault/ui/_shard_show/dialogs/on_change_owner_dialog.dart';
 
 class OnVaultTransferDialog extends StatelessWidget {
   static Future<void> show(
@@ -10,8 +10,7 @@ class OnVaultTransferDialog extends StatelessWidget {
     required Iterable<Vault> vaults,
   }) =>
       Navigator.of(context).push(
-        MaterialPageRoute(
-          fullscreenDialog: true,
+        CupertinoPageRoute(
           builder: (_) => OnVaultTransferDialog(vaults: vaults),
         ),
       );
@@ -25,30 +24,59 @@ class OnVaultTransferDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-        header: const HeaderBar(
-          caption: 'Assist with a Safe',
-          leftButton: HeaderBarButton.back(),
-        ),
-        children: [
-          const PageTitle(
-            subtitle: 'Select a Safe to assist with its recovery '
-                'or ownership transfer.',
+        appBar: AppBar(
+          title: const Text('Helping Restore a Safe'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          for (final vault in vaults)
-            Padding(
-              padding: paddingV6,
-              child: ListTile(
-                title: Text(vault.id.name),
-                subtitle: Text('Owned by ${vault.ownerId.name}'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  OnChangeOwnerDialog.show(
-                    context,
-                    vaultId: vault.id,
-                  );
-                },
-              ),
-            )
-        ],
+        ),
+        child: Padding(
+          padding: paddingH20,
+          child: Column(
+            children: [
+              if (vaults.isEmpty)
+                const Expanded(
+                  child: Center(
+                    child: PageTitle(
+                      title: 'You do not store any shards yet',
+                      subtitle:
+                          'When you become a Guardian for someone else`s safe, '
+                          'you can help them recover it if they lose access. '
+                          'This screen will guide you through the recovery process.',
+                    ),
+                  ),
+                )
+              else ...[
+                const PageTitle(
+                  subtitle: 'Select a Safe to assist with its recovery '
+                      'or ownership transfer:',
+                ),
+                for (final vault in vaults)
+                  Padding(
+                    padding: paddingV6,
+                    child: ListTile(
+                      title: Text(vault.id.name),
+                      subtitle: Text('Owned by ${vault.ownerId.name}'),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 0,
+                        horizontal: 16,
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        OnChangeOwnerDialog.show(
+                          context,
+                          vaultId: vault.id,
+                        );
+                      },
+                    ),
+                  )
+              ]
+            ],
+          ),
+        ),
       );
 }
