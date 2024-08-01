@@ -28,39 +28,38 @@ class VaultListTile extends StatelessWidget {
     return Stack(
       alignment: Alignment.topRight,
       children: [
-        ExpansionTile(
-          key: PageStorageKey(vault.id.name),
-          initiallyExpanded: initiallyExpanded,
-          title: Text(vault.id.name),
-          subtitle: vault.isRestricted
-              ? (vault.hasQuorum
-                  ? Text('Restricted usage', style: restrictedStyle)
-                  : Text('Complete the Recovery', style: restrictedStyle))
-              : (vault.isFull
-                  ? Text(
-                      '${vault.size} Guardians, ${vault.secrets.length} Secrets',
-                    )
-                  : Text(
-                      'Add ${vault.maxSize - vault.size} more'
-                      '${vault.maxSize - vault.size == 1 ? ' Guardian' : ' Guardians'}',
-                      style: restrictedStyle,
-                    )),
-          trailing: null,
-          childrenPadding: EdgeInsets.zero,
-          children: [
-            Divider(
-              height: 1,
-              color: theme.colorScheme.primary.withOpacity(0.6),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(cornerRadius),
             ),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(cornerRadius),
-                  bottomRight: Radius.circular(cornerRadius),
-                ),
-                color: theme.colorScheme.surface,
+            color: Theme.of(context).colorScheme.surface,
+          ),
+          child: ExpansionTile(
+            key: PageStorageKey(vault.id.name),
+            initiallyExpanded: initiallyExpanded,
+            title: Text(vault.id.name),
+            subtitle: vault.isRestricted
+                ? (vault.hasQuorum
+                    ? Text('Restricted usage', style: restrictedStyle)
+                    : Text('Complete the Recovery', style: restrictedStyle))
+                : (vault.isFull
+                    ? Text(
+                        '${vault.size} Guardians, ${vault.secrets.length} Secrets',
+                      )
+                    : Text(
+                        'Add ${vault.maxSize - vault.size} more'
+                        '${vault.maxSize - vault.size == 1 ? ' Guardian' : ' Guardians'}',
+                        style: restrictedStyle,
+                      )),
+            trailing: null,
+            childrenPadding: EdgeInsets.zero,
+            children: [
+              Divider(
+                height: 1,
+                color: theme.colorScheme.primary.withOpacity(0.6),
               ),
-              child: Column(
+              Column(
                 children: [
                   if (vault.isFull) ...[
                     for (final secretId in vault.secrets.keys)
@@ -130,8 +129,8 @@ class VaultListTile extends StatelessWidget {
                   ],
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
 
         //View Safe Icon
