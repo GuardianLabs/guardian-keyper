@@ -34,8 +34,8 @@ dependencies:
   url_launcher: ^6.3.0
   sodium_libs: ^2.2.1
   local_auth: ^2.2.0
-  share_plus: ^9.0.0
-  vibration: ^1.9.0
+  share_plus: ^10.0.2
+  vibration: ^2.0.0
   sodium: ^2.3.1
   hive: ^2.2.3
   nsd: ^3.0.0
