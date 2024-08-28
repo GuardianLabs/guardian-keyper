@@ -45,7 +45,7 @@ class GetCodePage extends StatelessWidget {
                   );
                   if (context.mounted) _setCode(context, code);
                 },
-                child: const Text('Add with a QR Code'),
+                child: const Text('Add via QR code'),
               ),
             ),
             // Input QR
@@ -56,7 +56,11 @@ class GetCodePage extends StatelessWidget {
                   final code = await OnCodeInputDialog.show(context);
                   if (context.mounted) _setCode(context, code);
                 },
-                child: const Text('Add with a Text Code'),
+                child: Text(
+                  'Add via Text code',
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary),
+                ),
               ),
             ),
           ],

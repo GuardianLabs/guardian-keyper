@@ -30,10 +30,8 @@ class VaultListTile extends StatelessWidget {
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(cornerRadius),
-            ),
-            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.all(Radius.circular(cornerRadius)),
+            color: theme.colorScheme.surface,
           ),
           child: ExpansionTile(
             key: PageStorageKey(vault.id.name),
@@ -47,17 +45,28 @@ class VaultListTile extends StatelessWidget {
                     ? Text(
                         '${vault.size} Guardians, ${vault.secrets.length} Secrets',
                       )
-                    : Text(
-                        'Add ${vault.maxSize - vault.size} more'
-                        '${vault.maxSize - vault.size == 1 ? ' Guardian' : ' Guardians'}',
-                        style: restrictedStyle,
+                    : Column(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(top: 6),
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.info,
+                                  color: theme.colorScheme.onError, size: 16),
+                              Text(' Add ${vault.maxSize - vault.size} more'
+                                  '${vault.maxSize - vault.size == 1 ? ' Guardian' : ' Guardians'}'),
+                            ],
+                          ),
+                        ],
                       )),
             trailing: null,
             childrenPadding: EdgeInsets.zero,
             children: [
               Divider(
                 height: 1,
-                color: theme.colorScheme.primary.withOpacity(0.6),
+                color: theme.colorScheme.primary.withOpacity(0.7),
               ),
               Column(
                 children: [
@@ -72,18 +81,11 @@ class VaultListTile extends StatelessWidget {
                             routeVaultSecretAdd,
                             arguments: vault.id,
                           ),
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.add_circle,
-                            color: theme.colorScheme.onPrimary,
                           ),
-                          label: Text(
+                          label: const Text(
                             'Add a Secret',
-                            style:
-                                TextStyle(color: theme.colorScheme.onPrimary),
-                          ),
-                          style: FilledButton.styleFrom(
-                            backgroundColor: theme.colorScheme.primary,
-                            foregroundColor: theme.colorScheme.onPrimary,
                           ),
                         ),
                       ),
@@ -109,18 +111,11 @@ class VaultListTile extends StatelessWidget {
                                     routeVaultGuardianAdd,
                                     arguments: vault.id,
                                   ),
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.add_circle,
-                              color: theme.colorScheme.onPrimary,
                             ),
-                            label: Text(
+                            label: const Text(
                               'Add a Guardian',
-                              style:
-                                  TextStyle(color: theme.colorScheme.onPrimary),
-                            ),
-                            style: FilledButton.styleFrom(
-                              backgroundColor: theme.colorScheme.primary,
-                              foregroundColor: theme.colorScheme.onPrimary,
                             ),
                           ),
                         ),
@@ -138,7 +133,10 @@ class VaultListTile extends StatelessWidget {
           right: 48,
           top: 12,
           child: IconButton(
-            icon: const Icon(Icons.folder_open),
+            icon: Icon(
+              Icons.folder_open,
+              color: theme.colorScheme.onSurface,
+            ),
             onPressed: () => Navigator.pushNamed(
               context,
               routeVaultShow,

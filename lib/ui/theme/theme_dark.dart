@@ -8,15 +8,15 @@ const systemStyleDark = SystemUiOverlayStyle(
 
 const colorSchemeExtensionDark = BrandColors(
   highlightColor: Color(0xFF62D6CB),
-  warningColor: Color(0xFFF19C38),
-  dangerColor: Color(0xFFEC5F59),
+  warningColor: Color(0xFFFF9800),
+  dangerColor: Color(0xFFFF5252),
 );
 
 final colorSchemeDark = ColorScheme.fromSeed(
   brightness: Brightness.dark,
   seedColor: const Color(0xFF570FE4),
   primary: const Color(0xFF570FE4),
-  onPrimary: Colors.white,
+  onPrimary: const Color(0xFFE6DEF8),
   secondary: const Color(0xFF3C089F),
   primaryContainer: const Color(0xFF570FE4),
   onPrimaryContainer: Colors.white,
@@ -73,9 +73,9 @@ final themeDark = themeData.copyWith(
   ),
   // Expansion Panel
   expansionTileTheme: themeData.expansionTileTheme.copyWith(
-    collapsedIconColor: colorSchemeDark.onPrimary,
-    iconColor: colorSchemeDark.onPrimary,
-    textColor: colorSchemeDark.onPrimary,
+    collapsedIconColor: colorSchemeDark.onSurface,
+    iconColor: colorSchemeDark.onSurface,
+    textColor: colorSchemeDark.onSurface,
   ),
   // Filled Button
   filledButtonTheme: FilledButtonThemeData(
@@ -123,7 +123,7 @@ final themeDark = themeData.copyWith(
   listTileTheme: themeData.listTileTheme.copyWith(
     tileColor: colorSchemeDark.surface,
     titleTextStyle: themeData.listTileTheme.titleTextStyle?.copyWith(
-      color: colorSchemeDark.onPrimary,
+      color: colorSchemeDark.onSurface,
     ),
     subtitleTextStyle: themeData.listTileTheme.subtitleTextStyle?.copyWith(
       color: colorSchemeDark.onSurface,
@@ -135,8 +135,8 @@ final themeDark = themeData.copyWith(
       style: themeData.filledButtonTheme.style?.copyWith(
     foregroundColor: WidgetStateProperty.resolveWith<Color>(
       (states) => states.contains(WidgetState.disabled)
-          ? colorSchemeDark.onPrimary.withOpacity(0.5)
-          : colorSchemeDark.onPrimary,
+          ? colorSchemeDark.onSurface.withOpacity(0.5)
+          : colorSchemeDark.onSurface,
     ),
     shape: const WidgetStatePropertyAll<RoundedRectangleBorder>(
       RoundedRectangleBorder(

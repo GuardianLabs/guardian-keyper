@@ -78,10 +78,6 @@ class ShardsList extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       strutStyle: const StrutStyle(height: 1.5),
                                     ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(cornerRadius),
-                                    ),
                                     childrenPadding: EdgeInsets.zero,
                                     children: [
                                       Divider(

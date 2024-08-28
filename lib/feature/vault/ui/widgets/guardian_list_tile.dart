@@ -78,7 +78,10 @@ class _GuardianCheckedIcon extends StatelessWidget {
         ),
         height: 40,
         width: 40,
-        child: const Icon(Icons.check),
+        child: Icon(
+          Icons.check,
+          color: Theme.of(context).colorScheme.primary,
+        ),
       );
 }
 
