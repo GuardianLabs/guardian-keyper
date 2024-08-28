@@ -32,9 +32,9 @@ class _LifecycleState extends State<Lifecycle> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     Future.microtask(() async {
       if (_authManager.passCode.isEmpty) {
-        await Navigator.of(context).pushNamed(routeIntro);
+        if (mounted) await Navigator.of(context).pushNamed(routeIntro);
       } else if (_authManager.passCode.isNotEmpty) {
-        await OnDemandAuthDialog.show(context);
+        if (mounted) await OnDemandAuthDialog.show(context);
         await _messageInteractor.pruneMessages();
       }
       await _networkManager.start();

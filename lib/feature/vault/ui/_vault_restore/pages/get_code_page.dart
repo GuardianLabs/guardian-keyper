@@ -40,23 +40,25 @@ class GetCodePage extends StatelessWidget {
             Padding(
               padding: paddingH20,
               child: FilledButton(
-                onPressed: () => OnQrCodeScanDialog.show(
-                  context,
-                  caption: 'Scan the Assistance QR',
-                ).then(
-                  (value) => _setCode(context, value),
-                ),
-                child: const Text('Restore with a QR Code'),
+                onPressed: () async {
+                  final qrCode = await OnQrCodeScanDialog.show(
+                    context,
+                    caption: 'Scan the Assistance QR',
+                  );
+                  if (context.mounted) _setCode(context, qrCode);
+                },
+                child: const Text('Restore via QR code'),
               ),
             ),
             // Input QR
             Padding(
               padding: paddingAll20,
               child: OutlinedButton(
-                onPressed: () => OnCodeInputDialog.show(context).then(
-                  (value) => _setCode(context, value),
-                ),
-                child: const Text('Restore with a Text Code'),
+                onPressed: () async {
+                  final qrCode = await OnCodeInputDialog.show(context);
+                  if (context.mounted) _setCode(context, qrCode);
+                },
+                child: const Text('Restore via Text code'),
               ),
             ),
           ],

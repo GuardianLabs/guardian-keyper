@@ -19,6 +19,7 @@ class _LoadingPageState extends State<LoadingPage> {
     super.initState();
     context.read<VaultRestorePresenter>().startRequest().then(
       (message) async {
+        if (!mounted) return;
         if (message.isAccepted) {
           final wantAddAnother = await OnSuccessDialog.show(
             context,
@@ -49,17 +50,17 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-    appBar: AppBar(
-      title: const Text('Restoring your Safe'),
-      centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-    ),
-    child: Column(
+        appBar: AppBar(
+          title: const Text('Restoring your Safe'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Body
@@ -104,5 +105,5 @@ class _LoadingPageState extends State<LoadingPage> {
             ),
           ],
         ),
-  );
+      );
 }

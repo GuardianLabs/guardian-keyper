@@ -21,7 +21,9 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
     super.initState();
     _presenter.startRequest().then((message) async {
       if (message.isRejected) {
-        await OnRejectDialog.show(context, vaultName: message.vaultId.name);
+        if (mounted) {
+          await OnRejectDialog.show(context, vaultName: message.vaultId.name);
+        }
         if (mounted) Navigator.of(context).pop();
       }
     });

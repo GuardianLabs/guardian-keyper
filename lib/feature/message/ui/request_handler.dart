@@ -31,17 +31,19 @@ class _RequestHandlerState extends State<RequestHandler> {
           currentRouteName == OnQRCodeShowDialog.route) {
         if (message.isReceived || message.hasResponse) {
           _canShowNotification = false;
-          OnMessageActiveDialog.show(
-            context,
-            message: message,
-          ).then(
-            (_) {
-              _canShowNotification = true;
-              if (mounted && currentRouteName == OnQRCodeShowDialog.route) {
-                Navigator.of(context).popUntil((r) => r.isFirst);
-              }
-            },
-          );
+          if (mounted) {
+            OnMessageActiveDialog.show(
+              context,
+              message: message,
+            ).then(
+              (_) {
+                _canShowNotification = true;
+                if (mounted && currentRouteName == OnQRCodeShowDialog.route) {
+                  Navigator.of(context).popUntil((r) => r.isFirst);
+                }
+              },
+            );
+          }
         }
       }
     },
