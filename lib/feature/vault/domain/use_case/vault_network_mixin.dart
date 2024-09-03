@@ -12,9 +12,6 @@ mixin class VaultNetworkMixin {
 
   Stream<MessageModel> get messageStream => _networkManager.messageStream;
 
-  Stream<(PeerId, bool)> get peerStatusChangeStream =>
-      _networkManager.peerStatusChanges;
-
   Future<void> sendToGuardian(MessageModel message) =>
       _networkManager.sendToPeer(
         message.peerId,

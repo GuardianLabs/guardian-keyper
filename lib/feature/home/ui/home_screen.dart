@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:guardian_keyper/app/routes.dart';
-import 'package:guardian_keyper/data/managers/network_manager.dart';
 import 'package:guardian_keyper/feature/home/ui/dialogs/on_show_id_dialog.dart';
+import 'package:guardian_keyper/ui/presenters/settings_presenter.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
@@ -72,15 +72,12 @@ class HomeScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Padding(padding: paddingT20),
-                  StreamBuilder<String>(
-                    stream: GetIt.I<NetworkManager>()
-                        .state
-                        .map((e) => e.deviceName),
-                    builder: (context, snapshot) => Text(
-                      snapshot.data ?? vaultInteractor.selfId.name,
-                      style: theme.textTheme.titleLarge,
-                    ),
-                  ),
+                  Selector<SettingsPresenter, String>(
+                      builder: (context, value, child) => Text(
+                            value,
+                            style: theme.textTheme.titleLarge,
+                          ),
+                      selector: (context, value) => value.name),
                   TextButton(
                     style: TextButton.styleFrom(
                       minimumSize: Size.zero,
