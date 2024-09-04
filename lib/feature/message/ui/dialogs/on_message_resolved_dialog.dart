@@ -31,12 +31,12 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
       titleString: getTitle(message),
       body: Card(
         child: Padding(
-          padding: paddingAll20,
+          padding: paddingAllDefault,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: paddingB20,
+                padding: paddingBDefault,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -52,7 +52,7 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
                 ),
               ),
               Padding(
-                padding: paddingB20,
+                padding: paddingBDefault,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -69,7 +69,7 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
               ),
               if (message.containsVault)
                 Padding(
-                  padding: paddingB20,
+                  padding: paddingBDefault,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -86,7 +86,7 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
                 ),
               if (message.containsSecretShard)
                 Padding(
-                  padding: paddingB20,
+                  padding: paddingBDefault,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -102,7 +102,7 @@ class OnMessageResolvedDialog extends StatelessWidget with MessageTextMixin {
                   ),
                 ),
               Padding(
-                padding: paddingB20,
+                padding: paddingBDefault,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

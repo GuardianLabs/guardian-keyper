@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/feature/vault/ui/dialogs/on_change_owner_dialog.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
@@ -35,7 +36,7 @@ class OnVaultTransferDialog extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: paddingH20,
+          padding: paddingHDefault,
           child: Column(
             children: [
               if (vaults.isEmpty)
@@ -57,13 +58,13 @@ class OnVaultTransferDialog extends StatelessWidget {
                 ),
                 for (final vault in vaults)
                   Padding(
-                    padding: paddingV6,
+                    padding: paddingV4,
                     child: ListTile(
                       title: Text(vault.id.name),
                       subtitle: Text('Owned by ${vault.ownerId.name}'),
                       contentPadding: const EdgeInsets.symmetric(
                         vertical: 0,
-                        horizontal: 16,
+                        horizontal: kDefaultTilePadding,
                       ),
                       onTap: () {
                         Navigator.of(context).pop();

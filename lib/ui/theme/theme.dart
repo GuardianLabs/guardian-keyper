@@ -72,7 +72,7 @@ final themeData = ThemeData(
     ),
     tilePadding: const EdgeInsets.symmetric(
       vertical: 0,
-      horizontal: 16,
+      horizontal: kDefaultTilePadding,
     ),
   ),
   // Filled Button
@@ -110,7 +110,7 @@ final themeData = ThemeData(
     ),
     contentPadding: const EdgeInsets.symmetric(
       vertical: kCornerRadius,
-      horizontal: 16,
+      horizontal: kDefaultTilePadding,
     ),
   ),
   // Outlined Button

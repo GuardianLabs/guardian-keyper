@@ -46,7 +46,7 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
             // Body
             Expanded(
               child: ListView(
-                padding: paddingH20,
+                padding: paddingHDefault,
                 children: [
                   // Title
                   const PageTitle(
@@ -57,21 +57,21 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
                   // Guardians
                   Card(
                     child: Padding(
-                      padding: paddingT20,
+                      padding: paddingTDefault,
                       child: Consumer<VaultSecretRecoveryPresenter>(
                         builder: (context, presenter, _) => Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: paddingH20,
+                              padding: paddingHDefault,
                               child: Text(
                                 'Approvals',
                                 style: _theme.textTheme.bodyMedium,
                               ),
                             ),
                             Padding(
-                              padding: paddingH20,
+                              padding: paddingHDefault,
                               child: Text(
                                 'Get at least ${_presenter.needAtLeast}'
                                 ' approvals to access your Secret.',

@@ -23,7 +23,7 @@ class InputNamePage extends StatelessWidget {
           // Body
           Expanded(
             child: ListView(
-              padding: paddingH20,
+              padding: paddingHDefault,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 32),

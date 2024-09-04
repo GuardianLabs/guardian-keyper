@@ -49,7 +49,7 @@ class IntrosPage extends StatelessWidget {
         }
       },
       child: Padding(
-        padding: paddingAll20,
+        padding: paddingAllDefault,
         child: Column(
           children: [
             const Spacer(),
@@ -67,7 +67,7 @@ class IntrosPage extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: paddingB20,
+              padding: paddingBDefault,
               child: Text(
                 _subtitles[presenter.introStep],
                 style: theme.textTheme.bodyMedium,

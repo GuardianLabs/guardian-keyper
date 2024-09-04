@@ -91,7 +91,7 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
         // Card
         body: Card(
           child: Padding(
-            padding: paddingAll20,
+            padding: paddingAllDefault,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: _isRequestError

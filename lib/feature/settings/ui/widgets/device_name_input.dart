@@ -34,7 +34,7 @@ class _DeviceNameInputState extends State<DeviceNameInput> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: paddingAll20,
+            padding: paddingAllDefault,
             child: TextField(
               autofocus: true,
               maxLength: kMaxNameLength,
@@ -55,7 +55,7 @@ class _DeviceNameInputState extends State<DeviceNameInput> {
             ),
           ),
           Padding(
-            padding: paddingAll20,
+            padding: paddingAllDefault,
             child: FilledButton(
               onPressed: _canProceed
                   ? () async {

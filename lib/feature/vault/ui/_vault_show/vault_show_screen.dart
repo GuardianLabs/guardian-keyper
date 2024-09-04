@@ -55,12 +55,12 @@ class VaultShowScreen extends StatelessWidget {
                 ownerId: vaultInteractor.selfId,
               );
           return ListView(
-            padding: paddingH20,
+            padding: paddingHDefault,
             children: [
               // Button
               if (vault.isFull)
                 Padding(
-                  padding: paddingB20,
+                  padding: paddingBDefault,
                   child: FilledButton(
                     child: const Text('Add a Secret'),
                     onPressed: () => Navigator.of(context).pushNamed(
@@ -72,7 +72,7 @@ class VaultShowScreen extends StatelessWidget {
               // Secrets
               if (vault.hasSecrets)
                 const Padding(
-                  padding: paddingV6,
+                  padding: paddingV4,
                   child: Text('Safe’s Secrets:'),
                 ),
               DecoratedBox(
@@ -99,9 +99,9 @@ class VaultShowScreen extends StatelessWidget {
                       'ready to securely hold your Secrets.',
                 )
               else ...[
-                const Padding(padding: paddingT20),
+                const Padding(padding: paddingTDefault),
                 const Padding(
-                  padding: paddingV6,
+                  padding: paddingV4,
                   child: Text('Safe’s Guardians:'),
                 ),
               ],

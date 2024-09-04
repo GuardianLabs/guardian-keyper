@@ -70,7 +70,7 @@ class HomeScreen extends StatelessWidget {
               title: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Padding(padding: paddingT20),
+                  const Padding(padding: paddingTDefault),
                   Selector<SettingsPresenter, String>(
                       builder: (context, value, child) => Text(
                             value,
@@ -106,7 +106,7 @@ class HomeScreen extends StatelessWidget {
               ],
               centerTitle: true,
               bottom: TabBar(
-                padding: paddingH20,
+                padding: paddingHDefault,
                 tabs: const [
                   Tab(text: 'Safes'),
                   Tab(text: 'Shards'),

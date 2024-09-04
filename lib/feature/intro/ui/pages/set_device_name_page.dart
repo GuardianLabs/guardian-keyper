@@ -13,7 +13,7 @@ class SetDeviceNamePage extends StatelessWidget {
   Widget build(BuildContext context) => ListView(
         children: [
           const Padding(
-            padding: paddingAll20,
+            padding: paddingAllDefault,
             child: SvgPicture(
               AssetBytesLoader('assets/images/logo.svg.vec'),
               height: 80,
@@ -21,7 +21,7 @@ class SetDeviceNamePage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: paddingAll20,
+            padding: paddingAllDefault,
             child: Text(
               'Create your Device name',
               textAlign: TextAlign.center,

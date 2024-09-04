@@ -12,7 +12,7 @@ class SetBiometricPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: paddingAll20,
+      padding: paddingAllDefault,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -36,7 +36,7 @@ class SetBiometricPage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: paddingT20,
+            padding: paddingTDefault,
             child: Row(children: [
               Expanded(
                 child: FilledButton(

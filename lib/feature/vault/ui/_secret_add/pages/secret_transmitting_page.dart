@@ -40,25 +40,25 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-    appBar: AppBar(
-      title: const Text('Awaiting Guardians'),
-      centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () async {
-                    final wantExit = await OnAbortDialog.show(context);
-                    if ((wantExit ?? false) && context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-      ),
-    ),
-    child: Column(
+        appBar: AppBar(
+          title: const Text('Awaiting Guardians'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () async {
+              final wantExit = await OnAbortDialog.show(context);
+              if ((wantExit ?? false) && context.mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+        ),
+        child: Column(
           children: [
             // Body
             Expanded(
               child: ListView(
-                padding: paddingH20,
+                padding: paddingHDefault,
                 children: [
                   // Warning
                   Container(
@@ -66,7 +66,7 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                       borderRadius: BorderRadius.circular(8),
                       color: _brandColor.warningColor.withOpacity(.2),
                     ),
-                    padding: paddingAll20,
+                    padding: paddingAllDefault,
                     child: Text(
                       'Keep the app open and active throughout the process, '
                       'as closing or minimizing it will disrupt the peer-to-peer (P2P) '
@@ -77,21 +77,21 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
                   const SizedBox(height: 32),
                   Card(
                     child: Padding(
-                      padding: paddingT20,
+                      padding: paddingTDefault,
                       child: Consumer<VaultSecretAddPresenter>(
                         builder: (context, presenter, _) => Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: paddingH20,
+                              padding: paddingHDefault,
                               child: Text(
                                 'Guardians',
                                 style: _theme.textTheme.bodyMedium,
                               ),
                             ),
                             Padding(
-                              padding: paddingH20,
+                              padding: paddingHDefault,
                               child: Text(
                                 'Ask your Guardians to open the app and accept a '
                                 'Secret shard. Make sure they keep the app open '
@@ -119,5 +119,5 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
             ),
           ],
         ),
-  );
+      );
 }

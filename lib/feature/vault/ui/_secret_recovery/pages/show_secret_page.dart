@@ -37,7 +37,7 @@ class ShowSecretPage extends StatelessWidget {
           // Body
           Expanded(
             child: ListView(
-              padding: paddingH20,
+              padding: paddingHDefault,
               children: [
                 const PageTitle(
                   subtitle: 'Make sure your display is covered '
@@ -46,14 +46,14 @@ class ShowSecretPage extends StatelessWidget {
                 // Secret
                 Card(
                   child: Padding(
-                    padding: paddingAll20,
+                    padding: paddingAllDefault,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Container(
                           height: 160,
-                          padding: paddingB20,
+                          padding: paddingBDefault,
                           child: presenter.isObfuscated
                               ? _mask
                               : Text(

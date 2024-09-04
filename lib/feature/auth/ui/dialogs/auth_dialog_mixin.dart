@@ -14,7 +14,7 @@ mixin class AuthDialogMixin {
   static const keyPadConfig = KeyPadConfig(clearOnLongPressed: true);
 
   static EdgeInsets getPadding(BuildContext context) =>
-      paddingH20 +
+      paddingHDefault +
       (ScreenSize(context) is ScreenSmall
           ? const EdgeInsets.symmetric(vertical: 12)
           : const EdgeInsets.symmetric(vertical: 32));

@@ -31,7 +31,7 @@ class RequestsScreen extends StatelessWidget {
                   ),
                 )
               : ListView.separated(
-                  padding: paddingAll20,
+                  padding: paddingAllDefault,
                   itemCount: requests.length,
                   itemBuilder: (context, index) {
                     final request = requests[index];
@@ -42,7 +42,7 @@ class RequestsScreen extends StatelessWidget {
                               alignment: Alignment.centerLeft,
                               color: backgroundColor,
                               height: double.infinity,
-                              padding: paddingH20,
+                              padding: paddingHDefault,
                               child: const Text('Move to Resolved'),
                             ),
                             direction: DismissDirection.startToEnd,

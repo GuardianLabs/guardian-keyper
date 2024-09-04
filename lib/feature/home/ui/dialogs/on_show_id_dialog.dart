@@ -51,7 +51,7 @@ class OnShowIdDialog extends StatelessWidget {
           children: [
             Expanded(
               child: Padding(
-                padding: paddingH20,
+                padding: paddingHDefault,
                 child: FilledButton(
                   onPressed: () async {
                     await Clipboard.setData(ClipboardData(text: id));
@@ -69,7 +69,7 @@ class OnShowIdDialog extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: paddingH20,
+                padding: paddingHDefault,
                 child: OutlinedButton(
                   onPressed: Navigator.of(context).pop,
                   child: const Text('Close'),

@@ -7,6 +7,8 @@ const kMaxNameLength = 25;
 const kMinNameLength = 3;
 const kCornerRadius = 8.0;
 const kButtonSize = 48.0;
+const kDefaultPadding = 20.0;
+const kDefaultTilePadding = 16.0;
 
 const kKeepalivePeriod = Duration(seconds: 10);
 const kRetryNetworkTimeout = Duration(seconds: 3);

@@ -27,7 +27,8 @@ class AddNamePage extends StatelessWidget {
             child: ListView(children: [
               // Input
               Padding(
-                padding: const EdgeInsets.only(top: 32, left: 20, right: 20),
+                padding: const EdgeInsets.only(
+                    top: 32, left: kDefaultPadding, right: kDefaultPadding),
                 child: TextFormField(
                   autofocus: true,
                   maxLength: kMaxNameLength,
@@ -40,7 +41,8 @@ class AddNamePage extends StatelessWidget {
               ),
               // Footer
               Padding(
-                padding: const EdgeInsets.only(top: 32, left: 20, right: 20),
+                padding: const EdgeInsets.only(
+                    top: 32, left: kDefaultPadding, right: kDefaultPadding),
                 child: Selector<VaultSecretAddPresenter, bool>(
                   selector: (_, p) => p.isNameTooShort,
                   builder: (context, isNameTooShort, _) => FilledButton(

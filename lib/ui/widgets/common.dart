@@ -5,14 +5,14 @@ import 'package:guardian_keyper/ui/utils/screen_size.dart';
 
 export 'package:flutter/material.dart';
 
-const paddingAll20 = EdgeInsets.all(20);
-const paddingH20 = EdgeInsets.symmetric(horizontal: 20);
-const paddingV6 = EdgeInsets.symmetric(vertical: 6);
-const paddingV20 = EdgeInsets.symmetric(vertical: 20);
+const paddingAllDefault = EdgeInsets.all(kDefaultPadding);
+const paddingHDefault = EdgeInsets.symmetric(horizontal: kDefaultPadding);
+const paddingVDefault = EdgeInsets.symmetric(vertical: kDefaultPadding);
+const paddingTDefault = EdgeInsets.only(top: kDefaultPadding);
+const paddingBDefault = EdgeInsets.only(bottom: kDefaultPadding);
 const paddingT12 = EdgeInsets.only(top: 12);
-const paddingT20 = EdgeInsets.only(top: 20);
 const paddingB12 = EdgeInsets.only(bottom: 12);
-const paddingB20 = EdgeInsets.only(bottom: 20);
+const paddingV4 = EdgeInsets.symmetric(vertical: 4);
 
 const styleW600 = TextStyle(fontWeight: FontWeight.w600);
 
@@ -52,15 +52,15 @@ class ScaffoldSafe extends StatelessWidget {
                     ? null
                     : (isSeparated
                         ? ListView.separated(
-                            padding: paddingAll20,
+                            padding: paddingAllDefault,
                             itemCount: children!.length,
                             itemBuilder: (_, i) => children![i],
                             separatorBuilder: (_, __) => isSeparatorSmall
                                 ? const Padding(padding: paddingT12)
-                                : const Padding(padding: paddingT20),
+                                : const Padding(padding: paddingTDefault),
                           )
                         : ListView(
-                            padding: paddingAll20,
+                            padding: paddingAllDefault,
                             children: children!,
                           ))),
             bottomNavigationBar: bottomNavigationBar,
@@ -92,13 +92,13 @@ class PageTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final paddingTop = switch (ScreenSize(context)) {
       ScreenSmall _ => paddingT12,
-      ScreenMedium _ => paddingT20,
+      ScreenMedium _ => paddingTDefault,
       _ => const EdgeInsets.only(top: 32),
     };
     final theme = Theme.of(context);
     final textColor = color ?? theme.colorScheme.onSurface;
     return Padding(
-      padding: paddingH20,
+      padding: paddingHDefault,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -123,7 +123,7 @@ class PageTitle extends StatelessWidget {
           // Subtitle
           if (subtitle != null || subtitleSpans != null)
             Padding(
-              padding: paddingT20,
+              padding: paddingTDefault,
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
@@ -167,7 +167,7 @@ class BottomSheetWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: paddingAll20,
+      padding: paddingAllDefault,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -202,10 +202,10 @@ class BottomSheetWidget extends StatelessWidget {
               ),
             ),
           // Body
-          if (body != null) Padding(padding: paddingT20, child: body),
+          if (body != null) Padding(padding: paddingTDefault, child: body),
           // Footer
-          if (footer != null) Padding(padding: paddingT20, child: footer),
-          const Padding(padding: paddingB20),
+          if (footer != null) Padding(padding: paddingTDefault, child: footer),
+          const Padding(padding: paddingBDefault),
         ],
       ),
     );
@@ -224,7 +224,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
   return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     duration: duration,
     behavior: isFloating ? SnackBarBehavior.floating : null,
-    margin: paddingAll20,
+    margin: paddingAllDefault,
     backgroundColor:
         isError ? theme.colorScheme.error : theme.snackBarTheme.backgroundColor,
     content: RichText(

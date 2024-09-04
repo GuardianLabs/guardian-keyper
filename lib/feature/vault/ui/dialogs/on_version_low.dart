@@ -26,7 +26,7 @@ class OnVersionLowDialog extends StatelessWidget {
               onPressed: GetIt.I<VaultInteractor>().openMarket,
               child: const Text('Update'),
             ),
-            const Padding(padding: paddingT20),
+            const Padding(padding: paddingTDefault),
             OutlinedButton(
               onPressed: Navigator.of(context).pop,
               child: const Text('Close, I’ll update it later'),

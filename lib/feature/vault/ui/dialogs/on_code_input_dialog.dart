@@ -41,7 +41,7 @@ class _OnCodeInputDialogState extends State<OnCodeInputDialog> {
         children: [
           // Input
           Padding(
-            padding: paddingV20,
+            padding: paddingVDefault,
             child: TextField(
               controller: _controller,
               decoration: const InputDecoration(labelText: ' Code '),
@@ -51,7 +51,7 @@ class _OnCodeInputDialogState extends State<OnCodeInputDialog> {
           ),
           // Buttons
           Padding(
-              padding: paddingV20,
+              padding: paddingVDefault,
               child: Row(
                 children: [
                   // Paste

@@ -26,7 +26,8 @@ class AddSecretPage extends StatelessWidget {
             child: ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 32, left: 20, right: 20),
+                  padding: const EdgeInsets.only(
+                      top: 32, left: kDefaultPadding, right: kDefaultPadding),
                   child: TextFormField(
                     autofocus: true,
                     maxLines: null,
@@ -41,8 +42,8 @@ class AddSecretPage extends StatelessWidget {
                 ),
                 // Footer
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 32, horizontal: kDefaultPadding),
                   child: Selector<VaultSecretAddPresenter, String>(
                     selector: (_, p) => p.secret,
                     builder: (_, secret, __) => FilledButton(

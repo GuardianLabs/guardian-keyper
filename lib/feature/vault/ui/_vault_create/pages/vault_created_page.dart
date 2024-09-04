@@ -8,7 +8,7 @@ class VaultCreatedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: paddingAll20,
+        padding: paddingAllDefault,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

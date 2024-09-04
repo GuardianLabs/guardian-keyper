@@ -1,4 +1,5 @@
 import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 import 'package:guardian_keyper/data/repositories/settings_repository.dart';
@@ -26,7 +27,7 @@ class SecretListTile extends StatelessWidget {
       title: Text(secretId.name),
       contentPadding: const EdgeInsets.symmetric(
         vertical: 0,
-        horizontal: 16,
+        horizontal: kDefaultTilePadding,
       ),
       trailing: vault.isRestricted
           ? null

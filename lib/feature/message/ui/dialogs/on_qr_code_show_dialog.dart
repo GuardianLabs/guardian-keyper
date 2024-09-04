@@ -116,7 +116,7 @@ class _OnQRCodeShowDialogState extends State<OnQRCodeShowDialog> {
             const Text('Text Code'),
             // Share Button
             Padding(
-              padding: paddingAll20,
+              padding: paddingAllDefault,
               child: Row(
                 children: [
                   Expanded(

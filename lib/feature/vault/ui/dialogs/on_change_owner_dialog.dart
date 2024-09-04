@@ -60,7 +60,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
                 }
               },
             ),
-            const Padding(padding: paddingT20),
+            const Padding(padding: paddingTDefault),
             FilledButton(
               onPressed: Navigator.of(context).pop,
               child: const Text('Cancel'),

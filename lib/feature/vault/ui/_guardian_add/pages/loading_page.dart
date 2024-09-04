@@ -58,12 +58,12 @@ class _LoadingPageState extends State<LoadingPage> {
             // Body
             const Padding(padding: EdgeInsets.only(top: 32)),
             Padding(
-              padding: paddingH20,
+              padding: paddingHDefault,
               child: Card(
                 child: Column(
                   children: [
                     Padding(
-                      padding: paddingT20,
+                      padding: paddingTDefault,
                       child: Selector<VaultGuardianAddPresenter, bool>(
                         selector: (_, presenter) => presenter.isWaiting,
                         builder: (_, isWaiting, __) => Visibility(
@@ -73,7 +73,7 @@ class _LoadingPageState extends State<LoadingPage> {
                       ),
                     ),
                     Padding(
-                      padding: paddingAll20,
+                      padding: paddingAllDefault,
                       child: Text(
                         'Awaiting Guardian’s response',
                         style: _theme.textTheme.bodyMedium,

@@ -60,7 +60,7 @@ class StepperPage extends StatelessWidget {
         // Subtitle
         if (subtitle != null)
           Padding(
-            padding: paddingT20,
+            padding: paddingTDefault,
             child: Text(
               subtitle!,
               style: theme.textTheme.bodyLarge,

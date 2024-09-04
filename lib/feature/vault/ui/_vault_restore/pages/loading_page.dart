@@ -66,12 +66,12 @@ class _LoadingPageState extends State<LoadingPage> {
             // Body
             const Padding(padding: paddingT12),
             Padding(
-              padding: paddingAll20,
+              padding: paddingAllDefault,
               child: Card(
                 child: Column(
                   children: [
                     Padding(
-                      padding: paddingT20,
+                      padding: paddingTDefault,
                       child: Selector<VaultRestorePresenter, bool>(
                         selector: (_, presenter) => presenter.isWaiting,
                         builder: (_, isWaiting, __) => Visibility(
@@ -81,7 +81,7 @@ class _LoadingPageState extends State<LoadingPage> {
                       ),
                     ),
                     Padding(
-                      padding: paddingAll20,
+                      padding: paddingAllDefault,
                       child: RichText(
                         text: TextSpan(
                           children: [

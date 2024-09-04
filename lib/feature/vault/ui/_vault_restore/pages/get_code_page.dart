@@ -38,7 +38,7 @@ class GetCodePage extends StatelessWidget {
             ),
             // Scan QR
             Padding(
-              padding: paddingH20,
+              padding: paddingHDefault,
               child: FilledButton(
                 onPressed: () async {
                   final qrCode = await OnQrCodeScanDialog.show(
@@ -52,7 +52,7 @@ class GetCodePage extends StatelessWidget {
             ),
             // Input QR
             Padding(
-              padding: paddingAll20,
+              padding: paddingAllDefault,
               child: OutlinedButton(
                 onPressed: () async {
                   final qrCode = await OnCodeInputDialog.show(context);

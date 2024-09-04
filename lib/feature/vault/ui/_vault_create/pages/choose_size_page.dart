@@ -23,7 +23,7 @@ class ChooseSizePage extends StatelessWidget {
         // Body
         Expanded(
           child: ListView(
-            padding: paddingAll20,
+            padding: paddingAllDefault,
             children: [
               // Control
               ListTile(

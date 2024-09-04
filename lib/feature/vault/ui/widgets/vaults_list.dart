@@ -18,7 +18,7 @@ class VaultsList extends StatelessWidget {
       builder: (context, _) {
         final vaults = vaultInteractor.vaults.toList();
         return Padding(
-          padding: paddingAll20,
+          padding: paddingAllDefault,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -43,7 +43,7 @@ class VaultsList extends StatelessWidget {
               ),
 
               //Buttons
-              const Padding(padding: paddingT20),
+              const Padding(padding: paddingTDefault),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [

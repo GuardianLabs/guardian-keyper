@@ -1,3 +1,4 @@
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/utils/guardian_icons.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
@@ -58,7 +59,7 @@ class GuardianListTile extends StatelessWidget {
         trailing: isWaiting ? const CircularProgressIndicator.adaptive() : null,
         contentPadding: const EdgeInsets.symmetric(
           vertical: 0,
-          horizontal: 16,
+          horizontal: kDefaultTilePadding,
         ),
         onTap: onTap,
         onLongPress: onLongPress,
