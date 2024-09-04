@@ -32,13 +32,13 @@ class VaultsList extends StatelessWidget {
                         ),
                       )
                     : ListView.separated(
+                        separatorBuilder: (_, __) =>
+                            const Padding(padding: paddingT12),
                         itemCount: vaults.length,
                         itemBuilder: (context, index) => VaultListTile(
                           vault: vaults[index],
                           initiallyExpanded: index == 0,
                         ),
-                        separatorBuilder: (_, __) =>
-                            const Padding(padding: paddingT12),
                       ),
               ),
 

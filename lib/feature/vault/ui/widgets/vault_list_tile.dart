@@ -64,9 +64,8 @@ class VaultListTile extends StatelessWidget {
             trailing: null,
             childrenPadding: EdgeInsets.zero,
             children: [
-              Divider(
+              const Divider(
                 height: 1,
-                color: theme.colorScheme.primary.withOpacity(0.7),
               ),
               Column(
                 children: [

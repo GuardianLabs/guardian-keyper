@@ -33,14 +33,16 @@ class AddSecretPage extends StatelessWidget {
                     maxLength: maxSecretLength,
                     initialValue: presenter.secret,
                     keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(labelText: ' Your Secret '),
+                    decoration:
+                        const InputDecoration(labelText: ' Your Secret '),
                     onTapOutside: (_) => FocusScope.of(context).unfocus(),
                     onChanged: presenter.setSecret,
                   ),
                 ),
                 // Footer
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
                   child: Selector<VaultSecretAddPresenter, String>(
                     selector: (_, p) => p.secret,
                     builder: (_, secret, __) => FilledButton(

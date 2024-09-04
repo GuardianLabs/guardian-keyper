@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class BrandColors extends ThemeExtension<BrandColors> {
   const BrandColors({
     this.highlightColor = const Color(0xFF62D6CB),
-    this.warningColor = const Color(0xFFF19C38),
-    this.dangerColor = const Color(0xFFEC5F59),
+    this.warningColor = const Color(0xFFFF9800),
+    this.dangerColor = const Color(0xFFFF5252),
   });
 
   final Color highlightColor;

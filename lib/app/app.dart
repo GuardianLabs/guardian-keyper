@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/services.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:guardian_keyper/ui/theme/theme.dart';
@@ -28,8 +29,8 @@ class App extends StatelessWidget {
     return FutureBuilder(
       future: di.init(),
       builder: (context, _) {
-        // TBD: light color scheme
-        if (di.isNotInited) return const Splash(brightness: Brightness.dark);
+        if (di.isNotInited) return const Splash();
+
         return MultiProvider(
           providers: [
             ChangeNotifierProvider<SettingsPresenter>(
@@ -56,8 +57,8 @@ class App extends StatelessWidget {
                   false => ThemeMode.light,
                   null => ThemeMode.system,
                 },
-                theme: themeLight,
-                darkTheme: themeDark,
+                theme: lightTheme,
+                darkTheme: darkTheme,
                 themeAnimationCurve: Curves.bounceInOut,
                 themeAnimationDuration: const Duration(seconds: 1),
                 navigatorObservers: [

@@ -79,12 +79,14 @@ class PageTitle extends StatelessWidget {
     this.title,
     this.subtitle,
     this.subtitleSpans,
+    this.color,
   });
 
   final Widget? icon;
   final String? title;
   final String? subtitle;
   final List<TextSpan>? subtitleSpans;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +96,7 @@ class PageTitle extends StatelessWidget {
       _ => const EdgeInsets.only(top: 32),
     };
     final theme = Theme.of(context);
+    final textColor = color ?? theme.colorScheme.onSurface;
     return Padding(
       padding: paddingH20,
       child: Column(
@@ -113,7 +116,7 @@ class PageTitle extends StatelessWidget {
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   text: title,
-                  style: theme.textTheme.titleLarge,
+                  style: theme.textTheme.titleLarge!.copyWith(color: textColor),
                 ),
               ),
             ),
@@ -126,10 +129,11 @@ class PageTitle extends StatelessWidget {
                 text: TextSpan(
                   text: subtitle,
                   children: subtitleSpans,
-                  style: const TextStyle(
+                  style: TextStyle(
                     height: 1.5,
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
+                    color: textColor,
                   ),
                 ),
               ),

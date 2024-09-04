@@ -6,8 +6,7 @@ import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 
-part 'theme_dark.dart';
-part 'theme_light.dart';
+part 'theme_colors.dart';
 
 final textTheme = ThemeData().textTheme.copyWith(
       headlineLarge: GoogleFonts.poppins(

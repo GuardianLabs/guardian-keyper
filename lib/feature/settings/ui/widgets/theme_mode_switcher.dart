@@ -1,3 +1,4 @@
+import 'package:guardian_keyper/ui/presenters/settings_presenter.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 
@@ -16,6 +17,16 @@ class ThemeModeSwitcher extends StatelessWidget {
           .map((event) => event.value),
       builder: (context, snapshot) {
         return SegmentedButton<bool?>(
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.resolveWith<Color?>(
+              (Set<WidgetState> states) {
+                if (states.contains(WidgetState.selected)) {
+                  return Theme.of(context).colorScheme.surface;
+                }
+                return null;
+              },
+            ),
+          ),
           segments: const [
             ButtonSegment(
               label: Text('Light'),
@@ -35,10 +46,9 @@ class ThemeModeSwitcher extends StatelessWidget {
           multiSelectionEnabled: false,
           selected: {snapshot.data},
           onSelectionChanged: (values) async {
-            await settingsRepository.setNullable<bool>(
-              PreferencesKeys.keyIsDarkModeOn,
-              values.first,
-            );
+            await context
+                .read<SettingsPresenter>()
+                .setIsDarkModeOn(values.first);
           },
         );
       },

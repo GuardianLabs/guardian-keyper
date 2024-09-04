@@ -80,17 +80,21 @@ class ShardsList extends StatelessWidget {
                                     ),
                                     childrenPadding: EdgeInsets.zero,
                                     children: [
-                                      Divider(
+                                      const Divider(
                                         height: 1,
-                                        color: theme.colorScheme.primary
-                                            .withOpacity(0.6),
                                       ),
                                       Column(
                                         children: [
                                           for (final secretShard
                                               in vault.secrets.keys)
                                             ListTile(
-                                              title: Text(secretShard.name),
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 0),
+                                              title: Text(
+                                                secretShard.name,
+                                              ),
                                             ),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
@@ -136,6 +140,7 @@ class ShardsList extends StatelessWidget {
               ),
 
               //Buttons
+              const Padding(padding: paddingT20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [

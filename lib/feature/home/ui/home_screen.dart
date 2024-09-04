@@ -67,7 +67,6 @@ class HomeScreen extends StatelessWidget {
           child: ScaffoldSafe(
             //AppBar
             appBar: AppBar(
-              toolbarHeight: kToolbarHeight + 32,
               title: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -75,7 +74,6 @@ class HomeScreen extends StatelessWidget {
                   Selector<SettingsPresenter, String>(
                       builder: (context, value, child) => Text(
                             value,
-                            style: theme.textTheme.titleLarge,
                           ),
                       selector: (context, value) => value.name),
                   TextButton(
@@ -99,18 +97,24 @@ class HomeScreen extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.settings),
+                  icon: Icon(
+                    Icons.settings,
+                    color: theme.colorScheme.onSurface,
+                  ),
                   onPressed: () =>
                       Navigator.of(context).pushNamed(routeSettings),
                 ),
               ],
               centerTitle: true,
-              bottom: const TabBar(
+              bottom: TabBar(
                 padding: paddingH20,
-                tabs: [
+                tabs: const [
                   Tab(text: 'Safes'),
                   Tab(text: 'Shards'),
                 ],
+                labelColor: theme.colorScheme.onSurface,
+                dividerColor: theme.colorScheme.onSurface,
+                indicatorColor: theme.colorScheme.onSurface,
               ),
             ),
             drawer: kDebugMode ? const DevDrawer() : null,
