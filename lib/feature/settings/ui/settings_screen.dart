@@ -1,6 +1,6 @@
 import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/ui/presenters/settings_presenter.dart';
-import 'package:guardian_keyper/ui/utils/guardian_icons.dart';
+import 'package:guardian_keyper/ui/widgets/guardian_icons.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/styled_icon.dart';
 import 'package:guardian_keyper/data/managers/auth_manager.dart';

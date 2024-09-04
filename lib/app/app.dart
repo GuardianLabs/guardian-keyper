@@ -1,6 +1,5 @@
 import 'package:get_it/get_it.dart';
 import 'package:flutter/services.dart';
-import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:guardian_keyper/ui/theme/theme.dart';
@@ -8,6 +7,7 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/splash.dart';
 import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
 import 'package:guardian_keyper/ui/presenters/settings_presenter.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 
 import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 import 'package:guardian_keyper/feature/message/ui/request_handler.dart';

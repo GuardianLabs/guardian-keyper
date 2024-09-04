@@ -1,5 +1,4 @@
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/ui/utils/guardian_icons.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/domain/entity/peer_id.dart';
@@ -97,7 +96,7 @@ class _GuardianPendingIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => StyledIcon(
-        icon: GuardianIcons.waiting,
+        icon: Icons.hourglass_empty,
         bgColor: Theme.of(context).colorScheme.primary,
         color: Theme.of(context).colorScheme.primary,
         outlined: true,

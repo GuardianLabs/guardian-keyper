@@ -1,4 +1,4 @@
-import 'package:guardian_keyper/ui/utils/guardian_icons.dart';
+import 'package:guardian_keyper/ui/widgets/guardian_icons.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/styled_icon.dart';
 

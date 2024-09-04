@@ -13,5 +13,4 @@ class GuardianIcons {
   static const twice = IconData(0xe909, fontFamily: fontFamily);
   static const user = IconData(0xe90a, fontFamily: fontFamily);
   static const vault = IconData(0xe905, fontFamily: fontFamily);
-  static const waiting = IconData(0xe908, fontFamily: fontFamily);
 }
