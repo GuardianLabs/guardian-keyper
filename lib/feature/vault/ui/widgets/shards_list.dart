@@ -1,12 +1,11 @@
-import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
 import 'package:guardian_keyper/feature/message/ui/dialogs/on_qr_code_show_dialog.dart';
-import 'package:guardian_keyper/feature/vault/ui/dialogs/on_become_owner_dialog.dart';
-import 'package:guardian_keyper/feature/vault/ui/dialogs/on_change_owner_dialog.dart';
 import 'package:guardian_keyper/feature/vault/ui/dialogs/on_vault_transfer_dialog.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
+
+import 'shards_list_tile.dart';
 
 class ShardsList extends StatelessWidget {
   const ShardsList({super.key});
@@ -21,7 +20,7 @@ class ShardsList extends StatelessWidget {
       builder: (context, _) {
         final shards = vaultInteractor.shards.toList();
         return Padding(
-          padding: paddingAll20,
+          padding: paddingAllDefault,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -40,107 +39,13 @@ class ShardsList extends StatelessWidget {
                         separatorBuilder: (_, __) =>
                             const Padding(padding: paddingT12),
                         itemCount: shards.length,
-                        itemBuilder: (context, index) {
-                          final vault = shards[index];
-                          return DecoratedBox(
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(kCornerRadius),
-                              ),
-                              color: theme.colorScheme.surface,
-                            ),
-                            child: vault.hasNoSecrets
-                                ? ListTile(
-                                    visualDensity: VisualDensity.standard,
-                                    minTileHeight: 88,
-                                    title: Text(vault.id.name),
-                                    subtitle: Text(
-                                      'Owner: ${vault.ownerId.name}\n'
-                                      '${vault.secrets.length} Shard(s)',
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      strutStyle: const StrutStyle(height: 1.5),
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 0,
-                                      horizontal: 16,
-                                    ),
-                                  )
-                                : ExpansionTile(
-                                    key: PageStorageKey(vault.id.name),
-                                    visualDensity: VisualDensity.standard,
-                                    minTileHeight: 88,
-                                    title: Text(vault.id.name),
-                                    subtitle: Text(
-                                      'Owner: ${vault.ownerId.name}\n'
-                                      '${vault.secrets.length} Shard(s)',
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      strutStyle: const StrutStyle(height: 1.5),
-                                    ),
-                                    childrenPadding: EdgeInsets.zero,
-                                    children: [
-                                      const Divider(
-                                        height: 1,
-                                      ),
-                                      Column(
-                                        children: [
-                                          for (final secretShard
-                                              in vault.secrets.keys)
-                                            ListTile(
-                                              contentPadding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 16,
-                                                      vertical: 0),
-                                              title: Text(
-                                                secretShard.name,
-                                              ),
-                                            ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 4),
-                                            child: Padding(
-                                              padding: paddingB12,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  FilledButton(
-                                                    onPressed: () =>
-                                                        OnBecomeOwnerDialog
-                                                            .show(
-                                                      context,
-                                                      vault: vault,
-                                                    ),
-                                                    child:
-                                                        const Text('Own Safe'),
-                                                  ),
-                                                  FilledButton(
-                                                    onPressed: () =>
-                                                        OnChangeOwnerDialog
-                                                            .show(
-                                                      context,
-                                                      vaultId: vault.id,
-                                                    ),
-                                                    child: const Text(
-                                                        'Help Restore'),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                          );
-                        },
+                        itemBuilder: (context, index) =>
+                            ShardsListTile(vault: shards[index]),
                       ),
               ),
 
               //Buttons
-              const Padding(padding: paddingT20),
+              const Padding(padding: paddingTDefault),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
