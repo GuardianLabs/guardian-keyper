@@ -24,90 +24,77 @@ class ShardsListTile extends StatelessWidget {
         ),
         color: theme.colorScheme.surface,
       ),
-      child: vault.hasNoSecrets
-          ? ListTile(
-              visualDensity: VisualDensity.standard,
-              minTileHeight: 88,
-              title: Text(vault.id.name),
-              subtitle: Text(
-                'Owner: ${vault.ownerId.name}\n'
-                '${vault.secrets.length} Shard(s)',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                strutStyle: const StrutStyle(height: 1.5),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 0,
-                horizontal: kDefaultTilePadding,
-              ),
-            )
-          : ExpansionTile(
-              key: PageStorageKey(vault.id.name),
-              visualDensity: VisualDensity.standard,
-              minTileHeight: 88,
-              title: Text(vault.id.name),
-              subtitle: Text(
-                'Owner: ${vault.ownerId.name}\n'
-                '${vault.secrets.length} Shard(s)',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                strutStyle: const StrutStyle(height: 1.5),
-              ),
-              childrenPadding: EdgeInsets.zero,
-              children: [
-                const Divider(
-                  height: 1,
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: kDefaultTilePadding,
-                        vertical: kCornerRadius,
-                      ),
-                      child: Column(
-                        children: vault.secrets.keys
-                            .map(
-                              (secretShard) => Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  secretShard.name,
-                                  style: theme.listTileTheme.titleTextStyle,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Padding(
-                        padding: paddingB12,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            FilledButton(
-                              onPressed: () => OnBecomeOwnerDialog.show(
-                                context,
-                                vault: vault,
-                              ),
-                              child: const Text('Own Safe'),
-                            ),
-                            FilledButton(
-                              onPressed: () => OnChangeOwnerDialog.show(
-                                context,
-                                vaultId: vault.id,
-                              ),
-                              child: const Text('Help Restore'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
+      child: IgnorePointer(
+        ignoring: vault.hasNoSecrets,
+        child: ExpansionTile(
+          key: PageStorageKey(vault.id.name),
+          visualDensity: VisualDensity.standard,
+          minTileHeight: 88,
+          title: Text(vault.id.name),
+          subtitle: Text(
+            'Owner: ${vault.ownerId.name}\n'
+            '${vault.secrets.length} Shard(s)',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            strutStyle: const StrutStyle(height: 1.5),
+          ),
+          childrenPadding: EdgeInsets.zero,
+          showTrailingIcon: !vault.hasNoSecrets,
+          children: [
+            const Divider(
+              height: 1,
             ),
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kDefaultTilePadding,
+                    vertical: kCornerRadius,
+                  ),
+                  child: Column(
+                    children: vault.secrets.keys
+                        .map(
+                          (secretShard) => Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              secretShard.name,
+                              style: theme.listTileTheme.titleTextStyle,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Padding(
+                    padding: paddingB12,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        FilledButton(
+                          onPressed: () => OnBecomeOwnerDialog.show(
+                            context,
+                            vault: vault,
+                          ),
+                          child: const Text('Own Safe'),
+                        ),
+                        FilledButton(
+                          onPressed: () => OnChangeOwnerDialog.show(
+                            context,
+                            vaultId: vault.id,
+                          ),
+                          child: const Text('Help Restore'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 }
