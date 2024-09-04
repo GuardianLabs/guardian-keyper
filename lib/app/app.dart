@@ -37,13 +37,13 @@ class App extends StatelessWidget {
               create: (_) => SettingsPresenter(),
             ),
           ],
-          child: Selector<SettingsPresenter, bool?>(
-            selector: (_, p) => p.isDarkModeOn,
-            builder: (context, isDarkModeOn, _) {
-              SystemChrome.setSystemUIOverlayStyle(switch (isDarkModeOn) {
-                true => systemStyleDark,
-                false => systemStyleLight,
-                null =>
+          child: Selector<SettingsPresenter, ThemeMode>(
+            selector: (_, p) => p.themeMode,
+            builder: (context, themeMode, _) {
+              SystemChrome.setSystemUIOverlayStyle(switch (themeMode) {
+                ThemeMode.dark => systemStyleDark,
+                ThemeMode.light => systemStyleLight,
+                ThemeMode.system =>
                   MediaQuery.of(context).platformBrightness == Brightness.dark
                       ? systemStyleDark
                       : systemStyleLight,
@@ -52,11 +52,7 @@ class App extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 title: 'Guardian Keyper',
                 routes: routes,
-                themeMode: switch (isDarkModeOn) {
-                  true => ThemeMode.dark,
-                  false => ThemeMode.light,
-                  null => ThemeMode.system,
-                },
+                themeMode: themeMode,
                 theme: lightTheme,
                 darkTheme: darkTheme,
                 themeAnimationCurve: Curves.bounceInOut,

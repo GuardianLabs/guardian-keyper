@@ -23,7 +23,7 @@ mixin class AuthDialogMixin {
     final theme = Theme.of(context);
     return ScreenLockConfig(
       themeData: theme,
-      backgroundColor: theme.colorScheme.surface.withOpacity(0.5),
+      backgroundColor: theme.colorScheme.surfaceTint.withOpacity(0.8),
       textStyle: theme.textTheme.titleMedium,
       titleTextStyle: theme.textTheme.titleLarge,
       buttonStyle: ButtonStyle(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:guardian_keyper/ui/presenters/name_helper_mixin.dart';
 import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/data/managers/network_manager.dart';
@@ -56,11 +57,13 @@ class SettingsPresenter with ChangeNotifier, NameHelperMixin {
         true,
       )!;
 
-  bool? get isDarkModeOn => _settingsRepository.get<bool>(
+  ThemeMode get themeMode => switch (_settingsRepository.get<bool>(
         PreferencesKeys.keyIsDarkModeOn,
-        // TBD: light color scheme
-        true,
-      );
+      )) {
+        true => ThemeMode.dark,
+        false => ThemeMode.light,
+        null => ThemeMode.system,
+      };
 
   @override
   void dispose() {
@@ -74,10 +77,14 @@ class SettingsPresenter with ChangeNotifier, NameHelperMixin {
     notifyListeners();
   }
 
-  Future<void> setIsDarkModeOn(bool? value) =>
+  Future<void> setIsThemeMode(ThemeMode value) =>
       _settingsRepository.setNullable<bool>(
         PreferencesKeys.keyIsDarkModeOn,
-        value,
+        switch (value) {
+          ThemeMode.dark => true,
+          ThemeMode.light => false,
+          ThemeMode.system => null,
+        },
       );
 
   Future<void> setIsBootstrapEnabled(bool value) =>

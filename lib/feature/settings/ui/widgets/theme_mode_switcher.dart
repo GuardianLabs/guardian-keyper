@@ -6,51 +6,32 @@ class ThemeModeSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<SettingsPresenter, bool?>(
-      selector: (_, presenter) => presenter.isDarkModeOn,
-      builder: (context, isDarkModeOn, child) {
-        return SegmentedButton<bool?>(
-          style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.resolveWith<Color?>(
-              (Set<WidgetState> states) {
-                if (states.contains(WidgetState.selected)) {
-                  return Theme.of(context).colorScheme.surface;
-                }
-                return null;
-              },
-            ),
-          ),
+    return Selector<SettingsPresenter, ThemeMode>(
+      selector: (_, presenter) => presenter.themeMode,
+      builder: (context, themeMode, child) {
+        return SegmentedButton<ThemeMode>(
           segments: const [
             ButtonSegment(
               label: Text('Light'),
-              value: false,
+              value: ThemeMode.light,
             ),
             ButtonSegment(
               label: Text('System'),
-              value: null,
+              value: ThemeMode.system,
             ),
             ButtonSegment(
               label: Text('Dark'),
-              value: true,
+              value: ThemeMode.dark,
             ),
           ],
           showSelectedIcon: false,
           emptySelectionAllowed: false,
           multiSelectionEnabled: false,
-          selected: {isDarkModeOn},
+          selected: {themeMode},
           onSelectionChanged: (values) async {
-            final selectedValue = values.first;
-            if (selectedValue == null) {
-              final isSystemDarkMode =
-                  MediaQuery.of(context).platformBrightness == Brightness.dark;
-              await context
-                  .read<SettingsPresenter>()
-                  .setIsDarkModeOn(isSystemDarkMode);
-            } else {
-              await context
-                  .read<SettingsPresenter>()
-                  .setIsDarkModeOn(selectedValue);
-            }
+            await context
+                .read<SettingsPresenter>()
+                .setIsThemeMode(values.first);
           },
         );
       },
