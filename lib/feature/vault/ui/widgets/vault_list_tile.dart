@@ -30,7 +30,8 @@ class VaultListTile extends StatelessWidget {
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(cornerRadius)),
+            borderRadius:
+                const BorderRadius.all(Radius.circular(kCornerRadius)),
             color: theme.colorScheme.surface,
           ),
           child: ExpansionTile(

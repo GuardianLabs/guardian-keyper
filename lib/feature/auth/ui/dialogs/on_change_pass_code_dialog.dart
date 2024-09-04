@@ -35,7 +35,7 @@ class OnChangePassCodeDialog {
         final inputController = InputController();
         screenLockCreate(
           context: context,
-          digits: passCodeLength,
+          digits: kPassCodeLength,
           config: AuthDialogMixin.getScreenLockConfig(context),
           keyPadConfig: AuthDialogMixin.keyPadConfig,
           inputController: inputController,

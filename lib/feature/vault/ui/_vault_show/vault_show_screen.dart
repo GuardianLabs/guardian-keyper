@@ -78,7 +78,7 @@ class VaultShowScreen extends StatelessWidget {
               DecoratedBox(
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(
-                    Radius.circular(cornerRadius),
+                    Radius.circular(kCornerRadius),
                   ),
                   color: Theme.of(context).colorScheme.surface,
                 ),
@@ -111,7 +111,7 @@ class VaultShowScreen extends StatelessWidget {
                   DecoratedBox(
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(
-                        Radius.circular(cornerRadius),
+                        Radius.circular(kCornerRadius),
                       ),
                       color: Theme.of(context).colorScheme.surface,
                     ),

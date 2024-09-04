@@ -30,7 +30,7 @@ class InputNamePage extends StatelessWidget {
                   child: TextField(
                     autofocus: true,
                     keyboardType: TextInputType.text,
-                    maxLength: maxNameLength,
+                    maxLength: kMaxNameLength,
                     decoration: const InputDecoration(
                       labelText: ' Safe name ',
                     ),

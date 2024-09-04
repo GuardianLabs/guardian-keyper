@@ -40,12 +40,12 @@ final themeData = ThemeData(
   appBarTheme: const AppBarTheme(
     centerTitle: true,
     elevation: 0,
-    toolbarHeight: toolbarHeight,
+    toolbarHeight: kToolbarHeight,
   ),
   // Bottom Sheet
   bottomSheetTheme: const BottomSheetThemeData(
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(cornerRadius)),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(kCornerRadius)),
     ),
     showDragHandle: true,
   ),
@@ -54,7 +54,7 @@ final themeData = ThemeData(
     elevation: 0,
     margin: EdgeInsets.zero,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(cornerRadius),
+      borderRadius: BorderRadius.circular(kCornerRadius),
     ),
   ),
   // Divider
@@ -65,10 +65,10 @@ final themeData = ThemeData(
   expansionTileTheme: ExpansionTileThemeData(
     childrenPadding: const EdgeInsets.all(20),
     collapsedShape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(cornerRadius),
+      borderRadius: BorderRadius.circular(kCornerRadius),
     ),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(cornerRadius),
+      borderRadius: BorderRadius.circular(kCornerRadius),
     ),
     tilePadding: const EdgeInsets.symmetric(
       vertical: 0,
@@ -80,7 +80,7 @@ final themeData = ThemeData(
     style: ButtonStyle(
       fixedSize: const WidgetStatePropertyAll(Size(
         double.infinity,
-        buttonSize,
+        kButtonSize,
       )),
       textStyle: WidgetStatePropertyAll(textTheme.titleMedium),
     ),
@@ -90,7 +90,7 @@ final themeData = ThemeData(
   // Input
   inputDecorationTheme: InputDecorationTheme(
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(cornerRadius),
+      borderRadius: BorderRadius.circular(kCornerRadius),
       borderSide: const BorderSide(width: 2),
     ),
     floatingLabelStyle: textTheme.labelMedium,
@@ -106,10 +106,10 @@ final themeData = ThemeData(
     ),
     subtitleTextStyle: textTheme.bodySmall,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(cornerRadius),
+      borderRadius: BorderRadius.circular(kCornerRadius),
     ),
     contentPadding: const EdgeInsets.symmetric(
-      vertical: cornerRadius,
+      vertical: kCornerRadius,
       horizontal: 16,
     ),
   ),
@@ -118,7 +118,7 @@ final themeData = ThemeData(
       style: ButtonStyle(
     fixedSize: const WidgetStatePropertyAll(Size(
       double.infinity,
-      buttonSize,
+      kButtonSize,
     )),
     textStyle: WidgetStatePropertyAll(textTheme.titleMedium),
   )),

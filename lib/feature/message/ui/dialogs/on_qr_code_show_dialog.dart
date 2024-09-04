@@ -132,7 +132,7 @@ class _OnQRCodeShowDialogState extends State<OnQRCodeShowDialog> {
                           ),
                         ),
                       ),
-                      height: buttonSize,
+                      height: kButtonSize,
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: Text(
@@ -153,7 +153,7 @@ class _OnQRCodeShowDialogState extends State<OnQRCodeShowDialog> {
                         ),
                       ),
                     ),
-                    height: buttonSize,
+                    height: kButtonSize,
                     child: Builder(
                       builder: (context) => IconButton(
                         icon: Transform.flip(

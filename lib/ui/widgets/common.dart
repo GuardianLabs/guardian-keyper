@@ -216,7 +216,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
   BuildContext context, {
   String? text,
   List<TextSpan>? textSpans,
-  Duration duration = snackBarDuration,
+  Duration duration = kSnackBarDuration,
   bool isFloating = false,
   bool isError = false,
 }) {

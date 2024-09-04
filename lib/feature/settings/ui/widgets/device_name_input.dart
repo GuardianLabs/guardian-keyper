@@ -21,7 +21,7 @@ class _DeviceNameInputState extends State<DeviceNameInput> {
     text: _settingsPresenter.name,
   );
 
-  late bool _canProceed = _settingsPresenter.name.length >= minNameLength;
+  late bool _canProceed = _settingsPresenter.name.length >= kMinNameLength;
 
   @override
   void dispose() {
@@ -37,18 +37,18 @@ class _DeviceNameInputState extends State<DeviceNameInput> {
             padding: paddingAll20,
             child: TextField(
               autofocus: true,
-              maxLength: maxNameLength,
+              maxLength: kMaxNameLength,
               controller: _inputController,
               keyboardType: TextInputType.text,
               decoration: const InputDecoration(
                 labelText: ' Device name ',
-                helperText: 'Minimum $minNameLength characters',
+                helperText: 'Minimum $kMinNameLength characters',
               ),
               onTapOutside: (_) => FocusScope.of(context).unfocus(),
               onChanged: (value) {
-                if (value.length >= minNameLength && !_canProceed) {
+                if (value.length >= kMinNameLength && !_canProceed) {
                   setState(() => _canProceed = true);
-                } else if (value.length < minNameLength && _canProceed) {
+                } else if (value.length < kMinNameLength && _canProceed) {
                   setState(() => _canProceed = false);
                 }
               },

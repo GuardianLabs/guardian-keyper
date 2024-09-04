@@ -45,7 +45,7 @@ class ShardsList extends StatelessWidget {
                           return DecoratedBox(
                             decoration: BoxDecoration(
                               borderRadius: const BorderRadius.all(
-                                Radius.circular(cornerRadius),
+                                Radius.circular(kCornerRadius),
                               ),
                               color: theme.colorScheme.surface,
                             ),

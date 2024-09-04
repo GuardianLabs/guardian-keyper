@@ -20,7 +20,7 @@ class GuardiansExpansionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => DecoratedBox(
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(cornerRadius)),
+          borderRadius: const BorderRadius.all(Radius.circular(kCornerRadius)),
           color: Theme.of(context).colorScheme.surface,
         ),
         child: ExpansionTile(

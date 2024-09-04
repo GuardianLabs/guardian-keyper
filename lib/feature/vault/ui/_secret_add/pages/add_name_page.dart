@@ -30,7 +30,7 @@ class AddNamePage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 32, left: 20, right: 20),
                 child: TextFormField(
                   autofocus: true,
-                  maxLength: maxNameLength,
+                  maxLength: kMaxNameLength,
                   keyboardType: TextInputType.name,
                   initialValue: presenter.secretName,
                   decoration: const InputDecoration(labelText: ' Secret name '),

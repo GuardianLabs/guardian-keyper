@@ -30,7 +30,7 @@ class AddSecretPage extends StatelessWidget {
                   child: TextFormField(
                     autofocus: true,
                     maxLines: null,
-                    maxLength: maxSecretLength,
+                    maxLength: kMaxSecretLength,
                     initialValue: presenter.secret,
                     keyboardType: TextInputType.multiline,
                     decoration:
