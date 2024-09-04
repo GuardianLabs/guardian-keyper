@@ -97,9 +97,8 @@ class HomeScreen extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.settings,
-                    color: theme.colorScheme.onSurface,
                   ),
                   onPressed: () =>
                       Navigator.of(context).pushNamed(routeSettings),

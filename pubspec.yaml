@@ -52,6 +52,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  
+  fonts:
+    - family: Guardian-Icons
+      fonts:
+      - asset: assets/fonts/Guardian-Icons.ttf
 
   assets:
     - assets/images/

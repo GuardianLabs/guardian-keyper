@@ -49,11 +49,11 @@ final colorSchemeLight = ColorScheme.fromSeed(
   surface: colorSwatchIndigo.shade50,
   surfaceTint: Colors.white,
   onSurface: colorSwatchIndigo.shade800,
+  onSurfaceVariant: colorSwatchIndigo.shade600,
   //Not used yet
   // primaryContainer: colorGuardianIndigo.shade600,
   // onPrimaryContainer: colorGuardianIndigo.shade50,
   // onTertiary: colorGuardianIndigo.shade50,
-  // onSurfaceVariant: colorGuardianIndigo.shade800,
   // errorContainer: const Color(0x22F6EAEA),
   // onErrorContainer: const Color(0xFFD32C2C),
 );
@@ -74,12 +74,13 @@ final colorSchemeDark = ColorScheme.fromSeed(
   surface: colorSwatchIndigo.shade800,
   surfaceTint: colorSwatchIndigo.shade900,
   onSurface: colorSwatchIndigo.shade50,
+  onSurfaceVariant: colorSwatchIndigo.shade100,
   //Not used yet
   // primaryContainer: colorGuardianIndigo.shade600,
   // onPrimaryContainer: colorGuardianIndigo.shade50,
+  // OnTertiary:
   // errorContainer: const Color(0x22F6EAEA),
   // onErrorContainer: const Color(0xFFD32C2C),
-  // onSurfaceVariant: colorGuardianIndigo.shade50,
 );
 
 final lightTheme = _createAppTheme(Brightness.light);
@@ -147,7 +148,7 @@ ThemeData _createAppTheme(Brightness brightness) {
     ),
     // Icon
     iconTheme: IconThemeData(
-      color: colorScheme.onPrimary,
+      color: colorScheme.onSurface,
     ),
     // Input
     inputDecorationTheme: themeData.inputDecorationTheme.copyWith(

@@ -63,18 +63,10 @@ class OnBecomeOwnerDialogState extends State<OnBecomeOwnerDialog> {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: _theme.colorScheme.primary,
-          ),
-          width: 80,
-          height: 80,
-          child: Icon(
-            Icons.warning,
-            color: _brandColors?.warningColor,
-            size: 40,
-          ),
+        icon: Icon(
+          Icons.warning,
+          color: _brandColors?.warningColor,
+          size: 80,
         ),
         titleString: 'Caution: Irreversible Action!',
         textString:

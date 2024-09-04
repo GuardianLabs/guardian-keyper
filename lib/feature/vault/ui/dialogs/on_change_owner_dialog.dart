@@ -1,5 +1,6 @@
+import 'package:guardian_keyper/ui/utils/guardian_icons.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/ui/widgets/styled_icon.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
 import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
@@ -26,7 +27,11 @@ class OnChangeOwnerDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.confirmIdentity(size: 80),
+        icon: StyledIcon(
+          icon: GuardianIcons.confirmIdentity,
+          size: 80,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         titleString: 'Confirm Identity!',
         textString: 'Helping with Safe recovery or changing ownership?\n'
             'Please verify if the person is the current '

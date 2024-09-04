@@ -30,7 +30,11 @@ class OnRemoveSecretDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const Icon(Icons.warning_rounded, size: 80),
+        icon: Icon(
+          Icons.warning_rounded,
+          size: 80,
+          color: Theme.of(context).colorScheme.error,
+        ),
         titleString: 'Do you want to remove this Secret?',
         textString: 'All the Shards of this Secret will not be removed '
             'from Guardians device.',
