@@ -6,8 +6,8 @@ import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/splash.dart';
 import 'package:guardian_keyper/ui/utils/current_route_observer.dart';
-import 'package:guardian_keyper/ui/presenters/home_tab_presenter.dart';
 import 'package:guardian_keyper/ui/presenters/settings_presenter.dart';
+import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 
 import 'package:guardian_keyper/feature/home/ui/home_screen.dart';
 import 'package:guardian_keyper/feature/message/ui/request_handler.dart';
@@ -29,26 +29,21 @@ class App extends StatelessWidget {
     return FutureBuilder(
       future: di.init(),
       builder: (context, _) {
-        // TBD: light color scheme
-        if (di.isNotInited) return const Splash(brightness: Brightness.dark);
+        if (di.isNotInited) return const Splash();
+
         return MultiProvider(
           providers: [
             ChangeNotifierProvider<SettingsPresenter>(
               create: (_) => SettingsPresenter(),
             ),
-            ChangeNotifierProvider<HomeTabPresenter>(
-              create: (_) => HomeTabPresenter(
-                stepsCount: HomeScreen.tabsCount,
-              ),
-            ),
           ],
-          child: Selector<SettingsPresenter, bool?>(
-            selector: (_, p) => p.isDarkModeOn,
-            builder: (context, isDarkModeOn, _) {
-              SystemChrome.setSystemUIOverlayStyle(switch (isDarkModeOn) {
-                true => systemStyleDark,
-                false => systemStyleLight,
-                null =>
+          child: Selector<SettingsPresenter, ThemeMode>(
+            selector: (_, p) => p.themeMode,
+            builder: (context, themeMode, _) {
+              SystemChrome.setSystemUIOverlayStyle(switch (themeMode) {
+                ThemeMode.dark => systemStyleDark,
+                ThemeMode.light => systemStyleLight,
+                ThemeMode.system =>
                   MediaQuery.of(context).platformBrightness == Brightness.dark
                       ? systemStyleDark
                       : systemStyleLight,
@@ -57,13 +52,9 @@ class App extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 title: 'Guardian Keyper',
                 routes: routes,
-                themeMode: switch (isDarkModeOn) {
-                  true => ThemeMode.dark,
-                  false => ThemeMode.light,
-                  null => ThemeMode.system,
-                },
-                theme: themeLight,
-                darkTheme: themeDark,
+                themeMode: themeMode,
+                theme: lightTheme,
+                darkTheme: darkTheme,
                 themeAnimationCurve: Curves.bounceInOut,
                 themeAnimationDuration: const Duration(seconds: 1),
                 navigatorObservers: [

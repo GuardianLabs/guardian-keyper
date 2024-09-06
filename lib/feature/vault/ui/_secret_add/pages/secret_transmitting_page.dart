@@ -1,10 +1,10 @@
+import 'package:guardian_keyper/feature/vault/ui/_secret_add/dialogs/on_abort_dialog.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 
 import 'package:guardian_keyper/feature/vault/ui/widgets/guardian_list_tile.dart';
 
 import '../vault_secret_add_presenter.dart';
-import '../widgets/abort_header_button.dart';
 import '../dialogs/on_success_dialog.dart';
 import '../dialogs/on_reject_dialog.dart';
 import '../dialogs/on_fail_dialog.dart';
@@ -33,85 +33,91 @@ class _SecretTransmittingPageState extends State<SecretTransmittingPage> {
         } else {
           await OnFailDialog.show(context);
         }
-        if (context.mounted) Navigator.of(context).pop();
+        if (mounted) Navigator.of(context).pop();
       },
     );
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          // Header
-          const HeaderBar(
-            caption: 'Adding a Secret',
-            rightButton: AbortHeaderButton(),
+  Widget build(BuildContext context) => ScaffoldSafe(
+        appBar: AppBar(
+          title: const Text('Awaiting Guardians'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () async {
+              final wantExit = await OnAbortDialog.show(context);
+              if ((wantExit ?? false) && context.mounted) {
+                Navigator.of(context).pop();
+              }
+            },
           ),
-          // Body
-          Expanded(
-            child: ListView(
-              padding: paddingH20,
-              children: [
-                // Title
-                const PageTitle(
-                  title: 'Awaiting Guardians',
-                ),
-                // Warning
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: _brandColor.warningColor.withOpacity(.2),
+        ),
+        child: Column(
+          children: [
+            // Body
+            Expanded(
+              child: ListView(
+                padding: paddingHDefault,
+                children: [
+                  // Warning
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: _brandColor.warningColor.withOpacity(.2),
+                    ),
+                    padding: paddingAllDefault,
+                    child: Text(
+                      'Keep the app open and active throughout the process, '
+                      'as closing or minimizing it will disrupt the peer-to-peer (P2P) '
+                      'connection and reset progress.',
+                      style: TextStyle(color: _theme.colorScheme.onError),
+                    ),
                   ),
-                  padding: paddingAll20,
-                  child: Text(
-                    'Keep the app open and active throughout the process, '
-                    'as closing or minimizing it will disrupt the peer-to-peer (P2P) '
-                    'connection and reset progress.',
-                    style: TextStyle(color: _theme.colorScheme.onError),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Card(
-                  child: Padding(
-                    padding: paddingT20,
-                    child: Consumer<VaultSecretAddPresenter>(
-                      builder: (context, presenter, _) => Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: paddingH20,
-                            child: Text(
-                              'Guardians',
-                              style: _theme.textTheme.bodyMedium,
+                  const SizedBox(height: 32),
+                  Card(
+                    child: Padding(
+                      padding: paddingTDefault,
+                      child: Consumer<VaultSecretAddPresenter>(
+                        builder: (context, presenter, _) => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: paddingHDefault,
+                              child: Text(
+                                'Guardians',
+                                style: _theme.textTheme.bodyMedium,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: paddingH20,
-                            child: Text(
-                              'Ask your Guardians to open the app and accept a '
-                              'Secret shard. Make sure they keep the app open '
-                              'until the shard splitting is complete.',
-                              style: _theme.textTheme.bodySmall,
+                            Padding(
+                              padding: paddingHDefault,
+                              child: Text(
+                                'Ask your Guardians to open the app and accept a '
+                                'Secret shard. Make sure they keep the app open '
+                                'until the shard splitting is complete.',
+                                style: _theme.textTheme.bodySmall,
+                              ),
                             ),
-                          ),
-                          for (final message in presenter.messages)
-                            message.peerId == presenter.selfId
-                                ? const GuardianListTile.my()
-                                : message.isAccepted
-                                    ? GuardianListTile(
-                                        guardian: message.peerId,
-                                      )
-                                    : GuardianListTile.pending(
-                                        guardian: message.peerId,
-                                      ),
-                        ],
+                            for (final message in presenter.messages)
+                              message.peerId == presenter.selfId
+                                  ? const GuardianListTile.my()
+                                  : message.isAccepted
+                                      ? GuardianListTile(
+                                          guardian: message.peerId,
+                                        )
+                                      : GuardianListTile.pending(
+                                          guardian: message.peerId,
+                                        ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
 }

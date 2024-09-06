@@ -1,11 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import 'package:guardian_keyper/feature/settings/ui/widgets/device_name_input.dart';
+import '../widgets/device_name_input.dart';
 
 class OnSetDeviceNameDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) =>
-      Navigator.of(context).push(MaterialPageRoute(
-        fullscreenDialog: true,
+      Navigator.of(context).push(CupertinoPageRoute(
         builder: (_) => const OnSetDeviceNameDialog(),
       ));
 
@@ -13,9 +13,14 @@ class OnSetDeviceNameDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-        header: const HeaderBar(
-          caption: 'Change Device Name',
-          leftButton: HeaderBarButton.back(),
+        appBar: AppBar(
+          title: const Text('Change device name'),
+          centerTitle: true,
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
         ),
         child: DeviceNameInput(
           onProceed: () {

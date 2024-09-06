@@ -20,61 +20,70 @@ class _LoadingPageState extends State<LoadingPage> {
     final presenter = context.read<VaultGuardianAddPresenter>();
     presenter.startRequest().then((message) async {
       if (message.isAccepted) {
-        showSnackBar(
-          context,
-          textSpans: [
-            const TextSpan(text: 'You have successfully added '),
-            TextSpan(text: message.peerId.name, style: styleW600),
-            const TextSpan(text: 'as a Guardian for '),
-            TextSpan(text: presenter.vaultId.name, style: styleW600),
-          ],
-        );
+        if (mounted) {
+          showSnackBar(
+            context,
+            textSpans: [
+              const TextSpan(text: 'You have successfully added '),
+              TextSpan(text: message.peerId.name, style: styleW600),
+              const TextSpan(text: ' as a Guardian for '),
+              TextSpan(text: presenter.vaultId.name, style: styleW600),
+            ],
+          );
+        }
       } else if (message.isRejected) {
-        await OnRejectDialog.show(context);
+        if (mounted) await OnRejectDialog.show(context);
       } else {
-        await OnFailDialog.show(context);
+        if (mounted) await OnFailDialog.show(context);
       }
-      if (context.mounted) Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop();
     });
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Header
-          const HeaderBar(
-            caption: 'Adding a Guardian',
-            rightButton: HeaderBarButton.close(),
+  Widget build(BuildContext context) => ScaffoldSafe(
+        appBar: AppBar(
+          title: const Text('Adding a Guardian'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          // Body
-          const Padding(padding: EdgeInsets.only(top: 32)),
-          Padding(
-            padding: paddingH20,
-            child: Card(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: paddingT20,
-                    child: Selector<VaultGuardianAddPresenter, bool>(
-                      selector: (_, presenter) => presenter.isWaiting,
-                      builder: (_, isWaiting, __) => Visibility(
-                        visible: isWaiting,
-                        child: const CircularProgressIndicator.adaptive(),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Body
+            const Padding(padding: EdgeInsets.only(top: 32)),
+            Padding(
+              padding: paddingHDefault,
+              child: Card(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: paddingTDefault,
+                      child: Selector<VaultGuardianAddPresenter, bool>(
+                        selector: (_, presenter) => presenter.isWaiting,
+                        builder: (_, isWaiting, __) => Visibility(
+                          visible: isWaiting,
+                          child: const CircularProgressIndicator.adaptive(),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: paddingAll20,
-                    child: Text(
-                      'Awaiting Guardian’s response',
-                      style: _theme.textTheme.bodyMedium,
+                    Padding(
+                      padding: paddingAllDefault,
+                      child: Text(
+                        'Awaiting Guardian’s response',
+                        style: _theme.textTheme.bodyMedium,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
 }

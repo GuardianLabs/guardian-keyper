@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
@@ -5,8 +6,7 @@ import 'package:guardian_keyper/ui/widgets/common.dart';
 class OnCodeInputDialog extends StatefulWidget {
   static Future<String?> show(BuildContext context) =>
       Navigator.of(context).push(
-        MaterialPageRoute<String>(
-          fullscreenDialog: true,
+        CupertinoPageRoute<String>(
           builder: (_) => const OnCodeInputDialog(),
         ),
       );
@@ -28,14 +28,20 @@ class _OnCodeInputDialogState extends State<OnCodeInputDialog> {
 
   @override
   Widget build(BuildContext context) => ScaffoldSafe(
-        header: const HeaderBar(
-          caption: 'Add with a Text Code',
-          leftButton: HeaderBarButton.back(),
+        appBar: AppBar(
+          title: const Text('Add with a Text Code'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         children: [
           // Input
           Padding(
-            padding: paddingV20,
+            padding: paddingVDefault,
             child: TextField(
               controller: _controller,
               decoration: const InputDecoration(labelText: ' Code '),
@@ -45,7 +51,7 @@ class _OnCodeInputDialogState extends State<OnCodeInputDialog> {
           ),
           // Buttons
           Padding(
-              padding: paddingV20,
+              padding: paddingVDefault,
               child: Row(
                 children: [
                   // Paste

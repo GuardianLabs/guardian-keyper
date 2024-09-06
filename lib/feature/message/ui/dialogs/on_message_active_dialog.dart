@@ -53,11 +53,11 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: retryNetworkTimeout,
+      duration: kRetryNetworkTimeout,
       vsync: this,
     );
     _timer = Timer.periodic(
-      retryNetworkTimeout,
+      kRetryNetworkTimeout,
       (_) {
         _messagesInteractor.pingPeer(widget.message.peerId).then(
           (isOnline) {
@@ -91,7 +91,7 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
         // Card
         body: Card(
           child: Padding(
-            padding: paddingAll20,
+            padding: paddingAllDefault,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: _isRequestError
@@ -173,7 +173,7 @@ class _OnMessageActiveDialogState extends State<OnMessageActiveDialog>
     try {
       await _messagesInteractor
           .sendRespone(response)
-          .timeout(retryNetworkTimeout);
+          .timeout(kRetryNetworkTimeout);
       if (mounted) Navigator.of(context).pop(true);
     } catch (_) {
       setState(() {

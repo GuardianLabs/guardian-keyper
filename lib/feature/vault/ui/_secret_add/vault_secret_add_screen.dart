@@ -22,7 +22,7 @@ class VaultSecretAddScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PopScope(
         canPop: false,
-        onPopInvoked: (didPop) async {
+        onPopInvokedWithResult: (bool didPop, Object? result) async {
           if (didPop) return;
           if (await OnAbortDialog.show(context) ?? false) {
             if (context.mounted) Navigator.of(context).pop();

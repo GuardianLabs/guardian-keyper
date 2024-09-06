@@ -6,8 +6,7 @@ import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 
-part 'theme_dark.dart';
-part 'theme_light.dart';
+part 'theme_colors.dart';
 
 final textTheme = ThemeData().textTheme.copyWith(
       headlineLarge: GoogleFonts.poppins(
@@ -41,25 +40,12 @@ final themeData = ThemeData(
   appBarTheme: const AppBarTheme(
     centerTitle: true,
     elevation: 0,
-    shadowColor: Colors.transparent,
-    toolbarHeight: toolbarHeight,
-  ),
-  // Bottom Navigation Bar
-  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-    type: BottomNavigationBarType.fixed,
-    selectedLabelStyle: TextStyle(
-      fontSize: 10,
-      fontWeight: FontWeight.w700,
-    ),
-    unselectedLabelStyle: TextStyle(
-      fontSize: 10,
-      fontWeight: FontWeight.w400,
-    ),
+    toolbarHeight: kToolbarHeight,
   ),
   // Bottom Sheet
   bottomSheetTheme: const BottomSheetThemeData(
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(cornerRadius)),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(kCornerRadius)),
     ),
     showDragHandle: true,
   ),
@@ -68,7 +54,7 @@ final themeData = ThemeData(
     elevation: 0,
     margin: EdgeInsets.zero,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(cornerRadius),
+      borderRadius: BorderRadius.circular(kCornerRadius),
     ),
   ),
   // Divider
@@ -79,20 +65,24 @@ final themeData = ThemeData(
   expansionTileTheme: ExpansionTileThemeData(
     childrenPadding: const EdgeInsets.all(20),
     collapsedShape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(cornerRadius),
+      borderRadius: BorderRadius.circular(kCornerRadius),
     ),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(cornerRadius),
+      borderRadius: BorderRadius.circular(kCornerRadius),
+    ),
+    tilePadding: const EdgeInsets.symmetric(
+      vertical: 0,
+      horizontal: kDefaultTilePadding,
     ),
   ),
   // Filled Button
   filledButtonTheme: FilledButtonThemeData(
     style: ButtonStyle(
-      fixedSize: const MaterialStatePropertyAll(Size(
+      fixedSize: const WidgetStatePropertyAll(Size(
         double.infinity,
-        buttonSize,
+        kButtonSize,
       )),
-      textStyle: MaterialStatePropertyAll(textTheme.titleMedium),
+      textStyle: WidgetStatePropertyAll(textTheme.titleMedium),
     ),
   ),
   // Font family
@@ -100,7 +90,7 @@ final themeData = ThemeData(
   // Input
   inputDecorationTheme: InputDecorationTheme(
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(cornerRadius),
+      borderRadius: BorderRadius.circular(kCornerRadius),
       borderSide: const BorderSide(width: 2),
     ),
     floatingLabelStyle: textTheme.labelMedium,
@@ -116,18 +106,26 @@ final themeData = ThemeData(
     ),
     subtitleTextStyle: textTheme.bodySmall,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(cornerRadius),
+      borderRadius: BorderRadius.circular(kCornerRadius),
+    ),
+    contentPadding: const EdgeInsets.symmetric(
+      vertical: kCornerRadius,
+      horizontal: kDefaultTilePadding,
     ),
   ),
   // Outlined Button
   outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(
-    fixedSize: const MaterialStatePropertyAll(Size(
+    fixedSize: const WidgetStatePropertyAll(Size(
       double.infinity,
-      buttonSize,
+      kButtonSize,
     )),
-    textStyle: MaterialStatePropertyAll(textTheme.titleMedium),
+    textStyle: WidgetStatePropertyAll(textTheme.titleMedium),
   )),
+  pageTransitionsTheme: const PageTransitionsTheme(builders: {
+    TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+  }),
   // SnackBar
   snackBarTheme: const SnackBarThemeData(
     behavior: SnackBarBehavior.floating,

@@ -39,7 +39,7 @@ abstract base class VaultPresenterBase extends PagePresentererBase {
     _networkSubscription.resume();
     await _vaultInteractor.wakelockEnable();
     _timer = Timer.periodic(
-      retryNetworkTimeout,
+      kRetryNetworkTimeout,
       requestWorker,
     );
     requestWorker();

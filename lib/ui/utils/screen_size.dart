@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
+import 'package:guardian_keyper/consts.dart';
 
 sealed class ScreenSize {
-  static EdgeInsets getPadding(BuildContext context) =>
-      (ScreenSize(context) is ScreenSmall
-          ? const EdgeInsets.symmetric(vertical: 12, horizontal: 20)
-          : const EdgeInsets.symmetric(vertical: 32, horizontal: 20));
+  static EdgeInsets getPadding(BuildContext context) => (ScreenSize(context)
+          is ScreenSmall
+      ? const EdgeInsets.symmetric(vertical: 12, horizontal: kDefaultPadding)
+      : const EdgeInsets.symmetric(vertical: 32, horizontal: kDefaultPadding));
 
   factory ScreenSize(BuildContext context) {
     final size = MediaQuery.of(context).size;

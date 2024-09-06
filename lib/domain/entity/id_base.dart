@@ -43,7 +43,7 @@ abstract class IdBase extends Serializable {
   @override
   String toString() => asKey;
 
-  String toHexShort([int count = shortKeyLength]) => asHex.length > count * 2
+  String toHexShort([int count = kShortKeyLength]) => asHex.length > count * 2
       ? '0x${asHex.substring(0, count)}...${asHex.substring(asHex.length - count)}'
       : '0x$asHex';
 

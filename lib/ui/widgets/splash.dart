@@ -48,7 +48,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     return Container(
       alignment: Alignment.center,
       color:
-          _isSystemThemeDark ? themeDark.canvasColor : themeLight.canvasColor,
+          _isSystemThemeDark ? darkTheme.canvasColor : lightTheme.canvasColor,
       child: RotationTransition(
         turns: _controller,
         child: SvgPicture(

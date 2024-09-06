@@ -3,8 +3,9 @@ import 'package:vector_graphics/vector_graphics_compat.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import 'package:guardian_keyper/feature/intro/ui/intro_presenter.dart';
 import 'package:guardian_keyper/feature/settings/ui/widgets/device_name_input.dart';
+
+import '../intro_presenter.dart';
 
 class SetDeviceNamePage extends StatelessWidget {
   const SetDeviceNamePage({super.key});
@@ -13,7 +14,7 @@ class SetDeviceNamePage extends StatelessWidget {
   Widget build(BuildContext context) => ListView(
         children: [
           const Padding(
-            padding: paddingAll20,
+            padding: paddingAllDefault,
             child: SvgPicture(
               AssetBytesLoader('assets/images/logo.svg.vec'),
               height: 80,
@@ -21,7 +22,7 @@ class SetDeviceNamePage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: paddingAll20,
+            padding: paddingAllDefault,
             child: Text(
               'Create your Device name',
               textAlign: TextAlign.center,

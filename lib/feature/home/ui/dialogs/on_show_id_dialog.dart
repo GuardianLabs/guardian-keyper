@@ -35,14 +35,14 @@ class OnShowIdDialog extends StatelessWidget {
         textSpan: [
           const TextSpan(text: '0x'),
           TextSpan(
-            text: id.substring(0, shortKeyLength),
+            text: id.substring(0, kShortKeyLength),
             style: TextStyle(color: highlightColor),
           ),
           TextSpan(
-            text: id.substring(shortKeyLength, id.length - shortKeyLength),
+            text: id.substring(kShortKeyLength, id.length - kShortKeyLength),
           ),
           TextSpan(
-            text: id.substring(id.length - shortKeyLength),
+            text: id.substring(id.length - kShortKeyLength),
             style: TextStyle(color: highlightColor),
           ),
         ],
@@ -51,7 +51,7 @@ class OnShowIdDialog extends StatelessWidget {
           children: [
             Expanded(
               child: Padding(
-                padding: paddingH20,
+                padding: paddingHDefault,
                 child: FilledButton(
                   onPressed: () async {
                     await Clipboard.setData(ClipboardData(text: id));
@@ -69,7 +69,7 @@ class OnShowIdDialog extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: paddingH20,
+                padding: paddingHDefault,
                 child: OutlinedButton(
                   onPressed: Navigator.of(context).pop,
                   child: const Text('Close'),

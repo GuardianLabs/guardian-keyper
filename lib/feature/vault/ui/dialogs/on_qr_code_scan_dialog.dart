@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 class OnQrCodeScanDialog extends StatefulWidget {
@@ -11,8 +12,7 @@ class OnQrCodeScanDialog extends StatefulWidget {
     BuildContext context, {
     required String caption,
   }) =>
-      Navigator.of(context).push(MaterialPageRoute(
-        fullscreenDialog: true,
+      Navigator.of(context).push(CupertinoPageRoute(
         settings: const RouteSettings(name: route),
         builder: (_) => OnQrCodeScanDialog(caption: caption),
       ));
@@ -48,7 +48,7 @@ class _OnQrCodeScanDialogState extends State<OnQrCodeScanDialog> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final size = MediaQuery.of(context).size;
-    final scanAreaSize = size.width > 600 ? size.width : size.width * 0.66;
+    final scanAreaSize = size.width * (size.width > 600 ? 0.5 : 0.66);
     _scanWindow = Rect.fromCenter(
       center: size.center(Offset.zero),
       width: scanAreaSize,
@@ -67,7 +67,9 @@ class _OnQrCodeScanDialogState extends State<OnQrCodeScanDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => Stack(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
         children: [
           MobileScanner(
             scanWindow: _scanWindow,
@@ -82,19 +84,29 @@ class _OnQrCodeScanDialogState extends State<OnQrCodeScanDialog> {
             },
           ),
           CustomPaint(painter: _ScannerOverlay(frame: _scanWindow)),
-          // Header
-          SafeArea(
-            child: HeaderBar(
-              isTransparent: true,
-              caption: widget.caption,
-              rightButton: const Material(
-                color: Colors.transparent,
-                child: HeaderBarButton.close(),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: SafeArea(
+              child: AppBar(
+                title: Text(widget.caption),
+                backgroundColor: Colors.transparent,
+                centerTitle: true,
+                elevation: 0,
+                leading: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
               ),
             ),
           ),
         ],
-      );
+      ),
+    );
+  }
 }
 
 class _ScannerOverlay extends CustomPainter {

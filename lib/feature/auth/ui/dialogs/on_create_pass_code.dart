@@ -14,7 +14,7 @@ class OnCreatePassCodeDialog {
     return screenLockCreate(
       context: context,
       canCancel: false,
-      digits: passCodeLength,
+      digits: kPassCodeLength,
       config: AuthDialogMixin.getScreenLockConfig(context),
       keyPadConfig: AuthDialogMixin.keyPadConfig,
       inputController: inputController,

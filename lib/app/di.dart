@@ -47,7 +47,7 @@ class DI {
 
     GetIt.I.registerSingleton<NetworkManager>(
       await NetworkManager().init(),
-      dispose: (i) => i.close(),
+      dispose: (i) => i.dispose(),
     );
 
     final encryptionCipher = HiveAesCipher(

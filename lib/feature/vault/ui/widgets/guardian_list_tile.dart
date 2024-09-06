@@ -1,7 +1,8 @@
+import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/domain/entity/peer_id.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/ui/widgets/styled_icon.dart';
 
 class GuardianListTile extends StatelessWidget {
   GuardianListTile({
@@ -55,6 +56,10 @@ class GuardianListTile extends StatelessWidget {
         title: Text(title, maxLines: 1),
         subtitle: Text(subtitle, maxLines: 1),
         trailing: isWaiting ? const CircularProgressIndicator.adaptive() : null,
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 0,
+          horizontal: kDefaultTilePadding,
+        ),
         onTap: onTap,
         onLongPress: onLongPress,
       );
@@ -64,17 +69,12 @@ class _GuardianCheckedIcon extends StatelessWidget {
   const _GuardianCheckedIcon();
 
   @override
-  Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Theme.of(context).colorScheme.primary,
-            width: 2,
-          ),
-          shape: BoxShape.circle,
-        ),
-        height: 40,
-        width: 40,
-        child: const Icon(Icons.check),
+  Widget build(BuildContext context) => StyledIcon(
+        icon: Icons.check,
+        scale: 0.6,
+        outlined: true,
+        color: Theme.of(context).colorScheme.primary,
+        bgColor: Theme.of(context).colorScheme.primary,
       );
 }
 
@@ -82,14 +82,12 @@ class _GuardianEmptyIcon extends StatelessWidget {
   const _GuardianEmptyIcon();
 
   @override
-  Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
-          shape: BoxShape.circle,
-        ),
-        height: 40,
-        width: 40,
-        child: const Icon(Icons.add),
+  Widget build(BuildContext context) => StyledIcon(
+        icon: Icons.add,
+        scale: 0.6,
+        outlined: true,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+        bgColor: Theme.of(context).colorScheme.primary,
       );
 }
 
@@ -97,13 +95,11 @@ class _GuardianPendingIcon extends StatelessWidget {
   const _GuardianPendingIcon();
 
   @override
-  Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
-          shape: BoxShape.circle,
-        ),
-        height: 40,
-        width: 40,
-        child: const IconOf.waiting(),
+  Widget build(BuildContext context) => StyledIcon(
+        icon: Icons.hourglass_empty,
+        bgColor: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.primary,
+        outlined: true,
+        scale: 0.6,
       );
 }

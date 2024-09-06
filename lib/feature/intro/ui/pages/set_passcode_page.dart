@@ -16,8 +16,8 @@ class _SetPasscodePageState extends State<SetPasscodePage> {
   void initState() {
     super.initState();
     Future.microtask(() async {
-      await OnCreatePassCodeDialog.show(context);
-      if (context.mounted) {
+      if (mounted) await OnCreatePassCodeDialog.show(context);
+      if (mounted) {
         final presenter = context.read<IntroPresenter>();
         presenter.hasBiometrics
             ? presenter.nextPage()
@@ -28,5 +28,5 @@ class _SetPasscodePageState extends State<SetPasscodePage> {
 
   @override
   Widget build(BuildContext context) =>
-      Container(color: Theme.of(context).colorScheme.background);
+      Container(color: Theme.of(context).colorScheme.surfaceTint);
 }

@@ -11,7 +11,11 @@ class OnAbortDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const Icon(Icons.warning_rounded, size: 80),
+        icon: Icon(
+          Icons.warning_rounded,
+          size: 80,
+          color: Theme.of(context).colorScheme.error,
+        ),
         titleString: 'Quitting the process',
         textString: 'All progress will be lost, you’ll have to start '
             'from the beginning. Are you sure?',

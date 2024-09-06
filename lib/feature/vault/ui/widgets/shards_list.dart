@@ -1,70 +1,111 @@
-import 'package:flutter_svg/flutter_svg.dart';
-
-import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
+import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
+import 'package:guardian_keyper/feature/message/ui/dialogs/on_qr_code_show_dialog.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 
-class ShardsList extends StatelessWidget {
-  static const _textSubtitle =
-      'Shards you are guarding will be displayed here. Each shard is a secure '
-      'component of someone else`s Secret, essential for collective recovery, '
-      'yet individually reveals no information.';
+import 'shards_list_tile.dart';
+import '../dialogs/on_vault_transfer_dialog.dart';
 
+class ShardsList extends StatelessWidget {
   const ShardsList({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final vaultInteractor = GetIt.I<VaultInteractor>();
+
     return StreamBuilder<Object>(
       stream: vaultInteractor.watch(),
       builder: (context, _) {
         final shards = vaultInteractor.shards.toList();
-        return shards.isEmpty
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+        return Padding(
+          padding: paddingAllDefault,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: shards.isEmpty
+                    ? const Center(
+                        child: PageTitle(
+                          title: 'Shards will appear here',
+                          subtitle:
+                              'Shards you are guarding will be displayed here. Each shard is a secure '
+                              'component of someone else`s Secret, essential for collective recovery, '
+                              'yet individually reveals no information.',
+                        ),
+                      )
+                    : ListView.separated(
+                        separatorBuilder: (_, __) =>
+                            const Padding(padding: paddingT12),
+                        itemCount: shards.length,
+                        itemBuilder: (context, index) =>
+                            ShardsListTile(vault: shards[index]),
+                      ),
+              ),
+
+              //Buttons
+              const Padding(padding: paddingTDefault),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  SvgPicture.asset(
-                    'assets/icons/home_shards.svg',
-                    height: 64,
-                    width: 64,
+                  Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.shield,
+                          size: 48,
+                          color: theme.colorScheme.primary,
+                        ),
+                        onPressed: () async {
+                          final message = await GetIt.I<MessageInteractor>()
+                              .createJoinVaultCode();
+                          if (context.mounted) {
+                            OnQRCodeShowDialog.show(
+                              context,
+                              message: message,
+                              caption: 'Become a Guardian',
+                              title: 'Guardian QR code',
+                              subtitle:
+                                  'To become a Guardian, show the QR code below to the '
+                                  'Safe Owner. If sharing the QR code is not possible, '
+                                  'share the text-code instead.',
+                            );
+                          }
+                        },
+                        padding: EdgeInsets.zero,
+                      ),
+                      const Padding(
+                        padding: paddingT12,
+                        child: Text('Become a Guardian'),
+                      ),
+                    ],
                   ),
-                  const PageTitle(
-                    title: 'Shards will appear here',
-                    subtitle: _textSubtitle,
+                  Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.auto_awesome_outlined,
+                          size: 48,
+                          color: theme.colorScheme.primary,
+                        ),
+                        onPressed: () => OnVaultTransferDialog.show(
+                          context,
+                          vaults: vaultInteractor.shards,
+                        ),
+                        padding: EdgeInsets.zero,
+                      ),
+                      const Padding(
+                        padding: paddingT12,
+                        child: Text('Help Restore a Safe'),
+                      ),
+                    ],
                   ),
                 ],
-              )
-            : ListView.separated(
-                padding: paddingAll20,
-                separatorBuilder: (_, __) => const Padding(padding: paddingT12),
-                itemCount: shards.length,
-                itemBuilder: (context, index) {
-                  final vault = shards[index];
-                  return ListTile(
-                    isThreeLine: true,
-                    visualDensity: VisualDensity.standard,
-                    title: Text(vault.id.name),
-                    subtitle: Text(
-                      'Owner: ${vault.ownerId.name}\n'
-                      '${vault.secrets.length} Shard(s)',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      strutStyle: const StrutStyle(height: 1.5),
-                    ),
-                    trailing: Container(
-                      width: 0,
-                      margin: paddingH20,
-                      alignment: Alignment.centerRight,
-                      child: const Icon(Icons.arrow_forward_ios),
-                    ),
-                    onTap: () => Navigator.of(context).pushNamed(
-                      routeShardShow,
-                      arguments: vault,
-                    ),
-                  );
-                },
-              );
+              ),
+            ],
+          ),
+        );
       },
     );
   }

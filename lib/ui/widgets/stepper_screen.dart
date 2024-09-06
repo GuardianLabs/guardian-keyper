@@ -3,7 +3,7 @@ import '../presenters/page_presenter_base.dart';
 
 export '../presenters/page_presenter_base.dart';
 
-typedef PopInvoke = void Function(bool);
+typedef PopInvokeWithResult = void Function(bool didPop, Object? result);
 
 class StepperScreen<T extends PagePresentererBase?> extends StatelessWidget {
   const StepperScreen({
@@ -11,20 +11,20 @@ class StepperScreen<T extends PagePresentererBase?> extends StatelessWidget {
     required this.create,
     this.minimumPadding = const EdgeInsets.all(16),
     this.physics = const NeverScrollableScrollPhysics(),
-    this.onPopInvoked,
+    this.onPopInvokedWithResult,
     super.key,
   });
 
   final Create<T> create;
   final List<Widget> pages;
   final ScrollPhysics physics;
-  final PopInvoke? onPopInvoked;
+  final PopInvokeWithResult? onPopInvokedWithResult;
   final EdgeInsets minimumPadding;
 
   @override
   Widget build(BuildContext context) => PopScope(
-        canPop: onPopInvoked == null,
-        onPopInvoked: onPopInvoked,
+        canPop: onPopInvokedWithResult == null,
+        onPopInvokedWithResult: onPopInvokedWithResult,
         child: ScaffoldSafe(
           minimumPadding: minimumPadding,
           child: ChangeNotifierProvider(

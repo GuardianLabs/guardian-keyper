@@ -23,14 +23,14 @@ class IntrosPage extends StatelessWidget {
   ];
 
   static const _subtitles = [
-    'Guardian Keyper is a secure way to store and recover secrets, such as seed'
-        ' phrases. With Guardian Keyper, your Web3 assets are safe.',
-    'Guardian Keyper splits a secret into a number of encrypted shards. Shards'
-        ' are then stored on devices owned by “Guardians”, persons you trust.',
-    'Each Shard is protected by state-of-the-art encryption algorithms and'
-        ' can’t be reversed into a seed phrase without approval of Guardians.',
-    'You can restore your seed phrase any time with the help of Guardians.'
-        ' Even in case you’ve lost access to your device.',
+    'Guardian Keyper is a secure solution for storing and recovering your secrets, '
+        'such as seed phrases. With Guardian Keyper, your assets remain safe.',
+    'Guardian Keyper splits your secret into several encrypted shards, which '
+        'are then stored on devices owned by Guardians – your trusted individuals.',
+    'Each shard is protected by state-of-the-art encryption algorithms and '
+        'cannot be reconstructed into a seed phrase without the approval of your Guardians.',
+    'You can restore your seed phrase anytime with the assistance of your Guardians, '
+        'even if you lose access to your device.',
   ];
 
   const IntrosPage({super.key});
@@ -49,7 +49,7 @@ class IntrosPage extends StatelessWidget {
         }
       },
       child: Padding(
-        padding: paddingAll20,
+        padding: paddingAllDefault,
         child: Column(
           children: [
             const Spacer(),
@@ -67,7 +67,7 @@ class IntrosPage extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: paddingB20,
+              padding: paddingBDefault,
               child: Text(
                 _subtitles[presenter.introStep],
                 style: theme.textTheme.bodyMedium,

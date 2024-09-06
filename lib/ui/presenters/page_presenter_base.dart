@@ -21,7 +21,7 @@ class PagePresentererBase extends PageController {
   Future<void> nextPage({Curve? curve, Duration? duration}) {
     _currentPage++;
     return super.nextPage(
-      duration: duration ?? pageChangeDuration,
+      duration: duration ?? kPageChangeDuration,
       curve: curve ?? Curves.easeInOut,
     );
   }
@@ -30,7 +30,7 @@ class PagePresentererBase extends PageController {
   Future<void> previousPage({Curve? curve, Duration? duration}) {
     if (_currentPage > 0) _currentPage--;
     return super.previousPage(
-      duration: duration ?? pageChangeDuration,
+      duration: duration ?? kPageChangeDuration,
       curve: curve ?? Curves.easeInOut,
     );
   }

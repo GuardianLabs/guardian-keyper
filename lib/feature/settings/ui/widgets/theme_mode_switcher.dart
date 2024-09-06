@@ -1,44 +1,37 @@
-import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/data/repositories/settings_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:guardian_keyper/ui/presenters/settings_presenter.dart';
 
 class ThemeModeSwitcher extends StatelessWidget {
   const ThemeModeSwitcher({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final settingsRepository = GetIt.I<SettingsRepository>();
-    return StreamBuilder(
-      initialData: settingsRepository.get<bool>(
-        PreferencesKeys.keyIsDarkModeOn,
-      ),
-      stream: settingsRepository
-          .watch<bool>(PreferencesKeys.keyIsDarkModeOn)
-          .map((event) => event.value),
-      builder: (context, snapshot) {
-        return SegmentedButton<bool?>(
+    return Selector<SettingsPresenter, ThemeMode>(
+      selector: (_, presenter) => presenter.themeMode,
+      builder: (context, themeMode, child) {
+        return SegmentedButton<ThemeMode>(
           segments: const [
             ButtonSegment(
               label: Text('Light'),
-              value: false,
+              value: ThemeMode.light,
             ),
             ButtonSegment(
               label: Text('System'),
-              value: null,
+              value: ThemeMode.system,
             ),
             ButtonSegment(
               label: Text('Dark'),
-              value: true,
+              value: ThemeMode.dark,
             ),
           ],
           showSelectedIcon: false,
           emptySelectionAllowed: false,
           multiSelectionEnabled: false,
-          selected: {snapshot.data},
+          selected: {themeMode},
           onSelectionChanged: (values) async {
-            await settingsRepository.setNullable<bool>(
-              PreferencesKeys.keyIsDarkModeOn,
-              values.first,
-            );
+            await context
+                .read<SettingsPresenter>()
+                .setIsThemeMode(values.first);
           },
         );
       },

@@ -1,7 +1,6 @@
 import 'package:guardian_keyper/consts.dart';
+import 'package:guardian_keyper/ui/presenters/settings_presenter.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-
-import 'package:guardian_keyper/data/managers/network_manager.dart';
 
 class DeviceNameInput extends StatefulWidget {
   const DeviceNameInput({
@@ -16,13 +15,13 @@ class DeviceNameInput extends StatefulWidget {
 }
 
 class _DeviceNameInputState extends State<DeviceNameInput> {
-  final _networkManager = GetIt.I<NetworkManager>();
+  late final _settingsPresenter = context.read<SettingsPresenter>();
 
   late final _inputController = TextEditingController(
-    text: _networkManager.selfId.name,
+    text: _settingsPresenter.name,
   );
 
-  late bool _canProceed = _networkManager.selfId.name.length >= minNameLength;
+  late bool _canProceed = _settingsPresenter.name.length >= kMinNameLength;
 
   @override
   void dispose() {
@@ -35,32 +34,32 @@ class _DeviceNameInputState extends State<DeviceNameInput> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: paddingAll20,
+            padding: paddingAllDefault,
             child: TextField(
               autofocus: true,
-              maxLength: maxNameLength,
+              maxLength: kMaxNameLength,
               controller: _inputController,
               keyboardType: TextInputType.text,
               decoration: const InputDecoration(
                 labelText: ' Device name ',
-                helperText: 'Minimum $minNameLength characters',
+                helperText: 'Minimum $kMinNameLength characters',
               ),
               onTapOutside: (_) => FocusScope.of(context).unfocus(),
               onChanged: (value) {
-                if (value.length >= minNameLength && !_canProceed) {
+                if (value.length >= kMinNameLength && !_canProceed) {
                   setState(() => _canProceed = true);
-                } else if (value.length < minNameLength && _canProceed) {
+                } else if (value.length < kMinNameLength && _canProceed) {
                   setState(() => _canProceed = false);
                 }
               },
             ),
           ),
           Padding(
-            padding: paddingAll20,
+            padding: paddingAllDefault,
             child: FilledButton(
               onPressed: _canProceed
                   ? () async {
-                      await _networkManager
+                      await _settingsPresenter
                           .setDeviceName(_inputController.value.text);
                       widget.onProceed();
                     }

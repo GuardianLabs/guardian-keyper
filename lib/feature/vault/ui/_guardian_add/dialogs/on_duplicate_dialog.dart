@@ -1,5 +1,6 @@
+import 'package:guardian_keyper/ui/widgets/guardian_icons.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/ui/widgets/styled_icon.dart';
 
 class OnDuplicateDialog extends StatelessWidget {
   static Future<void> show(
@@ -22,7 +23,11 @@ class OnDuplicateDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.twice(size: 80),
+        icon: StyledIcon(
+          icon: GuardianIcons.twice,
+          size: 80,
+          color: Theme.of(context).colorScheme.error,
+        ),
         titleString: 'You can’t add the same Guardian twice',
         textSpan: [
           const TextSpan(

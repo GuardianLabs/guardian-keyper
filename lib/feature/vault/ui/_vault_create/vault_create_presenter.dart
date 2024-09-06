@@ -24,7 +24,7 @@ final class VaultCreatePresenter extends PagePresentererBase {
 
   bool get isVaultMember => _isVaultMember;
 
-  bool get isVaultNameTooShort => _vaultName.length < minNameLength;
+  bool get isVaultNameTooShort => _vaultName.length < kMinNameLength;
 
   void setVaultSize(int size, int vaultThreshold) {
     _vaultSize = size;

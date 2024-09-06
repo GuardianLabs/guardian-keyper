@@ -1,5 +1,6 @@
+import 'package:guardian_keyper/ui/widgets/guardian_icons.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
+import 'package:guardian_keyper/ui/widgets/styled_icon.dart';
 
 import 'package:guardian_keyper/data/repositories/settings_repository.dart';
 
@@ -32,7 +33,11 @@ class _OnSecretSharingDialogState extends State<OnSecretSharingDialog> {
 
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
-        icon: const IconOf.shard(size: 80),
+        icon: StyledIcon(
+          icon: GuardianIcons.shard,
+          size: 80,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         titleString: 'Understanding Shards',
         textString: 'Your Secret will be divided into ${widget.maxSize} '
             'Shards, each entrusted to a different Guardian. On their own, '

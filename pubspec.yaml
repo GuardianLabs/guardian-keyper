@@ -2,57 +2,62 @@ name: guardian_keyper
 description: "A Guardian Network-based secrets backup app"
 publish_to: 'none'
 
-version: 2.2.7
+version: 2.2.8
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
-  flutter: ^3.16.7
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ^3.22.0
 
 dependencies:
   flutter:
     sdk: flutter
-  vector_graphics: ^1.1.9+2
-  google_fonts: ^6.1.0
-  flutter_svg: ^2.0.9
+  vector_graphics: ^1.1.11
+  google_fonts: ^6.2.1
+  flutter_svg: ^2.0.10
   messagepack: ^0.2.1
-  collection: ^1.17.2
+  collection: ^1.18.0
   qr_flutter: ^4.1.0
-  provider: ^6.1.1
-  get_it: ^7.6.6
-  p2plib: ^2.1.1
+  provider: ^6.1.2
+  get_it: ^7.7.0
+  p2plib: ^2.2.1
   sss256: ^1.0.0
-  intl: ^0.18.1
+  intl: ^0.19.0
 
   # Platform dependent
-  flutter_secure_storage: ^9.0.0
-  flutter_screen_lock: ^9.0.2
-  connectivity_plus: ^5.0.2
-  device_info_plus: ^9.1.1
-  mobile_scanner: ^3.5.6
-  path_provider: ^2.1.2
-  wakelock_plus: ^1.1.4
-  sodium_libs: ^2.2.0+8
-  url_launcher: ^6.2.3
-  local_auth: ^2.1.8
-  share_plus: ^7.2.1
-  vibration: ^1.8.4
-  sodium: ^2.3.0
+  flutter_secure_storage: ^9.2.2
+  flutter_screen_lock: ^9.1.0
+  connectivity_plus: ^6.0.3
+  device_info_plus: ^10.1.0
+  mobile_scanner: ^5.1.1
+  p2plib_flutter: ^0.1.2
+  path_provider: ^2.1.3
+  wakelock_plus: ^1.2.5
+  url_launcher: ^6.3.0
+  local_auth: ^2.2.0
+  share_plus: ^10.0.2
+  vibration: ^2.0.0
   hive: ^2.2.3
   nsd: ^3.0.0
 
   # Analytics
-  sentry_flutter: ^7.14.0
-  amplitude_flutter: ^3.16.1
+  sentry_flutter: ^8.3.0
+  amplitude_flutter: ^3.16.2
 
 dependency_overrides:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^5.1.0
+  very_good_analysis: ^6.0.0
+  flutter_native_splash: ^2.4.1
 
 flutter:
   uses-material-design: true
+  
+  fonts:
+    - family: Guardian-Icons
+      fonts:
+      - asset: assets/fonts/Guardian-Icons.ttf
 
   assets:
     - assets/images/

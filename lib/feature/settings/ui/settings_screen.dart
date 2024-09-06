@@ -1,14 +1,13 @@
-import 'package:flutter/foundation.dart';
-
+import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/ui/presenters/settings_presenter.dart';
+import 'package:guardian_keyper/ui/widgets/guardian_icons.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
-import 'package:guardian_keyper/ui/widgets/icon_of.dart';
-
+import 'package:guardian_keyper/ui/widgets/styled_icon.dart';
 import 'package:guardian_keyper/data/managers/auth_manager.dart';
-import 'package:guardian_keyper/data/managers/network_manager.dart';
-
-import 'package:guardian_keyper/feature/settings/ui/widgets/theme_mode_switcher.dart';
 import 'package:guardian_keyper/feature/auth/ui/dialogs/on_change_pass_code_dialog.dart';
-import 'package:guardian_keyper/feature/settings/ui/dialogs/on_set_device_name_dialog.dart';
+
+import 'dialogs/on_set_device_name_dialog.dart';
+import 'widgets/theme_mode_switcher.dart';
 
 class SettingsScreen extends StatelessWidget {
   static const route = '/settings';
@@ -18,31 +17,46 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authManager = GetIt.I<AuthManager>();
-    final networkManager = GetIt.I<NetworkManager>();
-    final bgColor = Theme.of(context).colorScheme.secondary;
+    final settingsPresenter = context.read<SettingsPresenter>();
+    final themeColors = Theme.of(context).colorScheme;
+    final bgColor = themeColors.secondaryContainer;
+    final color = themeColors.onSecondaryContainer;
+
     return ScaffoldSafe(
       isSeparated: true,
-      header: const HeaderBar(
-        caption: 'Settings',
-        rightButton: HeaderBarButton.close(),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        centerTitle: true,
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
       ),
       children: [
         // Change Device Name
-        StreamBuilder<String>(
-          stream: networkManager.state.map((e) => e.deviceName),
-          builder: (context, snapshot) => ListTile(
-            leading: IconOf.user(bgColor: bgColor),
-            title: const Text('Change Guardian name'),
-            subtitle: Text(snapshot.data ?? networkManager.selfId.name),
-            trailing: const Icon(Icons.arrow_forward_ios_rounded),
-            onTap: () => OnSetDeviceNameDialog.show(context),
-          ),
-        ),
+        Selector<SettingsPresenter, String>(
+            builder: (context, value, child) => ListTile(
+                  leading: StyledIcon(
+                    icon: GuardianIcons.user,
+                    bgColor: bgColor,
+                    color: color,
+                  ),
+                  title: const Text('Rename device'),
+                  subtitle: Text(value),
+                  trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                  onTap: () => OnSetDeviceNameDialog.show(context),
+                ),
+            selector: (context, value) => value.name),
         // Change PassCode
         ListTile(
-          leading: IconOf.passcode(bgColor: bgColor),
-          title: const Text('Passcode'),
-          subtitle: const Text('Change authentication passcode'),
+          leading: StyledIcon(
+            icon: GuardianIcons.passcode,
+            bgColor: bgColor,
+            color: color,
+          ),
+          title: const Text('Change passcode'),
+          subtitle: const Text('Set new authentication passcode'),
           trailing: const Icon(Icons.arrow_forward_ios_rounded),
           onTap: () => OnChangePassCodeDialog.show(context),
         ),
@@ -51,7 +65,11 @@ class SettingsScreen extends StatelessWidget {
           StreamBuilder<bool>(
             stream: authManager.state.map((e) => e.isBiometricsEnabled),
             builder: (context, snapshot) => SwitchListTile.adaptive(
-              secondary: const Icon(Icons.fingerprint, size: 40),
+              secondary: StyledIcon(
+                icon: Icons.fingerprint,
+                bgColor: bgColor,
+                color: color,
+              ),
               title: const Text('Biometric login'),
               subtitle: const Text(
                 'Easier, faster authentication with biometry',
@@ -61,20 +79,35 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
         // Toggle Bootstrap
-        StreamBuilder<bool>(
-          stream: networkManager.state.map((e) => e.isBootstrapEnabled),
-          builder: (context, snapshot) => SwitchListTile.adaptive(
-            secondary: IconOf.connection(bgColor: bgColor),
-            title: const Text('Proxy Connection'),
-            subtitle: const Text(
-              'P2P-discovery via Internet',
-            ),
-            value: snapshot.data ?? networkManager.isBootstrapEnabled,
-            onChanged: networkManager.setIsBootstrapEnabled,
+        Selector<SettingsPresenter, bool>(
+            builder: (context, value, child) => SwitchListTile.adaptive(
+                  secondary: StyledIcon(
+                    icon: GuardianIcons.connection,
+                    bgColor: bgColor,
+                    color: color,
+                  ),
+                  title: const Text('Proxy connection'),
+                  subtitle: const Text(
+                    'P2P-discovery via Internet',
+                  ),
+                  value: value,
+                  onChanged: settingsPresenter.setIsBootstrapEnabled,
+                ),
+            selector: (context, value) => value.isBootstrapEnabled),
+        // Show Requests Archive
+        ListTile(
+          leading: StyledIcon(
+            icon: GuardianIcons.requests,
+            bgColor: bgColor,
+            color: color,
           ),
+          title: const Text('Requests'),
+          subtitle: const Text('Show requests history'),
+          trailing: const Icon(Icons.arrow_forward_ios_rounded),
+          onTap: () => Navigator.pushNamed(context, routeRequestsScreen),
         ),
         // Theme Mode Switcher
-        if (kDebugMode) const ThemeModeSwitcher(),
+        const ThemeModeSwitcher(),
       ],
     );
   }

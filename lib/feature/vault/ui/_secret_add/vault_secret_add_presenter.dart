@@ -27,7 +27,7 @@ final class VaultSecretAddPresenter extends VaultSecretPresenterBase {
 
   String get secretName => _secretName;
 
-  bool get isNameTooShort => _secretName.length < minNameLength;
+  bool get isNameTooShort => _secretName.length < kMinNameLength;
 
   bool get isUnderstandingShardsHidden =>
       _settingsRepository

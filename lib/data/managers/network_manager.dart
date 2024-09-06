@@ -1,211 +1,138 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:p2plib/p2plib.dart' as p2p;
+import 'package:p2plib_flutter/router.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/domain/entity/peer_id.dart';
-import 'package:guardian_keyper/data/services/mdns_service.dart';
-import 'package:guardian_keyper/data/services/router_service.dart';
-import 'package:guardian_keyper/data/services/network_service.dart';
-import 'package:guardian_keyper/data/repositories/settings_repository.dart';
+
 import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+
+import '../repositories/settings_repository.dart';
+import '../services/platform_service.dart';
 
 export 'package:get_it/get_it.dart';
 
-enum NetworkManagerStatus { uninited, stopped, started, pending }
-
-typedef NetworkManagerState = ({
-  String deviceName,
-  bool hasWiFi,
-  bool hasConnectivity,
-  bool isBootstrapEnabled,
-  NetworkManagerStatus status,
-});
-
-/// Depends on [SettingsRepository]
 class NetworkManager {
   NetworkManager({
-    int? port,
-    MdnsService? mdnsService,
-    RouterService? routerService,
-    NetworkService? networkService,
-  })  : _port = port ?? bsPort,
-        _mdnsService = mdnsService ?? MdnsService(),
-        _routerService = routerService ?? RouterService(),
-        _networkService = networkService ?? NetworkService();
+    Router? router,
+  }) : _router = router ??
+            Router.mdns(
+              port: bsPort,
+              serviceName: 'Guardian Keyper',
+              serviceType: '_guardianKeyper._udp',
+            );
 
-  final int _port;
-  final MdnsService _mdnsService;
-  final RouterService _routerService;
-  final NetworkService _networkService;
+  final Router _router;
+
+  final _platformService = GetIt.I<PlatformService>();
 
   final _settingsRepository = GetIt.I<SettingsRepository>();
 
-  final _stateStreamController =
-      StreamController<NetworkManagerState>.broadcast();
+  late final _settingsChanges =
+      _settingsRepository.watch().listen(_updateSettings);
+
+  late final _messageStream = _router.messageStream.asBroadcastStream();
 
   late PeerId _selfId;
-  late bool _isBootstrapEnabled;
-  final Map<String, List<InternetAddress>> _bootstrapAddresses = {};
-
-  NetworkManagerStatus _status = NetworkManagerStatus.uninited;
 
   PeerId get selfId => _selfId;
 
-  bool get isBootstrapEnabled => _isBootstrapEnabled;
-
-  Stream<NetworkManagerState> get state => _stateStreamController.stream;
-
-  Stream<MessageModel> get messageStream => _routerService.messageStream;
-
-  Stream<(PeerId, bool)> get peerStatusChanges =>
-      _routerService.peerStatusChanges;
+  Stream<MessageModel> get messageStream => _messageStream
+      .map((e) => MessageModel.fromBytes(e.payload!))
+      .asBroadcastStream();
 
   Future<NetworkManager> init() async {
-    if (_status != NetworkManagerStatus.uninited) throw Exception('Init once!');
-    _status = NetworkManagerStatus.pending;
-    _isBootstrapEnabled =
-        _settingsRepository.get<bool>(PreferencesKeys.keyIsBootstrapEnabled) ??
-            true;
-
     final seed = _settingsRepository.get<Uint8List>(PreferencesKeys.keySeed);
     if (seed == null) {
       await _settingsRepository.set<Uint8List>(
         PreferencesKeys.keySeed,
-        await _routerService.init(),
+        await _router.init(),
       );
     } else {
-      await _routerService.init(seed);
+      await _router.init(seed);
     }
-
     _selfId = PeerId(
-      token: _routerService.selfId,
-      name: _settingsRepository.get<String>(PreferencesKeys.keyDeviceName) ??
-          await _networkService.getDeviceName(),
+      token: _router.selfId.value,
+      name: _settingsRepository.get<String>(
+        PreferencesKeys.keyDeviceName,
+        await _platformService.getDeviceName(),
+      )!,
     );
-
-    _mdnsService.onPeerFound =
-        (peerId, address, port) => _routerService.addPeerAddress(
-              peerId: peerId,
-              address: address,
-              port: port ?? _port,
-            );
-
-    _networkService.onConnectivityChanged.listen(
-      (state) async {
-        if (state.hasConnectivity) {
-          await stop();
-          await start();
-        } else {
-          await stop();
-        }
-        _updateState();
-      },
+    await _toggleBootstrap(
+      _settingsRepository.get<bool>(PreferencesKeys.keyIsBootstrapEnabled),
     );
-
-    if (bsName.isNotEmpty) {
-      final addresses =
-          await InternetAddress.lookup(bsName).timeout(retryNetworkTimeout);
-      if (addresses.isNotEmpty) _bootstrapAddresses[bsPeerId] = addresses;
-    }
-
-    _routerService.toggleBootstrap(
-      isActive: _isBootstrapEnabled,
-      addresses: _bootstrapAddresses,
-    );
-    _status = NetworkManagerStatus.stopped;
+    await start();
+    _settingsChanges.resume();
     return this;
   }
 
-  Future<void> close() async {
-    await stop();
-    await _stateStreamController.close();
+  Future<void> dispose() async {
+    await _settingsChanges.cancel();
   }
 
   Future<void> start() async {
-    if (_status != NetworkManagerStatus.stopped) {
-      return;
-    } else {
-      _status = NetworkManagerStatus.pending;
-      await _networkService.checkConnectivity();
-    }
-
-    if (_networkService.hasNoConnectivity) {
-      _status = NetworkManagerStatus.stopped;
-      return;
-    } else {
-      await _routerService.start(_port);
-    }
-
-    if (_networkService.hasWiFi) {
-      await _mdnsService.register(_selfId.token, _port);
-      await _mdnsService.startDiscovery();
-    }
-    _status = NetworkManagerStatus.started;
-    _updateState();
+    await _router.start();
   }
 
   Future<void> stop() async {
-    if (_status != NetworkManagerStatus.started) return;
-    _status = NetworkManagerStatus.pending;
-    _routerService.stop();
-    await _mdnsService.stopDiscovery();
-    await _mdnsService.unregister();
-    _status = NetworkManagerStatus.stopped;
-    _updateState();
+    await _router.stop();
   }
 
-  Future<void> setDeviceName(String value) async {
-    if (_selfId.name == value) return;
-    if (value.isEmpty) {
-      await _settingsRepository.delete(PreferencesKeys.keyDeviceName);
-      _selfId = _selfId.copyWith(
-        name: await _networkService.getDeviceName(),
-      );
-    } else {
-      _selfId = _selfId.copyWith(name: value);
-      await _settingsRepository.set<String>(
-        PreferencesKeys.keyDeviceName,
-        value,
-      );
-    }
-    _updateState();
-  }
+  Future<bool> pingPeer(PeerId peerId) =>
+      _router.pingPeer(p2p.PeerId(value: peerId.token));
 
-  Future<void> setIsBootstrapEnabled(bool isEnabled) async {
-    if (_isBootstrapEnabled == isEnabled) return;
-    _isBootstrapEnabled = isEnabled;
-    await _settingsRepository.set<bool>(
-      PreferencesKeys.keyIsBootstrapEnabled,
-      isEnabled,
-    );
-    _routerService.toggleBootstrap(
-      isActive: _isBootstrapEnabled,
-      addresses: _bootstrapAddresses,
-    );
-    _updateState();
-  }
-
-  Future<bool> pingPeer(PeerId peerId) => _routerService.pingPeer(peerId);
-
-  bool getPeerStatus(PeerId peerId) => _routerService.getPeerStatus(peerId);
+  bool getPeerStatus(PeerId peerId) =>
+      _router.getPeerStatus(p2p.PeerId(value: peerId.token));
 
   Future<void> sendToPeer(
     PeerId peerId, {
     required MessageModel message,
     bool isConfirmable = false,
-  }) =>
-      _routerService.sendToPeer(
-        peerId,
-        message: message,
+  }) async {
+    try {
+      await _router.sendMessage(
+        dstPeerId: p2p.PeerId(value: peerId.token),
         isConfirmable: isConfirmable,
+        payload: message.toBytes(),
       );
+    } catch (e) {
+      if (kDebugMode) print(e);
+      if (isConfirmable) rethrow;
+    }
+  }
 
-  void _updateState() => _stateStreamController.add((
-        status: _status,
-        deviceName: _selfId.name,
-        hasWiFi: _networkService.hasWiFi,
-        isBootstrapEnabled: _isBootstrapEnabled,
-        hasConnectivity: _networkService.hasConnectivity,
-      ));
+  Future<void> _updateSettings(SettingsRepositoryEvent event) async {
+    switch (event.key) {
+      case PreferencesKeys.keyDeviceName:
+        final deviceName = event.value as String?;
+        _selfId = _selfId.copyWith(
+          name: deviceName == null || deviceName.isEmpty
+              ? await _platformService.getDeviceName()
+              : deviceName,
+        );
+
+      case PreferencesKeys.keyIsBootstrapEnabled:
+        await _toggleBootstrap(event.value as bool?);
+
+      // ignore: no_default_cases
+      default:
+    }
+  }
+
+  Future<void> _toggleBootstrap(bool? isBootstrapEnabled) async {
+    if (isBootstrapEnabled ?? true) {
+      try {
+        await _router.addBootstrap(
+          bsName: bsName,
+          bsPeerId: bsPeerId,
+          port: bsPort,
+        );
+      } catch (e) {
+        if (kDebugMode) print(e);
+      }
+    } else {
+      _router.removeAllBootstraps();
+    }
+  }
 }
