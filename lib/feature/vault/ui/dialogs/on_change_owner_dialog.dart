@@ -1,3 +1,4 @@
+import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 import 'package:guardian_keyper/ui/widgets/guardian_icons.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/widgets/styled_icon.dart';
@@ -30,7 +31,7 @@ class OnChangeOwnerDialog extends StatelessWidget {
         icon: StyledIcon(
           icon: GuardianIcons.confirmIdentity,
           size: 80,
-          color: Theme.of(context).colorScheme.onSurface,
+          color: Theme.of(context).extension<BrandColors>()!.warningColor,
         ),
         titleString: 'Confirm Identity!',
         textString: 'Helping with Safe recovery or changing ownership?\n'
