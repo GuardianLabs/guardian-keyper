@@ -1,13 +1,12 @@
-// import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import 'package:guardian_keyper/data/enums.dart';
-
 export 'package:get_it/get_it.dart';
+
 export 'package:guardian_keyper/data/enums.dart';
+import 'package:guardian_keyper/data/enums.dart';
 
 typedef SettingsRepositoryEvent<T extends Object> = ({
   PreferencesKeys key,

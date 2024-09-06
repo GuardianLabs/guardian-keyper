@@ -5,10 +5,11 @@ import 'package:p2plib_flutter/router.dart';
 
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/domain/entity/peer_id.dart';
-import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
-import 'package:guardian_keyper/data/services/platform_service.dart';
 
-import 'package:guardian_keyper/data/repositories/settings_repository.dart';
+import 'package:guardian_keyper/feature/message/domain/entity/message_model.dart';
+
+import '../repositories/settings_repository.dart';
+import '../services/platform_service.dart';
 
 export 'package:get_it/get_it.dart';
 

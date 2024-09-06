@@ -1,13 +1,15 @@
-import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/feature/vault/ui/_vault_show/widgets/guardian_with_ping_tile.dart';
-import 'package:guardian_keyper/feature/vault/ui/_vault_show/widgets/page_title_restricted.dart';
-import 'package:guardian_keyper/feature/vault/ui/_vault_show/widgets/secret_list_tile.dart';
-import 'package:guardian_keyper/feature/vault/ui/widgets/guardian_list_tile.dart';
+import 'package:guardian_keyper/app/routes.dart';
+
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+
+import '../_vault_show/widgets/guardian_with_ping_tile.dart';
+import '../_vault_show/widgets/page_title_restricted.dart';
+import '../_vault_show/widgets/secret_list_tile.dart';
+import 'guardian_list_tile.dart';
 
 class VaultListTile extends StatelessWidget {
   const VaultListTile({
@@ -55,7 +57,10 @@ class VaultListTile extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(Icons.info,
-                                  color: theme.colorScheme.onError, size: 16),
+                                  color: theme
+                                      .extension<BrandColors>()!
+                                      .warningColor,
+                                  size: 16),
                               Text(' Add ${vault.maxSize - vault.size} more'
                                   '${vault.maxSize - vault.size == 1 ? ' Guardian' : ' Guardians'}'),
                             ],

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+import 'package:guardian_keyper/ui/theme/theme.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 class OnQrCodeScanDialog extends StatefulWidget {

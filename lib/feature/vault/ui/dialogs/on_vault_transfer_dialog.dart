@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
+
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/feature/vault/ui/dialogs/on_change_owner_dialog.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/vault/data/vault_repository.dart';
+
+import 'on_change_owner_dialog.dart';
 
 class OnVaultTransferDialog extends StatelessWidget {
   static Future<void> show(

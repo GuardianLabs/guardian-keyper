@@ -1,11 +1,11 @@
-import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
-import 'package:guardian_keyper/feature/message/ui/dialogs/on_qr_code_show_dialog.dart';
-import 'package:guardian_keyper/feature/vault/ui/dialogs/on_vault_transfer_dialog.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
+import 'package:guardian_keyper/feature/message/domain/use_case/message_interactor.dart';
+import 'package:guardian_keyper/feature/message/ui/dialogs/on_qr_code_show_dialog.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 
 import 'shards_list_tile.dart';
+import '../dialogs/on_vault_transfer_dialog.dart';
 
 class ShardsList extends StatelessWidget {
   const ShardsList({super.key});

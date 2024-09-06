@@ -1,15 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:guardian_keyper/app/routes.dart';
-import 'package:guardian_keyper/feature/home/ui/dialogs/on_show_id_dialog.dart';
-import 'package:guardian_keyper/ui/presenters/settings_presenter.dart';
 
+import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/ui/presenters/settings_presenter.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/vault/ui/widgets/shards_list.dart';
 import 'package:guardian_keyper/feature/vault/ui/widgets/vaults_list.dart';
 import 'package:guardian_keyper/feature/vault/domain/use_case/vault_interactor.dart';
 
+import 'dialogs/on_show_id_dialog.dart';
 import 'widgets/dev_drawer.dart';
 
 class HomeScreen extends StatelessWidget {

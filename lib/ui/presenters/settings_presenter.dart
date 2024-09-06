@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:guardian_keyper/ui/presenters/name_helper_mixin.dart';
+
 import 'package:guardian_keyper/domain/entity/peer_id.dart';
 import 'package:guardian_keyper/data/managers/network_manager.dart';
 import 'package:guardian_keyper/data/services/platform_service.dart';
-
 import 'package:guardian_keyper/data/repositories/settings_repository.dart';
+
+import 'name_helper_mixin.dart';
 
 export 'package:provider/provider.dart';
 

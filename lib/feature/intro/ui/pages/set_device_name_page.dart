@@ -3,8 +3,9 @@ import 'package:vector_graphics/vector_graphics_compat.dart';
 
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import 'package:guardian_keyper/feature/intro/ui/intro_presenter.dart';
 import 'package:guardian_keyper/feature/settings/ui/widgets/device_name_input.dart';
+
+import '../intro_presenter.dart';
 
 class SetDeviceNamePage extends StatelessWidget {
   const SetDeviceNamePage({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
-import 'package:guardian_keyper/feature/settings/ui/widgets/device_name_input.dart';
+import '../widgets/device_name_input.dart';
 
 class OnSetDeviceNameDialog extends StatelessWidget {
   static Future<void> show(BuildContext context) =>

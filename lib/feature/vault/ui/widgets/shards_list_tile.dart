@@ -1,9 +1,10 @@
 import 'package:guardian_keyper/consts.dart';
-import 'package:guardian_keyper/feature/vault/ui/dialogs/on_become_owner_dialog.dart';
-import 'package:guardian_keyper/feature/vault/ui/dialogs/on_change_owner_dialog.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
+
+import '../dialogs/on_become_owner_dialog.dart';
+import '../dialogs/on_change_owner_dialog.dart';
 
 class ShardsListTile extends StatelessWidget {
   const ShardsListTile({
