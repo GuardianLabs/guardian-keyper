@@ -1,42 +1,34 @@
 import 'package:guardian_keyper/app/routes.dart';
-import 'package:guardian_keyper/feature/vault/domain/entity/vault_id.dart';
+import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 class OnSuccessDialog extends StatelessWidget {
   static Future<bool?> show(
     BuildContext context, {
+    required Vault vault,
     required String peerName,
-    required VaultId vaultId,
-    required bool hasQuorum,
-    required bool isFull,
   }) =>
       showModalBottomSheet<bool>(
         context: context,
         isDismissible: false,
         isScrollControlled: true,
         builder: (_) => OnSuccessDialog(
+          vault: vault,
           peerName: peerName,
-          vaultId: vaultId,
-          hasQuorum: hasQuorum,
-          isFull: isFull,
         ),
       );
 
   const OnSuccessDialog({
+    required this.vault,
     required this.peerName,
-    required this.vaultId,
-    required this.hasQuorum,
-    required this.isFull,
     super.key,
   });
 
+  final Vault vault;
   final String peerName;
-  final VaultId vaultId;
-  final bool hasQuorum;
-  final bool isFull;
 
   @override
-  Widget build(BuildContext context) => isFull
+  Widget build(BuildContext context) => vault.isFull
       ? BottomSheetWidget(
           icon: const Icon(Icons.check_circle, size: 80),
           titleString: 'Ownership Changed',
@@ -45,7 +37,7 @@ class OnSuccessDialog extends StatelessWidget {
               text: 'The ownership of the Safe ',
             ),
             TextSpan(
-              text: vaultId.name,
+              text: vault.id.name,
               style: styleW600,
             ),
             const TextSpan(
@@ -68,10 +60,10 @@ class OnSuccessDialog extends StatelessWidget {
             const TextSpan(
                 text: ' approved the transfer of ownership for the Safe '),
             TextSpan(
-              text: '${vaultId.name}.',
+              text: '${vault.id.name}.',
               style: styleW600,
             ),
-            if (hasQuorum)
+            if (vault.hasQuorum)
               const TextSpan(
                 text:
                     '\n\nYou need to add all the Guardians linked to that Safe '
@@ -95,7 +87,7 @@ class OnSuccessDialog extends StatelessWidget {
                   ),
                 ],
               ),
-              if (hasQuorum)
+              if (vault.hasQuorum)
                 Padding(
                   padding: paddingT12,
                   child: Row(
@@ -104,12 +96,14 @@ class OnSuccessDialog extends StatelessWidget {
                       Expanded(
                         child: OutlinedButton(
                           child: const Text('Go to Safe'),
-                          onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            routeVaultShow,
-                            (Route<dynamic> route) => route.isFirst,
-                            arguments: vaultId,
-                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.pushReplacementNamed(
+                              context,
+                              routeVaultShow,
+                              arguments: vault.id,
+                            );
+                          },
                         ),
                       ),
                     ],

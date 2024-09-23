@@ -51,7 +51,7 @@ class Vault extends Serializable {
   int get redudancy => maxSize - threshold;
 
   bool get hasQuorum => size >= threshold;
-  bool get lacksQuorum => !hasQuorum;
+  bool get hasNoQuorum => !hasQuorum;
   bool get isSelfGuarded => guardians.containsKey(ownerId);
 
   bool get isFull => guardians.length == maxSize;

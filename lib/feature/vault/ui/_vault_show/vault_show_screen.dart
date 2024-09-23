@@ -29,17 +29,17 @@ class VaultShowScreen extends StatelessWidget {
         title: Column(
           children: [
             Text(vaultId.name),
-            if (vault!.isRestricted && vault.lacksQuorum)
+            if (vault!.isRestricted && vault.hasNoQuorum)
               Text(
                 'Restricted: proceed with recovery',
                 style: theme.textTheme.bodySmall!.copyWith(
-                    color: theme.extension<BrandColors>()!.dangerColor),
+                    color: theme.extension<BrandColors>()?.dangerColor),
               ),
             if (vault.isRestricted && vault.hasQuorum)
               Text(
                 'Limited access',
                 style: theme.textTheme.bodySmall!.copyWith(
-                    color: theme.extension<BrandColors>()!.warningColor),
+                    color: theme.extension<BrandColors>()?.warningColor),
               ),
           ],
         ),

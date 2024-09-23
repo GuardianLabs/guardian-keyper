@@ -76,7 +76,7 @@ class VaultListTile extends StatelessWidget {
               ),
               Column(
                 children: [
-                  if (vault.isFull || vault.hasQuorum) ...[
+                  if (vault.hasQuorum) ...[
                     for (final secretId in vault.secrets.keys)
                       SecretListTile(vault: vault, secretId: secretId),
                     if (vault.isFull)

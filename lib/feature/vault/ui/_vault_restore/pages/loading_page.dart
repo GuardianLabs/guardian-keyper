@@ -24,9 +24,7 @@ class _LoadingPageState extends State<LoadingPage> {
           final wantAddAnother = await OnSuccessDialog.show(
             context,
             peerName: message.peerId.name,
-            vaultId: message.vault.id,
-            hasQuorum: message.vault.hasQuorum,
-            isFull: message.vault.isFull,
+            vault: message.vault,
           );
           if (mounted) {
             return wantAddAnother ?? false

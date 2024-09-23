@@ -29,7 +29,7 @@ class SecretListTile extends StatelessWidget {
         vertical: 0,
         horizontal: kDefaultTilePadding,
       ),
-      trailing: vault.isRestricted && vault.lacksQuorum
+      trailing: vault.isRestricted && vault.hasNoQuorum
           ? null
           : Row(
               mainAxisSize: MainAxisSize.min,
