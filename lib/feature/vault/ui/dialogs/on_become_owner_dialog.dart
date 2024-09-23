@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:guardian_keyper/app/routes.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 
@@ -96,8 +97,11 @@ class OnBecomeOwnerDialogState extends State<OnBecomeOwnerDialog> {
                       await GetIt.I<VaultInteractor>()
                           .takeVaultOwnership(widget.vault.id);
                       if (context.mounted) {
-                        Navigator.of(context)
-                            .popUntil((r) => r.settings.name == '/');
+                        Navigator.popAndPushNamed(
+                          context,
+                          routeVaultShow,
+                          arguments: widget.vault.id,
+                        );
                       }
                     },
             ),
