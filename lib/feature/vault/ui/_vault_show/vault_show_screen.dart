@@ -1,5 +1,6 @@
 import 'package:guardian_keyper/consts.dart';
 import 'package:guardian_keyper/app/routes.dart';
+import 'package:guardian_keyper/ui/theme/brand_colors.dart';
 import 'package:guardian_keyper/ui/widgets/common.dart';
 
 import 'package:guardian_keyper/feature/vault/domain/entity/vault.dart';
@@ -20,9 +21,28 @@ class VaultShowScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final vaultId = ModalRoute.of(context)!.settings.arguments! as VaultId;
     final vaultInteractor = GetIt.I<VaultInteractor>();
+    final theme = Theme.of(context);
+    final vault = vaultInteractor.getVaultById(vaultId);
+
     return ScaffoldSafe(
       appBar: AppBar(
-        title: Text(vaultId.name),
+        title: Column(
+          children: [
+            Text(vaultId.name),
+            if (vault!.isRestricted && vault.hasNoQuorum)
+              Text(
+                'Restricted: proceed with recovery',
+                style: theme.textTheme.bodySmall!.copyWith(
+                    color: theme.extension<BrandColors>()?.dangerColor),
+              ),
+            if (vault.isRestricted && vault.hasQuorum)
+              Text(
+                'Limited access',
+                style: theme.textTheme.bodySmall!.copyWith(
+                    color: theme.extension<BrandColors>()?.warningColor),
+              ),
+          ],
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -46,7 +66,7 @@ class VaultShowScreen extends StatelessWidget {
         initialData: (
           isDeleted: false,
           key: vaultId.asKey,
-          vault: vaultInteractor.getVaultById(vaultId),
+          vault: vault,
         ),
         stream: vaultInteractor.watch(vaultId.asKey),
         builder: (context, snapshot) {
@@ -117,7 +137,7 @@ class VaultShowScreen extends StatelessWidget {
                     ),
                     child: GuardiansExpansionTile(
                       vault: vault,
-                      initiallyExpanded: vault.hasNoSecrets,
+                      initiallyExpanded: vault.hasNoSecrets || vault.isNotFull,
                     ),
                   ),
                 ],

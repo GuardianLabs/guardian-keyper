@@ -26,6 +26,7 @@ class VaultListTile extends StatelessWidget {
     final theme = Theme.of(context);
     final brandColors = theme.extension<BrandColors>()!;
     final restrictedStyle = TextStyle(color: brandColors.dangerColor);
+    final warningStyle = TextStyle(color: brandColors.warningColor);
 
     return Stack(
       alignment: Alignment.topRight,
@@ -42,8 +43,8 @@ class VaultListTile extends StatelessWidget {
             title: Text(vault.id.name),
             subtitle: vault.isRestricted
                 ? (vault.hasQuorum
-                    ? Text('Restricted usage', style: restrictedStyle)
-                    : Text('Complete the Recovery', style: restrictedStyle))
+                    ? Text('Limited access', style: warningStyle)
+                    : Text('Restricted', style: restrictedStyle))
                 : (vault.isFull
                     ? Text(
                         '${vault.size} Guardians, ${vault.secrets.length} Secrets',
@@ -75,26 +76,27 @@ class VaultListTile extends StatelessWidget {
               ),
               Column(
                 children: [
-                  if (vault.isFull) ...[
+                  if (vault.hasQuorum) ...[
                     for (final secretId in vault.secrets.keys)
                       SecretListTile(vault: vault, secretId: secretId),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: ListTile(
-                        title: FilledButton.icon(
-                          onPressed: () => Navigator.of(context).pushNamed(
-                            routeVaultSecretAdd,
-                            arguments: vault.id,
-                          ),
-                          icon: const Icon(
-                            Icons.add_circle,
-                          ),
-                          label: const Text(
-                            'Add a Secret',
+                    if (vault.isFull)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: ListTile(
+                          title: FilledButton.icon(
+                            onPressed: () => Navigator.of(context).pushNamed(
+                              routeVaultSecretAdd,
+                              arguments: vault.id,
+                            ),
+                            icon: const Icon(
+                              Icons.add_circle,
+                            ),
+                            label: const Text(
+                              'Add a Secret',
+                            ),
                           ),
                         ),
                       ),
-                    ),
                   ],
                   if (vault.isNotFull) ...[
                     if (vault.isRestricted)

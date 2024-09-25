@@ -29,19 +29,17 @@ class SecretListTile extends StatelessWidget {
         vertical: 0,
         horizontal: kDefaultTilePadding,
       ),
-      trailing: vault.isRestricted
+      trailing: vault.isRestricted && vault.hasNoQuorum
           ? null
           : Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  onPressed: vault.isRestricted
-                      ? null
-                      : () => OnRemoveSecretDialog.show(
-                            context,
-                            vault: vault,
-                            secretId: secretId,
-                          ),
+                  onPressed: () => OnRemoveSecretDialog.show(
+                    context,
+                    vault: vault,
+                    secretId: secretId,
+                  ),
                   icon: Icon(
                     Icons.delete_outlined,
                     color: vault.isRestricted
@@ -50,31 +48,26 @@ class SecretListTile extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  onPressed: vault.hasQuorum
-                      ? () async {
-                          final isSecretRestoreExplainerHidden =
-                              GetIt.I<SettingsRepository>().get<bool>(
-                                      PreferencesKeys
-                                          .keyIsSecretRestoreExplainerHidden) ??
-                                  false;
-                          if (!isSecretRestoreExplainerHidden &&
-                              context.mounted) {
-                            final shouldContinue =
-                                await OnSecretRestoreDialog.show(context) ??
-                                    false;
-                            if (!shouldContinue) return;
-                          }
-                          if (context.mounted) {
-                            Navigator.of(context).pushNamed(
-                              routeVaultSecretRecovery,
-                              arguments: (
-                                vaultId: vault.id,
-                                secretId: secretId,
-                              ),
-                            );
-                          }
-                        }
-                      : null,
+                  onPressed: () async {
+                    final isSecretRestoreExplainerHidden =
+                        GetIt.I<SettingsRepository>().get<bool>(PreferencesKeys
+                                .keyIsSecretRestoreExplainerHidden) ??
+                            false;
+                    if (!isSecretRestoreExplainerHidden && context.mounted) {
+                      final shouldContinue =
+                          await OnSecretRestoreDialog.show(context) ?? false;
+                      if (!shouldContinue) return;
+                    }
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamed(
+                        routeVaultSecretRecovery,
+                        arguments: (
+                          vaultId: vault.id,
+                          secretId: secretId,
+                        ),
+                      );
+                    }
+                  },
                   icon: const Icon(Icons.visibility_outlined),
                 ),
               ],
