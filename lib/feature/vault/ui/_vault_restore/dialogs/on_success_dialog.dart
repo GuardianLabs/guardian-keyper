@@ -76,37 +76,25 @@ class OnSuccessDialog extends StatelessWidget {
               )
           ],
           footer: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: FilledButton(
-                      child: const Text('Add another Guardian'),
-                      onPressed: () => Navigator.of(context).pop(true),
-                    ),
-                  ),
-                ],
+              FilledButton(
+                child: const Text('Add another Guardian'),
+                onPressed: () => Navigator.of(context).pop(true),
               ),
               if (vault.hasQuorum)
                 Padding(
                   padding: paddingT12,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          child: const Text('Go to Safe'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.pushReplacementNamed(
-                              context,
-                              routeVaultShow,
-                              arguments: vault.id,
-                            );
-                          },
-                        ),
-                      ),
-                    ],
+                  child: OutlinedButton(
+                    child: const Text('Go to Safe'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushReplacementNamed(
+                        context,
+                        routeVaultShow,
+                        arguments: vault.id,
+                      );
+                    },
                   ),
                 ),
             ],
