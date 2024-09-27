@@ -48,6 +48,8 @@ class Vault extends Serializable {
 
   int get size => guardians.length;
   int get missed => maxSize - size;
+
+  int get required => size - threshold;
   int get redudancy => maxSize - threshold;
 
   bool get hasQuorum => size >= threshold;

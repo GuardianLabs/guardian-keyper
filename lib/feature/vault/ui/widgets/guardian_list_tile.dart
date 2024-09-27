@@ -20,7 +20,7 @@ class GuardianListTile extends StatelessWidget {
   })  : onTap = null,
         onLongPress = null,
         isWaiting = false,
-        title = 'My device',
+        title = 'This device',
         subtitle = 'Acts as a Guardian',
         leading = const _GuardianCheckedIcon();
 
