@@ -59,7 +59,7 @@ final class VaultSecretRecoveryPresenter extends VaultSecretPresenterBase {
           .toList());
       requestCompleter.complete(updatedMessage);
       nextPage();
-    } else if (messages.where((e) => e.isRejected).length > vault.redudancy) {
+    } else if (messages.where((e) => e.isRejected).length > vault.required) {
       stopListenResponse();
       requestCompleter.complete(updatedMessage.copyWith(
         status: MessageStatus.rejected,

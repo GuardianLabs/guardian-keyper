@@ -85,9 +85,13 @@ class _DiscoveringPeersPageState extends State<DiscoveringPeersPage> {
                                       ? GuardianListTile(
                                           guardian: message.peerId,
                                         )
-                                      : GuardianListTile.pending(
-                                          guardian: message.peerId,
-                                        ),
+                                      : message.isRejected
+                                          ? GuardianListTile.rejected(
+                                              guardian: message.peerId,
+                                            )
+                                          : GuardianListTile.pending(
+                                              guardian: message.peerId,
+                                            ),
                           ],
                         ),
                       ),

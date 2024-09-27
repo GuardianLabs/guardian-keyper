@@ -20,7 +20,7 @@ class GuardianListTile extends StatelessWidget {
   })  : onTap = null,
         onLongPress = null,
         isWaiting = false,
-        title = 'My device',
+        title = 'This device',
         subtitle = 'Acts as a Guardian',
         leading = const _GuardianCheckedIcon();
 
@@ -42,6 +42,16 @@ class GuardianListTile extends StatelessWidget {
         title = guardian.name,
         subtitle = 'ID: ${guardian.toHexShort()}',
         leading = const _GuardianPendingIcon();
+
+  GuardianListTile.rejected({
+    required PeerId guardian,
+    super.key,
+  })  : onTap = null,
+        onLongPress = null,
+        isWaiting = false,
+        title = guardian.name,
+        subtitle = 'ID: ${guardian.toHexShort()}',
+        leading = const _GuardianRejectedIcon();
 
   final bool isWaiting;
   final Widget? leading;
@@ -101,5 +111,18 @@ class _GuardianPendingIcon extends StatelessWidget {
         color: Theme.of(context).colorScheme.primary,
         outlined: true,
         scale: 0.6,
+      );
+}
+
+class _GuardianRejectedIcon extends StatelessWidget {
+  const _GuardianRejectedIcon();
+
+  @override
+  Widget build(BuildContext context) => StyledIcon(
+        icon: Icons.close,
+        scale: 0.6,
+        outlined: true,
+        color: Theme.of(context).colorScheme.error,
+        bgColor: Theme.of(context).colorScheme.primary,
       );
 }
