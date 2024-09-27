@@ -22,7 +22,7 @@ class OnRejectDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BottomSheetWidget(
         icon: const Icon(Icons.cancel, size: 80),
-        titleString: 'Guardian rejected the recovery of your Secret',
+        titleString: 'Guardians have rejected your Secret recovery request',
         textSpan: [
           const TextSpan(text: 'Secret Recovery process for '),
           TextSpan(text: vaultName, style: styleW600),
