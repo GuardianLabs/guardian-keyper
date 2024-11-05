@@ -22,7 +22,7 @@ class _PageTitleRestrictedState extends State<PageTitleRestricted> {
   late final TapGestureRecognizer _tapRecognizer;
 
   late final _limitedAccessTapable = TextSpan(
-    text: 'limited Safe access.',
+    text: 'limited Safe access',
     style: const TextStyle(
       fontWeight: FontWeight.w600,
       decoration: TextDecoration.underline,
@@ -46,22 +46,24 @@ class _PageTitleRestrictedState extends State<PageTitleRestricted> {
   @override
   Widget build(BuildContext context) => widget.vault.hasQuorum
       ? PageTitle(
-          title: 'Guardians',
           subtitleSpans: [
             const TextSpan(
-              text: 'You`re unable to add a new Secrets '
+              text: 'You`re unable to add new Secrets '
                   'due to your ',
             ),
             _limitedAccessTapable,
+            const TextSpan(
+              text: '. Please add all the Guardians of that Safe '
+                  'to gain full access to it',
+            ),
           ],
         )
       : PageTitle(
           subtitleSpans: [
             TextSpan(
               text: 'Add at least '
-                  '${widget.vault.missed} more '
-                  'Guardian${widget.vault.missed == 1 ? '' : 's'} to complete the Recovery. '
-                  'This will grant you ',
+                  '${widget.vault.redudancy} more '
+                  'Guardian${widget.vault.redudancy == 1 ? '' : 's'} to gain ',
             ),
             _limitedAccessTapable,
             const TextSpan(text: ' to Safe’s Secrets.'),
